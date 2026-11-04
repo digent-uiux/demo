@@ -1,0 +1,241 @@
+{%- liquid
+  assign s = section.settings
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-countdown-04.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-countdown-04.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-lather', tokens: s.tokens -%}
+{% capture body %}<div aria-hidden="true" class="bcountdown04__ticker">{% for copy in (1..2) %}<div class="bcountdown04__run">{% for repeat in (1..2) %}{% for item in (1..4) %}<span class="bcountdown04__ticker-text blko-ui-text--h2">{% case item %}{% when 1 %}{{ s.ticker_one | escape }}{% when 2 %}{{ s.ends | escape }} <span data-time>47:05:33</span>{% when 3 %}{{ s.ticker_three | escape }}{% when 4 %}{{ s.ticker_four | escape }}{% endcase %}{% render 'blko-ui-icon', name: 'asterisk', size: 32 %}</span>{% endfor %}{% endfor %}</div>{% endfor %}</div><div class="bcountdown04__content"><div class="bcountdown04__copy"><h2 class="bcountdown04__title blko-ui-text--h1">{{ s.heading | escape }}</h2><div role="timer" class="bcountdown04__timer" aria-label="{{ s.timer_label | escape }}">{% assign units = 'hours|minutes|seconds' | split: '|' %}{% for unit in units %}<div class="bcountdown04__tile"><span class="bcountdown04__digits blko-ui-text--h2" data-{{ unit }}>{% case unit %}{% when 'hours' %}47{% when 'minutes' %}05{% when 'seconds' %}33{% endcase %}</span><span class="bcountdown04__unit blko-ui-text--label">{{ s[unit] | escape }}</span></div>{% endfor %}</div>{% assign shop_href = s.link | default: '#' %}{% render 'blko-ui-button', href: shop_href, variant: 'inverse', shape: 'pill', font: 'mono', children: s.link_label, className: 'bcountdown04__shop' %}</div><ul class="bcountdown04__products">{% for block in section.blocks %}<li class="bcountdown04__product" {{ block.shopify_attributes }}>{% if block.settings.product != blank %}{% render 'blko-ui-product-card', product: block.settings.product, ratio: 'square', badge: block.settings, quickAdd: true %}{% else %}{% render 'blko-ui-product-card', title: block.settings.title, image: block.settings.image, price: block.settings.price, compareAt: block.settings.compare, ratio: 'square', badge: block.settings, quickAdd: true %}{% endif %}</li>{% endfor %}</ul></div>{% endcapture %}<div class="bcountdown04" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-sale-countdown data-seconds="{{ s.seconds_left }}">{% render 'blko-ui-section', surface: 'pop-3', full: true, bleed: true, label: s.label, className: 'bcountdown04__section', children: body %}</div
+>
+
+{% schema %}
+{
+  "name": "Countdown 04 - Ticker ban",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "48-hour skincare sale"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Stock up before the clock runs out"
+    },
+    {
+      "type": "text",
+      "id": "ticker_one",
+      "label": "Ticker One",
+      "default": "48-hour skincare sale"
+    },
+    {
+      "type": "text",
+      "id": "ends",
+      "label": "Ends",
+      "default": "Ends in"
+    },
+    {
+      "type": "text",
+      "id": "ticker_three",
+      "label": "Ticker Three",
+      "default": "Up to 30% off"
+    },
+    {
+      "type": "text",
+      "id": "ticker_four",
+      "label": "Ticker Four",
+      "default": "Free shipping over $50"
+    },
+    {
+      "type": "text",
+      "id": "timer_label",
+      "label": "Timer Label",
+      "default": "Sale ends in about 47 hours"
+    },
+    {
+      "type": "text",
+      "id": "hours",
+      "label": "Hours",
+      "default": "Hrs"
+    },
+    {
+      "type": "text",
+      "id": "minutes",
+      "label": "Minutes",
+      "default": "Min"
+    },
+    {
+      "type": "text",
+      "id": "seconds",
+      "label": "Seconds",
+      "default": "Sec"
+    },
+    {
+      "type": "number",
+      "id": "seconds_left",
+      "label": "Seconds Left",
+      "default": 169533
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link Label",
+      "default": "Shop all skincare"
+    },
+    {
+      "type": "text",
+      "id": "sale_label",
+      "label": "Sale Label",
+      "default": "Sale"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Lather)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "Countdown 04 - Ticker band",
+      "blocks": [
+        {
+          "type": "product",
+          "settings": {
+            "title": "Vitamin C serum",
+            "price": 28,
+            "compare": 38
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "title": "Overnight gel mask",
+            "price": 24,
+            "compare": 32
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "title": "Botanical face oil",
+            "price": 34,
+            "compare": 46
+          }
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Sale product",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Sale"
+        },
+        {
+          "type": "select",
+          "id": "tone",
+          "label": "Badge color",
+          "default": "sale",
+          "options": [
+            {
+              "value": "sale",
+              "label": "Sale"
+            },
+            {
+              "value": "accent",
+              "label": "Accent"
+            }
+          ]
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Vitamin C serum"
+        },
+        {
+          "type": "number",
+          "id": "price",
+          "label": "Price",
+          "default": 28
+        },
+        {
+          "type": "number",
+          "id": "compare",
+          "label": "Compare",
+          "default": 38
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}
