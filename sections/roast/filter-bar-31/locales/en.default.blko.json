@@ -45,7 +45,7 @@
       "one": "roast",
       "many": "roasts",
       "filter_sort": "Filter &amp; sort",
-      "sheet_title": "Filter <em>&amp;</em> sort",
+      "sheet_title_html": "Filter <em>&amp;</em> sort",
       "close": "Close",
       "close_filters": "Close filters",
       "clear_all": "Clear all",

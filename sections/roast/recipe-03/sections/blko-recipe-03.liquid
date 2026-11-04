@@ -3,6 +3,7 @@
 -%}
 {{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
 {{ 'blko-recipe-03.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
 <script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
 {{ 'blko-roast-motion.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-roast-motion.js' | asset_url }}" defer="defer"></script>
@@ -25,7 +26,7 @@
         /><circle cx="60" cy="60" r="54" fill="none" stroke="var(--blko-color-pop-3, currentColor)" stroke-width="6" stroke-linecap="round" stroke-dasharray="{{ ring_c }}" stroke-dashoffset="0" class="brecipe03__arc" data-arc
       /></svg
       ><div class="brecipe03__read"
-        ><span role="timer" aria-live="off" class="brecipe03__clock" data-clock>{{ m0 }}:{{ s0 }}</span
+        ><span role="timer" aria-live="off" class="brecipe03__clock rm-heading" data-clock><span data-clock-m>{{ m0 }}</span><em>:<span data-clock-s>{{ s0 }}</span></em></span
         ><span class="brecipe03__label brecipe03__muted brecipe03__stepno" data-stepno>{{ 'blko.recipe_03.step' | t }} 1 / {{ step_count }}</span
       ></div
     ></div
@@ -41,7 +42,7 @@
   </div
 >{%- endcapture -%}
 {%- capture body -%}
-  <div class="brecipe03__grid" data-rm-magnetic
+  <div class="brecipe03__grid"
     ><div class="brecipe03__left"
       ><div class="brecipe03__titles"
         ><p class="brecipe03__label rm-rise brecipe03__dim8">{{ s.eyebrow | escape }}</p

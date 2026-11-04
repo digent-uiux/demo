@@ -120,7 +120,9 @@
       "pay_2": "Wallet",
       "pay_3": "Pay later",
       "pay_4": "Bank",
-      "pay_5": "Gift card"
+      "pay_5": "Gift card",
+      "country": "Country / currency",
+      "update": "Update"
     },
     "cart": {
       "items": "Items in your bag",
@@ -153,7 +155,15 @@
       "no_results": "No results for “{{ terms }}”. Check the spelling or try a different word.",
       "browse": "Browse all products",
       "article": "Article",
-      "page": "Page"
+      "page": "Page",
+      "suggestions": "Suggestions",
+      "collections": "Collections",
+      "pages": "Pages & journal",
+      "products": "Products",
+      "from": "From {{ price }}",
+      "search_for": "Search for “{{ terms }}”",
+      "close": "Close search",
+      "popular": "Popular"
     },
     "not_found": {
       "label": "404"
@@ -389,7 +399,7 @@
       "one": "roast",
       "many": "roasts",
       "filter_sort": "Filter &amp; sort",
-      "sheet_title": "Filter <em>&amp;</em> sort",
+      "sheet_title_html": "Filter <em>&amp;</em> sort",
       "close": "Close",
       "close_filters": "Close filters",
       "clear_all": "Clear all",
@@ -437,7 +447,8 @@
       "error": "Could not add to bag",
       "save": "Save to wishlist",
       "saved": "Saved to wishlist",
-      "subscribe_short": "subscribe"
+      "subscribe_short": "subscribe",
+      "unavailable": "Unavailable"
     },
     "recipe_03": {
       "brewer": "Brewer",
@@ -702,6 +713,16 @@
       "error": "Error 404",
       "search_label": "Search the shop",
       "search": "Search"
+    },
+    "cart_drawer": {
+      "count": {
+        "one": "{{ count }} item",
+        "other": "{{ count }} items"
+      },
+      "close": "Close bag",
+      "free_left": "{{ amount }} away from free shipping",
+      "free_done": "Free shipping unlocked",
+      "view": "View bag"
     }
   },
   "blko_ui": {

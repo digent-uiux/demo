@@ -1,8 +1,10 @@
 {%- liquid
   assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-8'
 -%}
 {{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
 {{ 'blko-team-27.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
 <script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
 {{ 'blko-roast-motion.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-roast-motion.js' | asset_url }}" defer="defer"></script>
@@ -26,7 +28,8 @@
       >{%- for b in section.blocks -%}
       <li class="rm-rise" style="--d:{{ forloop.index0 | times: 60 | plus: 120 }}ms" {{ b.shopify_attributes }}
         ><button type="button" class="bteam27__row" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}" data-person data-p-who="{{ b.settings.name | escape }} · {{ b.settings.role | escape }}" data-p-note="{{ b.settings.note | escape }}"
-          ><span class="bteam27__name">{{ b.settings.name | escape }}</span
+          >{%- assign nm = b.settings.name | strip | split: ' ' -%}{%- assign rest = b.settings.name | strip | remove_first: nm.first | strip -%}
+          <span class="bteam27__name rm-heading">{{ nm.first | escape }}{% if rest != blank %} <em>{{ rest | escape }}</em>{% endif %}</span
           ><span class="bteam27__role">{{ b.settings.role | escape }}</span
           ><span class="bteam27__label bteam27__brew">{{ b.settings.brew | escape }}</span
         ></button
@@ -34,13 +37,13 @@
       >{%- endfor -%}
       {%- if s.hiring_label != blank -%}
       <li class="rm-rise" style="--d:{{ section.blocks.size | times: 60 | plus: 120 }}ms"
-        ><a href="{{ s.hiring_link | default: '#' }}" class="bteam27__hire"><span class="bteam27__name"><span class="rm-ul">{{ s.hiring_label | escape }}</span></span>{% render 'blko-ui-icon', name: 'arrow-up-right', className: 'rm-nudge' %}</a
+        ><a href="{{ s.hiring_link | default: '#' }}" class="bteam27__hire"><span class="bteam27__name rm-heading"><span class="rm-ul">{{ s.hiring_label }}</span></span>{% render 'blko-ui-icon', name: 'arrow-up-right', className: 'rm-nudge' %}</a
       ></li
       >{%- endif -%}
     </ul
   ></div
 >{%- endcapture -%}
-<div class="bteam27" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast
+<div class="bteam27{%- if blko_sid != 'scheme-8' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast
   >{%- render 'blko-ui-section', surface: 'pop-3', label: s.label, inner: 'bteam27__grid', children: body -%}
 </div
 
@@ -93,8 +96,8 @@
     {
       "type": "text",
       "id": "hiring_label",
-      "label": "Hiring row label",
-      "default": "We’re hiring baristas"
+      "label": "Hiring row label (em allowed)",
+      "default": "We’re hiring <em>baristas</em>"
     },
     {
       "type": "url",
@@ -121,6 +124,13 @@
       ],
       "default": "preset",
       "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-8"
     },
     {
       "type": "header",

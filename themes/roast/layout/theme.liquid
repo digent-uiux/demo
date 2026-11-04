@@ -7,6 +7,14 @@
     <meta name="theme-color" content="{{ settings.color_schemes[settings.page_color_scheme].settings.background }}">
     <link rel="canonical" href="{{ canonical_url }}">
     <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+    {%- comment -%} The hero's giant heading reflows when its font swaps in (CLS 0.18 on mobile); preload the heading + body faces. Every roast font pair uses Syne + IBM Plex Sans. {%- endcomment -%}
+    {%- if settings.font_source == 'shopify' -%}
+      {%- unless settings.font_heading.system? %}{{ settings.font_heading | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}{% endunless -%}
+      {%- unless settings.font_body.system? %}{{ settings.font_body | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}{% endunless -%}
+    {%- else %}
+    {{ 'blko-font-syne-c37e2f.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}
+    {{ 'blko-font-ibm-plex-sans-118b75.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}
+    {%- endif %}
     {%- if settings.favicon != blank -%}
       <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 64, height: 64 }}">
     {%- endif -%}
@@ -22,6 +30,7 @@
     {% render 'blko-meta-tags' %}
     {% render 'blko-theme-styles' %}
     {% render 'blko-ds-tokens' %}
+    {%- render 'blko-color-schemes' -%}
     {%- comment -%} Roast's mono is IBM Plex Mono (every preset); blko-ds-tokens resets --font-mono to the body font after blko-theme-fonts, so put it back. {%- endcomment -%}
     {%- unless settings.font_source == 'shopify' -%}<style>.blko-theme, .blko-scheme { --font-mono: 'IBM Plex Mono', ui-monospace, monospace; }</style>{%- endunless %}
     {{ 'blko-theme.css' | asset_url | stylesheet_tag }}
@@ -34,5 +43,6 @@
       {{ content_for_layout }}
     </main>
     {% sections 'footer-group' %}
+    {% section 'blko-cart-drawer' %}
   </body>
 </html>

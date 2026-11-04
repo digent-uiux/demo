@@ -3,6 +3,7 @@
 -%}
 {{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
 {{ 'blko-marquee-gsap-05.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
 <script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
 {{ 'blko-roast-motion.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-roast-motion.js' | asset_url }}" defer="defer"></script>
@@ -27,7 +28,7 @@
         ><span class="bmarqueegsap05__name"><span class="bmarqueegsap05__n{% if odd == 1 %} bmarqueegsap05__n--light{% endif %}">{{ nm | escape }}</span>{%- if s.show_notes and nt != blank -%}<span class="bmarqueegsap05__note">{{ nt | escape }}</span>{%- endif -%}</span
         >{%- if odd == 0 -%}{%- assign im = s.image_1 -%}{%- assign ph = 'product-1' -%}{%- else -%}{%- assign im = s.image_2 -%}{%- assign ph = 'product-2' -%}{%- endif -%}
         {%- if im != blank -%}
-          {{ im | image_url: width: 160 | image_tag: alt: '', loading: 'lazy', class: 'bmarqueegsap05__ph' -}}
+          {{ im | image_url: width: 480 | image_tag: alt: '', loading: 'lazy', class: 'bmarqueegsap05__ph' -}}
         {%- else -%}
           <span class="bmarqueegsap05__ph">{{ ph | placeholder_svg_tag }}</span
         >{%- endif -%}
@@ -37,9 +38,12 @@
   {%- endfor -%}
 {%- endcapture -%}
 {%- capture list -%}{%- for r in rows -%}{%- assign nm = r | split: '|' | first | strip -%}{%- if nm != blank -%}{% unless forloop.first %}, {% endunless %}{{ nm }}{%- endif -%}{%- endfor -%}{%- endcapture -%}
-<section class="bmarqueegsap05" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast data-bmarqueegsap05 aria-label="{{ s.label | escape }}" style="--speed:{{ s.speed }}"
+<section class="bmarqueegsap05" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast data-bmarqueegsap05 aria-label="{{ s.label | escape }}"
   ><p class="bmarqueegsap05__sr">{{ 'blko.marquee_gsap_05.origins' | t: list: list | escape }}</p
-  ><div class="bmarqueegsap05__strip" aria-hidden="true" data-strip
+  >{%- if s.caption != blank or s.caption_2 != blank -%}
+  <div class="bmarqueegsap05__cap" aria-hidden="true"><div class="bmarqueegsap05__capin"><span>{{ s.caption | escape }}</span><span class="bmarqueegsap05__cap2">{{ s.caption_2 | escape }}</span></div></div
+  >{%- endif -%}
+  <div class="bmarqueegsap05__strip" aria-hidden="true" data-strip style="--speed:{{ s.speed }}"
     ><div class="bmarqueegsap05__track" data-track
       ><ul class="bmarqueegsap05__list">{{ items }}</ul
       ><ul class="bmarqueegsap05__list">{{ items }}</ul
@@ -66,6 +70,18 @@
       "id": "origins",
       "label": "Origins (Name | note per line)",
       "default": "Ethiopia | 2,100 m\nColombia | 1,850 m\nKenya | 1,700 m\nGuatemala | 1,600 m\nRwanda | 1,900 m\nSumatra | 1,400 m\nYunnan | 1,800 m"
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "Caption, left",
+      "default": "( Origins )"
+    },
+    {
+      "type": "text",
+      "id": "caption_2",
+      "label": "Caption, right",
+      "default": "Seven regions · altitude in metres"
     },
     {
       "type": "checkbox",

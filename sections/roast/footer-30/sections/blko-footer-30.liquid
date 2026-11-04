@@ -3,6 +3,7 @@
 -%}
 {{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
 {{ 'blko-footer-30.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
 <script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
 {{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
@@ -27,7 +28,7 @@
   ><div class="bfooter30__wrap"
     ><div class="bfooter30__grid"
       ><div class="bfooter30__left"
-        ><p class="bfooter30__mark" aria-label="{{ word | escape }}" data-mark
+        ><p class="bfooter30__mark" role="img" aria-label="{{ word | escape }}" data-mark
           >{%- assign chars = word | split: '' -%}
           {%- for ch in chars -%}<span aria-hidden="true" class="bfooter30__ch"><span style="transition-delay:{{ forloop.index0 | times: 70 }}ms">{{ ch | escape }}</span></span>{%- endfor -%}
         </p

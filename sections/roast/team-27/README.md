@@ -81,7 +81,7 @@ Do not use a zip.
 | `line_2` | text | Heading, line 2 | at the |
 | `line_2_em` | text | Heading, accent word | bar. |
 | `image` | image_picker | Photo |  |
-| `hiring_label` | text | Hiring row label | We’re hiring baristas |
+| `hiring_label` | text | Hiring row label (em allowed) | We’re hiring <em>baristas</em> |
 | `hiring_link` | url | Hiring link |  |
 | `tokens` | select | Colors, fonts, corners | preset |
 | `padding_top` | range | Top padding | 80 |

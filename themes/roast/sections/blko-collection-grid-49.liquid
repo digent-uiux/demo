@@ -1,8 +1,10 @@
 {%- liquid
   assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
 -%}
 {{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
 {{ 'blko-collection-grid-49.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
 <script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
 {{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
@@ -160,7 +162,7 @@
     ></ol
   ></nav
 >{%- endcapture -%}
-<div class="bcollectiongrid49" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast data-rm-magnetic data-mode="{% if live %}live{% else %}demo{% endif %}" data-per="{{ per }}" data-page="{{ cur_page }}" data-pages="{{ pages }}" data-next="{{ next_url }}" data-start="{{ start }}" data-end="{{ end_n }}" data-total="{{ total }}" data-tile-after="{{ tile_after }}" data-l-page="{{ 'blko.collection_grid_49.page' | t }}"
+<div class="bcollectiongrid49{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast data-rm-magnetic data-mode="{% if live %}live{% else %}demo{% endif %}" data-per="{{ per }}" data-page="{{ cur_page }}" data-pages="{{ pages }}" data-next="{{ next_url }}" data-start="{{ start }}" data-end="{{ end_n }}" data-total="{{ total }}" data-tile-after="{{ tile_after }}" data-l-page="{{ 'blko.collection_grid_49.page' | t }}"
   >{%- render 'blko-ui-section', surface: 'bg', label: s.label, inner: 'bcollectiongrid49__inner', children: body -%}
 </div
 
@@ -248,6 +250,13 @@
       ],
       "default": "preset",
       "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
     },
     {
       "type": "header",

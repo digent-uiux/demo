@@ -1,8 +1,10 @@
 {%- liquid
   assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
 -%}
 {{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
 {{ 'blko-account-34.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
 <script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
 {{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
@@ -60,7 +62,7 @@
     <div class="baccount34__meter rm-rise" style="--d:160ms"
       ><div class="baccount34__mrow"
         ><p class="baccount34__label baccount34__muted">{{ 'blko.account_34.beans' | t }}</p
-        ><p class="baccount34__beans"><span data-rm-count="{{ s.beans }}">{{ s.beans }}</span><span class="baccount34__muted"> / {{ goal_fmt }}</span></p
+        ><p class="baccount34__beans rm-heading"><span data-rm-count="{{ s.beans }}">{{ s.beans }}</span><em class="baccount34__muted"> / {{ goal_fmt }}</em></p
       ></div
       ><div role="progressbar" aria-label="{{ 'blko.account_34.meter' | t }}" aria-valuemin="0" aria-valuemax="{{ s.goal }}" aria-valuenow="{{ s.beans }}" class="baccount34__track"><span style="width:{{ pct }}%"></span></div
       ><p class="baccount34__small baccount34__muted">{{ s.loyalty_text | replace: '[n]', left | escape }}</p
@@ -245,7 +247,7 @@
     ></div
   ></div
 >{%- endcapture -%}
-<div class="baccount34" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast
+<div class="baccount34{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast
   >{%- render 'blko-ui-section', surface: 'bg', label: s.label, className: 'rm-load', inner: 'baccount34__inner', children: body -%}
 </div
 
@@ -392,6 +394,13 @@
       ],
       "default": "preset",
       "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
     },
     {
       "type": "header",

@@ -74,13 +74,13 @@
     }
   },
   {
-    "id": "linen",
-    "name": "Linen",
-    "industry": "fashion",
-    "subIndustry": "Natural fabric, warm and soft",
+    "id": "roast",
+    "name": "Roast",
+    "industry": "food",
+    "subIndustry": "Dark roast, loud colour",
     "status": "active",
-    "manifest": "linen/manifest.json",
-    "layouts": "linen/templates/layouts.json",
+    "manifest": "roast/manifest.json",
+    "layouts": "roast/templates/layouts.json",
     "templateJsBytes": {
       "home": 0,
       "collection": 0,
@@ -98,13 +98,13 @@
     }
   },
   {
-    "id": "roast",
-    "name": "Roast",
-    "industry": "food",
-    "subIndustry": "Coffee & tea roaster",
+    "id": "linen",
+    "name": "Linen",
+    "industry": "fashion",
+    "subIndustry": "Natural fabric, warm and soft",
     "status": "active",
-    "manifest": "roast/manifest.json",
-    "layouts": "roast/templates/layouts.json",
+    "manifest": "linen/manifest.json",
+    "layouts": "linen/templates/layouts.json",
     "templateJsBytes": {
       "home": 0,
       "collection": 0,

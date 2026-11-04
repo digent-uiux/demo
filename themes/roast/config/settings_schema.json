@@ -126,7 +126,7 @@
       },
       {
         "type": "paragraph",
-        "content": "Balm ships six schemes: 1 Cream (page), 2 Soft (header, footer), 3 Oat, 4 Olive (announcement), 5 Dark, 6 White. Every section has its own scheme picker."
+        "content": "Roast ships nine schemes: 1 Cream (page), 2 Oat, 3 Roast brown, 4 Espresso (announcement), 5 Dark (header, footer, dark bands), 6 White, 7 Copper, 8 Moss, 9 Oxblood. Every section has a Color scheme picker; 7\u20139 also feed the theme accents (pop 2\u20134)."
       },
       {
         "type": "color_scheme",
@@ -202,12 +202,12 @@
           }
         ],
         "default": "theme",
-        "info": "Theme fonts match the design exactly. Shopify library uses the two font pickers below."
+        "info": "Presets use Shopify library fonts to match their heading and body pair. Theme fonts uses the bundled font files."
       },
       {
         "type": "select",
         "id": "theme_font_pair",
-        "label": "Theme font pair",
+        "label": "Bundled font pair",
         "options": [
           {
             "value": "default",
@@ -215,18 +215,19 @@
           },
           {
             "value": "matcha",
-            "label": "Matcha (Syne + IBM Plex Sans)"
+            "label": "Matcha (bundled fonts)"
           },
           {
             "value": "clay",
-            "label": "Clay (Syne + IBM Plex Sans)"
+            "label": "Clay (bundled fonts)"
           },
           {
             "value": "night",
-            "label": "Night roast (Syne + IBM Plex Sans)"
+            "label": "Night (bundled fonts)"
           }
         ],
-        "default": "default"
+        "default": "default",
+        "info": "Applies only to Theme fonts. Presets select Shopify library and use the font pickers below."
       },
       {
         "type": "font_picker",

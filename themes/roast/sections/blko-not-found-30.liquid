@@ -1,8 +1,10 @@
 {%- liquid
   assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-7'
 -%}
 {{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
 {{ 'blko-not-found-30.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
 <script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
 {{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
@@ -29,12 +31,12 @@
       ><span aria-hidden="true" class="bnotfound30__bean" style="left:92%;top:30%"><span data-bean data-x="92" data-y="30"><svg viewBox="0 0 40 56"><ellipse cx="20" cy="28" rx="17" ry="25"/><path d="M20 5 C 12 18, 28 36, 20 51" stroke-width="3" stroke-linecap="round"/></svg></span></span
       ><span aria-hidden="true" class="bnotfound30__bean" style="left:2%;top:52%"><span data-bean data-x="2" data-y="52"><svg viewBox="0 0 40 56"><ellipse cx="20" cy="28" rx="17" ry="25"/><path d="M20 5 C 12 18, 28 36, 20 51" stroke-width="3" stroke-linecap="round"/></svg></span></span
       ><p class="bnotfound30__sr">{{ 'blko.not_found_30.error' | t }}</p
-      ><div aria-hidden="true" class="bnotfound30__giant"
+      ><div aria-hidden="true" class="bnotfound30__giant rm-heading"
         ><span class="rm-mask"><span class="rm-line">4</span></span
         ><span class="bnotfound30__cup rm-rise" style="--d:140ms"
           >{%- if s.cup_image != blank -%}{{ s.cup_image | image_url: width: 1000 | image_tag: alt: '', class: 'bnotfound30__img' }}{%- else -%}{{ 'product-1' | placeholder_svg_tag: 'bnotfound30__img' }}{%- endif -%}
         </span
-        ><span class="rm-mask"><span class="rm-line" style="--d:260ms">4</span></span
+        ><span class="rm-mask"><span class="rm-line" style="--d:260ms"><em>4</em></span></span
       ></div
     ></div
     ><div class="bnotfound30__low"
@@ -70,7 +72,7 @@
     ></div
   ></div
 >{%- endcapture -%}
-<div class="bnotfound30" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast
+<div class="bnotfound30{%- if blko_sid != 'scheme-7' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast
   >{%- render 'blko-ui-section', surface: 'pop-2', label: s.label, className: 'rm-load bnotfound30__section', inner: 'bnotfound30__inner', children: body -%}
 </div
 
@@ -180,6 +182,13 @@
       ],
       "default": "preset",
       "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-7"
     },
     {
       "type": "header",

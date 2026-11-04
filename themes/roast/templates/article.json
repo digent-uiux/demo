@@ -15,7 +15,7 @@
         "heading-2": {
           "type": "heading",
           "settings": {
-            "title": "Why dial in at all"
+            "title": "Why dial in <em>at all</em>"
           }
         },
         "text-3": {
@@ -34,7 +34,7 @@
         "heading-5": {
           "type": "heading",
           "settings": {
-            "title": "The base recipe"
+            "title": "The base <em>recipe</em>"
           }
         },
         "text-6": {
@@ -50,7 +50,7 @@
         "heading-8": {
           "type": "heading",
           "settings": {
-            "title": "Grind first, always"
+            "title": "Grind first, <em>always</em>"
           }
         },
         "text-9": {
@@ -66,7 +66,7 @@
         "heading-11": {
           "type": "heading",
           "settings": {
-            "title": "The method, step by step"
+            "title": "The method, <em>step by step</em>"
           }
         },
         "steps-12": {
@@ -78,7 +78,7 @@
         "heading-13": {
           "type": "heading",
           "settings": {
-            "title": "Reading the cup"
+            "title": "Reading the <em>cup</em>"
           }
         },
         "text-14": {

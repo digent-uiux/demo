@@ -3,6 +3,7 @@
 -%}
 {{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
 {{ 'blko-filter-bar-31.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
 <script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
 {{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
@@ -134,7 +135,7 @@
     ><div role="dialog" aria-modal="true" aria-labelledby="bfilterbar31-sh-{{ sid }}" class="bfilterbar31__sbox"
       ><span aria-hidden="true" class="bfilterbar31__handle"></span
       ><div class="bfilterbar31__shead"
-        ><h3 id="bfilterbar31-sh-{{ sid }}" class="bfilterbar31__stitle">{{ 'blko.filter_bar_31.sheet_title' | t }}</h3
+        ><h3 id="bfilterbar31-sh-{{ sid }}" class="bfilterbar31__stitle">{{ 'blko.filter_bar_31.sheet_title_html' | t }}</h3
         ><button type="button" aria-label="{{ 'blko.filter_bar_31.close' | t }}" class="bfilterbar31__x" data-sheet-close data-sheet-x>{% render 'blko-ui-icon', name: 'x', size: 16 %}</button
       ></div
       ><div class="bfilterbar31__sbody"

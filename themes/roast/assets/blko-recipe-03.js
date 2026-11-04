@@ -2,7 +2,6 @@
 // step under way lit in the list). Static: the first brewer, the ring full, nothing running.
 (() => {
   const C = 2 * Math.PI * 54;
-  const clock = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
   function init(root) {
     if (root.dataset.bound) return; root.dataset.bound = '1';
     const d = root.dataset, tick = parseInt(d.tick, 10) || 50;
@@ -29,7 +28,8 @@
       });
       timers.forEach((t) => {
         t.querySelector('[data-tname]').textContent = specs[b].dataset.name;
-        t.querySelector('[data-clock]').textContent = clock(left);
+        t.querySelector('[data-clock-m]').textContent = Math.floor(left / 60);
+        t.querySelector('[data-clock-s]').textContent = String(Math.floor(left % 60)).padStart(2, '0');
         t.querySelector('[data-stepno]').textContent = done ? d.lEnjoy : `${d.lStep} ${cur + 1} / ${steps.length}`;
         t.querySelector('[data-arc]').setAttribute('stroke-dashoffset', (C * (1 - left / total)).toFixed(2));
         const btn = t.querySelector('[data-toggle]');

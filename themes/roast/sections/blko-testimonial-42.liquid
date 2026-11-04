@@ -1,8 +1,10 @@
 {%- liquid
   assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
 -%}
 {{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
 {{ 'blko-testimonial-42.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
 <script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
 {{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
@@ -11,7 +13,7 @@
 <script src="{{ 'blko-testimonial-42.js' | asset_url }}" defer="defer"></script>
 {%- render 'blko-fonts-roast', tokens: s.tokens -%}
 {%- comment -%}
-  Halden "Notes from the regulars" (roast): mono heading row with stars, a long Syne pull quote whose words fill from
+  Halden "Notes from the regulars" (roast): mono heading row with stars, a long Syne 700 pull quote (an <em> phrase in Syne 400) whose words fill from
   20% to 100% as the section scrolls (motion only; static fully filled), three unequal offset quote cards (blocks).
 {%- endcomment -%}
 {%- capture body -%}
@@ -23,9 +25,9 @@
   ></div
   ><figure class="btestimonial42__fig" data-quote
     ><blockquote class="btestimonial42__bq"
-      ><p class="btestimonial42__pull"><span aria-hidden="true" class="btestimonial42__q">&ldquo;</span
-        >{%- assign words = s.quote | strip | split: ' ' -%}
-        {%- for w in words -%}<span data-w>{{ w | escape }}{% unless forloop.last %} {% endunless %}</span>{%- endfor -%}
+      ><p class="btestimonial42__pull rm-heading"><span aria-hidden="true" class="btestimonial42__q">&ldquo;</span
+        >{%- assign words = s.quote | strip | split: ' ' -%}{%- assign lt = false -%}
+        {%- for w in words -%}{%- if w contains '<em>' -%}{%- assign lt = true -%}{%- endif -%}{%- assign ww = w | remove: '<em>' | remove: '</em>' -%}<span data-w>{% if lt %}<em>{{ ww | escape }}</em>{% else %}{{ ww | escape }}{% endif %}{% unless forloop.last %}{{ ' ' }}{% endunless %}</span>{%- if w contains '</em>' -%}{%- assign lt = false -%}{%- endif -%}{%- endfor -%}
         <span aria-hidden="true" class="btestimonial42__q" data-w>&rdquo;</span></p
     ></blockquote
     ><figcaption class="btestimonial42__cap"
@@ -51,7 +53,7 @@
 </ul
 >{%- endif -%}
 {%- endcapture -%}
-<div class="btestimonial42" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast data-btestimonial42
+<div class="btestimonial42{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast data-btestimonial42
   >{%- render 'blko-ui-section', surface: 'bg', label: s.heading, inner: 'btestimonial42__inner', children: body -%}
 </div
 
@@ -88,8 +90,8 @@
     {
       "type": "textarea",
       "id": "quote",
-      "label": "Quote",
-      "default": "I've tried every subscription going. Halden is the only one where the bag lands two days after the roast date, the Guji tastes like a blueberry jam I can't stop thinking about, and the decaf my partner drinks actually tastes like coffee."
+      "label": "Quote (wrap words in <em> for the light face)",
+      "default": "I've tried every subscription going. Halden is the only one where the bag lands two days after the roast date, the Guji tastes like <em>a blueberry jam I can't stop thinking about</em>, and the decaf my partner drinks actually tastes like coffee."
     },
     {
       "type": "text",
@@ -129,6 +131,13 @@
       ],
       "default": "preset",
       "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
     },
     {
       "type": "header",

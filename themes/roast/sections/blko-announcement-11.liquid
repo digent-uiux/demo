@@ -1,8 +1,10 @@
 {%- liquid
   assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-4'
 -%}
 {{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
 {{ 'blko-announcement-11.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
 <script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
 {{ 'blko-roast-motion.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-roast-motion.js' | asset_url }}" defer="defer"></script>
@@ -15,7 +17,7 @@
   endif
 -%}
 {%- if show_bar and section.blocks.size > 0 -%}
-<div class="bannouncement11" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast data-ms="{{ s.speed | times: 1000 }}"
+<div class="bannouncement11{%- if blko_sid != 'scheme-4' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast data-ms="{{ s.speed | times: 1000 }}"
   ><div role="region" aria-label="{{ 'blko.announcement_11.label' | t }}" class="bannouncement11__bar" data-bar
     ><div class="bannouncement11__row"
       ><p class="bannouncement11__label bannouncement11__live"><span aria-hidden="true" class="bannouncement11__dot"></span>{{ s.live_text | escape }}</p
@@ -99,6 +101,13 @@
       ],
       "default": "preset",
       "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-4"
     },
     {
       "type": "header",

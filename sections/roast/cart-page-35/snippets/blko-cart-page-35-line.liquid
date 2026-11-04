@@ -16,7 +16,7 @@
         <div class="bcartpage35__top">
           <div class="bcartpage35__tt">
             {%- if origin != blank -%}<p class="bcartpage35__label bcartpage35__muted">{{ origin | escape }}</p>{%- endif -%}
-            <h2 class="bcartpage35__name"><a href="{{ href }}" class="rm-ul">{{ name | escape }}</a></h2>
+            <h2 class="bcartpage35__name"><span class="rm-mask"><span class="rm-line" style="--d:{{ d | plus: 120 }}ms"><a href="{{ href }}" class="rm-ul">{{ name | escape }}</a></span></span></h2>
           </div>
           <p class="bcartpage35__price">
             <span class="bcartpage35__paid" data-paid>{{ paid }}</span>

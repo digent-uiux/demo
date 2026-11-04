@@ -73,6 +73,8 @@ Do not use a zip.
 | --- | --- | --- | --- |
 | `label` | text | Region label | Where our coffee and tea come from |
 | `origins` | textarea | Origins (Name | note per line) | Ethiopia \| 2,100 m Colombia \| 1,850 m Kenya \| 1,700 m Guatemala \| 1,600 m Rwanda \| 1,900 m Sumatra \| 1,400 m Yunnan \| 1,800 m |
+| `caption` | text | Caption, left | ( Origins ) |
+| `caption_2` | text | Caption, right | Seven regions · altitude in metres |
 | `show_notes` | checkbox | Show the notes | true |
 | `image_1` | image_picker | Photo 1 |  |
 | `image_2` | image_picker | Photo 2 |  |

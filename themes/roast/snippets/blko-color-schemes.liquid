@@ -1,0 +1,34 @@
+{%- comment -%}
+  Per-section colour scheme (written by _tools/theme-schemes.py; regenerate instead of editing). A generated section
+  whose picker is off its default gets `color-<scheme> blko-scheme-pick`: .color-scheme-N (blko-theme-styles) sets
+  --color-*, blko-ds-tokens maps them to --blko-*, and this repaints the root + its blko-ui-section band, which beats the
+  section's own (0,2,0) root rule and any surface class. Gradient wins when the scheme sets one.
+{%- endcomment -%}
+<style>
+  .blko-scheme-pick.blko-scheme-pick.blko-scheme-pick,
+  .blko-scheme-pick.blko-scheme-pick .blko-ui-section[class*="blko-ui-surface--"] {
+    background: var(--color-bg-gradient, var(--color-bg)); color: var(--color-text);
+    --blko-color-on-pop-1: var(--color-text); --blko-color-on-pop-2: var(--color-text); --blko-color-on-pop-3: var(--color-text); --blko-color-on-pop-4: var(--color-text);
+  }
+  /* *-inverse buttons were drawn for the section's own dark backdrop; in a picked scheme they take the scheme's button */
+  .blko-scheme-pick.blko-scheme-pick.blko-scheme-pick .blko-ui-button--inverse {
+    --blko-color-bg: var(--color-button); --blko-color-text: var(--color-button-text); --blko-color-bg-alt: var(--color-button-hover);
+  }
+  .blko-scheme-pick.blko-scheme-pick.blko-scheme-pick .blko-ui-button--outline-inverse,
+  .blko-scheme-pick.blko-scheme-pick.blko-scheme-pick .blko-ui-button--ghost-inverse {
+    --blko-color-bg: var(--color-text); --blko-color-text: var(--color-bg);
+  }
+  /* header / footer bands paint from --fx-bg / --fx-fg on an inner element */
+  .blko-scheme-pick.blko-scheme-pick.blko-scheme-pick.blko-scheme-pick .bfooter30__flip,
+  .blko-scheme-pick.blko-scheme-pick.blko-scheme-pick.blko-scheme-pick .bheader39__h {
+    --fx-bg: var(--color-bg); --fx-fg: var(--color-text);
+  }
+  /* photo heroes: shade, glass, lines and light chips follow the picked scheme (default keeps the photo look) */
+  .blko-scheme-pick.blko-scheme-pick.blko-scheme-pick.blko-scheme-pick.bhero56 .bhero56__photo { background: var(--color-bg); }
+  .blko-scheme-pick.blko-scheme-pick.blko-scheme-pick.blko-scheme-pick.bhero56 .bhero56__shade { background: linear-gradient(to bottom, color-mix(in srgb, var(--color-bg) 72%, transparent), color-mix(in srgb, var(--color-bg) 8%, transparent), color-mix(in srgb, var(--color-bg) 100%, transparent)); }
+  .blko-scheme-pick.blko-scheme-pick.blko-scheme-pick.blko-scheme-pick.bhero56 .bhero56__card { border: 1px solid color-mix(in srgb, var(--color-text) 15%, transparent); background: color-mix(in srgb, var(--color-bg) 48%, transparent); }
+  .blko-scheme-pick.blko-scheme-pick.blko-scheme-pick.blko-scheme-pick.bhero56 .bhero56__buy { border-top: 1px solid color-mix(in srgb, var(--color-text) 15%, transparent); }
+  .blko-scheme-pick.blko-scheme-pick.blko-scheme-pick.blko-scheme-pick.bhero56 .bhero56__add { background: var(--color-text); color: var(--color-bg); }
+  .blko-scheme-pick.blko-scheme-pick.blko-scheme-pick.blko-scheme-pick.bhero56 .bhero56__add:focus-visible { box-shadow: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--color-text); }
+  .blko-scheme-pick.blko-scheme-pick.blko-scheme-pick.blko-scheme-pick.bhero56 .bhero56__bar { border-top: 1px solid color-mix(in srgb, var(--color-text) 20%, transparent); }
+</style>

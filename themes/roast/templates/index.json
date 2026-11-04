@@ -150,7 +150,7 @@
         "row-3": {
           "type": "row",
           "settings": {
-            "label": "Cold brew",
+            "label": "Cold <em>brew</em>",
             "count": "6 blends",
             "alt": "Iced coffee in a tall glass with milk swirling through it"
           }
@@ -158,7 +158,7 @@
         "row-4": {
           "type": "row",
           "settings": {
-            "label": "Tea & matcha",
+            "label": "Tea & <em>matcha</em>",
             "count": "15 teas",
             "alt": "A bowl of whisked green matcha on a wooden board"
           }

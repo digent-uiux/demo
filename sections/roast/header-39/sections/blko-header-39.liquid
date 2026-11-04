@@ -3,6 +3,7 @@
 -%}
 {{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
 {{ 'blko-header-39.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
 <script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
 {{ 'blko-roast-motion.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-roast-motion.js' | asset_url }}" defer="defer"></script>
@@ -62,13 +63,13 @@
             {%- for l in menu.links -%}
               {%- assign nt = notes[forloop.index0] | split: '|' | last | strip -%}
               {%- if notes[forloop.index0] contains '|' -%}{%- else -%}{%- assign nt = '' -%}{%- endif -%}
-              <li class="bheader39__item" style="--d:{{ forloop.index0 | times: 60 | plus: 80 }}ms"><a href="{{ l.url }}" class="bheader39__sa" data-close><span><span class="bheader39__sname">{{ l.title | escape }}</span>{%- if nt != blank -%}<span class="bheader39__label bheader39__snote">{{ nt | escape }}</span>{%- endif -%}</span>{%- render 'blko-ui-icon', name: 'arrow-up-right', size: 20, className: 'rm-nudge bheader39__sarr' -%}</a></li
+              <li class="bheader39__item" style="--d:{{ forloop.index0 | times: 60 | plus: 80 }}ms"><a href="{{ l.url }}" class="bheader39__sa" data-close><span><span class="bheader39__sname rm-heading">{%- assign odd = forloop.index0 | modulo: 2 -%}{%- if odd == 1 -%}<em>{{ l.title | escape }}</em>{%- else -%}{{ l.title | escape }}{%- endif -%}</span>{%- if nt != blank -%}<span class="bheader39__label bheader39__snote">{{ nt | escape }}</span>{%- endif -%}</span>{%- render 'blko-ui-icon', name: 'arrow-up-right', size: 20, className: 'rm-nudge bheader39__sarr' -%}</a></li
             >{%- endfor -%}
           {%- else -%}
             {%- for d in demo -%}
               {%- assign parts = d | split: '|' -%}{%- assign nm = parts[0] | strip -%}{%- assign nt = parts[1] | strip -%}
               {%- if nm != blank -%}
-              <li class="bheader39__item" style="--d:{{ forloop.index0 | times: 60 | plus: 80 }}ms"><a href="{{ routes.all_products_collection_url }}" class="bheader39__sa" data-close><span><span class="bheader39__sname">{{ nm | escape }}</span>{%- if nt != blank -%}<span class="bheader39__label bheader39__snote">{{ nt | escape }}</span>{%- endif -%}</span>{%- render 'blko-ui-icon', name: 'arrow-up-right', size: 20, className: 'rm-nudge bheader39__sarr' -%}</a></li
+              <li class="bheader39__item" style="--d:{{ forloop.index0 | times: 60 | plus: 80 }}ms"><a href="{{ routes.all_products_collection_url }}" class="bheader39__sa" data-close><span><span class="bheader39__sname rm-heading">{%- assign odd = forloop.index0 | modulo: 2 -%}{%- if odd == 1 -%}<em>{{ nm | escape }}</em>{%- else -%}{{ nm | escape }}{%- endif -%}</span>{%- if nt != blank -%}<span class="bheader39__label bheader39__snote">{{ nt | escape }}</span>{%- endif -%}</span>{%- render 'blko-ui-icon', name: 'arrow-up-right', size: 20, className: 'rm-nudge bheader39__sarr' -%}</a></li
               >{%- endif -%}
             {%- endfor -%}
           {%- endif -%}

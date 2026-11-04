@@ -6,7 +6,7 @@
     if (root.dataset.bound) return; root.dataset.bound = '1';
     const R = window.blkoRoast, strip = root.querySelector('[data-strip]'), track = root.querySelector('[data-track]');
     if (!R || !R.on || !track) return;
-    const dur = parseFloat(getComputedStyle(root).getPropertyValue('--speed')) || 60;
+    const dur = parseFloat(getComputedStyle(strip || root).getPropertyValue('--speed')) || 60;
     let x = 0.5, rate = 1, target = 1, dir = 1, held = false, boostUntil = 0, lastY = scrollY, lastT = performance.now(), prev = performance.now();
     let visible = true;
     new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(root);

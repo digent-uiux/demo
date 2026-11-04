@@ -19,7 +19,8 @@ Actions emit blko-ui:wishlist / blko-ui:quick-add; cart integration is owned by 
 -%}
 <article class="blko-ui-product-card {{ className }}"{% if product != blank %} data-variant-id="{{ product.selected_or_first_available_variant.id }}"{% endif %}>
   <div class="blko-ui-product-card__media blko-ui-product-card__media--{{ ratio | default: 'portrait' }}">
-    {% if card_image != blank %}{{ card_image | image_url: width: 1200 | image_tag: alt: alt, loading: 'lazy', class: 'blko-ui-product-card__image' }}{% else %}{{ 'product-1' | placeholder_svg_tag: 'blko-ui-product-card__image placeholder-svg' }}{% endif %}
+    {%- assign card_alt = alt | default: card_image.alt | default: product.title | default: title -%}
+    {% if card_image != blank %}{{ card_image | image_url: width: 1200 | image_tag: alt: card_alt, loading: 'lazy', widths: '360, 540, 720, 960, 1200', sizes: '(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw', class: 'blko-ui-product-card__image' }}{% else %}{{ 'product-1' | placeholder_svg_tag: 'blko-ui-product-card__image placeholder-svg' }}{% endif %}
     {% if badge != blank %}{% assign card_badge_tone = badge.tone | default: 'surface' %}{% render 'blko-ui-badge', tone: card_badge_tone, children: badge.label, className: 'blko-ui-product-card__badge' %}{% endif %}
     {% if wishlist %}<button type="button" data-blko-ui-wishlist aria-label="{{ 'blko_ui.product.save' | t: title: card_title | escape }}" class="blko-ui-product-card__wishlist">{% render 'blko-ui-icon', name: 'heart', size: 16 %}</button>{% endif %}
     {% if quickAdd %}<button type="button" data-blko-ui-quick-add aria-label="{{ 'blko_ui.product.add' | t: title: card_title | escape }}" class="blko-ui-product-card__add">{% render 'blko-ui-icon', name: 'plus', size: 16 %}</button>{% endif %}

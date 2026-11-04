@@ -3,6 +3,7 @@
 -%}
 {{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
 {{ 'blko-page-header-79.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
 <script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
 {{ 'blko-roast-motion.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-roast-motion.js' | asset_url }}" defer="defer"></script>
@@ -21,7 +22,7 @@
       >{%- for b in section.blocks -%}
       <li class="rm-rise" style="--d:{{ forloop.index0 | times: 80 | plus: 280 }}ms" {{ b.shopify_attributes }}
         ><a href="{{ b.settings.link | default: '#' }}" class="bpageheader79__row"
-          ><span><span class="bpageheader79__rowlabel">{{ b.settings.label | escape }}</span><span class="bpageheader79__label bpageheader79__detail">{{ b.settings.detail | escape }}</span></span
+          ><span><span class="bpageheader79__rowlabel rm-heading">{{ b.settings.label }}</span><span class="bpageheader79__label bpageheader79__detail">{{ b.settings.detail | escape }}</span></span
           ><span aria-hidden="true" class="bpageheader79__circle">{%- render 'blko-ui-icon', name: 'arrow-up-right' -%}</span
         ></a
       ></li
@@ -135,8 +136,8 @@
         {
           "type": "text",
           "id": "label",
-          "label": "Label",
-          "default": "Write to us"
+          "label": "Label (em allowed)",
+          "default": "Write <em>to us</em>"
         },
         {
           "type": "text",
@@ -159,21 +160,21 @@
         {
           "type": "row",
           "settings": {
-            "label": "Write to us",
+            "label": "Write <em>to us</em>",
             "detail": "hello@halden.coffee · replies within a day"
           }
         },
         {
           "type": "row",
           "settings": {
-            "label": "Call the bar",
+            "label": "Call <em>the bar</em>",
             "detail": "+1 (415) 555 0142 · 8 am – 6 pm"
           }
         },
         {
           "type": "row",
           "settings": {
-            "label": "Visit us",
+            "label": "Visit <em>us</em>",
             "detail": "Pier 7, Harbour district"
           }
         }

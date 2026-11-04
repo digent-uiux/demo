@@ -3,6 +3,7 @@
 -%}
 {{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
 {{ 'blko-horizontal-scroll-05.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
 <script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
 {{ 'blko-roast-motion.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-roast-motion.js' | asset_url }}" defer="defer"></script>
@@ -26,7 +27,7 @@
             >{%- if b.settings.image != blank -%}{{ b.settings.image | image_url: width: 900 | image_tag: alt: b.settings.image.alt, loading: 'lazy', class: 'bhorizontalscroll05__img', data-img: '' }}{%- else -%}{{ 'lifestyle-1' | placeholder_svg_tag: 'bhorizontalscroll05__img' }}{%- endif -%}
           </div
           ><div
-            ><p class="bhorizontalscroll05__year">{{ b.settings.year | escape }}</p
+            >{%- assign y = b.settings.year | escape -%}<p class="bhorizontalscroll05__year rm-heading">{%- if y.size == 4 -%}{{ y | slice: 0, 2 }}<em>{{ y | slice: 2, 2 }}</em>{%- else -%}{{ y }}{%- endif -%}</p
             ><h3 class="bhorizontalscroll05__h3">{{ b.settings.title | escape }}</h3
             ><p class="bhorizontalscroll05__text">{{ b.settings.text | escape }}</p
           ></div

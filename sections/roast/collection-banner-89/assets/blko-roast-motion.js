@@ -6,9 +6,9 @@
                              calls cb(1) once without motion; returns a stop function
        inView(el, cb, margin)            cb() once el enters the viewport (at once without motion)
        countUp(to, cb, ms)               cb(value) from 0 to `to`, ease-out (cb(to) at once without motion)
-       magnetic(root, max)               magnetic pull on blko-ui-buttons and [data-magnetic] inside root (fine pointers)
+       magnetic(root, max)               retired (no-op): buttons never move
        ping(qty)                         tell the header cart something was added (fires "roast:cart")
-   - Declarative: [data-rm-magnetic] roots get magnetic(); [data-rm-count="<to>"] elements count up when seen
+   - Declarative: [data-rm-magnetic] roots are left alone (magnetic retired); [data-rm-count="<to>"] elements count up when seen
      (data-rm-decimals, data-rm-suffix); .rm-cart elements wiggle on "roast:cart" and bump their .rm-count number. */
 (() => {
   if (window.blkoRoast) return;
@@ -44,18 +44,9 @@
     const step = (t) => { const k = Math.min(1, (t - t0) / ms); cb(to * (1 - (1 - k) ** 3)); if (k < 1) requestAnimationFrame(step); };
     cb(0); requestAnimationFrame(step);
   };
-  const magnetic = (box, max = 7) => {
-    if (!on || !matchMedia('(pointer: fine)').matches || box.dataset.rmMagOn) return;
-    box.dataset.rmMagOn = '1';
-    box.querySelectorAll('.blko-ui-button, [data-magnetic]').forEach((el) => {
-      el.addEventListener('pointermove', (e) => {
-        const b = el.getBoundingClientRect();
-        const x = ((e.clientX - b.left) / b.width - 0.5) * 2, y = ((e.clientY - b.top) / b.height - 0.5) * 2;
-        el.style.translate = `${(x * max).toFixed(1)}px ${(y * max * 0.6).toFixed(1)}px`;
-      });
-      el.addEventListener('pointerleave', () => { el.style.translate = ''; });
-    });
-  };
+  // Buttons never move (project rule, user 30/10 + 02/11): the magnetic pull is retired. Kept as a no-op so
+  // [data-rm-magnetic] roots and blkoRoast.magnetic() callers stay valid; hover is a colour / fill state only.
+  const magnetic = () => {};
   const ping = (qty = 1) => dispatchEvent(new CustomEvent('roast:cart', { detail: { qty } }));
   window.blkoRoast = { on, progress, inView, countUp, magnetic, ping };
 

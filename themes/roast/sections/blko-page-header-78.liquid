@@ -1,14 +1,16 @@
 {%- liquid
   assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-5'
 -%}
 {{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
 {{ 'blko-page-header-78.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
 <script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
 {{ 'blko-roast-motion.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-roast-motion.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'blko-page-header-78.js' | asset_url }}" defer="defer"></script>
 {%- render 'blko-fonts-roast', tokens: s.tokens -%}
-<section class="bpageheader78" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast aria-label="{{ s.label | escape }}"
+<section class="bpageheader78{%- if blko_sid != 'scheme-5' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast aria-label="{{ s.label | escape }}"
   ><div class="bpageheader78__bg"
     >{%- if s.image != blank -%}{{ s.image | image_url: width: 2000 | image_tag: alt: s.image.alt, fetchpriority: 'high', class: 'bpageheader78__img', data-parallax: '' }}{%- else -%}{{ 'lifestyle-2' | placeholder_svg_tag: 'bpageheader78__img' }}{%- endif -%}
     <span aria-hidden="true" class="bpageheader78__scrim"></span
@@ -129,6 +131,13 @@
       ],
       "default": "preset",
       "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-5"
     },
     {
       "type": "header",

@@ -9,21 +9,21 @@
         "row-1": {
           "type": "row",
           "settings": {
-            "label": "Write to us",
+            "label": "Write <em>to us</em>",
             "detail": "hello@halden.coffee · replies within a day"
           }
         },
         "row-2": {
           "type": "row",
           "settings": {
-            "label": "Call the bar",
+            "label": "Call <em>the bar</em>",
             "detail": "+1 (415) 555 0142 · 8 am – 6 pm"
           }
         },
         "row-3": {
           "type": "row",
           "settings": {
-            "label": "Visit us",
+            "label": "Visit <em>us</em>",
             "detail": "Pier 7, Harbour district"
           }
         }
@@ -93,7 +93,7 @@
         "location-1": {
           "type": "location",
           "settings": {
-            "name": "Pier 7 Roastery",
+            "name": "Pier <em>7 Roastery</em>",
             "area": "Harbour district",
             "address": "Pier 7, Boat Shed 3, Harbour district",
             "phone": "+1 (415) 555 0142",
@@ -104,7 +104,7 @@
         "location-2": {
           "type": "location",
           "settings": {
-            "name": "Kiln Street Bar",
+            "name": "Kiln <em>Street Bar</em>",
             "area": "Old town",
             "address": "48 Kiln Street, Old town",
             "phone": "+1 (415) 555 0177",

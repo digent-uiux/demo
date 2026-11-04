@@ -1,8 +1,10 @@
 {%- liquid
   assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
 -%}
 {{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
 {{ 'blko-cart-page-35.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
 <script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
 {{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
@@ -245,7 +247,7 @@
     ><aside aria-label="{{ 'blko.cart_page_35.aside' | t | escape }}" class="bcartpage35__aside rm-rise" style="--d:300ms"
       ><div class="bcartpage35__flip"
         ><div class="bcartpage35__sh"
-          ><h2 class="bcartpage35__sumh">{{ 'blko.cart_page_35.summary' | t }}</h2
+          ><h2 class="bcartpage35__sumh"><span class="rm-mask"><span class="rm-line" style="--d:420ms">{{ 'blko.cart_page_35.summary' | t }}</span></span></h2
           ><p class="bcartpage35__label bcartpage35__muted" data-count>{{ count_label }}</p
         ></div
         ><dl class="bcartpage35__dl"
@@ -287,7 +289,7 @@
   ></div
 ></div
 >{%- endcapture -%}
-<div class="bcartpage35" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast data-rm-magnetic data-mode="{% if live %}live{% else %}demo{% endif %}"{% if real_empty %} data-is-empty{% endif %} data-m0="{{ m0 | escape }}" data-free="{{ free_c }}" data-fee="{{ fee_c }}" data-sub="{{ s.sub_pct }}" data-code-v="{{ s.demo_code | escape }}" data-code-pct="{{ s.code_pct }}" data-l-item="{{ 'blko.cart_page_35.item' | t | escape }}" data-l-items="{{ 'blko.cart_page_35.items' | t | escape }}" data-l-free="{{ 'blko.cart_page_35.free' | t | escape }}" data-l-bad="{{ 'blko.cart_page_35.bad_code' | t | replace: '[code]', s.demo_code | escape }}" data-l-none="{{ 'blko.cart_page_35.no_code' | t | escape }}"
+<div class="bcartpage35{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast data-mode="{% if live %}live{% else %}demo{% endif %}"{% if real_empty %} data-is-empty{% endif %} data-m0="{{ m0 | escape }}" data-free="{{ free_c }}" data-fee="{{ fee_c }}" data-sub="{{ s.sub_pct }}" data-code-v="{{ s.demo_code | escape }}" data-code-pct="{{ s.code_pct }}" data-l-item="{{ 'blko.cart_page_35.item' | t | escape }}" data-l-items="{{ 'blko.cart_page_35.items' | t | escape }}" data-l-free="{{ 'blko.cart_page_35.free' | t | escape }}" data-l-bad="{{ 'blko.cart_page_35.bad_code' | t | replace: '[code]', s.demo_code | escape }}" data-l-none="{{ 'blko.cart_page_35.no_code' | t | escape }}"
   >{%- render 'blko-ui-section', surface: 'bg', label: s.label, inner: 'bcartpage35__inner', children: body -%}
 </div
 
@@ -466,6 +468,13 @@
       ],
       "default": "preset",
       "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
     },
     {
       "type": "header",

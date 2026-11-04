@@ -1,8 +1,10 @@
 {%- liquid
   assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-5'
 -%}
 {{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
 {{ 'blko-header-39.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
 <script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
 {{ 'blko-roast-motion.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-roast-motion.js' | asset_url }}" defer="defer"></script>
@@ -25,7 +27,7 @@
   assign count = cart.item_count
   assign uid = 'h39-' | append: section.id
 -%}
-<div class="bheader39" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast data-bheader39
+<div class="bheader39{%- if blko_sid != 'scheme-5' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast data-bheader39
 ><header class="bheader39__h" data-h
   ><div class="bheader39__flip"
     ><div class="bheader39__row"
@@ -62,13 +64,13 @@
             {%- for l in menu.links -%}
               {%- assign nt = notes[forloop.index0] | split: '|' | last | strip -%}
               {%- if notes[forloop.index0] contains '|' -%}{%- else -%}{%- assign nt = '' -%}{%- endif -%}
-              <li class="bheader39__item" style="--d:{{ forloop.index0 | times: 60 | plus: 80 }}ms"><a href="{{ l.url }}" class="bheader39__sa" data-close><span><span class="bheader39__sname">{{ l.title | escape }}</span>{%- if nt != blank -%}<span class="bheader39__label bheader39__snote">{{ nt | escape }}</span>{%- endif -%}</span>{%- render 'blko-ui-icon', name: 'arrow-up-right', size: 20, className: 'rm-nudge bheader39__sarr' -%}</a></li
+              <li class="bheader39__item" style="--d:{{ forloop.index0 | times: 60 | plus: 80 }}ms"><a href="{{ l.url }}" class="bheader39__sa" data-close><span><span class="bheader39__sname rm-heading">{%- assign odd = forloop.index0 | modulo: 2 -%}{%- if odd == 1 -%}<em>{{ l.title | escape }}</em>{%- else -%}{{ l.title | escape }}{%- endif -%}</span>{%- if nt != blank -%}<span class="bheader39__label bheader39__snote">{{ nt | escape }}</span>{%- endif -%}</span>{%- render 'blko-ui-icon', name: 'arrow-up-right', size: 20, className: 'rm-nudge bheader39__sarr' -%}</a></li
             >{%- endfor -%}
           {%- else -%}
             {%- for d in demo -%}
               {%- assign parts = d | split: '|' -%}{%- assign nm = parts[0] | strip -%}{%- assign nt = parts[1] | strip -%}
               {%- if nm != blank -%}
-              <li class="bheader39__item" style="--d:{{ forloop.index0 | times: 60 | plus: 80 }}ms"><a href="{{ routes.all_products_collection_url }}" class="bheader39__sa" data-close><span><span class="bheader39__sname">{{ nm | escape }}</span>{%- if nt != blank -%}<span class="bheader39__label bheader39__snote">{{ nt | escape }}</span>{%- endif -%}</span>{%- render 'blko-ui-icon', name: 'arrow-up-right', size: 20, className: 'rm-nudge bheader39__sarr' -%}</a></li
+              <li class="bheader39__item" style="--d:{{ forloop.index0 | times: 60 | plus: 80 }}ms"><a href="{{ routes.all_products_collection_url }}" class="bheader39__sa" data-close><span><span class="bheader39__sname rm-heading">{%- assign odd = forloop.index0 | modulo: 2 -%}{%- if odd == 1 -%}<em>{{ nm | escape }}</em>{%- else -%}{{ nm | escape }}{%- endif -%}</span>{%- if nt != blank -%}<span class="bheader39__label bheader39__snote">{{ nt | escape }}</span>{%- endif -%}</span>{%- render 'blko-ui-icon', name: 'arrow-up-right', size: 20, className: 'rm-nudge bheader39__sarr' -%}</a></li
               >{%- endif -%}
             {%- endfor -%}
           {%- endif -%}
@@ -148,6 +150,13 @@
       ],
       "default": "preset",
       "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-5"
     },
     {
       "type": "header",

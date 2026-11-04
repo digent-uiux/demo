@@ -1,8 +1,10 @@
 {%- liquid
   assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-9'
 -%}
 {{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
 {{ 'blko-subscription-07.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
 <script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
 {{ 'blko-roast-motion.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-roast-motion.js' | asset_url }}" defer="defer"></script>
@@ -63,7 +65,7 @@
         ><defs><path id="{{ uid }}-arc" d="M50,50 m-39,0 a39,39 0 1,1 78,0 a39,39 0 1,1 -78,0" /></defs
         ><text class="bsubscription07__rt"><textPath href="#{{ uid }}-arc">{{ s.ring | escape }}</textPath></text
       ></svg
-      ><span class="bsubscription07__pct">{{ s.badge | escape }}</span
+      ><span class="bsubscription07__pct rm-heading">{{ s.badge | remove: '%' | escape }}{% if s.badge contains '%' %}<em>%</em>{% endif %}</span
     ></div
   ></div
   >{%- endif -%}
@@ -140,7 +142,7 @@
   ></div
 ></div
 >{%- endcapture -%}
-<div class="bsubscription07" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast data-bsubscription07 data-rm-magnetic
+<div class="bsubscription07{%- if blko_sid != 'scheme-9' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast data-bsubscription07
   >{%- render 'blko-ui-section', surface: 'pop-4', bleed: true, full: true, label: s.label, inner: 'bsubscription07__inner', children: body -%}
 </div
 
@@ -196,7 +198,7 @@
     {
       "type": "text",
       "id": "badge",
-      "label": "Badge",
+      "label": "Badge (a % sign is set in the light face)",
       "default": "-15%"
     },
     {
@@ -289,6 +291,13 @@
       ],
       "default": "preset",
       "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-9"
     },
     {
       "type": "header",

@@ -86,7 +86,7 @@ Do not use a zip.
 | `image` | image_picker | Image |  |
 | `alt` | text | Image alt | A portafilter, tamper and ground coffee laid flat on a dark surface |
 | `caption` | text | Photo caption | Members since 2019 · 4,800 cups a week |
-| `badge` | text | Badge | -15% |
+| `badge` | text | Badge (a % sign is set in the light face) | -15% |
 | `ring` | text | Badge ring text | Roast club · first box · roast club · first box ·  |
 | `product` | product | Subscription product |  |
 | `price` | number | Price per bag (while no product) | 21 |

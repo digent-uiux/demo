@@ -3,6 +3,7 @@
 -%}
 {{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
 {{ 'blko-store-locator-08.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
 <script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
 {{ 'blko-roast-motion.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-roast-motion.js' | asset_url }}" defer="defer"></script>
@@ -28,7 +29,7 @@
   ><div role="tablist" aria-label="{{ 'blko.store_locator_08.locations' | t }}" class="bstorelocator08__tabs" data-tabs
     >{%- for b in section.blocks -%}
     <button type="button" role="tab" id="sl08-t-{{ section.id }}-{{ forloop.index }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="sl08-p-{{ section.id }}-{{ forloop.index }}" tabindex="{% if forloop.first %}0{% else %}-1{% endif %}" class="bstorelocator08__tab" data-tab {{ b.shopify_attributes }}
-      ><span class="bstorelocator08__tname">{{ b.settings.name | escape }}</span
+      ><span class="bstorelocator08__tname rm-heading">{{ b.settings.name }}</span
       ><span class="bstorelocator08__label bstorelocator08__muted">{{ b.settings.area | escape }}</span
     ></button
     >{%- endfor -%}
@@ -183,8 +184,8 @@
         {
           "type": "text",
           "id": "name",
-          "label": "Name",
-          "default": "Pier 7 Roastery"
+          "label": "Name (em allowed)",
+          "default": "Pier <em>7 Roastery</em>"
         },
         {
           "type": "text",
@@ -238,7 +239,7 @@
         {
           "type": "location",
           "settings": {
-            "name": "Pier 7 Roastery",
+            "name": "Pier <em>7 Roastery</em>",
             "area": "Harbour district",
             "address": "Pier 7, Boat Shed 3, Harbour district",
             "phone": "+1 (415) 555 0142",
@@ -249,7 +250,7 @@
         {
           "type": "location",
           "settings": {
-            "name": "Kiln Street Bar",
+            "name": "Kiln <em>Street Bar</em>",
             "area": "Old town",
             "address": "48 Kiln Street, Old town",
             "phone": "+1 (415) 555 0177",

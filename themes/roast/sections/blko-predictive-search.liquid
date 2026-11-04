@@ -1,0 +1,80 @@
+{%- comment -%}
+  Predictive search results for the roast header panel. Fetched by blko-predictive-search.js from
+  /search/suggest?q=…&section_id=blko-predictive-search (never placed on a template). Left: query suggestions, collections
+  and pages in mono lists; right: up to 6 products as photo rows with price. Last row: "Search for “q”".
+{%- endcomment -%}
+{%- liquid
+  assign r = predictive_search.resources
+  assign total = r.products.size | plus: r.collections.size | plus: r.pages.size | plus: r.articles.size | plus: r.queries.size
+-%}
+<div class="bps__res" data-results data-count="{{ total }}">
+  {%- if predictive_search.performed and total > 0 -%}
+    <div class="bps__side">
+      {%- if r.queries.size > 0 -%}
+      <div class="bps__grp">
+        <h2 class="bps__label">{{ 'blko.search.suggestions' | t }}</h2>
+        <ul role="list">
+          {%- for q in r.queries -%}<li><a href="{{ q.url }}" class="bps__q" data-opt>{{ q.styled_text }}</a></li>{%- endfor -%}
+        </ul>
+      </div>
+      {%- endif -%}
+      {%- if r.collections.size > 0 -%}
+      <div class="bps__grp">
+        <h2 class="bps__label">{{ 'blko.search.collections' | t }}</h2>
+        <ul role="list">
+          {%- for c in r.collections -%}<li><a href="{{ c.url }}" class="bps__q" data-opt>{{ c.title | escape }}</a></li>{%- endfor -%}
+        </ul>
+      </div>
+      {%- endif -%}
+      {%- assign pa = r.pages | concat: r.articles -%}
+      {%- if pa.size > 0 -%}
+      <div class="bps__grp">
+        <h2 class="bps__label">{{ 'blko.search.pages' | t }}</h2>
+        <ul role="list">
+          {%- for p in pa -%}<li><a href="{{ p.url }}" class="bps__q" data-opt>{{ p.title | escape }}</a></li>{%- endfor -%}
+        </ul>
+      </div>
+      {%- endif -%}
+    </div>
+    {%- if r.products.size > 0 -%}
+    <div class="bps__grp bps__prods">
+      <h2 class="bps__label">{{ 'blko.search.products' | t }}</h2>
+      <ul role="list">
+        {%- for p in r.products limit: 6 -%}
+        <li>
+          <a href="{{ p.url }}" class="bps__p" data-opt>
+            <span class="bps__pimg">
+              {%- if p.featured_image != blank -%}
+                {{ p.featured_image | image_url: width: 160 | image_tag: alt: '', loading: 'lazy', widths: '80, 160', sizes: '64px' }}
+              {%- else -%}
+                {{ 'product-1' | placeholder_svg_tag }}
+              {%- endif -%}
+            </span>
+            <span class="bps__pt">
+              {%- if p.vendor != blank -%}<span class="bps__label bps__muted">{{ p.vendor | escape }}</span>{%- endif -%}
+              <span class="bps__pn">{{ p.title | escape }}</span>
+            </span>
+            <span class="bps__pp">{%- assign pm = p.price_min | money -%}{% if p.price_varies %}{{ 'blko.search.from' | t: price: pm }}{% else %}{{ p.price | money }}{% endif %}</span>
+          </a>
+        </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+    {%- endif -%}
+  {%- elsif predictive_search.performed -%}
+    <p class="bps__none">{{ 'blko.search.no_results' | t: terms: predictive_search.terms }}</p>
+  {%- endif -%}
+  {%- if predictive_search.performed -%}
+    <a href="{{ routes.search_url }}?q={{ predictive_search.terms | url_encode }}&options%5Bprefix%5D=last" class="bps__all" data-opt>
+      <span>{{ 'blko.search.search_for' | t: terms: predictive_search.terms }}</span>{%- render 'blko-icon', name: 'arrow-right', size: 18 -%}
+    </a>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Predictive search",
+  "tag": "div",
+  "settings": []
+}
+{% endschema %}

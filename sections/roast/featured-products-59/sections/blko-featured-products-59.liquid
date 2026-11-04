@@ -3,6 +3,7 @@
 -%}
 {{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
 {{ 'blko-featured-products-59.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
 <script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
 {{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
@@ -28,6 +29,11 @@
     assign pick_img = pick.featured_image
   endif
   assign cards = section.blocks | where: 'type', 'card'
+  assign use_col = false
+  if s.collection != blank and s.collection.products.size > 0
+    assign use_col = true
+    assign cards = s.collection.products
+  endif
 -%}
 {%- capture body -%}
 <div class="bfeaturedproducts59__head"
@@ -81,6 +87,12 @@
       >{%- for b in cards limit: 4 -%}
         {%- assign m = forloop.index0 | modulo: 2 -%}
         {%- if m != i -%}{%- continue -%}{%- endif -%}
+        {%- if use_col -%}
+          {%- assign tags = b.tags | join: ',' | downcase -%}
+          {%- assign dl = forloop.index0 | times: 90 | plus: 140 -%}
+          <div class="rm-rise bfeaturedproducts59__card" style="--d:{{ dl }}ms" data-tags=",{{ tags | remove: ' ' }},">{%- render 'blko-ui-product-card', product: b, ratio: 'portrait', quickAdd: true, wishlist: true -%}</div
+          >{%- continue -%}
+        {%- endif -%}
         {%- liquid
           assign d = b.settings
           assign badge = nil
@@ -115,7 +127,7 @@
   {%- endif -%}
 </div
 >{%- endcapture -%}
-<div class="bfeaturedproducts59" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast data-bfeaturedproducts59 data-rm-magnetic
+<div class="bfeaturedproducts59" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast data-bfeaturedproducts59
   >{%- render 'blko-ui-section', surface: 'bg', label: s.label, inner: 'bfeaturedproducts59__inner', children: body -%}
 </div
 
@@ -157,6 +169,12 @@
       "label": "Filter chips (comma separated; first = all)",
       "default": "All, Espresso, Filter, Decaf, Tea",
       "info": "A chip shows the cards whose product (or demo) tags include it."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection (first 4 products)",
+      "info": "Set it to show a collection. Blank: the Card blocks below, each with its own product picker."
     },
     {
       "type": "header",

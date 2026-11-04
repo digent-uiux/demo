@@ -1,8 +1,10 @@
 {%- liquid
   assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
 -%}
 {{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
 {{ 'blko-image-with-text-42.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
 <script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
 {{ 'blko-roast-motion.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-roast-motion.js' | asset_url }}" defer="defer"></script>
@@ -14,7 +16,7 @@
       >{%- if s.image != blank -%}{{ s.image | image_url: width: 900 | image_tag: alt: s.image.alt, loading: 'lazy', class: 'bimagewithtext42__img' }}{%- else -%}{{ 'lifestyle-2' | placeholder_svg_tag: 'bimagewithtext42__img' }}{%- endif -%}
     </div
     ><div class="bimagewithtext42__stat rm-rise" style="--d:200ms"
-      ><p class="bimagewithtext42__num"><span data-rm-count="{{ s.stat }}" data-rm-decimals="{{ s.stat_decimals }}" data-rm-suffix="{{ s.stat_suffix | escape }}">{{ s.stat }}{{ s.stat_suffix | escape }}</span></p
+      ><p class="bimagewithtext42__num rm-heading"><span data-rm-count="{{ s.stat }}" data-rm-decimals="{{ s.stat_decimals }}">{{ s.stat }}</span>{%- if s.stat_suffix != blank -%}<em>{{ s.stat_suffix | escape }}</em>{%- endif -%}</p
       ><p class="bimagewithtext42__cap">{{ s.stat_caption | escape }}</p
     ></div
   ></div
@@ -35,7 +37,7 @@
     >{%- endif -%}
   </div
 >{%- endcapture -%}
-<div class="bimagewithtext42" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast
+<div class="bimagewithtext42{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast
   >{%- render 'blko-ui-section', surface: 'bg', label: s.label, inner: 'bimagewithtext42__grid', children: body -%}
 </div
 
@@ -163,6 +165,13 @@
       ],
       "default": "preset",
       "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
     },
     {
       "type": "header",

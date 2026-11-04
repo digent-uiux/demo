@@ -1,8 +1,10 @@
 {%- liquid
   assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
 -%}
 {{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
 {{ 'blko-filter-bar-31.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
 <script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
 {{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
@@ -134,7 +136,7 @@
     ><div role="dialog" aria-modal="true" aria-labelledby="bfilterbar31-sh-{{ sid }}" class="bfilterbar31__sbox"
       ><span aria-hidden="true" class="bfilterbar31__handle"></span
       ><div class="bfilterbar31__shead"
-        ><h3 id="bfilterbar31-sh-{{ sid }}" class="bfilterbar31__stitle">{{ 'blko.filter_bar_31.sheet_title' | t }}</h3
+        ><h3 id="bfilterbar31-sh-{{ sid }}" class="bfilterbar31__stitle">{{ 'blko.filter_bar_31.sheet_title_html' | t }}</h3
         ><button type="button" aria-label="{{ 'blko.filter_bar_31.close' | t }}" class="bfilterbar31__x" data-sheet-close data-sheet-x>{% render 'blko-ui-icon', name: 'x', size: 16 %}</button
       ></div
       ><div class="bfilterbar31__sbody"
@@ -153,7 +155,7 @@
     ></div
   ></div
 >{%- endcapture -%}
-<div class="bfilterbar31" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast data-rm-magnetic data-mode="{% if live %}live{% else %}demo{% endif %}" data-base="{% if live %}{{ collection.url }}{% endif %}" data-sticky="{{ s.sticky }}" data-catalog-nl="{{ s.catalog | newline_to_br | escape }}" data-cur="{{ s.currency | escape }}" data-l-one="{{ 'blko.filter_bar_31.one' | t }}" data-l-many="{{ 'blko.filter_bar_31.many' | t }}" data-l-show="{{ 'blko.filter_bar_31.show' | t }}" data-l-remove="{{ 'blko.filter_bar_31.remove' | t }}" data-l-to="{{ 'blko.filter_bar_31.to' | t }}" data-l-hint="{{ 'blko.filter_bar_31.scale_hint' | t }}" data-l-roast="{{ 'blko.filter_bar_31.roast_suffix' | t }}"
+<div class="bfilterbar31{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast data-rm-magnetic data-mode="{% if live %}live{% else %}demo{% endif %}" data-base="{% if live %}{{ collection.url }}{% endif %}" data-sticky="{{ s.sticky }}" data-catalog-nl="{{ s.catalog | newline_to_br | escape }}" data-cur="{{ s.currency | escape }}" data-l-one="{{ 'blko.filter_bar_31.one' | t }}" data-l-many="{{ 'blko.filter_bar_31.many' | t }}" data-l-show="{{ 'blko.filter_bar_31.show' | t }}" data-l-remove="{{ 'blko.filter_bar_31.remove' | t }}" data-l-to="{{ 'blko.filter_bar_31.to' | t }}" data-l-hint="{{ 'blko.filter_bar_31.scale_hint' | t }}" data-l-roast="{{ 'blko.filter_bar_31.roast_suffix' | t }}"
   >{%- render 'blko-ui-section', surface: 'bg', bleed: true, label: s.label, className: 'bfilterbar31__band', inner: 'bfilterbar31__inner', children: body -%}
 </div
 
@@ -280,6 +282,13 @@
       ],
       "default": "preset",
       "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
     },
     {
       "type": "header",

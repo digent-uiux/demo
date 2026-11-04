@@ -100,6 +100,7 @@ Do not use a zip.
 | `line_1` | text | Heading line 1 | This week’s |
 | `line_2` | text | Heading line 2 (wrap a word in <em>) | <em>roasts</em> → |
 | `chips` | text | Filter chips (comma separated; first = all) | All, Espresso, Filter, Decaf, Tea |
+| `collection` | collection | Collection (first 4 products) |  |
 | `pick_product` | product | Product |  |
 | `pick_image` | image_picker | Image (blank = product image) |  |
 | `pick_alt` | text | Image alt | A latte with a rosetta in a white cup, from above, on a round weathered wooden table |

@@ -9,10 +9,10 @@
     if (img) R.progress(band, (p) => { const k = 1 + (1 - p) * 0.15; img.style.transform = k > 1.0005 ? `scale(${k.toFixed(4)})` : ''; }, { start: 1, end: -0.15 });
     if (!bar) return;
     const nums = [...bar.querySelectorAll('[data-to]')];
-    nums.forEach((n) => { n.textContent = (0).toFixed(+n.dataset.dec) + n.dataset.suf; });
+    nums.forEach((n) => { n.textContent = (0).toFixed(+n.dataset.dec); });
     R.inView(bar, () => {
       bar.classList.add('is-seen');
-      nums.forEach((n) => { const d = +n.dataset.dec; R.countUp(parseFloat(n.dataset.to), (v) => { n.textContent = v.toFixed(d) + n.dataset.suf; }, +n.dataset.ms); });
+      nums.forEach((n) => { const d = +n.dataset.dec; R.countUp(parseFloat(n.dataset.to), (v) => { n.textContent = v.toFixed(d); }, +n.dataset.ms); });
     });
   }
   const all = () => document.querySelectorAll('.bcounters40').forEach(init);

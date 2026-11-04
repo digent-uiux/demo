@@ -1,8 +1,10 @@
 {%- liquid
   assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-5'
 -%}
 {{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
 {{ 'blko-store-locator-08.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
 <script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
 {{ 'blko-roast-motion.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-roast-motion.js' | asset_url }}" defer="defer"></script>
@@ -28,7 +30,7 @@
   ><div role="tablist" aria-label="{{ 'blko.store_locator_08.locations' | t }}" class="bstorelocator08__tabs" data-tabs
     >{%- for b in section.blocks -%}
     <button type="button" role="tab" id="sl08-t-{{ section.id }}-{{ forloop.index }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="sl08-p-{{ section.id }}-{{ forloop.index }}" tabindex="{% if forloop.first %}0{% else %}-1{% endif %}" class="bstorelocator08__tab" data-tab {{ b.shopify_attributes }}
-      ><span class="bstorelocator08__tname">{{ b.settings.name | escape }}</span
+      ><span class="bstorelocator08__tname rm-heading">{{ b.settings.name }}</span
       ><span class="bstorelocator08__label bstorelocator08__muted">{{ b.settings.area | escape }}</span
     ></button
     >{%- endfor -%}
@@ -77,7 +79,7 @@
   ></div
   >{%- endfor -%}
 {%- endcapture -%}
-<div class="bstorelocator08" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast data-rm-magnetic
+<div class="bstorelocator08{%- if blko_sid != 'scheme-5' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast data-rm-magnetic
   >{%- render 'blko-ui-section', surface: 'dark', label: s.label, children: body -%}
 </div
 
@@ -150,6 +152,13 @@
       "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
     },
     {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-5"
+    },
+    {
       "type": "header",
       "content": "Spacing"
     },
@@ -183,8 +192,8 @@
         {
           "type": "text",
           "id": "name",
-          "label": "Name",
-          "default": "Pier 7 Roastery"
+          "label": "Name (em allowed)",
+          "default": "Pier <em>7 Roastery</em>"
         },
         {
           "type": "text",
@@ -238,7 +247,7 @@
         {
           "type": "location",
           "settings": {
-            "name": "Pier 7 Roastery",
+            "name": "Pier <em>7 Roastery</em>",
             "area": "Harbour district",
             "address": "Pier 7, Boat Shed 3, Harbour district",
             "phone": "+1 (415) 555 0142",
@@ -249,7 +258,7 @@
         {
           "type": "location",
           "settings": {
-            "name": "Kiln Street Bar",
+            "name": "Kiln <em>Street Bar</em>",
             "area": "Old town",
             "address": "48 Kiln Street, Old town",
             "phone": "+1 (415) 555 0177",

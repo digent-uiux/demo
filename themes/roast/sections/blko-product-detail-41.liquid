@@ -1,8 +1,10 @@
 {%- liquid
   assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
 -%}
 {{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
 {{ 'blko-product-detail-41.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
 <script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
 {{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
@@ -84,9 +86,9 @@
         {%- assign lab = 'blko.product_detail_41.show_photo' | t: n: n, note: nb.settings.label -%}
         <button type="button" class="bproductdetail41__thumb" data-go="{{ i }}" aria-label="{{ lab | escape }}"{% if forloop.first %} aria-current="true"{% endif %}
           >{%- if live -%}
-            {{ media[i].preview_image | image_url: width: 160 | image_tag: alt: '', loading: 'lazy' -}}
+            {{ media[i].preview_image | image_url: width: 320 | image_tag: alt: '', loading: 'lazy' -}}
           {%- elsif nb.settings.image != blank -%}
-            {{ nb.settings.image | image_url: width: 160 | image_tag: alt: '', loading: 'lazy' -}}
+            {{ nb.settings.image | image_url: width: 320 | image_tag: alt: '', loading: 'lazy' -}}
           {%- else -%}
             {{ 'product-' | append: n | placeholder_svg_tag -}}
           {%- endif -%}
@@ -161,7 +163,8 @@
 {%- capture options -%}
   {%- if live -%}
     <script type="application/json" data-variants>{{ product.variants | json }}</script
-    >{%- for opt in product.options_with_values -%}
+    >{%- unless product.has_only_default_variant -%}
+    {%- for opt in product.options_with_values -%}
       {%- assign on = opt.name | downcase | strip -%}
       <fieldset class="rm-rise bproductdetail41__fs" style="--d:{{ forloop.index0 | times: 50 | plus: 280 }}ms" data-group="{{ forloop.index0 }}"
         >{%- if on == size_name -%}
@@ -177,6 +180,7 @@
         >{%- endif -%}
       </fieldset
     >{%- endfor -%}
+    {%- endunless -%}
   {%- else -%}
     {%- assign grinds = s.grinds | split: ',' -%}
     {%- if grinds.size > 0 -%}
@@ -244,7 +248,7 @@
         {%- assign pv = pp[1] | strip | plus: 0 -%}{%- assign pw = pv | times: 20 -%}
         <div class="bproductdetail41__prow"
           ><dt class="bproductdetail41__label bproductdetail41__muted">{{ pk | escape }}</dt
-          ><dd class="bproductdetail41__track" aria-label="{{ 'blko.product_detail_41.out_of' | t: v: pv | escape }}"><span style="--w:{{ pw }}%;transition-delay:{{ forloop.index0 | times: 140 | plus: 300 }}ms"></span></dd
+          ><dd class="bproductdetail41__track"><span role="img" aria-label="{{ 'blko.product_detail_41.out_of' | t: v: pv | escape }}" style="--w:{{ pw }}%;transition-delay:{{ forloop.index0 | times: 140 | plus: 300 }}ms"></span></dd
           ><dd class="bproductdetail41__pword">{{ pp[2] | strip | escape }}</dd
         ></div
       >{%- endif -%}
@@ -309,7 +313,7 @@
     >{%- for b in infos -%}
       {%- assign on = false -%}{%- if forloop.index == s.open_index -%}{%- assign on = true -%}{%- endif -%}
       <div class="bproductdetail41__acc" {{ b.shopify_attributes }}
-        ><h2 class="bproductdetail41__ah"><button type="button" class="bproductdetail41__ab" aria-expanded="{{ on }}" aria-controls="pd41-{{ section.id }}-{{ forloop.index }}" id="pd41-{{ section.id }}-h{{ forloop.index }}" data-acc>{{ b.settings.title | escape }}<span aria-hidden="true" class="rm-pm"></span></button></h2
+        ><h2 class="bproductdetail41__ah"><button type="button" class="bproductdetail41__ab" aria-expanded="{{ on }}" aria-controls="pd41-{{ section.id }}-{{ forloop.index }}" id="pd41-{{ section.id }}-h{{ forloop.index }}" data-acc><span class="rm-mask"><span class="rm-line" style="--d:{{ forloop.index0 | times: 70 | plus: 540 }}ms">{{ b.settings.title | escape }}</span></span><span aria-hidden="true" class="rm-pm"></span></button></h2
         ><div id="pd41-{{ section.id }}-{{ forloop.index }}" role="region" aria-labelledby="pd41-{{ section.id }}-h{{ forloop.index }}" class="bproductdetail41__ap{% if on %} is-open{% endif %}"
           ><div{% unless on %} inert{% endunless %}><div class="bproductdetail41__abody">{{ b.settings.body }}</div></div
         ></div
@@ -337,7 +341,7 @@
   ></div
 ></div
 >{%- endcapture -%}
-<div class="bproductdetail41" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast data-bproductdetail41 data-rm-magnetic
+<div class="bproductdetail41{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast data-bproductdetail41
   >{%- render 'blko-ui-section', surface: 'bg', label: s.label, className: 'rm-load', inner: 'bproductdetail41__in', children: body -%}
 </div
 
@@ -492,6 +496,13 @@
       ],
       "default": "preset",
       "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
     },
     {
       "type": "header",

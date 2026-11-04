@@ -1,8 +1,10 @@
 {%- liquid
   assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-9'
 -%}
 {{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
 {{ 'blko-horizontal-scroll-05.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
 <script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
 {{ 'blko-roast-motion.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-roast-motion.js' | asset_url }}" defer="defer"></script>
@@ -26,7 +28,7 @@
             >{%- if b.settings.image != blank -%}{{ b.settings.image | image_url: width: 900 | image_tag: alt: b.settings.image.alt, loading: 'lazy', class: 'bhorizontalscroll05__img', data-img: '' }}{%- else -%}{{ 'lifestyle-1' | placeholder_svg_tag: 'bhorizontalscroll05__img' }}{%- endif -%}
           </div
           ><div
-            ><p class="bhorizontalscroll05__year">{{ b.settings.year | escape }}</p
+            >{%- assign y = b.settings.year | escape -%}<p class="bhorizontalscroll05__year rm-heading">{%- if y.size == 4 -%}{{ y | slice: 0, 2 }}<em>{{ y | slice: 2, 2 }}</em>{%- else -%}{{ y }}{%- endif -%}</p
             ><h3 class="bhorizontalscroll05__h3">{{ b.settings.title | escape }}</h3
             ><p class="bhorizontalscroll05__text">{{ b.settings.text | escape }}</p
           ></div
@@ -43,7 +45,7 @@
     ></div
   ></div
 >{%- endcapture -%}
-<div class="bhorizontalscroll05" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast
+<div class="bhorizontalscroll05{%- if blko_sid != 'scheme-9' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast
   >{%- render 'blko-ui-section', surface: 'pop-4', bleed: true, full: true, label: s.label, children: body -%}
 </div
 
@@ -120,6 +122,13 @@
       ],
       "default": "preset",
       "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-9"
     },
     {
       "type": "header",

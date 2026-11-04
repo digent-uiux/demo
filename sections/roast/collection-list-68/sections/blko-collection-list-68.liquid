@@ -3,13 +3,14 @@
 -%}
 {{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
 {{ 'blko-collection-list-68.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
 <script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
 {{ 'blko-roast-motion.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-roast-motion.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'blko-collection-list-68.js' | asset_url }}" defer="defer"></script>
 {%- render 'blko-fonts-roast', tokens: s.tokens -%}
 {%- comment -%}
-  Halden "Shop by brew" (roast): huge Syne rows split by hairlines (index + count, name, arrow circle). Motion with a fine
+  Halden "Shop by brew" (roast): huge Syne rows (alternating 800 / 400, an em word in the light 400) split by hairlines (index + count, name, arrow circle). Motion with a fine
   pointer from 768px: a cursor image trail of the rows' photos, the hovered row slides right and the others dim. Static,
   reduced motion and touch: each row shows its photo inline as a small tilted thumb.
 {%- endcomment -%}
@@ -28,7 +29,7 @@
         assign c = collections[b.settings.collection]
         assign name = b.settings.label
         if name == blank and c != blank
-          assign name = c.title
+          assign name = c.title | escape
         endif
         assign im = b.settings.image
         if im == blank and c != blank
@@ -42,18 +43,18 @@
         if count == blank and c != blank
           assign count = c.products_count | append: ' products'
         endif
-        assign alt = b.settings.alt | default: name
+        assign alt = b.settings.alt | default: name | strip_html
       -%}
       <li class="rm-rise bcollectionlist68__row" data-row="{{ forloop.index0 }}" style="--d:{{ forloop.index0 | times: 70 }}ms" {{ b.shopify_attributes }}
         ><a href="{{ url }}" class="bcollectionlist68__a"
           ><span class="bcollectionlist68__thumb"
-            >{%- if im != blank -%}{{ im | image_url: width: 160 | image_tag: alt: '', loading: 'lazy', class: 'bcollectionlist68__img' }}{%- else -%}{{ 'collection-2' | placeholder_svg_tag: 'bcollectionlist68__img' }}{%- endif -%}
+            >{%- if im != blank -%}{{ im | image_url: width: 320 | image_tag: alt: '', loading: 'lazy', class: 'bcollectionlist68__img' }}{%- else -%}{{ 'collection-2' | placeholder_svg_tag: 'bcollectionlist68__img' }}{%- endif -%}
           </span
           ><span class="bcollectionlist68__label bcollectionlist68__idx"><span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><span class="bcollectionlist68__muted">{{ count | escape }}</span></span
           ><span class="bcollectionlist68__nm"
-            ><span class="bcollectionlist68__name">{{ name | escape }}</span
+            ><span class="bcollectionlist68__name rm-heading">{{ name }}</span
             ><span class="bcollectionlist68__inl"{% if im != blank %} data-src="{{ im | image_url: width: 400 }}"{% endif %}
-              >{%- if im != blank -%}{{ im | image_url: width: 200 | image_tag: alt: alt, loading: 'lazy', class: 'bcollectionlist68__img' }}{%- else -%}{{ 'collection-2' | placeholder_svg_tag: 'bcollectionlist68__img' }}{%- endif -%}
+              >{%- if im != blank -%}{{ im | image_url: width: 400 | image_tag: alt: alt, loading: 'lazy', class: 'bcollectionlist68__img' }}{%- else -%}{{ 'collection-2' | placeholder_svg_tag: 'bcollectionlist68__img' }}{%- endif -%}
             </span
             ><span class="bcollectionlist68__label bcollectionlist68__muted bcollectionlist68__cnt">{{ count | escape }}</span
           ></span
@@ -168,7 +169,8 @@
         {
           "type": "text",
           "id": "label",
-          "label": "Label (blank = collection title)",
+          "label": "Label (em allowed)",
+          "info": "Blank = the collection title. Wrap a word in <em> for the light weight.",
           "default": "Espresso"
         },
         {
@@ -214,7 +216,7 @@
         {
           "type": "row",
           "settings": {
-            "label": "Cold brew",
+            "label": "Cold <em>brew</em>",
             "count": "6 blends",
             "alt": "Iced coffee in a tall glass with milk swirling through it"
           }
@@ -222,7 +224,7 @@
         {
           "type": "row",
           "settings": {
-            "label": "Tea & matcha",
+            "label": "Tea & <em>matcha</em>",
             "count": "15 teas",
             "alt": "A bowl of whisked green matcha on a wooden board"
           }

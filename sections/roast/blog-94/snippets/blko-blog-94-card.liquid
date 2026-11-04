@@ -9,7 +9,7 @@
   <span class="bblog94__label bblog94__flag">{{ 'blko.blog_94.feature' | t }}</span>
   <div class="bblog94__fcopy">
     <p class="bblog94__label bblog94__dim85">{{ cat | escape }} · {{ read | escape }}</p>
-    <h2 class="bblog94__fh2"><span class="rm-ul">{{ title | escape }}</span></h2>
+    <h2 class="bblog94__fh2"><span class="rm-ul">{%- assign tsep = ': ' -%}{%- unless title contains tsep -%}{%- assign tsep = '? ' -%}{%- endunless -%}{%- unless title contains tsep -%}{%- assign tsep = ', ' -%}{%- endunless -%}{%- assign tparts = title | split: tsep -%}{%- assign twords = title | split: ' ' -%}{%- if tparts.size > 1 -%}{{ tparts[0] | escape }}{{ tsep | rstrip }} <em>{{ title | remove_first: tparts[0] | remove_first: tsep | escape }}</em>{%- elsif twords.size > 3 -%}{%- assign tcut = twords.size | minus: 2 -%}{{ twords | slice: 0, tcut | join: ' ' | escape }} <em>{{ twords | slice: tcut, 2 | join: ' ' | escape }}</em>{%- else -%}{{ title | escape }}{%- endif -%}</span></h2>
     <p class="bblog94__fdek">{{ dek | escape }}</p>
     <span class="bblog94__fmore"><span aria-hidden="true" class="bblog94__circle">{%- render 'blko-ui-icon', name: 'arrow-up-right', size: 16, className: 'rm-nudge' -%}</span>{{ 'blko.blog_94.read_more' | t }}</span>
   </div>
@@ -39,7 +39,7 @@
   <div class="bblog94__ttop"><p class="bblog94__label bblog94__dim75">{{ cat | escape }} · {{ read | escape }}</p>{%- render 'blko-ui-icon', name: 'arrow-up-right', size: 20, className: 'rm-nudge' -%}</div>
   <div class="bblog94__tbody">
     <p class="bblog94__quote">{{ dek | escape }}</p>
-    <h3 class="bblog94__h3 bblog94__t-text"><span class="rm-ul">{{ title | escape }}</span></h3>
+    <h3 class="bblog94__h3 bblog94__h3--d bblog94__t-text"><span class="rm-ul">{%- assign tsep = ': ' -%}{%- unless title contains tsep -%}{%- assign tsep = '? ' -%}{%- endunless -%}{%- unless title contains tsep -%}{%- assign tsep = ', ' -%}{%- endunless -%}{%- assign tparts = title | split: tsep -%}{%- assign twords = title | split: ' ' -%}{%- if tparts.size > 1 -%}{{ tparts[0] | escape }}{{ tsep | rstrip }} <em>{{ title | remove_first: tparts[0] | remove_first: tsep | escape }}</em>{%- elsif twords.size > 3 -%}{%- assign tcut = twords.size | minus: 2 -%}{{ twords | slice: 0, tcut | join: ' ' | escape }} <em>{{ twords | slice: tcut, 2 | join: ' ' | escape }}</em>{%- else -%}{{ title | escape }}{%- endif -%}</span></h3>
   </div>
 </a>
 {%- endif -%}
@@ -55,7 +55,7 @@
   <div class="bblog94__photo bblog94__photo--land">{{ photo }}</div>
   <div class="bblog94__wcopy">
     {{ meta_line }}
-    <h3 class="bblog94__h3 bblog94__t-wide"><span class="rm-ul">{{ title | escape }}</span></h3>
+    <h3 class="bblog94__h3 bblog94__h3--d bblog94__t-wide"><span class="rm-ul">{%- assign tsep = ': ' -%}{%- unless title contains tsep -%}{%- assign tsep = '? ' -%}{%- endunless -%}{%- unless title contains tsep -%}{%- assign tsep = ', ' -%}{%- endunless -%}{%- assign tparts = title | split: tsep -%}{%- assign twords = title | split: ' ' -%}{%- if tparts.size > 1 -%}{{ tparts[0] | escape }}{{ tsep | rstrip }} <em>{{ title | remove_first: tparts[0] | remove_first: tsep | escape }}</em>{%- elsif twords.size > 3 -%}{%- assign tcut = twords.size | minus: 2 -%}{{ twords | slice: 0, tcut | join: ' ' | escape }} <em>{{ twords | slice: tcut, 2 | join: ' ' | escape }}</em>{%- else -%}{{ title | escape }}{%- endif -%}</span></h3>
     <p class="bblog94__wdek">{{ dek | escape }}</p>
     <span class="bblog94__wmore"><span class="rm-ul">{{ 'blko.blog_94.read_more' | t }}</span>{%- render 'blko-ui-icon', name: 'arrow-right', size: 16, className: 'rm-nudge' -%}</span>
   </div>

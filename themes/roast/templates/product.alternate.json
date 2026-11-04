@@ -54,6 +54,12 @@
             "title": "Brew notes",
             "body": "<p>Pour-over: 15 g to 250 g water at 94 °C, 3:00 total. Espresso: 18 g in, 40 g out in 28 s. Rest the beans 7 days after the roast date for the sweetest cup.</p>"
           }
+        },
+        "description": {
+          "type": "description",
+          "settings": {
+            "title": "The coffee"
+          }
         }
       },
       "block_order": [
@@ -61,6 +67,7 @@
         "note-2",
         "note-3",
         "note-4",
+        "description",
         "info-5",
         "info-6",
         "info-7"

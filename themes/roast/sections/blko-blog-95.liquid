@@ -1,8 +1,10 @@
 {%- liquid
   assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-2'
 -%}
 {{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
 {{ 'blko-blog-95.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
 <script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
 {{ 'blko-roast-motion.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-roast-motion.js' | asset_url }}" defer="defer"></script>
@@ -54,14 +56,14 @@
           -%}
       <li class="rm-rise bblog95__slide" style="--d:{{ n | minus: 1 | times: 100 }}ms"
         ><a href="{{ a.url }}" class="rm-zoom bblog95__card"
-          ><span aria-hidden="true" class="bblog95__num">{{ num }}</span
+          ><span aria-hidden="true" class="bblog95__num rm-heading">{%- assign n0 = num | slice: 0 -%}{%- if n0 == '0' -%}<em>0</em>{{ num | slice: 1 }}{%- else -%}{{ num }}{%- endif -%}</span
           ><div class="bblog95__photo"
             >{%- if a.image -%}{{ a.image | image_url: width: 1200 | image_tag: class: 'bblog95__img', loading: 'lazy', widths: '600, 900, 1200', sizes: '(min-width: 768px) 62vw, 84vw', alt: a.image.alt | default: a.title }}{%- else -%}{{ 'image' | placeholder_svg_tag: 'bblog95__img placeholder-svg' }}{%- endif -%}
           </div
           ><div class="bblog95__meta"
             ><div class="bblog95__copy"
               ><p class="bblog95__label bblog95__muted">{{ cat | escape }} · {{ mins }} {{ 'blko.blog_95.min_read' | t }}</p
-              ><h3 class="bblog95__h3"><span class="rm-ul">{{ a.title | escape }}</span></h3
+              >{%- assign title = a.title -%}<h3 class="bblog95__h3"><span class="rm-ul">{%- assign tsep = ': ' -%}{%- unless title contains tsep -%}{%- assign tsep = '? ' -%}{%- endunless -%}{%- unless title contains tsep -%}{%- assign tsep = ', ' -%}{%- endunless -%}{%- assign tparts = title | split: tsep -%}{%- assign twords = title | split: ' ' -%}{%- if tparts.size > 1 -%}{{ tparts[0] | escape }}{{ tsep | rstrip }} <em>{{ title | remove_first: tparts[0] | remove_first: tsep | escape }}</em>{%- elsif twords.size > 3 -%}{%- assign tcut = twords.size | minus: 2 -%}{{ twords | slice: 0, tcut | join: ' ' | escape }} <em>{{ twords | slice: tcut, 2 | join: ' ' | escape }}</em>{%- else -%}{{ title | escape }}{%- endif -%}</span></h3
               ><p class="bblog95__dek">{{ a.excerpt_or_content | strip_html | truncatewords: 16 }}</p
             ></div
             ><span class="bblog95__more">{{ s.more_text | escape }} {% render 'blko-ui-icon', name: 'arrow-right', size: 16, className: 'rm-nudge' %}</span
@@ -74,14 +76,14 @@
           {%- assign num = forloop.index | prepend: '0' | slice: -2, 2 -%}
       <li class="rm-rise bblog95__slide" style="--d:{{ forloop.index0 | times: 100 }}ms" {{ b.shopify_attributes }}
         ><a href="{{ b.settings.link | default: '#' }}" class="rm-zoom bblog95__card"
-          ><span aria-hidden="true" class="bblog95__num">{{ num }}</span
+          ><span aria-hidden="true" class="bblog95__num rm-heading">{%- assign n0 = num | slice: 0 -%}{%- if n0 == '0' -%}<em>0</em>{{ num | slice: 1 }}{%- else -%}{{ num }}{%- endif -%}</span
           ><div class="bblog95__photo"
             >{%- if b.settings.image != blank -%}{{ b.settings.image | image_url: width: 1200 | image_tag: class: 'bblog95__img', loading: 'lazy', widths: '600, 900, 1200', sizes: '(min-width: 768px) 62vw, 84vw', alt: b.settings.image.alt }}{%- else -%}{{ 'image' | placeholder_svg_tag: 'bblog95__img placeholder-svg' }}{%- endif -%}
           </div
           ><div class="bblog95__meta"
             ><div class="bblog95__copy"
               ><p class="bblog95__label bblog95__muted">{{ b.settings.cat | escape }} · {{ b.settings.read | escape }}</p
-              ><h3 class="bblog95__h3"><span class="rm-ul">{{ b.settings.title | escape }}</span></h3
+              >{%- assign title = b.settings.title -%}<h3 class="bblog95__h3"><span class="rm-ul">{%- assign tsep = ': ' -%}{%- unless title contains tsep -%}{%- assign tsep = '? ' -%}{%- endunless -%}{%- unless title contains tsep -%}{%- assign tsep = ', ' -%}{%- endunless -%}{%- assign tparts = title | split: tsep -%}{%- assign twords = title | split: ' ' -%}{%- if tparts.size > 1 -%}{{ tparts[0] | escape }}{{ tsep | rstrip }} <em>{{ title | remove_first: tparts[0] | remove_first: tsep | escape }}</em>{%- elsif twords.size > 3 -%}{%- assign tcut = twords.size | minus: 2 -%}{{ twords | slice: 0, tcut | join: ' ' | escape }} <em>{{ twords | slice: tcut, 2 | join: ' ' | escape }}</em>{%- else -%}{{ title | escape }}{%- endif -%}</span></h3
               ><p class="bblog95__dek">{{ b.settings.dek | escape }}</p
             ></div
             ><span class="bblog95__more">{{ s.more_text | escape }} {% render 'blko-ui-icon', name: 'arrow-right', size: 16, className: 'rm-nudge' %}</span
@@ -94,7 +96,7 @@
     ><span aria-hidden="true" class="bblog95__track"><span data-bar style="transform:scaleX(0.15)"></span></span
   ></div
 >{%- endcapture -%}
-<div class="bblog95" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast data-rm-magnetic
+<div class="bblog95{%- if blko_sid != 'scheme-2' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast data-rm-magnetic
   >{%- render 'blko-ui-section', surface: 'alt', label: s.label, inner: 'bblog95__inner', children: body -%}
 </div
 
@@ -180,6 +182,13 @@
       ],
       "default": "preset",
       "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-2"
     },
     {
       "type": "header",

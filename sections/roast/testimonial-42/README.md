@@ -84,7 +84,7 @@ Do not use a zip.
 | `heading` | text | Heading | Notes from the regulars |
 | `rating` | text | Average rating (0–5) | 4.9 |
 | `summary` | text | Rating summary | 4.9 from 2,140 reviews |
-| `quote` | textarea | Quote | I've tried every subscription going. Halden is the only one where the bag lands two days after the roast date, the Guji tastes like a blueberry jam I can't stop thinking about, and the decaf my partner drinks actually tastes like coffee. |
+| `quote` | textarea | Quote (wrap words in <em> for the light face) | I've tried every subscription going. Halden is the only one where the bag lands two days after the roast date, the Guji tastes like <em>a blueberry jam I can't stop thinking about</em>, and the decaf my partner drinks actually tastes like coffee. |
 | `name` | text | Name | Mira Okafor |
 | `meta` | text | City and note | Lisbon · Member since 2021 |
 | `name_rating` | text | Rating (0–5) | 5 |

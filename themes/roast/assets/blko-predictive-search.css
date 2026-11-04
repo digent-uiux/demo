@@ -1,0 +1,49 @@
+/* Roast predictive search: an espresso panel dropping from the top, a big Syne input on a copper hairline, then
+   suggestions / collections / pages (mono lists) beside product rows. Results come from /search/suggest. */
+.bps__dialog { position: fixed; inset: 0 0 auto 0; width: 100%; max-width: 100%; max-height: 100dvh; margin: 0; padding: 0; border: 0; background: transparent; color: var(--blko-color-bg, #f3eee6); overflow: visible; }
+.bps__dialog::backdrop { background: rgb(20 14 11 / .5); }
+html.blko-rm .bps__dialog[open] .bps__panel { animation: bps-in .5s var(--blko-motion-ease, cubic-bezier(.22,1,.36,1)) both; }
+html.blko-rm .bps__dialog[open]::backdrop { animation: bps-fade .35s ease both; }
+@keyframes bps-in { from { translate: 0 -24px; opacity: 0; } to { translate: 0 0; opacity: 1; } }
+@keyframes bps-fade { from { opacity: 0; } to { opacity: 1; } }
+.bps__panel { max-height: 100dvh; overflow-x: hidden; overflow-y: auto; background: var(--blko-color-text, #1b1411); padding: 20px 16px 28px; font-family: var(--blko-font-body, system-ui, sans-serif); font-size: 15px; line-height: 1.5; }
+.bps__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.bps__label { margin: 0 0 12px; font-family: var(--blko-font-mono, ui-monospace, monospace); font-size: 12px; font-weight: 400; line-height: 1.4; letter-spacing: .08em; text-transform: uppercase; color: color-mix(in oklab, currentColor 65%, transparent); }
+.bps__muted { color: color-mix(in oklab, currentColor 65%, transparent); }
+.bps__form { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; max-width: var(--blko-container-page, 1280px); margin: 0 auto; padding-bottom: 12px; border-bottom: 1px solid var(--color-pop-2, #c8693a); }
+.bps__form > svg { color: var(--color-pop-2, #c8693a); }
+.bps__input { width: 100%; min-width: 0; padding: 6px 0; border: 0; background: none; color: inherit; font-family: var(--blko-font-heading, system-ui); font-size: clamp(26px, 5vw, 48px); font-weight: 800; line-height: 1.1; letter-spacing: -.03em; -webkit-appearance: none; appearance: none; }
+.bps__input::placeholder { color: color-mix(in oklab, currentColor 40%, transparent); font-weight: 400; }
+.bps__input:focus { outline: none; }
+.bps__input::-webkit-search-cancel-button { display: none; }
+.bps__form:focus-within { border-bottom-width: 2px; }
+.bps__close { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid color-mix(in oklab, currentColor 30%, transparent); border-radius: 999px; background: none; color: inherit; cursor: pointer; transition: background .25s, color .25s; }
+.bps__close:hover { background: var(--blko-color-bg, #f3eee6); color: var(--blko-color-text, #1b1411); }
+.bps__close:focus-visible, .bps__q:focus-visible, .bps__p:focus-visible, .bps__all:focus-visible, .bps__chip:focus-visible { outline: 2px solid var(--color-pop-2, #c8693a); outline-offset: 2px; }
+.bps__body { max-width: var(--blko-container-page, 1280px); margin: 0 auto; }
+.bps__body[aria-busy="true"] { opacity: .6; transition: opacity .2s; }
+.bps__res { display: grid; gap: 28px; padding-top: 24px; }
+.bps__side { display: grid; gap: 24px; align-content: start; }
+.bps__grp ul { margin: 0; padding: 0; list-style: none; }
+.bps__q { display: block; padding: 6px 0; overflow-wrap: anywhere; color: inherit; text-decoration: none; font-size: 17px; }
+.bps__q mark { background: none; color: inherit; font-weight: 600; }
+.bps__q:hover, .bps__q[aria-selected="true"] { color: var(--color-pop-2, #c8693a); }
+.bps__prods ul { display: grid; gap: 4px; }
+.bps__p { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; align-items: center; gap: 16px; padding: 8px; margin: 0 -8px; border-radius: 10px; color: inherit; text-decoration: none; transition: background .2s; }
+.bps__p:hover, .bps__p[aria-selected="true"] { background: color-mix(in oklab, currentColor 9%, transparent); }
+.bps__pimg { display: block; width: 64px; aspect-ratio: 4 / 5; border-radius: 6px; overflow: hidden; background: color-mix(in oklab, currentColor 12%, transparent); }
+.bps__pimg img, .bps__pimg svg { display: block; width: 100%; height: 100%; object-fit: cover; }
+.bps__pt { display: grid; gap: 2px; min-width: 0; }
+.bps__pt .bps__label { margin: 0; }
+.bps__pn { font-family: var(--blko-font-heading, system-ui); font-size: 18px; font-weight: 800; line-height: 1.15; letter-spacing: -.02em; overflow-wrap: anywhere; }
+.bps__pp { font-weight: 600; white-space: nowrap; }
+.bps__none { margin: 0; padding-top: 24px; font-size: 17px; }
+.bps__all { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 4px; padding: 16px 0 0; border-top: 1px solid color-mix(in oklab, currentColor 20%, transparent); color: inherit; text-decoration: none; font-family: var(--blko-font-heading, system-ui); font-size: 20px; font-weight: 800; letter-spacing: -.02em; }
+.bps__all:hover, .bps__all[aria-selected="true"] { color: var(--color-pop-2, #c8693a); }
+.bps__chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.bps__chip { display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border: 1px solid color-mix(in oklab, currentColor 30%, transparent); border-radius: 999px; color: inherit; text-decoration: none; transition: background .2s, color .2s, border-color .2s; }
+.bps__chip:hover { background: var(--color-pop-2, #c8693a); border-color: var(--color-pop-2, #c8693a); color: var(--blko-color-text, #1b1411); }
+@media (min-width: 900px) {
+  .bps__panel { padding: 32px 32px 40px; }
+  .bps__res:not(.bps__res--idle) { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 32px 48px; }
+}

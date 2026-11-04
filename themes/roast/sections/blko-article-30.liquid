@@ -1,8 +1,10 @@
 {%- liquid
   assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
 -%}
 {{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
 {{ 'blko-article-30.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
 <script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
 {{ 'blko-roast-motion.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-roast-motion.js' | asset_url }}" defer="defer"></script>
@@ -61,7 +63,7 @@
     {%- for b in section.blocks -%}
       {%- if b.type != 'heading' -%}{%- continue -%}{%- endif -%}
       {%- assign ti = ti | plus: 1 -%}
-      <li><a href="#{{ section.id }}-h{{ ti }}" class="barticle30__toca"{% if ti == 1 %} aria-current="location"{% endif %}><span class="barticle30__tocn">{% if ti < 10 %}0{% endif %}{{ ti }}</span>{{ b.settings.title | escape }}</a></li
+      <li><a href="#{{ section.id }}-h{{ ti }}" class="barticle30__toca"{% if ti == 1 %} aria-current="location"{% endif %}><span class="barticle30__tocn">{% if ti < 10 %}0{% endif %}{{ ti }}</span>{{ b.settings.title | strip_html | escape }}</a></li
     >{%- endfor -%}
   {%- endunless -%}
 {%- endcapture -%}
@@ -77,7 +79,7 @@
           <p class="barticle30__lead" {{ b.shopify_attributes }}>{{ bs.text | escape }}</p
         >{%- when 'heading' -%}
           {%- assign hi = hi | plus: 1 -%}
-          <h2 id="{{ section.id }}-h{{ hi }}" class="barticle30__h2" data-toc-target {{ b.shopify_attributes }}>{{ bs.title | escape }}</h2
+          <h2 id="{{ section.id }}-h{{ hi }}" class="barticle30__h2" data-toc-target {{ b.shopify_attributes }}>{{ bs.title }}</h2
         >{%- when 'text' -%}
           <div class="barticle30__rich" {{ b.shopify_attributes }}>{{ bs.text }}</div
         >{%- when 'quote' -%}
@@ -88,7 +90,7 @@
         >{%- when 'recipe' -%}
           <aside aria-label="{{ bs.aria | escape }}" class="barticle30__recipe" {{ b.shopify_attributes }}
             ><div class="barticle30__rhead"
-              ><p class="barticle30__rtitle">{{ bs.title | escape }}</p
+              ><p class="barticle30__rtitle rm-heading">{{ bs.title }}</p
               ><p class="barticle30__label barticle30__dim80">{{ bs.meta | escape }}</p
             ></div
             ><dl class="barticle30__rgrid"
@@ -97,7 +99,7 @@
                 {%- assign kv = r | split: '|' -%}
                 {%- assign k = kv[0] | strip -%}
                 {%- if k == blank -%}{%- continue -%}{%- endif -%}
-                <div class="barticle30__rcell"><dt class="barticle30__label barticle30__dim75">{{ k | escape }}</dt><dd class="barticle30__rval">{{ kv[1] | strip | escape }}</dd></div
+                <div class="barticle30__rcell"><dt class="barticle30__label barticle30__dim75">{{ k | escape }}</dt><dd class="barticle30__rval rm-heading">{{ kv[1] | strip }}</dd></div
               >{%- endfor -%}
             </dl
             ><p class="barticle30__rnote">{{ bs.note | escape }}</p
@@ -199,7 +201,7 @@
     ></div
   ></div
 >{%- endcapture -%}
-<div class="barticle30" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast data-rm-magnetic{% if s.show_progress %} data-progress{% endif %}
+<div class="barticle30{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast data-rm-magnetic{% if s.show_progress %} data-progress{% endif %}
   >{%- render 'blko-ui-section', surface: 'bg', bleed: true, full: true, label: s.label, className: 'rm-load', inner: 'barticle30__inner', children: body -%}
 </div
 
@@ -365,6 +367,13 @@
       "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
     },
     {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
+    },
+    {
       "type": "header",
       "content": "Spacing"
     },
@@ -410,8 +419,8 @@
         {
           "type": "text",
           "id": "title",
-          "label": "Title",
-          "default": "Why dial in at all"
+          "label": "Title (em allowed)",
+          "default": "Why dial in <em>at all</em>"
         }
       ]
     },
@@ -458,8 +467,8 @@
         {
           "type": "text",
           "id": "title",
-          "label": "Title",
-          "default": "Base pour-over"
+          "label": "Title (em allowed)",
+          "default": "Base <em>pour-over</em>"
         },
         {
           "type": "text",
@@ -470,8 +479,8 @@
         {
           "type": "textarea",
           "id": "specs",
-          "label": "Specs (label | value per line)",
-          "default": "Dose | 15 g\nWater | 250 g\nTemp | 94 °C\nTime | 2:45–3:15"
+          "label": "Specs (label | value per line, em allowed)",
+          "default": "Dose | 15 <em>g</em>\nWater | 250 <em>g</em>\nTemp | 94 <em>°C</em>\nTime | 3 <em>min</em>"
         },
         {
           "type": "text",
@@ -524,7 +533,7 @@
         {
           "type": "heading",
           "settings": {
-            "title": "Why dial in at all"
+            "title": "Why dial in <em>at all</em>"
           }
         },
         {
@@ -543,7 +552,7 @@
         {
           "type": "heading",
           "settings": {
-            "title": "The base recipe"
+            "title": "The base <em>recipe</em>"
           }
         },
         {
@@ -559,7 +568,7 @@
         {
           "type": "heading",
           "settings": {
-            "title": "Grind first, always"
+            "title": "Grind first, <em>always</em>"
           }
         },
         {
@@ -575,7 +584,7 @@
         {
           "type": "heading",
           "settings": {
-            "title": "The method, step by step"
+            "title": "The method, <em>step by step</em>"
           }
         },
         {
@@ -587,7 +596,7 @@
         {
           "type": "heading",
           "settings": {
-            "title": "Reading the cup"
+            "title": "Reading the <em>cup</em>"
           }
         },
         {

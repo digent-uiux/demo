@@ -1,8 +1,10 @@
 {%- liquid
   assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
 -%}
 {{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
 {{ 'blko-search-results-29.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
 <script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
 {{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
@@ -208,7 +210,7 @@
     ><div class="bsearchresults29__panel" id="bsearchresults29-panel0-{{ section.id }}" role="tabpanel" aria-labelledby="bsearchresults29-tab0-{{ section.id }}" data-panel="0"
       ><div class="bsearchresults29__grid{% if n_products > 2 %} has-lead{% endif %}" data-grid>{{ product_cards }}</div
       ><div class="bsearchresults29__also" data-also{% if n_stories == 0 %} hidden{% endif %}
-        ><h2 class="bsearchresults29__h2">{{ 'blko.search_results_29.also' | t }}</h2
+        ><h2 class="bsearchresults29__h2"><span class="rm-mask"><span class="rm-line" style="--d:120ms">{{ 'blko.search_results_29.also' | t }}</span></span></h2
         ><ul class="bsearchresults29__alist" data-alist
           >{%- assign rows = story_rows | split: '<li data-story ' -%}
           {%- for r in rows -%}
@@ -271,7 +273,7 @@
     </div
   ></div
 >{%- endcapture -%}
-<div class="bsearchresults29" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast data-rm-magnetic data-mode="{% if live %}live{% else %}demo{% endif %}" data-dym-from="{{ s.dym_from | escape }}"
+<div class="bsearchresults29{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-roast data-mode="{% if live %}live{% else %}demo{% endif %}" data-dym-from="{{ s.dym_from | escape }}"
   >{%- render 'blko-ui-section', surface: 'bg', label: s.label, className: 'rm-load', inner: 'bsearchresults29__inner', children: body -%}
 </div
 
@@ -374,6 +376,13 @@
       ],
       "default": "preset",
       "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
     },
     {
       "type": "header",
