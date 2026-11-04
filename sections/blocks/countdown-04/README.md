@@ -98,9 +98,7 @@ Copy text files into the same theme folders using these exact raw file links. Me
 - `assets/blko-ui-commerce.js`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/blocks/countdown-04/assets/blko-ui-commerce.js
 - `assets/blko-ui-core.css`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/blocks/countdown-04/assets/blko-ui-core.css
 - `assets/blko-ui-motion.js`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/blocks/countdown-04/assets/blko-ui-motion.js
-- `full.log`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/blocks/countdown-04/full.log
 - `locales/en.default.blko.json`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/blocks/countdown-04/locales/en.default.blko.json
-- `quick.log`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/blocks/countdown-04/quick.log
 - `sections/blko-countdown-04.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/blocks/countdown-04/sections/blko-countdown-04.liquid
 - `snippets/blko-fonts-lather.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/blocks/countdown-04/snippets/blko-fonts-lather.liquid
 - `snippets/blko-ui-badge.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/blocks/countdown-04/snippets/blko-ui-badge.liquid
