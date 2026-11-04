@@ -1,0 +1,6 @@
+{%- comment -%}
+  Stars (components/ui/rating.tsx): value 0-5 (partial stars are clipped), size xs|sm|md, tone default|inherit, label.
+{%- endcomment -%}
+{%- capture row -%}{%- for i in (1..5) -%}{% render 'blko-ui-icon', name: 'star', size: 14, stroke: 0 %}{%- endfor -%}{%- endcapture -%}
+{%- assign w = value | times: 20 -%}
+<span class="bx-stars{% if size == 'xs' %} bx-stars--xs{% elsif size == 'md' %} bx-stars--md{% endif %}{% if tone == 'inherit' %} bx-stars--inherit{% endif %}" role="img" aria-label="{{ label | escape }}"><span class="bx-stars__row bx-stars__off">{{ row }}</span><span class="bx-stars__on" style="width:{{ w }}%"><span class="bx-stars__row">{{ row }}</span></span></span>

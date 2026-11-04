@@ -1,0 +1,26 @@
+{
+  "blko": {
+    "account_26": {
+      "care": "Care guide",
+      "history": "History",
+      "label": "Your wardrobe",
+      "repair": "Repair",
+      "repair_type": "Repair type"
+    },
+    "general": {
+      "next": "Next",
+      "page": "Page {{ page }}",
+      "pagination": "Pagination",
+      "previous": "Previous"
+    },
+    "linen": {
+      "account_details": "Your account",
+      "addresses": "Addresses",
+      "log_in": "Log in",
+      "log_out": "Log out",
+      "no_orders": "Your wardrobe starts here. You have no orders yet.",
+      "orders": "Orders",
+      "shop_all": "Shop all pieces"
+    }
+  }
+}

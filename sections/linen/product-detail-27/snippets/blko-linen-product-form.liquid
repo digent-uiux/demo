@@ -1,0 +1,65 @@
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+  assign allocation = product.selected_selling_plan_allocation
+  if product.requires_selling_plan and allocation == blank
+    assign allocation = variant.selling_plan_allocations.first
+  endif
+  assign price = variant.price
+  assign compare = variant.compare_at_price
+  if allocation
+    assign price = allocation.price
+    assign compare = allocation.compare_at_price
+  endif
+  assign product_form_id = 'LinenProduct-' | append: section.id
+-%}
+<div data-linen-product data-in-stock="{{ 'blko.linen.in_stock' | t | escape }}" data-added="{{ section.settings.added_msg | escape }}" data-url="{{ product.url | escape }}" data-add="{{ section.settings.add_label | escape }}" data-sold-out="{{ 'blko.linen.sold_out' | t | escape }}" data-unavailable="{{ 'blko.linen.unavailable' | t | escape }}">
+  <h1 class="bproductdetail27__title">{% render 'blko-linen-mixed', text: product.title %}</h1>
+  <p class="bproductdetail27__price" aria-live="polite"><span class="bproductdetail27__unit" data-product-price>{{ price | money }}</span> <s class="bx-small bx-muted" data-product-compare{% unless compare > price %} hidden{% endunless %}>{{ compare | money }}</s></p>
+  <p class="blko-linen-product-stock" data-product-stock>{% if variant.available %}{{ 'blko.linen.in_stock' | t }}{% else %}{{ 'blko.linen.sold_out' | t }}{% endif %}</p>
+  {%- form 'product' , product, id: product_form_id, class: 'bproductdetail27__form', data-linen-ajax-form: '', data-product-form: '' -%}
+    {{ form.errors | default_errors }}
+    <div data-native-variants>
+      <label for="{{ product_form_id }}-variant">{{ 'blko.linen.variant' | t }}</label>
+      <select id="{{ product_form_id }}-variant" name="id" data-product-variant>
+        {%- for v in product.variants -%}<option value="{{ v.id }}"{% if v.id == variant.id %} selected{% endif %}{% unless v.available %} disabled{% endunless %}>{{ v.title | escape }} — {{ v.price | money }}{% unless v.available %} · {{ 'blko.linen.sold_out' | t }}{% endunless %}</option>{%- endfor -%}
+      </select>
+    </div>
+    {%- unless product.has_only_default_variant -%}
+      <div data-product-options hidden>
+        {%- for option in product.options_with_values -%}
+          {%- assign option_index = forloop.index0 -%}
+          <fieldset class="bproductdetail27__size"><legend class="bx-label">{{ option.name | escape }}: <span data-product-option-label="{{ option_index }}">{{ variant.options[option_index] | escape }}</span></legend><div class="bproductdetail27__chips">
+            {%- for value in option.values -%}{%- assign option_value = value.name | default: value -%}
+              <label class="blko-linen-option"><input type="radio" name="options[{{ option.name | escape }}]" value="{{ option_value | escape }}" data-product-option="{{ option_index }}"{% if variant.options[option_index] == option_value %} checked{% endif %}><span>{{ option_value | escape }}</span></label>
+            {%- endfor -%}
+          </div></fieldset>
+        {%- endfor -%}
+      </div>
+    {%- endunless -%}
+    {%- if product.selling_plan_groups.size > 0 -%}
+      <label for="{{ product_form_id }}-plan">{{ 'blko.linen.purchase_option' | t }}</label>
+      <select id="{{ product_form_id }}-plan" name="selling_plan" data-product-plan>
+        {%- unless product.requires_selling_plan -%}<option value="">{{ 'blko.linen.one_time' | t }}</option>{%- endunless -%}
+        {%- for group in product.selling_plan_groups -%}<optgroup label="{{ group.name | escape }}">{%- for plan in group.selling_plans -%}<option value="{{ plan.id }}"{% if allocation.selling_plan.id == plan.id %} selected{% endif %}>{{ plan.name | escape }}</option>{%- endfor -%}</optgroup>{%- endfor -%}
+      </select>
+    {%- endif -%}
+    {%- for block in section.blocks -%}{%- if block.type == '@app' -%}{% render block %}{%- endif -%}{%- endfor -%}
+    <div class="bproductdetail27__buy">
+      <label for="{{ product_form_id }}-qty" class="bx-label">{{ 'blko.linen.quantity' | t }}</label>
+      <div class="bproductdetail27__row">
+        <div class="blko-linen-stepper"><button type="button" data-quantity-step="down" aria-label="{{ 'blko_ui.quantity.decrease' | t: label: product.title | escape }}">−</button><input id="{{ product_form_id }}-qty" class="blko-linen-product-qty" type="number" name="quantity" value="{{ variant.quantity_rule.min | default: 1 }}" min="{{ variant.quantity_rule.min | default: 1 }}" step="{{ variant.quantity_rule.increment | default: 1 }}"{% if variant.quantity_rule.max %} max="{{ variant.quantity_rule.max }}"{% endif %} required data-product-quantity><button type="button" data-quantity-step="up" aria-label="{{ 'blko_ui.quantity.increase' | t: label: product.title | escape }}">+</button></div>
+        {%- capture add_label -%}<span data-product-add-label>{% if variant.available %}{{ section.settings.add_label | escape }}{% else %}{{ 'blko.linen.sold_out' | t }}{% endif %}</span>{%- endcapture -%}
+        {%- assign add_attrs = 'data-product-add' -%}{%- unless variant.available -%}{%- assign add_attrs = 'data-product-add disabled' -%}{%- endunless -%}
+        {% render 'blko-ui-button', type: 'submit', size: 'lg', shape: 'pill', className: 'bproductdetail27__add', children: add_label, attrs: add_attrs %}
+      </div>
+      <p role="status" aria-live="polite" data-linen-add-status></p>
+      <div data-product-payment{% unless variant.available %} hidden{% endunless %}>{{ form | payment_button }}</div>
+      {%- if section.settings.delivery != blank -%}<p class="bx-small bproductdetail27__note">{% render 'blko-ui-icon', name: 'truck', size: 16 %}<span>{{ section.settings.delivery | escape }}</span></p>{%- endif -%}
+    </div>
+  {%- endform -%}
+  {%- if product.description != blank -%}<div class="blko-linen-product-description">{{ product.description }}</div>{%- endif -%}
+  {% for entry in (1..2) %}{% assign detail = section.settings.care_details %}{% assign title = 'blko.linen.care' | t %}{% assign icon = 'droplets' %}{% if entry == 2 %}{% assign detail = section.settings.material_details %}{% assign title = 'blko.linen.materials' | t %}{% assign icon = 'layers' %}{% endif %}{% if detail != blank %}<details class="blko-linen-product-accordion"><summary>{% render 'blko-ui-icon', name: icon, size: 18 %}{{ title }}</summary><div>{{ detail | escape | newline_to_br }}</div></details>{% endif %}{% endfor %}
+  {% if section.settings.pairs_with.size > 0 %}<aside class="blko-linen-pairs"><h2>{{ 'blko.linen.pairs_with' | t }}</h2><ul>{% for paired in section.settings.pairs_with %}{% unless paired.id == product.id %}<li><a href="{{ paired.url }}">{% if paired.featured_image %}{{ paired.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: paired.featured_image.alt }}{% endif %}<span>{{ paired.title | escape }}<br>{{ paired.price | money }}</span></a></li>{% endunless %}{% endfor %}</ul></aside>{% endif %}
+  <div class="blko-linen-product-sticky" data-product-sticky hidden><div><p>{{ product.title | escape }}</p><p data-sticky-variant></p><p data-sticky-price>{{ price | money }}</p></div><button type="button"{% unless variant.available %} disabled{% endunless %}>{{ section.settings.add_label | escape }}</button></div>
+  {%- capture catalog_json -%}{"requiresPlan":{{ product.requires_selling_plan | json }},"image":{% if product.featured_media %}{"src":{{ product.featured_media | image_url: width: 1000 | json }},"srcset":{% capture product_srcset %}{{ product.featured_media | image_url: width: 500 }} 500w, {{ product.featured_media | image_url: width: 750 }} 750w, {{ product.featured_media | image_url: width: 1000 }} 1000w, {{ product.featured_media | image_url: width: 1400 }} 1400w{% endcapture %}{{ product_srcset | json }},"alt":{{ product.featured_media.alt | default: product.title | json }}}{% else %}null{% endif %},"variants":[{%- for v in product.variants -%}{"id":{{ v.id | json }},"options":{{ v.options | json }},"available":{{ v.available | json }},"price":{{ v.price | money | json }},"compare":{% if v.compare_at_price > v.price %}{{ v.compare_at_price | money | json }}{% else %}null{% endif %},"min":{{ v.quantity_rule.min | default: 1 | json }},"step":{{ v.quantity_rule.increment | default: 1 | json }},"max":{{ v.quantity_rule.max | json }},"image":{% if v.featured_media %}{"src":{{ v.featured_media | image_url: width: 1000 | json }},"srcset":{% capture variant_srcset %}{{ v.featured_media | image_url: width: 500 }} 500w, {{ v.featured_media | image_url: width: 750 }} 750w, {{ v.featured_media | image_url: width: 1000 }} 1000w, {{ v.featured_media | image_url: width: 1400 }} 1400w{% endcapture %}{{ variant_srcset | json }},"alt":{{ v.featured_media.alt | default: product.title | json }}}{% else %}null{% endif %},"plans":[{%- for a in v.selling_plan_allocations -%}{"id":{{ a.selling_plan.id | json }},"price":{{ a.price | money | json }},"compare":{% if a.compare_at_price > a.price %}{{ a.compare_at_price | money | json }}{% else %}null{% endif %}}{% unless forloop.last %},{% endunless %}{%- endfor -%}]}{% unless forloop.last %},{% endunless %}{%- endfor -%}]}{%- endcapture -%}<script type="application/json" data-product-catalog>{{ catalog_json | replace: '<', '\u003c' }}</script>
+</div>

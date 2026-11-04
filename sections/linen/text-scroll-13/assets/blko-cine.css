@@ -1,0 +1,41 @@
+/* GENERATED from design-system/site/components/ui/kits/cine.ts (cineCss) (Blocko cine kit). Do not edit: change the TS and regenerate. */
+html.blko-cine [data-cine] .cine-m { display: inline-block; overflow: clip; vertical-align: top; padding-bottom: .12em; margin-bottom: -.12em; }
+html.blko-cine [data-cine] .cine-l { display: inline-block; }
+html.blko-cine [data-cine]:not([data-cine="in"], [data-cine="load"]) :is(.cine-l, .cine-c, .cine-w, .cine-rise) { opacity: 0; }
+html.blko-cine [data-cine]:not([data-cine="in"], [data-cine="load"]) .cine-l { opacity: 1; transform: translateY(105%); }
+html.blko-cine :is([data-cine="in"], [data-cine="load"]) .cine-l { animation: cine-line .9s cubic-bezier(.22,1,.36,1) calc(var(--cine-d0, 0ms) + var(--l, 0) * 90ms) both; }
+html.blko-cine [data-cine="load"] .cine-l { animation-delay: calc(150ms + var(--cine-d0, 0ms) + var(--l, 0) * 90ms); }
+@keyframes cine-line { from { transform: translateY(105%); } }
+html.blko-cine [data-cine] .cine-c { display: inline-block; white-space: pre; }
+html.blko-cine :is([data-cine="in"], [data-cine="load"]) .cine-c { animation: cine-char .5s cubic-bezier(.16,1,.3,1) calc(var(--cine-dt, 0ms) + min(var(--i, 0), 24) * 28ms) both; }
+@keyframes cine-char { from { opacity: 0; transform: translateY(.3em); } }
+html.blko-cine [data-cine] .cine-w { display: inline-block; }
+html.blko-cine :is([data-cine="in"], [data-cine="load"]) .cine-w { animation: cine-word .7s cubic-bezier(.25,1,.5,1) calc(var(--cine-d, 380ms) + min(var(--i, 0), 18) * 45ms) both; }
+@keyframes cine-word { from { opacity: 0; transform: translateY(.6em); } }
+html.blko-cine :is([data-cine="in"], [data-cine="load"]) .cine-rise { animation: cine-rise 1s cubic-bezier(.16,1,.3,1) var(--cine-d, 520ms) both; }
+@keyframes cine-rise { from { opacity: 0; filter: blur(10px); transform: translateY(24px); } }
+
+.cine-btn { position: relative; isolation: isolate; overflow: hidden; }
+.cine-btn::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
+  background: var(--cine-fill, color-mix(in oklab, var(--blko-color-bg) 22%, transparent)); clip-path: circle(0 at var(--cx, 50%) var(--cy, 50%)); }
+.cine-btn__a { flex: none; }
+html.blko-cine .cine-btn { animation: none !important; outline-color: transparent !important; transition: color .45s cubic-bezier(.22,1,.36,1), background-color .45s cubic-bezier(.22,1,.36,1), border-color .45s cubic-bezier(.22,1,.36,1), scale .18s cubic-bezier(.22,1,.36,1); }
+html.blko-cine .cine-btn::before { transition: clip-path .56s cubic-bezier(.22,1,.36,1); }
+html.blko-cine .cine-btn:focus-visible::before { clip-path: circle(160% at 50% 50%); }
+html.blko-cine .cine-btn:focus-visible .cine-btn__a { animation: cine-arrow .6s cubic-bezier(.22,1,.36,1); }
+html.blko-cine .cine-btn:active { scale: .97; }
+@media (hover: hover) {
+  html.blko-cine .cine-btn:hover::before { clip-path: circle(160% at var(--cx, 50%) var(--cy, 50%)); }
+  html.blko-cine .cine-btn:hover .cine-btn__a { animation: cine-arrow .6s cubic-bezier(.22,1,.36,1); }
+}
+@keyframes cine-arrow { 0% { transform: none; } 42% { transform: translate(120%, -120%); opacity: 0; } 43% { transform: translate(-120%, 120%); opacity: 0; } 100% { transform: none; opacity: 1; } }
+/* Solid buttons keep their own fill under the ink (no second hover colour). Outline buttons (--ink): the fill is the
+   ink colour and the label turns to the ground colour. */
+html.blko-cine .cine-btn--solid:is(:hover, :focus-visible) { background-color: var(--blko-color-button); }
+.cine-btn--ink { --cine-fill: var(--blko-color-text); }
+html.blko-cine .cine-btn--ink:is(:hover, :focus-visible) { background-color: transparent; }
+@media (hover: hover) { html.blko-cine .cine-btn--ink:hover { color: var(--blko-color-bg); } }
+html.blko-cine .cine-btn--ink:focus-visible { color: var(--blko-color-bg); }
+.cine-btn--light { --cine-fill: color-mix(in oklab, var(--blko-color-text) 12%, transparent); }
+html.blko-cine .cine-btn--light:is(:hover, :focus-visible) { background-color: var(--blko-color-bg); }
+@media (prefers-reduced-motion: reduce) { html.blko-cine .cine-btn::before { transition: none; } }

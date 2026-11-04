@@ -1,0 +1,80 @@
+{
+  "globals": {
+    "collection": {
+      "id": 18,
+      "title": "Clothing",
+      "url": "/collections/clothing",
+      "products_count": 0,
+      "all_products_count": 30,
+      "products": [],
+      "all_types": [
+        "Linen"
+      ],
+      "filters": [
+        {
+          "type": "list",
+          "label": "Cloth",
+          "active_values": [
+            {
+              "label": "Linen",
+              "value": "Linen",
+              "param_name": "filter.p.product_type",
+              "count": 0,
+              "active": true,
+              "url_to_remove": "/collections/clothing?sort_by=price-ascending"
+            }
+          ],
+          "values": [
+            {
+              "label": "Linen",
+              "value": "Linen",
+              "param_name": "filter.p.product_type",
+              "count": 0,
+              "active": true,
+              "url_to_remove": "/collections/clothing?sort_by=price-ascending"
+            },
+            {
+              "label": "Wool",
+              "value": "Wool",
+              "param_name": "filter.p.product_type",
+              "count": 0,
+              "active": false
+            }
+          ]
+        },
+        {
+          "type": "price_range",
+          "label": "Price",
+          "active_values": [],
+          "min_value": {
+            "value": 1750,
+            "param_name": "filter.v.price.gte"
+          },
+          "max_value": {
+            "value": 2350,
+            "param_name": "filter.v.price.lte"
+          },
+          "range_max": 50000,
+          "url_to_remove": "/collections/clothing?filter.p.product_type=Linen"
+        }
+      ],
+      "sort_by": "price-ascending",
+      "default_sort_by": "manual",
+      "sort_options": [
+        {
+          "name": "Featured",
+          "value": "manual"
+        },
+        {
+          "name": "Price, low to high",
+          "value": "price-ascending"
+        }
+      ]
+    },
+    "request": {
+      "host": "linen.example",
+      "page_type": "collection",
+      "design_mode": false
+    }
+  }
+}

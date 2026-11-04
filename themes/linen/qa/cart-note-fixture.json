@@ -1,0 +1,116 @@
+{
+  "globals": {
+    "cart": {
+      "item_count": 2,
+      "items": [
+        {
+          "key": "1702:gift",
+          "id": 1702,
+          "title": "Washed linen shirt",
+          "url": "/products/linen-shirt?variant=1702",
+          "product": {
+            "id": 17,
+            "title": "Washed linen shirt",
+            "has_only_default_variant": false,
+            "url": "/products/linen-shirt",
+            "options_with_values": [
+              {
+                "name": "Colour",
+                "values": [
+                  "Oat"
+                ],
+                "position": 1
+              },
+              {
+                "name": "Size",
+                "values": [
+                  "M"
+                ],
+                "position": 2
+              }
+            ],
+            "variants": [
+              {
+                "id": 1702,
+                "title": "Oat / M",
+                "options": [
+                  "Oat",
+                  "M"
+                ],
+                "price": 2000,
+                "available": true,
+                "quantity_rule": {
+                  "min": 1,
+                  "max": 10,
+                  "increment": 1
+                }
+              }
+            ],
+            "selected_or_first_available_variant": {
+              "id": 1702,
+              "title": "Oat / M",
+              "options": [
+                "Oat",
+                "M"
+              ],
+              "price": 2000,
+              "available": true,
+              "quantity_rule": {
+                "min": 1,
+                "max": 10,
+                "increment": 1
+              }
+            }
+          },
+          "variant": {
+            "id": 1702,
+            "title": "Oat / M",
+            "options": [
+              "Oat",
+              "M"
+            ],
+            "price": 2000,
+            "available": true,
+            "quantity_rule": {
+              "min": 1,
+              "max": 10,
+              "increment": 1
+            }
+          },
+          "quantity": 2,
+          "final_price": 1750,
+          "final_line_price": 3500,
+          "original_line_price": 4000,
+          "properties": {
+            "Gift": "Yes"
+          },
+          "line_level_discount_allocations": [
+            {
+              "discount_application": {
+                "title": "Studio welcome"
+              },
+              "amount": 500
+            }
+          ]
+        }
+      ],
+      "total_price": 3500,
+      "items_subtotal_price": 3500,
+      "original_total_price": 4000,
+      "total_discount": 500,
+      "attributes": {},
+      "cart_level_discount_applications": [],
+      "note": "Please leave at reception.",
+      "taxes_included": false
+    },
+    "request": {
+      "host": "linen.example",
+      "page_type": "cart",
+      "path": "/cart",
+      "design_mode": false,
+      "locale": {
+        "iso_code": "en"
+      }
+    }
+  }
+}

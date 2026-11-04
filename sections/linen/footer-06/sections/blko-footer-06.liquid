@@ -1,0 +1,335 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-5'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+<script data-blko-kit="linen">try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-kit-linen')}catch(e){}</script>
+{{ 'blko-linen-motion.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-linen-motion.js' | asset_url }}" defer></script>
+
+{{ 'blko-footer-06.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture blko_class -%}bfooter06{% if s.tokens == 'theme' %} bfooter06--theme{% endif %}{% if blko_sid != 'scheme-5' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}{%- endcapture -%}
+<script src="{{ 'blko-footer-06.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign brand = s.brand | default: shop.name
+  assign words = brand | split: ' '
+  assign year = 'now' | date: '%Y'
+-%}
+<blko-footer-06 class="{{ blko_class }}" style="{{ blko_style }}">
+  <footer class="bfooter06__foot">
+    <div class="bfooter06__top">
+      <div class="bfooter06__intro"><p class="bx-label">{{ s.care_kicker | escape }}</p><h2 class="bfooter06__caretitle">{% render 'blko-linen-mixed', text: s.care_heading %}</h2><p class="bfooter06__care">{{ s.care_text | escape | newline_to_br }}</p>
+        <a href="{{ routes.root_url }}" class="bfooter06__brand">
+          {%- if s.italic_last and words.size > 1 -%}
+            {%- for w in words -%}{%- if forloop.last -%}<em>{{ w | escape }}</em>{%- else -%}{{ w | escape }} {% endif -%}{%- endfor -%}
+          {%- else -%}{{ brand | escape }}{%- endif -%}
+        </a>
+        {%- if s.tagline != blank -%}<p class="bfooter06__tag">{{ s.tagline | escape }}</p>{%- endif -%}
+        {%- if s.show_signup -%}
+          {%- form 'customer', id: 'blko-f06-form', class: 'bfooter06__form' -%}
+            {%- if form.posted_successfully? -%}
+              <p class="bfooter06__done" role="status">{{ s.success | escape }}</p>
+            {%- else -%}
+              <input type="hidden" name="contact[tags]" value="newsletter">
+              {%- if form.errors -%}<div role="alert" class="bx-small">{{ form.errors | default_errors }}</div>{%- endif -%}
+              <label for="{{ section.id }}-email" class="bx-sr">{{ s.placeholder | escape }}</label>
+              <input id="{{ section.id }}-email" type="email" name="contact[email]" required autocomplete="email" class="bx-input bfooter06__input" placeholder="{{ s.placeholder | escape }}">
+              {%- assign lbl = s.button_label | escape -%}
+              {%- render 'blko-ui-button', type: 'submit', variant: 'inverse', className: 'bfooter06__join', children: lbl -%}
+            {%- endif -%}
+          {%- endform -%}
+        {%- endif -%}
+      </div>
+      {%- for b in section.blocks -%}
+        {%- assign cid = section.id | append: '-' | append: forloop.index -%}
+        {%- assign menu = linklists[b.settings.menu] -%}
+        <div class="bfooter06__col" {{ b.shopify_attributes }}>
+          <h2 class="bfooter06__head">
+            <button type="button" class="bfooter06__toggle" aria-expanded="{{ b.settings.open }}" aria-controls="{{ cid }}" data-toggle>
+              {{ b.settings.title | escape }}
+              {%- render 'blko-ui-icon', name: 'plus', size: 16, className: 'bfooter06__plus' -%}
+            </button>
+          </h2>
+          <ul id="{{ cid }}" class="bfooter06__list">
+            {%- if menu.links.size > 0 -%}
+              {%- for l in menu.links -%}<li><a href="{{ l.url }}" class="bfooter06__link">{{ l.title | escape }}</a></li>{%- endfor -%}
+            {%- else -%}
+              {%- assign demo = b.settings.demo_links | newline_to_br | split: '<br />' -%}
+              {%- for l in demo -%}{%- assign t = l | strip -%}{%- if t != blank -%}<li><a href="{{ routes.all_products_collection_url }}" class="bfooter06__link">{{ t | escape }}</a></li>{%- endif -%}{%- endfor -%}
+            {%- endif -%}
+          </ul>
+        </div>
+      {%- endfor -%}
+    </div>
+    {% render 'blko-linen-localization', section: section %}
+    <div class="bfooter06__bar">
+      <div class="bfooter06__barin">
+        <span>&copy; {{ year }} {{ brand | escape }}</span>
+        {%- assign legal = linklists[s.legal_menu] -%}
+        {%- assign legal_label = 'blko.footer_06.legal' | t -%}
+        <nav aria-label="{{ legal_label }}" class="bfooter06__legal">
+          {%- if legal.links.size > 0 -%}
+            {%- for l in legal.links -%}<a href="{{ l.url }}" class="bfooter06__link">{{ l.title | escape }}</a>{%- endfor -%}
+          {%- else -%}
+            {%- assign demo = s.demo_legal | split: ',' -%}
+            {%- for l in demo -%}<a href="{{ routes.root_url }}" class="bfooter06__link">{{ l | strip | escape }}</a>{%- endfor -%}
+          {%- endif -%}
+        </nav>
+      </div>
+    </div>
+  </footer>
+</blko-footer-06>
+
+{% schema %}
+{
+  "name": "Footer, dark accordion",
+  "tag": "div",
+  "class": "blko-footer-06-wrap",
+  "settings": [
+    {
+      "type": "text",
+      "id": "care_kicker",
+      "default": "A note for the wardrobe",
+      "label": "Care label eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "care_heading",
+      "default": "Keep this label.",
+      "label": "Care label headline"
+    },
+    {
+      "id": "care_text",
+      "default": "Wash cool. Dry in the shade.\nMend the little things. Wear again.",
+      "label": "Care label text",
+      "type": "textarea"
+    },
+    {
+      "type": "header",
+      "content": "Brand"
+    },
+    {
+      "type": "text",
+      "id": "brand",
+      "label": "Brand name",
+      "default": "Linen",
+      "info": "Leave empty to use the store name."
+    },
+    {
+      "type": "checkbox",
+      "id": "italic_last",
+      "label": "Italic last word",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "Linen, wool and cotton, cut in small runs in Lisbon. Hear about new drops first."
+    },
+    {
+      "type": "header",
+      "content": "Sign-up"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_signup",
+      "label": "Show email sign-up",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Email placeholder",
+      "default": "Email address"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Join"
+    },
+    {
+      "type": "text",
+      "id": "success",
+      "label": "Thank-you message",
+      "default": "Thanks, you're on the list."
+    },
+    {
+      "type": "header",
+      "content": "Legal row"
+    },
+    {
+      "type": "link_list",
+      "id": "legal_menu",
+      "label": "Legal menu"
+    },
+    {
+      "type": "text",
+      "id": "demo_legal",
+      "label": "Demo links",
+      "default": "Privacy, Terms, Cookies",
+      "info": "Shown while no menu is picked. Comma separated."
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_source",
+      "label": "Fonts",
+      "options": [
+        {
+          "value": "bundled",
+          "label": "Bundled (EB Garamond + Albert Sans)"
+        },
+        {
+          "value": "picker",
+          "label": "Pick from the font library"
+        },
+        {
+          "value": "theme",
+          "label": "Use the theme's fonts"
+        }
+      ],
+      "default": "bundled"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors and shapes"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, corners, type style",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case\u2026). Other themes: keep the preset."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:blko.linen.color_scheme",
+      "default": "scheme-5"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 64,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Link column",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Shop"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu"
+        },
+        {
+          "type": "textarea",
+          "id": "demo_links",
+          "label": "Demo links",
+          "default": "New in\nDresses\nKnitwear",
+          "info": "Shown while no menu is picked. One per line."
+        },
+        {
+          "type": "checkbox",
+          "id": "open",
+          "label": "Open on phones",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Footer, dark accordion",
+      "blocks": [
+        {
+          "type": "column",
+          "settings": {
+            "title": "Shop",
+            "demo_links": "New in\nDresses\nKnitwear\nDenim\nAccessories"
+          }
+        },
+        {
+          "type": "column",
+          "settings": {
+            "title": "Help",
+            "demo_links": "Contact us\nDelivery\nReturns\nSize guide\nTrack order",
+            "open": true
+          }
+        },
+        {
+          "type": "column",
+          "settings": {
+            "title": "Company",
+            "demo_links": "Our story\nSustainability\nStores\nCareers"
+          }
+        },
+        {
+          "type": "column",
+          "settings": {
+            "title": "Follow",
+            "demo_links": "Instagram\nPinterest\nTikTok\nNewsletter"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,214 @@
+{%- liquid
+  assign s = section.settings
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+<script data-blko-kit="linen">try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-kit-linen')}catch(e){}</script>
+{{ 'blko-linen-motion.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-linen-motion.js' | asset_url }}" defer></script>
+
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-counters-03.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture blko_class -%}bcounters03{% if s.tokens == 'theme' %} bcounters03--theme{% endif %}{%- endcapture -%}
+<script src="{{ 'blko-counters-03.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign label = s.heading | strip_html
+  assign timer_label = s.timer_label | escape
+  assign d = s.days | prepend: '0' | slice: -2, 2
+  assign h = s.hours | prepend: '0' | slice: -2, 2
+  assign m = s.minutes | prepend: '0' | slice: -2, 2
+  assign sec = s.seconds | prepend: '0' | slice: -2, 2
+-%}
+
+{%- capture blko_body -%}<div class="bcounters03__copy"><p class="bx-label bx-muted">{{ s.eyebrow | escape }}</p><h2 class="bcounters03__title">{% render 'blko-linen-mixed', text: s.heading %}</h2><p class="bx-body bx-muted">{{ s.text | escape }}</p><p class="bx-small bx-muted">{{ s.care_note | escape }}</p></div><blko-wash-study class="bcounters03__swatch"><div class="bcounters03__dial"><span class="bcounters03__number" data-number>01</span><span class="bx-label">{{ s.unit | escape }}</span></div><div class="bcounters03__tabs" role="group" aria-label="{{ s.controls_label | escape }}">{% for i in (1..3) %}{% assign lk = 'stage_label_' | append: i %}{% assign nk = 'stage_note_' | append: i %}{% assign vk = 'stage_value_' | append: i %}<button type="button" data-value="{{ s[vk] | escape }}" data-note="{{ s[nk] | escape }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}">{{ s[lk] | escape }}</button>{% endfor %}</div><p class="bcounters03__note" data-note-output aria-live="polite">{{ s.stage_note_1 | escape }}</p></blko-wash-study>{%- endcapture -%}
+{%- render 'blko-ui-section', surface: 'bg', bleed: true, label: label, className: blko_class, style: blko_style, inner: 'bx-pad bcounters03__in', children: blko_body -%}
+
+
+{% schema %}
+{
+  "name": "Wash study",
+  "tag": "div",
+  "class": "blko-counters-03-wrap",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "A study in wearing"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "From crisp\nto yours."
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Natural cloth changes with you. Not a finish to preserve, but a story to add to."
+    },
+    {
+      "type": "text",
+      "id": "care_note",
+      "label": "Care note",
+      "default": "Follow the care label on your own piece."
+    },
+    {
+      "type": "text",
+      "id": "unit",
+      "label": "Unit",
+      "default": "Washes"
+    },
+    {
+      "type": "text",
+      "id": "controls_label",
+      "label": "Controls label",
+      "default": "Explore the wash study"
+    },
+    {
+      "type": "text",
+      "id": "stage_label_1",
+      "label": "Stage label 1",
+      "default": "First wash"
+    },
+    {
+      "type": "text",
+      "id": "stage_label_2",
+      "label": "Stage label 2",
+      "default": "Worn in"
+    },
+    {
+      "type": "text",
+      "id": "stage_label_3",
+      "label": "Stage label 3",
+      "default": "Keep going"
+    },
+    {
+      "type": "text",
+      "id": "stage_value_1",
+      "label": "Stage value 1",
+      "default": "01"
+    },
+    {
+      "type": "text",
+      "id": "stage_value_2",
+      "label": "Stage value 2",
+      "default": "10"
+    },
+    {
+      "type": "text",
+      "id": "stage_value_3",
+      "label": "Stage value 3",
+      "default": "30"
+    },
+    {
+      "type": "text",
+      "id": "stage_note_1",
+      "label": "Stage note 1",
+      "default": "Wash before the first wear. A cool, gentle cycle lets the weave settle."
+    },
+    {
+      "type": "text",
+      "id": "stage_note_2",
+      "label": "Stage note 2",
+      "default": "The cloth relaxes with washing and wearing. Air between wears; wash only when needed."
+    },
+    {
+      "type": "text",
+      "id": "stage_note_3",
+      "label": "Stage note 3",
+      "default": "A loose stitch is a small repair, not the end of a shirt. Mend it and keep wearing it."
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_source",
+      "label": "Fonts",
+      "options": [
+        {
+          "value": "bundled",
+          "label": "Bundled (EB Garamond + Albert Sans)"
+        },
+        {
+          "value": "picker",
+          "label": "Pick from the font library"
+        },
+        {
+          "value": "theme",
+          "label": "Use the theme's fonts"
+        }
+      ],
+      "default": "bundled"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors and shapes"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, corners, type style",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case\u2026). Other themes: keep the preset."
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "Wash study"
+    }
+  ]
+}
+{% endschema %}

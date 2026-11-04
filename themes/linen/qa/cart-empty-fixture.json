@@ -1,0 +1,25 @@
+{
+  "globals": {
+    "cart": {
+      "item_count": 0,
+      "items": [],
+      "total_price": 0,
+      "items_subtotal_price": 0,
+      "original_total_price": 0,
+      "total_discount": 0,
+      "attributes": {},
+      "cart_level_discount_applications": [],
+      "note": "",
+      "taxes_included": false
+    },
+    "request": {
+      "host": "linen.example",
+      "page_type": "cart",
+      "path": "/cart",
+      "design_mode": false,
+      "locale": {
+        "iso_code": "en"
+      }
+    }
+  }
+}

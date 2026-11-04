@@ -1,0 +1,409 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-2'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-account-26.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture blko_class -%}baccount26{% if s.tokens == 'theme' %} baccount26--theme{% endif %}{% if blko_sid != 'scheme-2' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}{%- endcapture -%}
+<script src="{{ 'blko-account-26.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign label = 'blko.account_26.label' | t
+  assign demo = false
+  if request.design_mode or request.host == blank
+    assign demo = true
+  endif
+  assign real = false
+  if customer and customer.orders_count > 0
+    assign real = true
+  endif
+-%}
+{% capture nl %}
+{% endcapture %}
+{%- capture blko_body -%}
+  <header class="baccount26__head">
+    <h1 class="baccount26__title">{{ s.heading | escape }}{% if s.heading_em != blank %} <em>{{ s.heading_em | escape }}</em>{% endif %}</h1>
+    {%- if s.text != blank -%}<p class="bx-small bx-muted baccount26__lead">{{ s.text | escape }}</p>{%- endif -%}
+  </header>
+
+  {%- unless demo -%}{% render 'blko-linen-account-summary', customer: customer, section: section %}{%- endunless -%}
+  {%- if real or demo -%}<blko-account-26 class="baccount26__grid">
+    <ul class="baccount26__pieces">
+      {%- if real -%}
+        {%- assign n = 0 -%}
+        {%- for order in customer.orders -%}
+          {%- for line in order.line_items -%}
+            {%- if n < 6 -%}
+              {%- capture note -%}{{ line.variant.title | default: order.name }} · {{ order.name }}{%- endcapture -%}
+              {%- assign img = line.image | default: line.product.featured_image -%}
+              {%- assign pname = line.product.title | default: line.title -%}{%- assign on = false -%}{%- if n == 0 -%}{%- assign on = true -%}{%- endif -%}
+              {%- render 'blko-account-26-piece', mode: 'btn', idx: n, name: pname, note: note, image: img, on: on, s: s -%}
+              {%- assign n = n | plus: 1 -%}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for b in section.blocks -%}
+          {%- assign bs = b.settings -%}
+          {%- capture note -%}{{ bs.colour }} · {{ s.worn_label | replace: '[n]', bs.wears }}{%- endcapture -%}
+          {%- assign on = false -%}{%- if forloop.first -%}{%- assign on = true -%}{%- endif -%}
+          {%- render 'blko-account-26-piece', mode: 'btn', idx: forloop.index0, name: bs.name, note: note, image: bs.image, on: on, s: s -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </ul>
+
+    <div class="baccount26__card">
+      {%- form 'contact', class: 'baccount26__form' -%}
+        <input type="hidden" name="contact[Piece]" value="" data-piece-input>
+        <input type="hidden" name="contact[Repair]" value="" data-repair-input>
+        <input type="hidden" name="contact[email]" value="{{ customer.email }}">
+        <div aria-live="polite" class="baccount26__panels">
+          {%- if real -%}
+            {%- assign n = 0 -%}
+            {%- for order in customer.orders -%}
+              {%- for line in order.line_items -%}
+                {%- if n < 6 -%}
+                  {%- capture colour -%}{{ line.variant.title | default: order.name }} · {{ s.bought_word }} {{ order.created_at | date: '%b %Y' }}{%- endcapture -%}
+                  {%- capture life -%}{{ order.created_at | date: '%b %Y' }} | {{ s.bought_line }} {{ line.variant.title }}{% if line.fulfillment %}{{ nl }}{{ line.fulfillment.created_at | date: '%b %Y' }} | {{ s.sent_line }}{% endif %}{%- endcapture -%}
+                  {%- assign care = line.product.metafields.custom.care.value | default: s.care -%}
+                  {%- assign on = false -%}{%- if n == 0 -%}{%- assign on = true -%}{%- endif -%}
+                  {%- assign pname = line.product.title | default: line.title -%}
+                  {%- render 'blko-account-26-piece', mode: 'panel', idx: n, name: pname, colour: colour, care: care, life: life, on: on, s: s -%}
+                  {%- assign n = n | plus: 1 -%}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endfor -%}
+          {%- else -%}
+            {%- for b in section.blocks -%}
+              {%- assign bs = b.settings -%}
+              {%- capture colour -%}{{ bs.colour }} · {{ s.bought_word }} {{ bs.bought }}{%- endcapture -%}
+              {%- assign care = bs.care | default: s.care -%}
+              {%- assign on = false -%}{%- if forloop.first -%}{%- assign on = true -%}{%- endif -%}
+              {%- render 'blko-account-26-piece', mode: 'panel', idx: forloop.index0, name: bs.name, colour: colour, care: care, life: bs.life, on: on, s: s -%}
+            {%- endfor -%}
+          {%- endif -%}
+        </div>
+        <section aria-label="{{ 'blko.account_26.repair' | t }}" class="baccount26__sec baccount26__repair">
+          <h3 class="baccount26__rh">{{ s.repair_heading | escape }}</h3>
+          {%- if form.posted_successfully? -%}
+            <p class="bx-small" role="status">{{ s.success | escape }}</p>
+          {%- else -%}
+            {%- if form.errors -%}<p class="bx-small baccount26__err" role="alert">{{ form.errors | default_errors }}</p>{%- endif -%}
+            <div class="baccount26__fixes" role="group" aria-label="{{ 'blko.account_26.repair_type' | t }}" data-blko-ui-options>
+              {%- assign fixes = s.repairs | split: ',' -%}
+              {%- for f in fixes -%}
+                {%- assign ff = f | strip | escape -%}
+                {%- render 'blko-ui-option', value: ff, className: 'baccount26__fix', children: ff -%}
+              {%- endfor -%}
+            </div>
+            {%- assign send = s.send_label | escape -%}
+            {%- render 'blko-ui-button', type: 'submit', className: 'baccount26__send', attrs: 'disabled data-send', children: send -%}
+          {%- endif -%}
+        </section>
+      {%- endform -%}
+    </div>
+  </blko-account-26>{%- endif -%}
+{%- endcapture -%}
+{%- render 'blko-ui-section', surface: 'alt', bleed: true, label: label, className: blko_class, style: blko_style, inner: 'bx-pad baccount26__in', children: blko_body -%}
+
+{% schema %}
+{
+  "name": "Account, wardrobe",
+  "tag": "div",
+  "class": "blko-account-26-wrap",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Pieces you"
+    },
+    {
+      "type": "text",
+      "id": "heading_em",
+      "label": "Heading, italic end",
+      "default": "live in"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "Free repairs for life on everything you buy from us. Pick a piece to see its care and history."
+    },
+    {
+      "type": "paragraph",
+      "content": "Signed-in customers see the pieces from their orders. Example pieces appear only in the theme editor; customers without orders see an empty state."
+    },
+    {
+      "type": "text",
+      "id": "worn_label",
+      "label": "Worn count",
+      "default": "worn [n]×",
+      "info": "Demo pieces. [n] is the count."
+    },
+    {
+      "type": "text",
+      "id": "bought_word",
+      "label": "Bought word",
+      "default": "bought"
+    },
+    {
+      "type": "text",
+      "id": "bought_line",
+      "label": "Bought, history line",
+      "default": "Bought,"
+    },
+    {
+      "type": "text",
+      "id": "sent_line",
+      "label": "Shipped, history line",
+      "default": "Sent out"
+    },
+    {
+      "type": "text",
+      "id": "care_label",
+      "label": "Care heading",
+      "default": "Care"
+    },
+    {
+      "type": "textarea",
+      "id": "care",
+      "label": "Default care",
+      "default": "Wash cool, 30°\nDry on the line, in shade\nIron damp, medium\nNo tumble dryer",
+      "info": "One per line, up to 4. A product's custom.care metafield wins."
+    },
+    {
+      "type": "text",
+      "id": "story_label",
+      "label": "History heading",
+      "default": "Its story so far"
+    },
+    {
+      "type": "header",
+      "content": "Repair"
+    },
+    {
+      "type": "text",
+      "id": "repair_heading",
+      "label": "Heading",
+      "default": "Needs a repair?"
+    },
+    {
+      "type": "text",
+      "id": "repairs",
+      "label": "Repairs",
+      "default": "Hem, Mend a seam, Replace buttons, Darn a hole",
+      "info": "Comma separated."
+    },
+    {
+      "type": "text",
+      "id": "send_label",
+      "label": "Button label",
+      "default": "Send it to our tailor"
+    },
+    {
+      "type": "text",
+      "id": "success",
+      "label": "Sent message",
+      "default": "Repair booked. A prepaid label is on its way."
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_source",
+      "label": "Fonts",
+      "options": [
+        {
+          "value": "bundled",
+          "label": "Bundled (EB Garamond + Albert Sans)"
+        },
+        {
+          "value": "picker",
+          "label": "Pick from the font library"
+        },
+        {
+          "value": "theme",
+          "label": "Use the theme's fonts"
+        }
+      ],
+      "default": "bundled"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors and shapes"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, corners, type style",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case…). Other themes: keep the preset."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:blko.linen.color_scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "piece",
+      "name": "Demo piece",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Washed linen midi dress"
+        },
+        {
+          "type": "text",
+          "id": "colour",
+          "label": "Colour",
+          "default": "Clay"
+        },
+        {
+          "type": "text",
+          "id": "bought",
+          "label": "Bought",
+          "default": "May 2025"
+        },
+        {
+          "type": "number",
+          "id": "wears",
+          "label": "Times worn",
+          "default": 46
+        },
+        {
+          "type": "textarea",
+          "id": "care",
+          "label": "Care",
+          "info": "One per line. Empty: the default care."
+        },
+        {
+          "type": "textarea",
+          "id": "life",
+          "label": "History",
+          "default": "May 2025 | Bought, size S",
+          "info": "One per line: date | event."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Account, wardrobe",
+      "blocks": [
+        {
+          "type": "piece",
+          "settings": {
+            "name": "Washed linen midi dress",
+            "colour": "Clay",
+            "bought": "May 2025",
+            "wears": 46,
+            "care": "Wash cool, 30°\nDry on the line, in shade\nIron damp, medium\nNo tumble dryer",
+            "life": "May 2025 | Bought, size S\nAug 2025 | Hem taken up 3 cm, free\nJun 2026 | Worn to 4 weddings"
+          }
+        },
+        {
+          "type": "piece",
+          "settings": {
+            "name": "Relaxed linen shirt",
+            "colour": "Oat",
+            "bought": "Mar 2024",
+            "wears": 88,
+            "care": "Wash cool, 30°\nDry flat or line\nIron while damp\nSoftens with every wash",
+            "life": "Mar 2024 | Bought, size M\nJan 2025 | Two buttons replaced\nSep 2026 | Elbow darned, invisible"
+          }
+        },
+        {
+          "type": "piece",
+          "settings": {
+            "name": "Linen house robe",
+            "colour": "Sand",
+            "bought": "Dec 2025",
+            "wears": 120,
+            "care": "Wash warm, 40°\nLine dry\nNo iron needed\nWash with like colours",
+            "life": "Dec 2025 | Bought, one size\nOct 2026 | Still going strong"
+          }
+        },
+        {
+          "type": "piece",
+          "settings": {
+            "name": "Resort shirt and short set",
+            "colour": "Sage",
+            "bought": "Jun 2026",
+            "wears": 14,
+            "care": "Wash cool, 30°\nDry in shade\nIron medium\nWash inside out",
+            "life": "Jun 2026 | Bought, size S"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

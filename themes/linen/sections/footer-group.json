@@ -1,0 +1,53 @@
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "footer-06": {
+      "type": "blko-footer-06",
+      "settings": {
+        "tokens": "theme",
+        "brand": "Linen"
+      },
+      "blocks": {
+        "column-1": {
+          "type": "column",
+          "settings": {
+            "title": "Shop",
+            "demo_links": "New in\nDresses\nKnitwear\nDenim\nAccessories"
+          }
+        },
+        "column-2": {
+          "type": "column",
+          "settings": {
+            "title": "Help",
+            "demo_links": "Contact us\nDelivery\nReturns\nSize guide\nTrack order",
+            "open": true
+          }
+        },
+        "column-3": {
+          "type": "column",
+          "settings": {
+            "title": "Company",
+            "demo_links": "Our story\nSustainability\nStores\nCareers"
+          }
+        },
+        "column-4": {
+          "type": "column",
+          "settings": {
+            "title": "Follow",
+            "demo_links": "Instagram\nPinterest\nTikTok\nNewsletter"
+          }
+        }
+      },
+      "block_order": [
+        "column-1",
+        "column-2",
+        "column-3",
+        "column-4"
+      ]
+    }
+  },
+  "order": [
+    "footer-06"
+  ]
+}

@@ -1,0 +1,346 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+<script data-blko-kit="linen">try { if (!new URLSearchParams(location.search).has('static') && !navigator.webdriver && !matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('blko-kit-linen'); } catch (e) {}</script>
+{{ 'blko-linen-motion.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-linen-motion.js' | asset_url }}" defer="defer"></script>
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-featured-products-49.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture blko_class -%}bfeaturedproducts49{% if s.tokens == 'theme' %} bfeaturedproducts49--theme{% endif %}{% if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}{%- endcapture -%}
+<blko-featured-products-49 class="bfeaturedproducts49-host">
+{%- capture blko_body -%}
+    <header class="bfeaturedproducts49__head">
+      <h2 class="bfeaturedproducts49__title">{{ s.heading | escape }}</h2>
+      {%- if s.link_label != blank -%}<a href="{{ s.link | default: routes.all_products_collection_url }}" class="bfeaturedproducts49__all bx-body">{{ s.link_label | escape }}</a>{%- endif -%}
+    </header>
+    <ul class="bfeaturedproducts49__grid">
+      {%- for b in section.blocks -%}
+        {%- liquid
+          assign p = b.settings.product
+          assign bs = b.settings
+          if p != blank
+            assign title = p.title
+            assign url = p.url
+            assign chosen_variant = p.selected_or_first_available_variant
+            assign price = chosen_variant.price
+            assign compare = chosen_variant.compare_at_price
+          else
+            assign title = bs.demo_title
+            assign url = routes.all_products_collection_url
+            assign price = bs.demo_price | times: 100
+            assign compare = bs.demo_compare | times: 100
+          endif
+          assign sale = false
+          if compare > price
+            assign sale = true
+          endif
+        -%}
+        <li class="bfeaturedproducts49__card" style="--o:{{ bs.zoom_origin | escape }}" {{ b.shopify_attributes }}>
+          <div class="bfeaturedproducts49__media">
+            {%- if p.featured_image != blank -%}
+              {{ p.featured_image | image_url: width: 900 | image_tag: class: 'bfeaturedproducts49__img', loading: 'lazy', widths: '360, 540, 720, 900', sizes: '(min-width: 768px) 25vw, 50vw' }}
+            {%- elsif p == blank and bs.demo_photo != blank -%}
+              {%- if request.design_mode or request.host == blank -%}<img class="bfeaturedproducts49__img" src="https://images.unsplash.com/{{ bs.demo_photo | escape }}?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="{{ bs.demo_alt | escape }}" width="800" height="1000" loading="lazy">{%- else -%}{{ 'product-1' | placeholder_svg_tag: 'bfeaturedproducts49__img' }}{%- endif -%}
+            {%- else -%}
+              {{ 'product-1' | placeholder_svg_tag: 'bfeaturedproducts49__img' }}
+            {%- endif -%}
+            <span data-sale-badge{% unless sale %} hidden{% endunless %}>{%- assign lbl = s.sale_label | escape -%}{%- render 'blko-ui-badge', tone: 'sale', className: 'bfeaturedproducts49__badge', children: lbl -%}</span>
+          </div>
+          {%- liquid
+            assign names = ''
+            assign hexes = ''
+            if p != blank
+              for opt in p.options_with_values
+                assign on = opt.name | downcase
+                if on == 'color' or on == 'colour'
+                  assign colour_index = opt.position | minus: 1
+                  assign current_colour = chosen_variant.options[colour_index]
+                  for v in opt.values
+                    assign hx = v.swatch.color | default: 'var(--c-bg-alt)'
+                    assign names = names | append: v | append: '|'
+                    assign hexes = hexes | append: hx | append: '|'
+                  endfor
+                endif
+              endfor
+            else
+              assign pairs = bs.demo_colors | split: ','
+              for pr in pairs
+                assign bits = pr | strip | split: ' '
+                assign hx = bits | last
+                assign nm = pr | strip | remove_last: hx | strip
+                assign names = names | append: nm | append: '|'
+                assign hexes = hexes | append: hx | append: '|'
+              endfor
+            endif
+            assign names = names | split: '|'
+            assign hexes = hexes | split: '|'
+          -%}
+          {%- if names.size > 0 -%}
+            <div role="group" class="bfeaturedproducts49__strip" aria-label="{{ 'blko.featured_products_49.colours' | t: product: title }}">
+              {%- for nm in names -%}
+                {%- liquid
+                  assign colour_variant = nil
+                  if p != blank
+                    for v in p.variants
+                      if v.options[colour_index] == nm
+                        if colour_variant == nil
+                          assign colour_variant = v
+                        endif
+                        if v.available
+                          assign colour_variant = v
+                          break
+                        endif
+                      endif
+                    endfor
+                  endif
+                  assign picked = false
+                  if p != blank
+                    if nm == current_colour
+                      assign picked = true
+                    endif
+                  elsif forloop.first
+                    assign picked = true
+                  endif
+                -%}
+                <button type="button" class="bfeaturedproducts49__sw" data-sw aria-label="{{ nm | escape }}" title="{{ nm | escape }}" aria-pressed="{{ picked }}" data-name="{{ nm | escape }}"{% if colour_variant != nil %} data-url="{{ p.url }}?variant={{ colour_variant.id }}" data-price="{{ colour_variant.price | money_without_trailing_zeros | escape }}" data-compare="{{ colour_variant.compare_at_price | money_without_trailing_zeros | escape }}" data-sale="{% if colour_variant.compare_at_price > colour_variant.price %}true{% else %}false{% endif %}"{% if colour_variant.featured_image != blank %} data-image="{{ colour_variant.featured_image | image_url: width: 900 }}" data-srcset="{{ colour_variant.featured_image | image_url: width: 360 }} 360w, {{ colour_variant.featured_image | image_url: width: 540 }} 540w, {{ colour_variant.featured_image | image_url: width: 900 }} 900w"{% endif %}{% endif %}><span aria-hidden="true" style="background:{{ hexes[forloop.index0] }}"></span></button>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+          <div class="bfeaturedproducts49__info">
+            <h3 class="bfeaturedproducts49__name"><a href="{{ url }}" class="bfeaturedproducts49__link">{{ title | escape }}</a></h3>
+            <div class="bfeaturedproducts49__row">
+            <span class="bx-price{% if sale %} bx-price--sale{% endif %}">
+              <span class="bx-price__now">{{ price | money_without_trailing_zeros }}</span>
+              <s class="bx-price__was"{% unless sale %} hidden{% endunless %}><span class="bx-sr">{{ 'blko.featured_products_49.was' | t }} </span>{{ compare | money_without_trailing_zeros }}</s>
+            </span>
+            {%- if names.size > 0 -%}<span class="bfeaturedproducts49__cname" data-cname>{% if p != blank %}{{ current_colour | escape }}{% else %}{{ names.first | escape }}{% endif %}</span>{%- endif -%}
+            </div>
+          </div>
+        </li>
+      {%- endfor -%}
+    </ul>
+{%- endcapture -%}
+{%- render 'blko-ui-section', surface: 'bg', bleed: true, label: s.heading, className: blko_class, style: blko_style, inner: 'bx-pad bfeaturedproducts49__in', children: blko_body -%}
+</blko-featured-products-49>
+<script src="{{ 'blko-featured-products-49.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Bestsellers, colour dots",
+  "tag": "div",
+  "class": "blko-featured-products-49-wrap",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The everyday edit"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label",
+      "default": "Shop all"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link",
+      "default": "/collections/all"
+    },
+    {
+      "type": "text",
+      "id": "sale_label",
+      "label": "Sale badge",
+      "default": "Sale"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_source",
+      "label": "Fonts",
+      "options": [
+        {
+          "value": "bundled",
+          "label": "Bundled (EB Garamond + Albert Sans)"
+        },
+        {
+          "value": "picker",
+          "label": "Pick from the font library"
+        },
+        {
+          "value": "theme",
+          "label": "Use the theme's fonts"
+        }
+      ],
+      "default": "bundled"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors and shapes"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, corners, type style",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case\u2026). Other themes: keep the preset."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:blko.linen.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "The swatch strip comes from a Color option. Blank: the demo below."
+        },
+        {
+          "type": "header",
+          "content": "Demo (no product picked)"
+        },
+        {
+          "type": "text",
+          "id": "demo_title",
+          "label": "Title",
+          "default": "The indigo camp shirt"
+        },
+        {
+          "type": "number",
+          "id": "demo_price",
+          "label": "Price",
+          "default": 98
+        },
+        {
+          "type": "number",
+          "id": "demo_compare",
+          "label": "Compare-at price",
+          "default": 0
+        },
+        {
+          "type": "text",
+          "id": "demo_colors",
+          "label": "Colours (name #hex, \u2026)",
+          "default": "Indigo #25333c, Ink #17252e"
+        },
+        {
+          "type": "text",
+          "id": "zoom_origin",
+          "label": "Photo zoom origin",
+          "default": "50% 40%"
+        },
+        {
+          "type": "text",
+          "id": "demo_photo",
+          "label": "Preview Unsplash photo ID"
+        },
+        {
+          "type": "text",
+          "id": "demo_alt",
+          "label": "Preview photo description"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "Bestsellers, colour dots",
+      "blocks": [
+        {
+          "type": "product",
+          "settings": {
+            "demo_title": "The indigo camp shirt",
+            "demo_price": 98,
+            "demo_photo": "photo-1713881649391-a1c8ddaf83cd",
+            "demo_alt": "Short-sleeved indigo linen shirt hanging from a branch above pale sand",
+            "demo_compare": 0,
+            "demo_colors": "Indigo #25333c, Ink #17252e",
+            "zoom_origin": "50% 40%"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "demo_title": "The chalk band-collar shirt",
+            "demo_price": 88,
+            "demo_photo": "photo-1713881587420-113c1c43e28a",
+            "demo_alt": "Short-sleeved chalk linen shirt on the same branch and pale sand backdrop",
+            "demo_compare": 110,
+            "demo_colors": "Chalk #f4eee7, Natural #d8c9ad",
+            "zoom_origin": "50% 40%"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

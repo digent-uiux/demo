@@ -1,0 +1,258 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-2'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+<script data-blko-kit="linen">try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-kit-linen')}catch(e){}</script>
+{{ 'blko-linen-motion.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-linen-motion.js' | asset_url }}" defer></script>
+
+{{ 'blko-testimonial-40.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture blko_class -%}btestimonial40{% if s.tokens == 'theme' %} btestimonial40--theme{% endif %}{% if blko_sid != 'scheme-2' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}{%- endcapture -%}
+{%- capture blko_body -%}
+    <header class="btestimonial40__head">
+      <div class="btestimonial40__intro">
+        <h2 class="btestimonial40__title">{{ s.heading | escape }}</h2>
+        {%- if s.text != blank -%}<p class="bx-body bx-muted btestimonial40__lead">{{ s.text | escape }}</p>{%- endif -%}
+      </div>
+      {%- if s.button_label != blank -%}
+        {%- assign href = s.button_link | default: routes.root_url -%}
+        {%- assign lbl = s.button_label | escape -%}
+        {%- render 'blko-ui-button', href: href, variant: 'outline', shape: 'pill', children: lbl -%}
+      {%- endif -%}
+    </header>
+    <ul class="btestimonial40__grid">
+      {%- for b in section.blocks -%}
+        {%- assign bs = b.settings -%}
+        <li class="btestimonial40__card" {{ b.shopify_attributes }}>
+          <span class="btestimonial40__index" aria-hidden="true">{{ s.index_label | escape }} / 0{{ forloop.index }}</span>
+          {%- assign stars_label = 'blko.testimonial_40.stars' | t: count: bs.rating -%}
+          {%- render 'blko-testimonial-40-stars', value: bs.rating, label: stars_label -%}
+          <blockquote class="btestimonial40__quote bx-body">&ldquo;{{ bs.quote | escape }}&rdquo;</blockquote>
+          <p class="btestimonial40__by bx-small">
+            <span class="btestimonial40__name">{{ bs.name | escape }}</span>
+            {%- if bs.piece != blank -%}<a href="{{ bs.piece_link | default: routes.all_products_collection_url }}" class="btestimonial40__piece">{{ bs.piece | escape }}</a>{%- endif -%}
+          </p>
+        </li>
+      {%- endfor -%}
+    </ul>
+{%- endcapture -%}
+{%- render 'blko-ui-section', surface: 'alt', bleed: true, label: s.heading, className: blko_class, style: blko_style, inner: 'bx-pad btestimonial40__in', children: blko_body -%}
+
+{% schema %}
+{
+  "name": "Reviews, face cards",
+  "tag": "div",
+  "class": "blko-testimonial-40-wrap",
+  "settings": [
+    {
+      "type": "text",
+      "id": "index_label",
+      "default": "Field note",
+      "label": "Note index label"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Worn all summer"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "Notes from people who wear our linen every day."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Read all reviews"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_source",
+      "label": "Fonts",
+      "options": [
+        {
+          "value": "bundled",
+          "label": "Bundled (EB Garamond + Albert Sans)"
+        },
+        {
+          "value": "picker",
+          "label": "Pick from the font library"
+        },
+        {
+          "value": "theme",
+          "label": "Use the theme's fonts"
+        }
+      ],
+      "default": "bundled"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors and shapes"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, corners, type style",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case\u2026). Other themes: keep the preset."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:blko.linen.color_scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "note",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "face",
+          "label": "Face"
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Stars",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Review",
+          "default": "Softer after every wash. I live in it from May to September."
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Iris B."
+        },
+        {
+          "type": "text",
+          "id": "piece",
+          "label": "Piece",
+          "default": "Linen camp shirt, sand"
+        },
+        {
+          "type": "url",
+          "id": "piece_link",
+          "label": "Piece link"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "Reviews, face cards",
+      "blocks": [
+        {
+          "type": "note",
+          "settings": {
+            "quote": "Softer after every wash. I live in it from May to September.",
+            "name": "Iris B.",
+            "piece": "Linen camp shirt, sand"
+          }
+        },
+        {
+          "type": "note",
+          "settings": {
+            "quote": "Cool on a hot train, and the creases look on purpose.",
+            "name": "Leila M.",
+            "piece": "Smock maxi dress, clay"
+          }
+        },
+        {
+          "type": "note",
+          "settings": {
+            "quote": "Drawstring waist, deep pockets, long enough for my legs.",
+            "name": "Hanne J.",
+            "piece": "Wide linen trouser, oat"
+          }
+        },
+        {
+          "type": "note",
+          "settings": {
+            "quote": "Packed it for the beach and wore it to dinner too.",
+            "name": "Rosa T.",
+            "piece": "Gauze beach robe, olive"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

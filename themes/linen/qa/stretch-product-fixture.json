@@ -1,0 +1,162 @@
+{
+  "globals": {
+    "product": {
+      "id": 17,
+      "title": "Washed linen shirt",
+      "url": "/products/shirt",
+      "description": "<p>Soft oat linen, cut for everyday wear.</p>",
+      "has_only_default_variant": false,
+      "requires_selling_plan": false,
+      "selected_or_first_available_variant": {
+        "id": 1702,
+        "title": "Oat / M",
+        "options": [
+          "Oat",
+          "M"
+        ],
+        "price": 17550,
+        "compare_at_price": 20000,
+        "available": true,
+        "quantity_rule": {
+          "min": 2,
+          "increment": 2,
+          "max": 8
+        },
+        "selling_plan_allocations": [
+          {
+            "selling_plan": {
+              "id": 51,
+              "name": "Every month"
+            },
+            "price": 12345,
+            "compare_at_price": 17550
+          }
+        ],
+        "featured_media": {
+          "src": "https://images.unsplash.com/photo-1713881604560-085594ed2c3d",
+          "alt": "Chalk linen shirt on a branch"
+        }
+      },
+      "variants": [
+        {
+          "id": 1702,
+          "title": "Oat / M",
+          "options": [
+            "Oat",
+            "M"
+          ],
+          "price": 17550,
+          "compare_at_price": 20000,
+          "available": true,
+          "quantity_rule": {
+            "min": 2,
+            "increment": 2,
+            "max": 8
+          },
+          "selling_plan_allocations": [
+            {
+              "selling_plan": {
+                "id": 51,
+                "name": "Every month"
+              },
+              "price": 12345,
+              "compare_at_price": 17550
+            }
+          ],
+          "featured_media": {
+            "src": "https://images.unsplash.com/photo-1713881604560-085594ed2c3d",
+            "alt": "Chalk linen shirt on a branch"
+          }
+        },
+        {
+          "id": 1703,
+          "title": "Black / M",
+          "options": [
+            "Black",
+            "M"
+          ],
+          "price": 18000,
+          "compare_at_price": 20000,
+          "available": true,
+          "quantity_rule": {
+            "min": 2,
+            "increment": 2,
+            "max": 8
+          },
+          "selling_plan_allocations": []
+        },
+        {
+          "id": 1704,
+          "title": "Oat / L",
+          "options": [
+            "Oat",
+            "L"
+          ],
+          "price": 19000,
+          "compare_at_price": 20000,
+          "available": false,
+          "quantity_rule": {
+            "min": 2,
+            "increment": 2,
+            "max": 8
+          },
+          "selling_plan_allocations": []
+        }
+      ],
+      "options_with_values": [
+        {
+          "name": "Colour",
+          "values": [
+            "Oat",
+            "Black"
+          ]
+        },
+        {
+          "name": "Size",
+          "values": [
+            "M",
+            "L"
+          ]
+        }
+      ],
+      "selling_plan_groups": [
+        {
+          "name": "Recurring linen",
+          "selling_plans": [
+            {
+              "id": 51,
+              "name": "Every month"
+            }
+          ]
+        }
+      ],
+      "featured_media": {
+        "src": "https://images.unsplash.com/photo-1713881604560-085594ed2c3d",
+        "alt": "Chalk linen shirt on a branch"
+      }
+    },
+    "request": {
+      "host": "linen.example",
+      "page_type": "product",
+      "design_mode": false
+    }
+  },
+  "sectionSettings": {
+    "blko-product-detail-27": {
+      "care_details": "Wash cool. Dry in the shade. Smooth the collar while damp.",
+      "material_details": "Linen with a visible slub and a light, dry hand.",
+      "pairs_with": [
+        {
+          "id": 20,
+          "title": "Blue flax shirt",
+          "url": "/products/blue-flax",
+          "price": 9800,
+          "featured_image": {
+            "src": "https://images.unsplash.com/photo-1713881842156-3d9ef36418cc",
+            "alt": "Blue flax shirt"
+          }
+        }
+      ]
+    }
+  }
+}

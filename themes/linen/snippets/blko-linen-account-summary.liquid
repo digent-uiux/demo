@@ -1,0 +1,15 @@
+<section class="blko-linen-account-summary" aria-labelledby="LinenAccountTitle-{{ section.id }}">
+  <h2 id="LinenAccountTitle-{{ section.id }}">{{ 'blko.linen.account_details' | t }}</h2>
+  {%- if customer -%}
+    <p>{{ customer.name | escape }}<br>{{ customer.email | escape }}</p>
+    {%- if customer.default_address -%}{{ customer.default_address | format_address }}{%- endif -%}
+    <p><a href="{{ routes.account_addresses_url }}">{{ 'blko.linen.addresses' | t }}</a> · <a href="{{ routes.account_logout_url }}">{{ 'blko.linen.log_out' | t }}</a></p>
+    <h3>{{ 'blko.linen.orders' | t }}</h3>
+    {% paginate customer.orders by 20 %}
+      {%- if customer.orders.size > 0 -%}
+        <ul class="blko-linen-orders">{%- for order in customer.orders -%}<li><a href="{{ order.customer_url }}">{{ order.name | escape }}</a><time datetime="{{ order.created_at | date: '%Y-%m-%d' }}">{{ order.created_at | date: format: 'date' }}</time><span>{{ order.financial_status_label | escape }} · {{ order.fulfillment_status_label | escape }}</span><strong>{{ order.total_net_amount | default: order.total_price | money_with_currency }}</strong></li>{%- endfor -%}</ul>
+        {% render 'blko-pagination', paginate: paginate %}
+      {%- else -%}<p>{{ 'blko.linen.no_orders' | t }}</p><a href="{{ routes.all_products_collection_url }}">{{ 'blko.linen.shop_all' | t }}</a>{%- endif -%}
+    {% endpaginate %}
+  {%- else -%}<p><a href="{{ routes.account_login_url }}">{{ 'blko.linen.log_in' | t }}</a></p>{%- endif -%}
+</section>

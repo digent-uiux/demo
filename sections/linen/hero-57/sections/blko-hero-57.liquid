@@ -1,0 +1,114 @@
+{%- comment -%} Hero 57 - ripple (Linen). Port of design-system/site/registry/hero/hero-57.tsx. {%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign label = s.heading_1 | append: ' ' | append: s.heading_2
+-%}
+<script>try{if(!/[?&]static\b/.test(location.search)&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-cine')}catch(e){}</script>
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-cine.css' | asset_url | stylesheet_tag }}
+{{ 'blko-hero-57.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-cine.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-hero-57.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- assign pos = '50% 40%' -%}
+{%- if s.image != blank and s.image.presentation.focal_point != blank -%}{%- assign pos = s.image.presentation.focal_point | append: '' -%}{%- endif -%}
+{%- assign pos_style = 'object-position: ' | append: pos -%}
+<section class="bhero57{% if s.tokens == 'theme' %} bhero57--theme{% endif %}" style="{{ blko_style }}" aria-label="{{ s.aria_label | escape }}" data-blko-hero57 data-strength="{{ s.ripple_strength }}" data-gl="{{ 'blko-cine-gl.js' | asset_url }}">
+  <div class="bhero57__band">
+    <div class="bhero57__media">
+      <div class="bhero57__move" data-move>
+        {%- if s.image != blank -%}
+          {{ s.image | image_url: width: 2400 | image_tag: class: 'bhero57__img', loading: 'eager', fetchpriority: 'high', crossorigin: 'anonymous', widths: '1200, 1800, 2400', sizes: '100vw', alt: s.image.alt, style: pos_style }}
+        {%- else -%}
+          {{ 'lifestyle-2' | placeholder_svg_tag: 'bhero57__img placeholder-svg' }}
+        {%- endif -%}
+      </div>
+      <span aria-hidden="true" class="bhero57__wash"></span>
+    </div>
+    <div class="bhero57__wrap">
+      <div class="bhero57__copy" data-cine="load" data-copy>
+        {%- if s.label != blank -%}
+          <p class="bhero57__label">
+            <span aria-hidden="true" class="bhero57__rule"></span>
+            <span class="bhero57__sr">{{ s.label | escape }}</span>
+            <span aria-hidden="true">{%- assign chars = s.label | split: '' -%}{%- for ch in chars -%}<span class="cine-c" style="--i:{{ forloop.index0 }}">{{ ch | escape }}</span>{%- endfor -%}</span>
+          </p>
+        {%- endif -%}
+        <h1 class="bhero57__title" aria-label="{{ label | escape }}" data-heading>
+          {%- assign lines = s.heading_1 | append: '|' | append: s.heading_2 | split: '|' -%}
+          {%- for line in lines -%}
+            <span class="bhero57__line" aria-hidden="true">
+              {%- assign words = line | split: ' ' -%}
+              {%- for w in words -%}<span><span data-w class="cine-m"><span class="cine-l">{{ w | escape }}</span></span>{% unless forloop.last %} {% endunless %}</span>{%- endfor -%}
+            </span>
+          {%- endfor -%}
+        </h1>
+        {%- if s.text != blank -%}
+          <p class="bhero57__lead">
+            {%- assign words = s.text | split: ' ' -%}
+            {%- for w in words -%}<span><span class="cine-w" style="--i:{{ forloop.index0 }}">{{ w | escape }}</span>{% unless forloop.last %} {% endunless %}</span>{%- endfor -%}
+          </p>
+        {%- endif -%}
+        <div class="bhero57__btns cine-rise">
+          {%- if s.button_label != blank -%}
+            {%- capture kids -%}<span class="cine-btn__l">{{ s.button_label | escape }}</span>{% render 'blko-ui-icon', name: 'arrow-up-right', className: 'cine-btn__a' %}{%- endcapture -%}
+            {%- assign href = s.button_link | default: routes.all_products_collection_url -%}
+            {%- render 'blko-ui-button', href: href, size: 'lg', className: 'cine-btn cine-btn--solid', children: kids -%}
+          {%- endif -%}
+          {%- if s.button_2_label != blank -%}
+            {%- capture kids -%}<span class="cine-btn__l">{{ s.button_2_label | escape }}</span>{%- endcapture -%}
+            {%- assign href = s.button_2_link | default: routes.root_url -%}
+            {%- render 'blko-ui-button', href: href, size: 'lg', variant: 'outline', className: 'cine-btn cine-btn--ink', children: kids -%}
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+    {%- if s.hint != blank -%}
+      <p aria-hidden="true" class="bhero57__hint"><span class="bhero57__dot"></span>{{ s.hint | escape }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero, ripple",
+  "tag": "div",
+  "class": "blko-hero-57-wrap",
+  "settings": [
+    { "type": "header", "content": "Content" },
+    { "type": "image_picker", "id": "image", "label": "Photo", "info": "Set a focal point to keep the face in frame." },
+    { "type": "text", "id": "aria_label", "label": "Section name (screen readers)", "default": "Coast linen, summer collection" },
+    { "type": "text", "id": "label", "label": "Label", "default": "Summer 26 · Coast linen" },
+    { "type": "text", "id": "heading_1", "label": "Heading, line 1", "default": "Made for salt air" },
+    { "type": "text", "id": "heading_2", "label": "Heading, line 2", "default": "and slow summers." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Stone-washed dresses, shirts and wraps in coastal flax, cut in small runs and made to soften with every summer." },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop the collection" },
+    { "type": "url", "id": "button_link", "label": "Button link", "default": "/collections/all" },
+    { "type": "text", "id": "button_2_label", "label": "Second button label", "default": "Our flax" },
+    { "type": "url", "id": "button_2_link", "label": "Second button link", "default": "/collections/all" },
+    { "type": "text", "id": "hint", "label": "Pointer hint", "default": "Move across the water", "info": "Shown on mouse devices when motion is on." },
+    { "type": "header", "content": "Motion" },
+    { "type": "range", "id": "ripple_strength", "label": "Ripple strength", "min": 0, "max": 100, "step": 5, "default": 70, "info": "0 turns the water effect off. Motion is skipped with reduced motion, Save-Data and in the editor preview with ?static." },
+    { "type": "header", "content": "Typography" },
+    { "type": "select", "id": "font_source", "label": "Fonts", "options": [
+      { "value": "bundled", "label": "Bundled (EB Garamond + Albert Sans)" },
+      { "value": "picker", "label": "Pick from the font library" },
+      { "value": "theme", "label": "Use the theme's fonts" }
+    ], "default": "bundled" },
+    { "type": "font_picker", "id": "heading_font", "label": "Heading font", "default": "assistant_n4" },
+    { "type": "font_picker", "id": "body_font", "label": "Body font", "default": "assistant_n4" },
+    { "type": "header", "content": "Colors and shapes" },
+    { "type": "select", "id": "tokens", "label": "Colors, corners, type style", "options": [
+      { "value": "preset", "label": "Bundled preset (Linen)" },
+      { "value": "theme", "label": "Read the theme's tokens" }
+    ], "default": "preset", "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case…). Other themes: keep the preset." },
+    { "type": "header", "content": "Spacing" },
+    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 0, "info": "Phones use 70%." },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 0 }
+  ],
+  "presets": [{ "name": "Hero, ripple" }]
+}
+{% endschema %}

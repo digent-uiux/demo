@@ -1,0 +1,8 @@
+{%- comment -%}Tabs(items:string[], value/defaultValue, look='pill', full, label, panels:HTML[], className). id REQUIRED, unique per instance (section.id + block.id). Emits blko-ui:change {value,index}.{%- endcomment -%}
+{%- assign active = value | default: defaultValue | default: items.first -%}
+<blko-ui-tabs class="blko-ui-tabs {{ className }}" data-look="{{ look | default: 'pill' }}"{% if full %} data-full{% endif %}>
+  <div role="tablist"{% if label != blank %} aria-label="{{ label | escape }}"{% endif %}>
+    {% for item in items %}<button type="button" role="tab" id="{{ id | escape }}-t{{ forloop.index0 }}" aria-selected="{% if item == active %}true{% else %}false{% endif %}" tabindex="{% if item == active %}0{% else %}-1{% endif %}"{% if panels != nil %} aria-controls="{{ id | escape }}-p{{ forloop.index0 }}"{% endif %} data-value="{{ item | escape }}">{{ item | escape }}</button>{% endfor %}
+  </div>
+  {% if panels != nil %}{% for item in items %}<div role="tabpanel" id="{{ id | escape }}-p{{ forloop.index0 }}" aria-labelledby="{{ id | escape }}-t{{ forloop.index0 }}"{% unless item == active %} hidden{% endunless %}>{{ panels[forloop.index0] }}</div>{% endfor %}{% endif %}
+</blko-ui-tabs>

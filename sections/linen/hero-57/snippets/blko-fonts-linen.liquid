@@ -1,0 +1,20 @@
+{%- comment -%}
+  Fonts for Blocko Linen block bundles. mode 'faces' prints the @font-face rules, mode 'vars' the
+  DS font tokens (--blko-font-heading, --blko-font-body…) for the section root; theme mode sets none. source: bundled (woff2 in assets, OFL) | picker | theme.
+{%- endcomment -%}
+{%- if mode == 'faces' -%}
+  {%- if source == 'picker' -%}
+    {%- assign hb = heading_font | font_modify: 'weight', 'bold' -%}
+    {%- assign bb = body_font | font_modify: 'weight', 'bold' -%}
+    {%- assign bm = body_font | font_modify: 'weight', '500' -%}
+<style>{{ heading_font | font_face: font_display: 'swap' }}{{ hb | font_face: font_display: 'swap' }}{{ body_font | font_face: font_display: 'swap' }}{{ bm | font_face: font_display: 'swap' }}{{ bb | font_face: font_display: 'swap' }}</style>
+  {%- elsif source != 'theme' -%}
+<style>@font-face{font-family:'blko EB Garamond';src:url('{{ 'blko-f-eb-garamond-normal.woff2' | asset_url }}') format('woff2');font-weight:400 800;font-style:normal;font-display:swap}@font-face{font-family:'blko EB Garamond';src:url('{{ 'blko-f-eb-garamond-italic.woff2' | asset_url }}') format('woff2');font-weight:400 800;font-style:italic;font-display:swap}@font-face{font-family:'blko Albert Sans';src:url('{{ 'blko-f-albert-sans-normal.woff2' | asset_url }}') format('woff2');font-weight:100 900;font-style:normal;font-display:swap}</style>
+  {%- endif -%}
+{%- else -%}
+  {%- case source -%}
+    {%- when 'picker' -%}{%- capture h -%}{{ heading_font.family }}, {{ heading_font.fallback_families }}{%- endcapture -%}{%- capture b -%}{{ body_font.family }}, {{ body_font.fallback_families }}{%- endcapture -%}--blko-font-heading:{{ h }};--blko-font-display:{{ h }};--blko-font-condensed:{{ h }};--blko-font-body:{{ b }};--blko-font-mono:{{ b }};
+    {%- when 'theme' -%}
+    {%- else -%}--blko-font-heading:'blko EB Garamond', Georgia, serif;--blko-font-display:'blko EB Garamond', Georgia, serif;--blko-font-condensed:'blko EB Garamond', Georgia, serif;--blko-font-body:'blko Albert Sans', system-ui, sans-serif;--blko-font-mono:'blko Albert Sans', system-ui, sans-serif;
+  {%- endcase -%}
+{%- endif -%}

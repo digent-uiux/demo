@@ -1,0 +1,44 @@
+{
+  "globals": {
+    "request": {
+      "host": "linen.example",
+      "design_mode": false,
+      "page_type": "page"
+    },
+    "customer": {
+      "name": "Avery Example",
+      "email": "avery@example.test",
+      "orders_count": 1,
+      "addresses_count": 1,
+      "default_address": {
+        "id": 101,
+        "name": "Avery Example",
+        "first_name": "Avery",
+        "last_name": "Example",
+        "address1": "1 Sample Street",
+        "city": "Montreal",
+        "country": "Canada",
+        "province": "Quebec",
+        "zip": "H1A 0A1"
+      },
+      "addresses": [
+        {
+          "id": 101,
+          "name": "Avery Example",
+          "first_name": "Avery",
+          "last_name": "Example",
+          "address1": "1 Sample Street",
+          "city": "Montreal",
+          "country": "Canada",
+          "province": "Quebec",
+          "zip": "H1A 0A1"
+        }
+      ],
+      "new_address": {
+        "country": "Canada",
+        "province": "Ontario"
+      }
+    },
+    "all_country_option_tags": "<option value=\"Canada\" data-provinces=\"[[&quot;Ontario&quot;, &quot;Ontario&quot;], [&quot;Quebec&quot;, &quot;Quebec&quot;]]\">Canada</option><option value=\"Singapore\" data-provinces=\"[]\">Singapore</option>"
+  }
+}

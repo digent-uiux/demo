@@ -1,0 +1,29 @@
+{%- comment -%}
+  Media(image, alt, ratio='portrait', framed, rounded=true, priority, className, children, placeholder='image', widths):
+  components/ui/media.tsx. One image frame: ratio, radius, optional framed card-in-card look.
+  - image: an image object (image_picker); blank shows placeholder_svg_tag (placeholder: Shopify placeholder name)
+  - ratio: square | portrait (4:5) | tall (3:4) | landscape (4:3) | wide (16:9) | hero (21:9)
+  - rounded: pass false for square corners (default rounded); children: HTML laid over the image
+{%- endcomment -%}
+{%- liquid
+  assign r = ratio | default: 'portrait'
+  assign square = false
+  if rounded == false
+    assign square = true
+  endif
+  assign load = 'lazy'
+  if priority
+    assign load = 'eager'
+  endif
+-%}
+{%- capture frame -%}
+<div class="blko-ui-media blko-ui-media--{{ r }}{% unless square %} blko-ui-media--rounded{% endunless %}{% if className != blank and framed == blank %} {{ className }}{% endif %}">
+  {%- if image != blank -%}
+    {{ image | image_url: width: 1600 | image_tag: alt: alt, loading: load, widths: widths | default: '360, 540, 720, 900, 1200, 1600', class: 'blko-ui-media__img' }}
+  {%- else -%}
+    {{ placeholder | default: 'image' | placeholder_svg_tag: 'blko-ui-media__img blko-ui-media__placeholder' }}
+  {%- endif -%}
+  {{- children -}}
+</div>
+{%- endcapture -%}
+{%- if framed -%}<div class="blko-ui-media-frame{% if className != blank %} {{ className }}{% endif %}">{{ frame }}</div>{%- else -%}{{ frame }}{%- endif -%}

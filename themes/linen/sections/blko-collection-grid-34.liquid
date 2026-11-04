@@ -1,0 +1,597 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-7'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-collection-grid-34.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture blko_class -%}bcollectiongrid34{% if s.tokens == 'theme' %} bcollectiongrid34--theme{% endif %}{% if blko_sid != 'scheme-7' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}{%- endcapture -%}
+<script src="{{ 'blko-collection-grid-34.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign label = s.heading | default: 'blko.collection_grid_34.label'
+  if s.heading == blank
+    assign label = 'blko.collection_grid_34.label' | t
+  endif
+  assign live = false
+  if collection.id != blank
+    assign live = true
+  endif
+  assign demo = false
+  unless live
+    if request.design_mode or request.host == blank
+      assign demo = true
+    endif
+  endunless
+  assign size_opt = s.size_option | default: 'Size' | downcase
+  assign run = '' | split: ','
+  assign raw = s.sizes | split: ','
+  for z in raw
+    assign zz = z | strip | split: '~'
+    assign run = run | concat: zz
+  endfor
+  assign first = s.first_count
+-%}
+{%- capture blko_body -%}
+  <blko-collection-grid-34 class="bcollectiongrid34__wrap" data-live="{{ live }}" data-catalog-count="{{ collection.products_count }}" data-error="{{ 'blko.linen.cart_error' | t | escape }}" data-available="{{ 'blko.linen.in_stock' | t | escape }}" data-first="{{ first }}" data-step="{{ s.step }}" data-fmt="{% render 'blko-ui-money', amount: 7 %}"
+    data-count="{{ s.count_text | escape }}" data-in="{{ s.in_word | escape }}" data-bag="{{ s.bag_text | escape }}"
+    data-few="{{ s.left_few | escape }}" data-on="{{ s.on_shelf | escape }}" data-sizes-left="{{ s.sizes_left | escape }}"
+    data-add-label="{{ s.add_label | escape }}" data-pick="{{ s.pick_label | escape }}" data-out-text="{{ s.out_text | escape }}"
+    data-bare-all="{{ s.bare_all | escape }}" data-bare-one="{{ s.bare_one | escape }}" data-restock="{{ s.restock | escape }}">
+    {%- capture cells -%}
+      {%- assign total = 0 -%}
+      {%- if live -%}
+        {%- paginate collection.products by 24 -%}
+          {%- for p in collection.products -%}
+            {%- liquid
+              assign si = -1
+              for o in p.options_with_values
+                assign oname = o.name | downcase
+                if oname == size_opt
+                  assign si = forloop.index0
+                  assign sizes = o.values
+                endif
+              endfor
+              assign stock = ''
+              assign vids = ''
+              assign plain = ''
+              if si >= 0
+                for z in sizes
+                  assign n = 0
+                  assign vid = ''
+                  for v in p.variants
+                    if v.options[si] == z and v.available
+                      if v.inventory_management == 'shopify' and v.inventory_policy == 'deny'
+                        assign n = n | plus: v.inventory_quantity
+                      else
+                        assign n = n | plus: 99
+                      endif
+                      if vid == ''
+                        assign vid = v.id
+                      endif
+                    endif
+                  endfor
+                  assign stock = stock | append: z | append: ':' | append: n | append: '|'
+                  if vid != ''
+                    assign vids = vids | append: z | append: ':' | append: vid | append: '|'
+                  endif
+                endfor
+              else
+                assign sizes = '' | split: ','
+                assign plain = p.selected_or_first_available_variant.id
+              endif
+              assign note = p.metafields.custom.note.value | default: ''
+              assign alt = p.featured_media.alt | default: p.title
+              assign hide = false
+              assign choose_options = false
+              if p.options_with_values.size > 1 or p.requires_selling_plan
+                assign choose_options = true
+                assign sizes = '' | split: ','
+                assign plain = ''
+              endif
+              assign total = total | plus: 1
+            -%}
+            {%- render 'blko-collection-grid-34-piece', idx: forloop.index0, name: p.title, url: p.url, image: p.featured_media, alt: alt, cloth: p.type, note: note, price: p.price, cents: true, sizes: sizes, stock: stock, vids: vids, plain: plain, s: s, hidden: hide, choose_options: choose_options, available: p.available, catalog_product: p -%}
+          {%- endfor -%}
+          {%- capture pagination -%}{% render 'blko-pagination', paginate: paginate %}{%- endcapture -%}
+        {%- endpaginate -%}
+      {%- elsif demo -%}
+        {%- for b in section.blocks -%}
+          {%- liquid
+            assign bs = b.settings
+            assign stock = ''
+            assign raw = bs.stock | split: ','
+            for r in raw
+              assign kv = r | split: ':'
+              assign kk = kv[0] | strip
+              assign vv = kv[1] | strip | default: '0'
+              assign stock = stock | append: kk | append: ':' | append: vv | append: '|'
+            endfor
+            assign alt = bs.image.alt | default: bs.name
+            assign hide = false
+            if forloop.index > first
+              assign hide = true
+            endif
+            assign total = total | plus: 1
+          -%}
+          {%- render 'blko-collection-grid-34-piece', idx: forloop.index0, name: bs.name, url: bs.url, image: bs.image, demo_photo: bs.demo_photo, compare_price: bs.compare_price, alt: alt, cloth: bs.cloth, note: bs.note, price: bs.price, cents: false, sizes: run, stock: stock, vids: '', s: s, hidden: hide -%}
+        {%- endfor -%}
+      {%- endif -%}
+    {%- endcapture -%}
+    {%- liquid
+      assign cl = '' | split: ','
+      if live
+        for t in collection.all_types
+          assign tt = t | split: '~'
+          assign cl = cl | concat: tt
+        endfor
+      else
+        for b in section.blocks
+          assign tt = b.settings.cloth | split: '~'
+          unless cl contains b.settings.cloth
+            assign cl = cl | concat: tt
+          endunless
+        endfor
+      endif
+    -%}
+    {% if live %}{% assign total = collection.products_count %}{% endif %}
+    <header class="bcollectiongrid34__head">
+      <h2 class="bcollectiongrid34__title{% unless s.show_heading %} bx-sr{% endunless %}">{{ s.heading | escape }}</h2>
+      <p aria-live="polite" class="bx-small bcollectiongrid34__count" data-status>{{ total }} {{ s.count_text | escape }}</p>
+    </header>
+
+    {% if live %}<div class="blko-linen-collection-controls"><div class="blko-linen-density" role="group" aria-label="{{ 'blko.linen.grid_density' | t }}"><button type="button" data-linen-density="compact" aria-pressed="true">{{ 'blko.linen.grid_compact' | t }}</button><button type="button" data-linen-density="spacious" aria-pressed="false">{{ 'blko.linen.grid_spacious' | t }}</button></div>{% if s.collection_menu.links.size > 0 %}<nav aria-label="{{ 'blko.linen.collections' | t }}"><ul class="blko-linen-subcollections">{% for link in s.collection_menu.links %}<li><a href="{{ link.url }}"{% if link.active %} aria-current="page"{% endif %}>{{ link.title | escape }}</a></li>{% endfor %}</ul></nav>{% endif %}{% render 'blko-linen-facets', section: section, collection: collection %}</div>{% else %}<div class="blko-linen-collection-controls"><div class="blko-linen-density" role="group" aria-label="{{ 'blko.linen.grid_density' | t }}"><button type="button" data-linen-density="compact" aria-pressed="true">{{ 'blko.linen.grid_compact' | t }}</button><button type="button" data-linen-density="spacious" aria-pressed="false">{{ 'blko.linen.grid_spacious' | t }}</button></div><details class="blko-linen-filter-shell" data-linen-filter-shell data-close="{{ 'blko.linen.close' | t }}"><summary>{{ 'blko.linen.filter_sort' | t }}</summary><form method="dialog" class="blko-linen-facets">{% render 'blko-linen-filter-heading' %}
+    <div class="bcollectiongrid34__bar">
+      <div class="bcollectiongrid34__mine">
+        <span class="bx-small bcollectiongrid34__ml">{{ s.size_label | escape }}</span>
+        {%- for z in run -%}
+          <button type="button" class="bcollectiongrid34__my" aria-pressed="false" data-mine="{{ z | escape }}">{{ z | escape }}</button>
+        {%- endfor -%}
+      </div>
+      <div role="group" aria-label="{{ 'blko.collection_grid_34.cloth' | t }}" class="bcollectiongrid34__cloths">
+        <button type="button" class="bcollectiongrid34__cc" aria-pressed="true" data-cloth-btn="">{{ s.all_label | escape }} <span class="bcollectiongrid34__n" data-n>{{ total }}</span></button>
+        {%- for c in cl -%}
+          {%- liquid
+            assign n = 0
+            if live
+              for p in collection.products
+                if p.type == c
+                  assign n = n | plus: 1
+                endif
+              endfor
+            else
+              for b in section.blocks
+                if b.settings.cloth == c
+                  assign n = n | plus: 1
+                endif
+              endfor
+            endif
+          -%}
+          <button type="button" class="bcollectiongrid34__cc" aria-pressed="false" data-cloth-btn="{{ c | escape }}">{{ c | escape }} <span class="bcollectiongrid34__n" data-n>{{ n }}</span></button>
+        {%- endfor -%}
+      </div>
+      <label class="bx-select bcollectiongrid34__sort">
+        <span class="bx-sr">{{ 'blko.collection_grid_34.sort' | t }}</span>
+        <select class="bx-input bcollectiongrid34__sel" data-sort>
+          <option value="shelf">{{ s.sort_shelf | escape }}</option>
+          <option value="low">{{ s.sort_low | escape }}</option>
+          <option value="high">{{ s.sort_high | escape }}</option>
+        </select>
+        {%- render 'blko-ui-icon', name: 'chevron-down', size: 16 -%}
+      </label>
+    </div><footer class="blko-linen-facets__actions"><button type="button" data-demo-clear>{{ 'blko.collection.clear_all' | t }}</button><button type="submit">{{ 'blko.collection.apply' | t }}</button></footer></form></details></div>
+    {% endif %}
+    <p class="bcollectiongrid34__bare" data-bare{% unless live and total == 0 %} hidden{% endunless %}>{% if live and total == 0 %}{{ 'blko.linen.collection_empty' | t }}{% endif %}</p>
+    <ul class="bcollectiongrid34__grid" data-grid>{% if live and s.editorial_image != blank %}<li class="blko-linen-collection-editorial"><figure>{{ s.editorial_image | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '400, 700, 1000', sizes: '(min-width: 768px) 60vw, 100vw', alt: s.editorial_image.alt }}{% if s.editorial_caption != blank %}<figcaption>{{ s.editorial_caption | escape }}</figcaption>{% endif %}</figure></li>{% endif %}{{ cells }}</ul>
+
+    {% if live %}{{ pagination }}{% else %}
+    <div class="bcollectiongrid34__more" data-more{% if total <= first %} hidden{% endif %}>
+      <p class="bx-small bcollectiongrid34__out" data-out>{{ s.out_text | replace: '[n]', first | replace: '[total]', total | escape }}</p>
+      <button type="button" class="bcollectiongrid34__mb" data-more-btn>{{ s.more_label | escape }}</button>
+    </div>
+    {% endif %}
+  </blko-collection-grid-34>
+{%- endcapture -%}
+{%- render 'blko-ui-section', surface: 'pop-2', bleed: true, label: label, className: blko_class, style: blko_style, inner: 'bx-pad bcollectiongrid34__in', children: blko_body -%}
+
+{% schema %}
+{
+  "name": "Collection, shelf",
+  "tag": "div",
+  "class": "blko-collection-grid-34-wrap",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Folded, hung and ready to travel"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_heading",
+      "label": "Show heading",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "count_text",
+      "label": "Count text",
+      "default": "on the shelves"
+    },
+    {
+      "type": "text",
+      "id": "in_word",
+      "label": "In word",
+      "default": "in"
+    },
+    {
+      "type": "text",
+      "id": "bag_text",
+      "label": "Bag text",
+      "default": "in your bag"
+    },
+    {
+      "type": "header",
+      "content": "Filters"
+    },
+    {
+      "type": "text",
+      "id": "size_option",
+      "label": "Size option name",
+      "default": "Size",
+      "info": "The cloth chips use the product type."
+    },
+    {
+      "type": "text",
+      "id": "sizes",
+      "label": "Size run",
+      "default": "XS, S, M, L, XL",
+      "info": "Comma separated. The 'My size' row."
+    },
+    {
+      "type": "text",
+      "id": "size_label",
+      "label": "My size label",
+      "default": "My size"
+    },
+    {
+      "type": "text",
+      "id": "all_label",
+      "label": "All label",
+      "default": "All"
+    },
+    {
+      "type": "text",
+      "id": "sort_shelf",
+      "label": "Sort, default",
+      "default": "As folded"
+    },
+    {
+      "type": "text",
+      "id": "sort_low",
+      "label": "Sort, low to high",
+      "default": "Price, low to high"
+    },
+    {
+      "type": "text",
+      "id": "sort_high",
+      "label": "Sort, high to low",
+      "default": "Price, high to low"
+    },
+    {
+      "type": "header",
+      "content": "Swing tag"
+    },
+    {
+      "type": "paragraph",
+      "content": "The note under the name comes from the product's custom.note metafield."
+    },
+    {
+      "type": "text",
+      "id": "sold_word",
+      "label": "Sold out word",
+      "default": "sold out"
+    },
+    {
+      "type": "text",
+      "id": "left_aria",
+      "label": "Stock, screen readers",
+      "default": "[n] left"
+    },
+    {
+      "type": "text",
+      "id": "left_few",
+      "label": "Last pieces",
+      "default": "Only [n] left in [s]"
+    },
+    {
+      "type": "text",
+      "id": "on_shelf",
+      "label": "In stock",
+      "default": "[s] is on the shelf"
+    },
+    {
+      "type": "text",
+      "id": "sizes_left",
+      "label": "Sizes left",
+      "default": "[k] of [n] sizes left"
+    },
+    {
+      "type": "text",
+      "id": "add_label",
+      "label": "Add label",
+      "default": "Add [s]"
+    },
+    {
+      "type": "text",
+      "id": "pick_label",
+      "label": "Pick label",
+      "default": "Pick a size"
+    },
+    {
+      "type": "text",
+      "id": "add_plain",
+      "label": "Add, no sizes",
+      "default": "Add to bag"
+    },
+    {
+      "type": "header",
+      "content": "Shelves"
+    },
+    {
+      "type": "range",
+      "id": "first_count",
+      "label": "Pieces at first",
+      "min": 3,
+      "max": 24,
+      "step": 3,
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "step",
+      "label": "Pieces per shelf",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "text",
+      "id": "out_text",
+      "label": "Shown count",
+      "default": "[n] of [total] pieces out"
+    },
+    {
+      "type": "text",
+      "id": "more_label",
+      "label": "More label",
+      "default": "Open the next shelf"
+    },
+    {
+      "type": "text",
+      "id": "bare_all",
+      "label": "Bare, all",
+      "default": "The shelves are bare in [s]."
+    },
+    {
+      "type": "text",
+      "id": "bare_one",
+      "label": "Bare, one cloth",
+      "default": "The [cloth] shelf is bare in [s]."
+    },
+    {
+      "type": "text",
+      "id": "restock",
+      "label": "Restock note",
+      "default": "We restock most pieces in six weeks."
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_source",
+      "label": "Fonts",
+      "options": [
+        {
+          "value": "bundled",
+          "label": "Bundled (EB Garamond + Albert Sans)"
+        },
+        {
+          "value": "picker",
+          "label": "Pick from the font library"
+        },
+        {
+          "value": "theme",
+          "label": "Use the theme's fonts"
+        }
+      ],
+      "default": "bundled"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors and shapes"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, corners, type style",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case\u2026). Other themes: keep the preset."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:blko.linen.color_scheme",
+      "default": "scheme-7"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "link_list",
+      "id": "collection_menu",
+      "label": "Subcollection navigation"
+    },
+    {
+      "type": "image_picker",
+      "id": "editorial_image",
+      "label": "Editorial image in wardrobe grid"
+    },
+    {
+      "type": "text",
+      "id": "editorial_caption",
+      "label": "Editorial image caption"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "piece",
+      "name": "Demo piece",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Washed linen shift"
+        },
+        {
+          "type": "text",
+          "id": "cloth",
+          "label": "Cloth",
+          "default": "Linen"
+        },
+        {
+          "type": "text",
+          "id": "note",
+          "label": "Note",
+          "default": "185 gsm, stone-washed, oat"
+        },
+        {
+          "type": "number",
+          "id": "price",
+          "label": "Price",
+          "default": 148
+        },
+        {
+          "type": "text",
+          "id": "stock",
+          "label": "Stock per size",
+          "default": "XS:2, S:4, M:3, L:0, XL:1"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "demo_photo",
+          "label": "Preview Unsplash photo ID"
+        },
+        {
+          "type": "number",
+          "id": "compare_price",
+          "label": "Preview compare price",
+          "default": 0
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "Collection, shelf",
+      "blocks": [
+        {
+          "type": "piece",
+          "settings": {
+            "name": "The collarless linen shirt",
+            "cloth": "Linen",
+            "note": "Short sleeve \u00b7 chalk",
+            "price": 88,
+            "stock": "XS:2, S:4, M:3, L:0, XL:1"
+          }
+        },
+        {
+          "type": "piece",
+          "settings": {
+            "name": "The button-through linen shirt",
+            "cloth": "Linen",
+            "note": "Short sleeve \u00b7 blue flax",
+            "price": 98,
+            "stock": "XS:0, S:2, M:2, L:3, XL:0"
+          }
+        },
+        {
+          "type": "piece",
+          "settings": {
+            "name": "The gathered linen shirt",
+            "cloth": "Linen",
+            "note": "Soft hem \u00b7 natural",
+            "price": 92,
+            "stock": "XS:0, S:0, M:0, L:0, XL:0"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

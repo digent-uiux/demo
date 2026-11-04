@@ -1,0 +1,1 @@
+{%- assign mixed_words = text | strip_html | split: ' ' -%}{{- mixed_words.first | escape -}}{% if mixed_words.size > 1 %} <span class="blko-mixed-regular">{% for word in mixed_words offset: 1 %}{{ word | escape }}{% unless forloop.last %} {% endunless %}{% endfor %}</span>{% endif %}

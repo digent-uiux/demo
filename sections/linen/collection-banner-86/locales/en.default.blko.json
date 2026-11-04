@@ -1,0 +1,12 @@
+{
+  "blko": {
+    "collection_banner_86": {
+      "breadcrumb": "Breadcrumb",
+      "count_html": {
+        "one": "<span class=\"bcollectionbanner86__num\">{{ count }}</span> piece",
+        "other": "<span class=\"bcollectionbanner86__num\">{{ count }}</span> pieces"
+      },
+      "label": "Collection header"
+    }
+  }
+}

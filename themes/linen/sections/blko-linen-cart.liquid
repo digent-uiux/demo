@@ -1,0 +1,47 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}<dialog id="LinenCartDrawer" class="blko-linen-dialog blko-linen-cart{% if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-linen-cart data-root="{{ routes.root_url }}" data-error="{{ 'blko.linen.cart_error' | t | escape }}" data-refresh-error="{{ 'blko.linen.cart_refresh_error' | t | escape }}" aria-labelledby="LinenCartTitle">
+  <header class="blko-linen-dialog__head"><h2 id="LinenCartTitle" tabindex="-1">{% assign bag_title = 'blko.cart.items' | t %}{% render 'blko-linen-mixed', text: bag_title %}</h2>{% assign close = 'blko.linen.close' | t %}{% render 'blko-ui-button', type: 'button', variant: 'ghost', size: 'sm', children: close, attrs: 'data-linen-close' %}</header>
+  <p class="blko-linen-error" data-linen-cart-error role="status" hidden></p>
+  <a href="{{ routes.cart_url }}" data-linen-cart-fallback hidden>{{ 'blko.linen.view_bag' | t }}</a>
+  <div data-linen-cart-content data-count="{{ cart.item_count }}">
+    {% if cart.item_count == 0 %}<div class="blko-linen-cart__empty"><p>{{ 'blko.cart.empty' | t }}</p><a href="{{ routes.all_products_collection_url }}">{{ 'blko.cart.continue' | t }}</a></div>{% else %}
+    <form action="{{ routes.cart_url }}" method="post" data-linen-cart-form>
+      <fieldset data-linen-cart-fields><legend class="blko-ui-sr-only">{{ 'blko.cart.items' | t }}</legend>
+      <ul class="blko-linen-cart__lines">
+      {% for item in cart.items %}<li class="blko-linen-cart__line" data-linen-line data-key="{{ item.key | escape }}">
+        <a href="{{ item.url }}" tabindex="-1" aria-hidden="true">{% if item.image != blank %}{{ item.image | image_url: width: 320 | image_tag: class: 'blko-linen-cart__image', widths: '160, 240, 320', sizes: '80px', alt: item.image.alt }}{% else %}{{ 'product-1' | placeholder_svg_tag: 'blko-linen-cart__image' }}{% endif %}</a>
+        <div><h3><a href="{{ item.url }}">{{ item.product.title | escape }}</a></h3>
+          <div class="blko-linen-cart__details">{% unless item.product.has_only_default_variant %}<p>{{ item.variant.title | escape }}</p>{% endunless %}{% if item.selling_plan_allocation %}<p>{{ item.selling_plan_allocation.selling_plan.name | escape }}</p>{% endif %}
+          {% for property in item.properties %}{% assign first_char = property.first | slice: 0 %}{% unless property.last == blank or first_char == '_' %}<p>{{ property.first | escape }}: {{ property.last | escape }}</p>{% endunless %}{% endfor %}</div>
+          <p>{% if item.original_line_price > item.final_line_price %}<s>{{ item.original_line_price | money }}</s> {% endif %}<span>{{ item.final_line_price | money }}</span></p>
+          {% for discount in item.line_level_discount_allocations %}<p class="blko-linen-cart__details">{{ discount.discount_application.title | escape }} (−{{ discount.amount | money }})</p>{% endfor %}
+          <div class="blko-linen-cart__line-controls"><label>{{ 'blko.cart.quantity' | t }}{% assign quantity_label = 'blko.cart.quantity_for' | t: title: item.product.title %}{% assign minimum = item.variant.quantity_rule.min | default: 1 %}{% render 'blko-ui-input', type: 'number', name: 'updates[]', min: minimum, required: true, step: item.variant.quantity_rule.increment, value: item.quantity, label: quantity_label %}</label><a href="{{ routes.cart_change_url }}?id={{ item.key | url_encode }}&amp;quantity=0" data-linen-remove>{{ 'blko.cart.remove' | t }}</a></div>
+        </div>
+      </li>{% endfor %}
+      </ul>
+      <div class="blko-linen-cart__footer">
+        <label class="blko-linen-cart__note" for="LinenCartNote">{{ 'blko.cart.note' | t }}{% render 'blko-ui-textarea', id: 'LinenCartNote', name: 'note', value: cart.note, rows: 2 %}</label>
+        {% for discount in cart.cart_level_discount_applications %}<p>{{ discount.title | escape }} (−{{ discount.total_allocated_amount | money }})</p>{% endfor %}
+        <div class="blko-linen-cart__total"><span>{{ 'blko.cart.subtotal' | t }}</span><strong>{{ cart.total_price | money }}</strong></div>
+        <small>{% if cart.taxes_included %}{{ 'blko.cart.taxes_included' | t }}{% else %}{{ 'blko.cart.taxes_excluded' | t }}{% endif %}</small>
+        {% assign checkout = 'blko.cart.checkout' | t %}{% render 'blko-ui-button', type: 'submit', children: checkout, full: true, attrs: 'name="checkout"' %}
+        <div class="blko-linen-cart__links"><a href="{{ routes.cart_url }}">{{ 'blko.linen.view_bag' | t }}</a>{% assign update = 'blko.cart.update' | t %}{% render 'blko-ui-button', type: 'submit', children: update, variant: 'link', attrs: 'name="update"' %}</div>
+      </div></fieldset>
+    </form>{% endif %}
+  </div>
+</dialog>
+{% schema %}
+{
+  "name": "t:linen.cart.name",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:blko.linen.color_scheme",
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

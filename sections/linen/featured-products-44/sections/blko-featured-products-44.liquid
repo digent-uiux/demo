@@ -1,0 +1,301 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+<script data-blko-kit="linen">try { if (!new URLSearchParams(location.search).has('static') && !navigator.webdriver && !matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('blko-kit-linen'); } catch (e) {}</script>
+{{ 'blko-linen-motion.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-linen-motion.js' | asset_url }}" defer="defer"></script>
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-featured-products-44.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture blko_class -%}bfeaturedproducts44{% if s.tokens == 'theme' %} bfeaturedproducts44--theme{% endif %}{% if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}{%- endcapture -%}
+<blko-featured-products-44 class="bfeaturedproducts44-host" data-preview="{% if request.design_mode or request.host == blank %}true{% else %}false{% endif %}" data-error="{{ 'blko.featured_products_44.error' | t | escape }}">
+{%- capture blko_body -%}
+    <header class="bfeaturedproducts44__head">
+      <div class="bfeaturedproducts44__intro">
+        <h2 class="bfeaturedproducts44__title">{{ s.heading | escape }}</h2>
+        {%- if s.subheading != blank -%}<p class="bfeaturedproducts44__sub">{{ s.subheading | escape }}</p>{%- endif -%}
+      </div>
+      {%- if s.link_label != blank -%}
+        {%- assign href = s.link | default: routes.all_products_collection_url -%}
+        {%- assign lbl = s.link_label | escape -%}
+        {%- render 'blko-ui-button', href: href, variant: 'outline', size: 'sm', shape: 'pill', children: lbl -%}
+      {%- endif -%}
+    </header>
+    <ul class="bfeaturedproducts44__grid">
+      {%- for b in section.blocks -%}
+        {%- liquid
+          assign p = b.settings.product
+          assign bs = b.settings
+          if p != blank
+            assign title = p.title
+            assign url = p.url
+            assign price = p.price
+            assign vid = p.selected_or_first_available_variant.id
+          else
+            assign title = bs.demo_title
+            assign url = routes.all_products_collection_url
+            assign price = bs.demo_price | times: 100
+            assign vid = ''
+          endif
+          assign add_label = 'blko.featured_products_44.quick_add' | t: product: title
+          assign added_label = 'blko.featured_products_44.added' | t: product: title
+        -%}
+        <li class="bfeaturedproducts44__card" {{ b.shopify_attributes }}>
+          {%- assign note = bs.badge | default: s.restock_label -%}
+          {%- if bs.day != blank or note != blank -%}
+          <p class="bfeaturedproducts44__ledger"><span class="bfeaturedproducts44__day">{{ bs.day | escape }}</span><span class="bfeaturedproducts44__rule" aria-hidden="true"></span><span>{{ note | escape }}</span></p>
+          {%- endif -%}
+          <div class="bfeaturedproducts44__media">
+            {%- if p.featured_image != blank -%}
+              {{ p.featured_image | image_url: width: 640 | image_tag: class: 'bfeaturedproducts44__img', loading: 'lazy', widths: '320, 480, 640', sizes: '(min-width: 768px) 25vw, 50vw' }}
+            {%- elsif p == blank and bs.demo_photo != blank -%}
+              {%- if request.design_mode or request.host == blank -%}<img class="bfeaturedproducts44__img" src="https://images.unsplash.com/{{ bs.demo_photo | escape }}?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="{{ bs.demo_alt | escape }}" width="800" height="1000" loading="lazy">{%- else -%}{{ 'product-1' | placeholder_svg_tag: 'bfeaturedproducts44__img' }}{%- endif -%}
+            {%- else -%}
+              {{ 'product-2' | placeholder_svg_tag: 'bfeaturedproducts44__img' }}
+            {%- endif -%}
+            <button type="button" class="bfeaturedproducts44__add" aria-pressed="false" aria-label="{{ add_label | escape }}" data-add="{{ add_label | escape }}" data-added="{{ added_label | escape }}" data-variant="{{ vid }}">
+              <span class="bfeaturedproducts44__plus">{% render 'blko-ui-icon', name: 'plus', size: 16 %}</span>
+              <span class="bfeaturedproducts44__check">{% render 'blko-ui-icon', name: 'check', size: 16 %}</span>
+            </button>
+          </div>
+          <div class="bfeaturedproducts44__info">
+            <h3 class="bfeaturedproducts44__name"><a href="{{ url }}">{{ title | escape }}</a></h3>
+            <span class="bx-price"><span class="bx-price__now">{{ price | money_without_trailing_zeros }}</span></span>
+          </div>
+        </li>
+      {%- endfor -%}
+    </ul>
+    <p class="bx-sr" aria-live="polite" data-live data-text="{{ 'blko.featured_products_44.in_bag' | t: count: 'N' | escape }}">{{ 'blko.featured_products_44.in_bag' | t: count: 0 }}</p>
+{%- endcapture -%}
+{%- render 'blko-ui-section', surface: 'bg', bleed: true, label: s.heading, className: blko_class, style: blko_style, inner: 'bx-pad bfeaturedproducts44__in', children: blko_body -%}
+</blko-featured-products-44>
+<script src="{{ 'blko-featured-products-44.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "New in, quick add",
+  "tag": "div",
+  "class": "blko-featured-products-44-wrap",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "New in this week"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Line under the heading",
+      "default": "Three linen cuts for long summer days."
+    },
+    {
+      "type": "text",
+      "id": "restock_label",
+      "label": "Ledger note when a product has no note",
+      "default": "Restock"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Button label",
+      "default": "View all"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Button link",
+      "default": "/collections/all"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_source",
+      "label": "Fonts",
+      "options": [
+        {
+          "value": "bundled",
+          "label": "Bundled (EB Garamond + Albert Sans)"
+        },
+        {
+          "value": "picker",
+          "label": "Pick from the font library"
+        },
+        {
+          "value": "theme",
+          "label": "Use the theme's fonts"
+        }
+      ],
+      "default": "bundled"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors and shapes"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, corners, type style",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case\u2026). Other themes: keep the preset."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:blko.linen.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "The + button adds its first available variant to the cart. Blank: the demo below."
+        },
+        {
+          "type": "text",
+          "id": "day",
+          "label": "Arrival day (ledger)",
+          "default": "Mon 27"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Ledger note",
+          "info": "Blank: the section's restock note."
+        },
+        {
+          "type": "header",
+          "content": "Demo (no product picked)"
+        },
+        {
+          "type": "text",
+          "id": "demo_title",
+          "label": "Title",
+          "default": "Linen shift dress"
+        },
+        {
+          "type": "number",
+          "id": "demo_price",
+          "label": "Price",
+          "default": 128
+        },
+        {
+          "type": "text",
+          "id": "demo_photo",
+          "label": "Preview Unsplash photo ID"
+        },
+        {
+          "type": "text",
+          "id": "demo_alt",
+          "label": "Preview photo description"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "New in, quick add",
+      "blocks": [
+        {
+          "type": "product",
+          "settings": {
+            "demo_title": "Sleeveless linen shift",
+            "demo_price": 128,
+            "demo_photo": "photo-1747396206869-75ea57b325ce",
+            "demo_alt": "Sand-coloured sleeveless linen shift on a pale studio backdrop",
+            "day": "Mon 27",
+            "badge": "New"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "demo_title": "Gathered linen midi",
+            "demo_price": 138,
+            "demo_photo": "photo-1789110519607-6176d668fb72",
+            "demo_alt": "Pale sage gathered linen midi dress on a white studio backdrop",
+            "day": "Wed 29",
+            "badge": "Restock"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "demo_title": "Rope-tie linen dress",
+            "demo_price": 118,
+            "demo_photo": "photo-1789110520302-3df8ce0410f0",
+            "demo_alt": "Short chalk linen dress with a rope waist tie on a white studio backdrop",
+            "day": "Fri 31",
+            "badge": "New"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

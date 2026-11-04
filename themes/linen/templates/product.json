@@ -1,0 +1,294 @@
+{
+  "sections": {
+    "product-detail-27": {
+      "type": "blko-product-detail-27",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "plan-1": {
+          "type": "plan",
+          "settings": {
+            "label": "Just this one",
+            "off": 0,
+            "months": "May"
+          }
+        },
+        "plan-2": {
+          "type": "plan",
+          "settings": {
+            "label": "Twice a year",
+            "plan_name": "Twice a year",
+            "off": 10,
+            "months": "May, Nov"
+          }
+        },
+        "plan-3": {
+          "type": "plan",
+          "settings": {
+            "label": "Every season",
+            "plan_name": "Every season",
+            "off": 15,
+            "months": "May, Aug, Nov, Feb",
+            "start": true
+          }
+        },
+        "colourway-4": {
+          "type": "colourway",
+          "settings": {
+            "month": "May",
+            "name": "Natural",
+            "colour": "#e4dccb"
+          }
+        },
+        "colourway-5": {
+          "type": "colourway",
+          "settings": {
+            "month": "Aug",
+            "name": "Sea salt",
+            "colour": "#bcd0d6"
+          }
+        },
+        "colourway-6": {
+          "type": "colourway",
+          "settings": {
+            "month": "Nov",
+            "name": "Olive",
+            "colour": "#8a8a5c"
+          }
+        },
+        "colourway-7": {
+          "type": "colourway",
+          "settings": {
+            "month": "Feb",
+            "name": "Clay",
+            "colour": "#c28a6c"
+          }
+        }
+      },
+      "block_order": [
+        "plan-1",
+        "plan-2",
+        "plan-3",
+        "colourway-4",
+        "colourway-5",
+        "colourway-6",
+        "colourway-7"
+      ]
+    },
+    "reviews-31": {
+      "type": "blko-reviews-31",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "stage-1": {
+          "type": "stage",
+          "settings": {
+            "label": "New",
+            "knot": "0",
+            "min": 0,
+            "soft": 48,
+            "colour": 100,
+            "shape": 98,
+            "intro": "At the first wear",
+            "line": "Crisp, a little stiff, slubby texture you can see."
+          }
+        },
+        "stage-2": {
+          "type": "stage",
+          "settings": {
+            "label": "5 washes",
+            "knot": "5",
+            "min": 5,
+            "soft": 66,
+            "colour": 99,
+            "shape": 97,
+            "intro": "At 5 washes",
+            "line": "Stiffness gone; the collar starts to roll on its own."
+          }
+        },
+        "stage-3": {
+          "type": "stage",
+          "settings": {
+            "label": "10 washes",
+            "knot": "10",
+            "min": 10,
+            "soft": 79,
+            "colour": 97,
+            "shape": 96,
+            "intro": "At 10 washes",
+            "line": "Soft against the skin, creases look lived-in, not messy."
+          }
+        },
+        "stage-4": {
+          "type": "stage",
+          "settings": {
+            "label": "20 washes",
+            "knot": "20",
+            "min": 20,
+            "soft": 91,
+            "colour": 94,
+            "shape": 95,
+            "intro": "At 20 washes",
+            "line": "Buttery hand, colour mellowed a shade, seams still flat.",
+            "start": true
+          }
+        },
+        "stage-5": {
+          "type": "stage",
+          "settings": {
+            "label": "40+ washes",
+            "knot": "40+",
+            "min": 40,
+            "soft": 97,
+            "colour": 88,
+            "shape": 92,
+            "intro": "At 40+ washes",
+            "line": "Like an old favourite; cuffs show gentle wear, no holes."
+          }
+        },
+        "review-6": {
+          "type": "review",
+          "settings": {
+            "who": "Odile",
+            "place": "Lisbon",
+            "washes": 23,
+            "care": "Cold wash, Line dried",
+            "colour": "Natural",
+            "stars": 5,
+            "date": "Oct 19",
+            "title": "Better every summer",
+            "body": "Two summers in and it's the softest thing I own. The natural has gone a touch paler, which I prefer. No pilling, every seam intact.",
+            "helpful": 73,
+            "placeholder": true
+          }
+        },
+        "review-7": {
+          "type": "review",
+          "settings": {
+            "who": "Ben",
+            "place": "Bristol",
+            "washes": 2,
+            "care": "30°C, Tumble low",
+            "colour": "Olive",
+            "stars": 4,
+            "date": "Oct 14",
+            "title": "Stiff at first, as promised",
+            "body": "Out of the parcel it felt like a sail. After one wash it relaxed a lot. Shrank about 1 cm in length on a low tumble.",
+            "helpful": 21
+          }
+        },
+        "review-8": {
+          "type": "review",
+          "settings": {
+            "who": "Rania",
+            "place": "Marseille",
+            "washes": 41,
+            "care": "Cold wash, Line dried, Never ironed",
+            "colour": "Sea salt",
+            "stars": 5,
+            "date": "Oct 08",
+            "title": "Forty-odd washes, still my holiday shirt",
+            "body": "Worn over swimsuits, to dinners, on planes. The cuffs have a soft fuzz now. Colour held better than any cotton I've had.",
+            "helpful": 58
+          }
+        },
+        "review-9": {
+          "type": "review",
+          "settings": {
+            "who": "Tom",
+            "place": "Leeds",
+            "washes": 11,
+            "care": "40°C, Line dried",
+            "colour": "Natural",
+            "stars": 5,
+            "date": "Oct 01",
+            "title": "Boxy in the right way",
+            "body": "Ten washes and it hangs better than new. Collar rolls nicely. I size up for a looser beach fit.",
+            "helpful": 16
+          }
+        },
+        "review-10": {
+          "type": "review",
+          "settings": {
+            "who": "Mei",
+            "place": "Sydney",
+            "washes": 20,
+            "care": "Cold wash, Line dried",
+            "colour": "Olive",
+            "stars": 4,
+            "date": "Sep 23",
+            "title": "Olive fades, gently",
+            "body": "Twenty washes in strong sun and the olive is a shade softer along the shoulders. Fabric is lovely. Dry it inside out.",
+            "helpful": 34
+          }
+        },
+        "review-11": {
+          "type": "review",
+          "settings": {
+            "who": "Jonas",
+            "place": "Hamburg",
+            "washes": 6,
+            "care": "30°C, Line dried",
+            "colour": "Sea salt",
+            "stars": 5,
+            "date": "Sep 16",
+            "title": "The texture is the best part",
+            "body": "You can see the slub in the weave. After a few washes it creases into soft lines rather than sharp ones.",
+            "helpful": 9
+          }
+        },
+        "review-12": {
+          "type": "review",
+          "settings": {
+            "who": "Ana",
+            "place": "Valencia",
+            "washes": 28,
+            "care": "Cold wash, Line dried",
+            "colour": "Natural",
+            "stars": 3,
+            "date": "Sep 09",
+            "title": "One button came loose",
+            "body": "Fabric has aged beautifully but a coconut button worked free around wash twenty-five. Easy to sew back; a spare was in the bag.",
+            "helpful": 27
+          }
+        },
+        "review-13": {
+          "type": "review",
+          "settings": {
+            "who": "Priya",
+            "place": "Goa",
+            "washes": 33,
+            "care": "Cold wash, Shade dried",
+            "colour": "Sea salt",
+            "stars": 5,
+            "date": "Sep 01",
+            "title": "Wears like a second skin in the heat",
+            "body": "Thirty-odd washes through a monsoon season. It dries in an hour on the line and never smells musty. The pale blue is barely faded.",
+            "helpful": 19
+          }
+        }
+      },
+      "block_order": [
+        "stage-1",
+        "stage-2",
+        "stage-3",
+        "stage-4",
+        "stage-5",
+        "review-6",
+        "review-7",
+        "review-8",
+        "review-9",
+        "review-10",
+        "review-11",
+        "review-12",
+        "review-13"
+      ]
+    }
+  },
+  "order": [
+    "product-detail-27",
+    "reviews-31"
+  ]
+}

@@ -1,0 +1,315 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-4'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-blog-80.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture blko_class -%}bblog80{% if s.tokens == 'theme' %} bblog80--theme{% endif %}{% if blko_sid != 'scheme-4' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}{%- endcapture -%}
+{%- liquid
+  assign label = 'blko.blog_80.label' | t
+  assign has_next = false
+  if blog != blank
+    assign nx = blog.next_article | default: blog.previous_article
+    if nx.title != blank
+      assign has_next = true
+    endif
+  endif
+  if has_next
+    assign n_title = nx.title
+    assign n_dek = nx.excerpt | strip_html | strip
+    if n_dek == blank
+      assign n_dek = nx.content | strip_html | truncatewords: 26
+    endif
+    assign n_topic = nx.tags.first | default: blog.title
+    assign words = nx.content | strip_html | split: ' '
+    assign n_min = words.size | divided_by: 200.0 | ceil | at_least: 1
+    assign n_url = nx.url
+    assign n_img = nx.image
+    assign n_alt = nx.image.alt | default: nx.title
+  else
+    assign n_title = s.title
+    assign n_dek = s.dek
+    assign n_topic = s.topic
+    assign n_min = s.mins
+    assign n_url = s.link | default: '#'
+    assign n_img = s.image
+    assign n_alt = s.image.alt | default: s.title
+  endif
+  assign n_read = s.read_label | replace: '[n]', n_min
+-%}
+{%- capture blko_body -%}
+  <a href="{{ n_url }}" class="bblog80__next">
+    <span class="bblog80__ph">
+      {%- if n_img != blank -%}
+        {{ n_img | image_url: width: 1600 | image_tag: class: 'bblog80__img', loading: 'lazy', widths: '800, 1200, 1600', sizes: '100vw', alt: n_alt }}
+      {%- else -%}
+        {{ 'lifestyle-2' | placeholder_svg_tag: 'bblog80__img' }}
+      {%- endif -%}
+    </span>
+    <span class="bblog80__card">
+      <span class="bblog80__title">{{ n_title | escape }}</span>
+      {%- if n_dek != blank -%}<span class="bx-body bblog80__dek">{{ n_dek | escape }}</span>{%- endif -%}
+      <span class="bblog80__meta">
+        <span class="bx-small bblog80__soft">{{ n_topic | escape }} · {{ n_read | escape }}</span>
+        <span class="bx-small bblog80__go">{{ s.read_more | escape }}{%- render 'blko-ui-icon', name: 'arrow-right', size: 16 -%}</span>
+      </span>
+    </span>
+  </a>
+
+  <div class="bblog80__more">
+    <p class="bx-label bblog80__soft">{{ s.more_label | escape }}</p>
+    <ul class="bblog80__row">
+      {%- if blog != blank and blog.articles_count > 1 -%}
+        {%- assign k = 0 -%}
+        {%- for a in blog.articles -%}
+          {%- if a.id != article.id and a.id != nx.id and k < 3 -%}
+            {%- assign words = a.content | strip_html | split: ' ' -%}
+            {%- assign m = words.size | divided_by: 200.0 | ceil | at_least: 1 -%}
+            {%- assign topic = a.tags.first | default: blog.title -%}
+            <li class="bblog80__li"><a href="{{ a.url }}" class="bblog80__a"><span class="bblog80__h4">{{ a.title | escape }}</span><span class="bx-small bblog80__soft">{{ topic | escape }} · {{ s.read_label | replace: '[n]', m | escape }}</span></a></li>
+            {%- assign k = k | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for b in section.blocks limit: 3 -%}
+          {%- assign bs = b.settings -%}
+          <li class="bblog80__li" {{ b.shopify_attributes }}><a href="{{ bs.link | default: '#' }}" class="bblog80__a"><span class="bblog80__h4">{{ bs.title | escape }}</span><span class="bx-small bblog80__soft">{{ bs.topic | escape }} · {{ s.read_label | replace: '[n]', bs.mins | escape }}</span></a></li>
+        {%- endfor -%}
+      {%- endif -%}
+    </ul>
+  </div>
+{%- endcapture -%}
+{%- render 'blko-ui-section', surface: 'pop-3', bleed: true, label: label, className: blko_class, style: blko_style, inner: 'bx-pad bx-flip bblog80__in', children: blko_body -%}
+
+{% schema %}
+{
+  "name": "Blog, next story band",
+  "tag": "div",
+  "class": "blko-blog-80-wrap",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "On an article page the next story and the row come from the blog. The demo copy shows elsewhere."
+    },
+    {
+      "type": "header",
+      "content": "Next story, demo"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Photo"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "One white dress, five ways from the jetty to dinner"
+    },
+    {
+      "type": "textarea",
+      "id": "dek",
+      "label": "Standfirst",
+      "default": "A single linen slip dress, worn through a week by the sea: barefoot at noon, belted at sundown, layered when the wind picks up."
+    },
+    {
+      "type": "text",
+      "id": "topic",
+      "label": "Topic",
+      "default": "Lookbook"
+    },
+    {
+      "type": "range",
+      "id": "mins",
+      "label": "Minutes to read",
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "default": 7
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Labels"
+    },
+    {
+      "type": "text",
+      "id": "read_label",
+      "label": "Read time",
+      "default": "[n] min read"
+    },
+    {
+      "type": "text",
+      "id": "read_more",
+      "label": "Link label",
+      "default": "Read the story"
+    },
+    {
+      "type": "text",
+      "id": "more_label",
+      "label": "Row heading",
+      "default": "Also in the journal"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_source",
+      "label": "Fonts",
+      "options": [
+        {
+          "value": "bundled",
+          "label": "Bundled (EB Garamond + Albert Sans)"
+        },
+        {
+          "value": "picker",
+          "label": "Pick from the font library"
+        },
+        {
+          "value": "theme",
+          "label": "Use the theme's fonts"
+        }
+      ],
+      "default": "bundled"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors and shapes"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, corners, type style",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case…). Other themes: keep the preset."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:blko.linen.color_scheme",
+      "default": "scheme-4"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "story",
+      "name": "Demo story",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Undyed, clay and indigo: the summer palette"
+        },
+        {
+          "type": "text",
+          "id": "topic",
+          "label": "Topic",
+          "default": "Lookbook"
+        },
+        {
+          "type": "range",
+          "id": "mins",
+          "label": "Minutes to read",
+          "min": 1,
+          "max": 30,
+          "step": 1,
+          "default": 4
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 3,
+  "presets": [
+    {
+      "name": "Blog, next story band",
+      "blocks": [
+        {
+          "type": "story",
+          "settings": {
+            "title": "Undyed, clay and indigo: the summer palette",
+            "topic": "Lookbook",
+            "mins": 4
+          }
+        },
+        {
+          "type": "story",
+          "settings": {
+            "title": "Washing linen by hand on a slow Sunday",
+            "topic": "Fabric care",
+            "mins": 5
+          }
+        },
+        {
+          "type": "story",
+          "settings": {
+            "title": "Ten days by the sea in one small bag",
+            "topic": "Travel",
+            "mins": 6
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,80 @@
+{% capture nl %}
+{% endcapture %}{%- comment -%} One bag line. live, key, name, colour, price (major units; cents: true for Shopify), qty, max, size, sizes / outs / variants (arrays; variants live only), fits ("S | text" lines), image, url, s (section settings). {%- endcomment -%}
+{%- liquid
+  assign fit_lines = fits | split: nl
+  assign fit_now = s.fit_default
+  for f in fit_lines
+    assign bits = f | split: '|'
+    assign fk = bits[0] | strip
+    if bits.size > 1 and fk == size
+      assign fit_now = bits[1] | strip
+    endif
+  endfor
+  assign total = price | times: qty
+  if live
+    assign total = line_total
+  endif
+  assign alt = 'blko.cart_page_13.photo_alt' | t | replace: '[name]', name | replace: '[colour]', colour | downcase
+  assign qlabel = 'blko.cart_page_13.quantity' | t | replace: '[name]', name
+  assign remove = s.remove_label | escape
+  assign s_sold = 'blko.cart_page_13.sold_out' | t
+-%}
+<li class="bcartpage13__line" data-line data-key="{{ key }}" data-price="{{ price }}" data-qty="{{ qty }}">
+  <a class="bcartpage13__ph"{% if url != blank %} href="{{ url }}"{% else %} tabindex="-1" aria-hidden="true"{% endif %}>
+    {%- if image != blank -%}
+      {{ image | image_url: width: 360 | image_tag: class: 'bcartpage13__img', loading: 'lazy', widths: '180, 270, 360', sizes: '(min-width: 576px) 144px, 96px', alt: alt }}
+    {%- else -%}
+      {{ 'apparel-1' | placeholder_svg_tag: 'bcartpage13__img' }}
+    {%- endif -%}
+  </a>
+  <div class="bcartpage13__body">
+    <div class="bcartpage13__top">
+      <div class="bcartpage13__nm">
+        <h2 class="bx-body bcartpage13__name">{% if url != blank %}<a href="{{ url }}">{{ name | escape }}</a>{% else %}{{ name | escape }}{% endif %}</h2>
+        <p class="bx-small bx-muted">{% if colour != blank %}<span data-colour>{{ colour | escape }}</span> · {% endif %}{% if size != blank %}{{ 'blko.cart_page_13.size_word' | t }} <span data-size>{{ size | escape }}</span>{% endif %}</p>
+      </div>
+      <span data-total>{%- render 'blko-ui-price', amount: total, compareAt: original_total, cents: cents -%}</span>
+    </div>
+    {%- if sizes.size > 0 and live == false -%}
+      <fieldset class="bcartpage13__fs">
+        <legend class="bx-label bx-muted bcartpage13__lg">{{ s.size_label | escape }}</legend>
+        <div class="bcartpage13__chips" data-blko-ui-options>
+          {%- for z in sizes -%}
+            {%- liquid
+              assign out = false
+              if outs contains z
+                assign out = true
+              endif
+              assign on = false
+              if z == size
+                assign on = true
+              endif
+              assign zfit = s.fit_default
+              for f in fit_lines
+                assign bits = f | split: '|'
+                assign fk = bits[0] | strip
+                if bits.size > 1 and fk == z
+                  assign zfit = bits[1] | strip
+                endif
+              endfor
+              assign zw = 'blko.cart_page_13.size_word' | t
+              capture zc
+                echo '<span class="bx-sr">' | append: zw | append: ' </span>' | append: z
+                if out
+                  echo '<span class="bx-sr">' | append: s_sold | append: '</span>'
+                endif
+              endcapture
+            -%}
+            {%- render 'blko-ui-option', selected: on, soldOut: out, disabled: out, value: z, children: zc, className: 'bcartpage13__chip' -%}
+            <span hidden data-opt="{{ z | escape }}" data-fit="{{ zfit | escape }}"{% if variants %} data-variant="{{ variants[forloop.index0] }}"{% endif %}></span>
+          {%- endfor -%}
+        </div>
+        <p aria-live="polite" class="bx-small bx-muted bcartpage13__fit"><span class="bcartpage13__fw">{{ s.fit_word | escape }} · </span><span data-fit>{{ fit_now | escape }}</span></p>
+      </fieldset>
+    {%- endif -%}
+    <div class="bcartpage13__acts">
+      {% if live %}{% render 'blko-ui-input', type: 'number', name: 'updates[]', min: minimum, max: max, step: step, required: true, value: qty, label: qlabel %}{% else %}{%- render 'blko-ui-quantity', size: 'sm', value: qty, max: max, label: qlabel -%}{% endif %}
+      {% if live %}{% capture remove_url %}{{ routes.cart_change_url }}?id={{ key | url_encode }}&quantity=0{% endcapture %}{% render 'blko-ui-button', href: remove_url, variant: 'ghost', size: 'sm', icon: 'trash-2', children: remove, className: 'bcartpage13__rm', attrs: 'data-remove' %}{% else %}{%- render 'blko-ui-button', variant: 'ghost', size: 'sm', icon: 'trash-2', children: remove, className: 'bcartpage13__rm', attrs: 'data-remove' -%}{% endif %}
+    </div>
+  </div>
+</li>

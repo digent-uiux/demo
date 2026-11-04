@@ -1,0 +1,97 @@
+{
+  "sections": {
+    "cart-page-13": {
+      "type": "blko-cart-page-13",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "line-1": {
+          "type": "line",
+          "settings": {
+            "name": "Wrap dress in washed linen",
+            "colour": "Clay",
+            "price": 168,
+            "qty": 1,
+            "size": "S",
+            "out": "XS",
+            "fit": "S | Ties at the waist, so S fits a 34 to 36.\nM | Room for a layer underneath.\nL | Falls a little longer, to mid-calf.\nXL | Longest length, just above the ankle."
+          }
+        },
+        "line-2": {
+          "type": "line",
+          "settings": {
+            "name": "Camp-collar shirt",
+            "colour": "Undyed",
+            "price": 98,
+            "qty": 1,
+            "size": "M",
+            "out": "XL",
+            "fit": "XS | Cut boxy: XS still sits loose.\nS | Easy through the chest, sleeves to the elbow.\nM | Our model wears M, worn open over a tee.\nL | Very relaxed, drops at the shoulder."
+          }
+        },
+        "line-3": {
+          "type": "line",
+          "settings": {
+            "name": "Two-piece lounge set",
+            "colour": "Sage",
+            "price": 142,
+            "qty": 1,
+            "size": "M",
+            "fit": "XS | Drawstring waist, fits 24 to 26 in.\nS | Drawstring waist, fits 26 to 28 in.\nM | Drawstring waist, fits 28 to 31 in.\nL | Drawstring waist, fits 31 to 34 in.\nXL | Drawstring waist, fits 34 to 37 in."
+          }
+        },
+        "wrap-4": {
+          "type": "wrap",
+          "settings": {
+            "name": "No wrap",
+            "note": "Folded in tissue, in a recycled box",
+            "tone": "bg",
+            "price": 0,
+            "none": true
+          }
+        },
+        "wrap-5": {
+          "type": "wrap",
+          "settings": {
+            "name": "Undyed",
+            "note": "Natural flax, fringed edge",
+            "tone": "bg-alt",
+            "price": 8
+          }
+        },
+        "wrap-6": {
+          "type": "wrap",
+          "settings": {
+            "name": "Clay",
+            "note": "Dyed with madder root",
+            "tone": "pop-2",
+            "price": 8,
+            "start": true
+          }
+        },
+        "wrap-7": {
+          "type": "wrap",
+          "settings": {
+            "name": "River",
+            "note": "Dyed with woad, pale blue",
+            "tone": "pop-4",
+            "price": 8
+          }
+        }
+      },
+      "block_order": [
+        "line-1",
+        "line-2",
+        "line-3",
+        "wrap-4",
+        "wrap-5",
+        "wrap-6",
+        "wrap-7"
+      ]
+    }
+  },
+  "order": [
+    "cart-page-13"
+  ]
+}

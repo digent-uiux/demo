@@ -1,0 +1,73 @@
+{
+  "blocks": [
+    {
+      "product": {
+        "id": 17,
+        "title": "Catalog linen shirt",
+        "url": "/products/catalog-linen-shirt",
+        "price": 16000,
+        "compare_at_price": 20000,
+        "selected_or_first_available_variant": {
+          "id": 1702,
+          "options": [
+            "Oat",
+            "M"
+          ],
+          "available": true,
+          "price": 17550,
+          "compare_at_price": 20000
+        },
+        "variants": [
+          {
+            "id": 1701,
+            "options": [
+              "Natural",
+              "M"
+            ],
+            "available": false,
+            "price": 16000,
+            "compare_at_price": null
+          },
+          {
+            "id": 1702,
+            "options": [
+              "Oat",
+              "M"
+            ],
+            "available": true,
+            "price": 17550,
+            "compare_at_price": 20000
+          },
+          {
+            "id": 1703,
+            "options": [
+              "Indigo",
+              "M"
+            ],
+            "available": true,
+            "price": 18000,
+            "compare_at_price": null
+          }
+        ],
+        "options_with_values": [
+          {
+            "name": "Colour",
+            "position": 1,
+            "values": [
+              "Natural",
+              "Oat",
+              "Indigo"
+            ]
+          },
+          {
+            "name": "Size",
+            "position": 2,
+            "values": [
+              "M"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

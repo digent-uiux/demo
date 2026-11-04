@@ -1,0 +1,20 @@
+{% if predictive_search.performed %}
+{% assign total = predictive_search.resources.products.size | plus: predictive_search.resources.collections.size | plus: predictive_search.resources.articles.size %}
+<div data-linen-predictive-results data-count="{{ total }}">
+  <div class="blko-linen-search__tabs" data-search-tabs role="tablist" aria-label="{{ 'blko.linen.search_suggestions' | t }}">{% for kind in (1..3) %}{% assign key = 'products' %}{% if kind == 2 %}{% assign key = 'collections' %}{% elsif kind == 3 %}{% assign key = 'articles' %}{% endif %}{% assign label = 'blko.linen.' | append: key %}<button type="button" role="tab" data-search-kind="{{ key }}" aria-selected="{% if kind == 1 %}true{% else %}false{% endif %}" tabindex="{% if kind == 1 %}0{% else %}-1{% endif %}">{{ label | t }} ({{ predictive_search.resources[key].size }})</button>{% endfor %}</div>
+  <div data-search-group="products">
+  {% if predictive_search.resources.products.size > 0 %}<ul class="blko-linen-search__results" role="presentation">
+    {% for product in predictive_search.resources.products %}<li role="presentation"><a href="{{ product.url }}" role="option" aria-selected="false" tabindex="-1">
+      {% if product.featured_image != blank %}{{ product.featured_image | image_url: width: 160 | image_tag: class: 'blko-linen-search__image', widths: '80, 120, 160', sizes: '56px', loading: 'lazy', alt: product.featured_image.alt }}{% else %}{{ 'product-1' | placeholder_svg_tag: 'blko-linen-search__image' }}{% endif %}
+      <span><span class="blko-linen-search__title">{{ product.title | escape }}</span>{% unless product.available %}<span class="blko-linen-search__status"> · {{ 'blko.products.sold_out' | t }}</span>{% endunless %}</span>
+      <span class="blko-linen-search__price">{% if product.price_varies %}{{ 'blko_ui.price.from' | t }} {% endif %}{{ product.price | money_without_trailing_zeros }}</span>
+    </a></li>{% endfor %}
+  </ul>{% else %}<p class="blko-linen-search__status">{{ 'blko.linen.search_empty' | t }}</p>{% endif %}
+  </div>
+  {% for kind in (1..2) %}{% assign key = 'collections' %}{% if kind == 2 %}{% assign key = 'articles' %}{% endif %}<div data-search-group="{{ key }}" hidden>{% if predictive_search.resources[key].size > 0 %}<ul class="blko-linen-search__results" role="presentation">{% for result in predictive_search.resources[key] %}<li role="presentation"><a href="{{ result.url }}" role="option" aria-selected="false" tabindex="-1"><span class="blko-linen-search__title">{{ result.title | escape }}</span></a></li>{% endfor %}</ul>{% else %}<p>{{ 'blko.linen.search_empty' | t }}</p>{% endif %}</div>{% endfor %}
+  <a href="{{ routes.search_url }}?q={{ predictive_search.terms | url_encode }}&amp;type=product,article" data-linen-all-search role="option" aria-selected="false" tabindex="-1">{{ 'blko.linen.search_all' | t }}</a>
+</div>
+{% endif %}
+{% schema %}
+{"name":"t:linen.search.results_name","settings":[]}
+{% endschema %}

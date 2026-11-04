@@ -1,0 +1,154 @@
+{
+  "sections": {
+    "search-results-11": {
+      "type": "blko-search-results-11",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "fabric-1": {
+          "type": "fabric",
+          "settings": {
+            "name": "Linen",
+            "feel": "Crisp, cools as you move",
+            "weight": "180 gsm",
+            "start": true
+          }
+        },
+        "fabric-2": {
+          "type": "fabric",
+          "settings": {
+            "name": "Cotton",
+            "feel": "Soft, breathable voile",
+            "weight": "120 gsm",
+            "start": true
+          }
+        },
+        "fabric-3": {
+          "type": "fabric",
+          "settings": {
+            "name": "Silk",
+            "feel": "Fluid, sand-washed",
+            "weight": "16 momme"
+          }
+        },
+        "fabric-4": {
+          "type": "fabric",
+          "settings": {
+            "name": "Hemp",
+            "feel": "Dry hand, gets softer",
+            "weight": "210 gsm"
+          }
+        },
+        "piece-5": {
+          "type": "piece",
+          "settings": {
+            "name": "Wide-sleeve linen shirt",
+            "fibre": "Linen",
+            "origin": "Woven in Portugal",
+            "price": 118,
+            "colors": "#efe7d8, #b8a88d"
+          }
+        },
+        "piece-6": {
+          "type": "piece",
+          "settings": {
+            "name": "Tiered linen sundress",
+            "fibre": "Linen",
+            "origin": "Woven in Lithuania",
+            "price": 165,
+            "colors": "#d8c8ae"
+          }
+        },
+        "piece-7": {
+          "type": "piece",
+          "settings": {
+            "name": "Long linen robe coat",
+            "fibre": "Linen",
+            "origin": "Woven in Portugal",
+            "price": 198,
+            "colors": "#cfc3ae, #6f6a5f"
+          }
+        },
+        "piece-8": {
+          "type": "piece",
+          "settings": {
+            "name": "Cotton voile beach shirt",
+            "fibre": "Cotton",
+            "origin": "Woven in India",
+            "price": 84,
+            "colors": "#ffffff, #a9bfc7"
+          }
+        },
+        "piece-9": {
+          "type": "piece",
+          "settings": {
+            "name": "Gauze cotton wrap skirt",
+            "fibre": "Cotton",
+            "origin": "Woven in India",
+            "price": 92,
+            "colors": "#e8d9c4"
+          }
+        },
+        "piece-10": {
+          "type": "piece",
+          "settings": {
+            "name": "Sand-washed silk slip",
+            "fibre": "Silk",
+            "origin": "Woven in Italy",
+            "price": 210,
+            "colors": "#f1ece3, #c9a98e"
+          }
+        },
+        "piece-11": {
+          "type": "piece",
+          "settings": {
+            "name": "Silk-blend palazzo trousers",
+            "fibre": "Silk",
+            "origin": "Woven in Italy",
+            "price": 176,
+            "colors": "#e3b7a8"
+          }
+        },
+        "piece-12": {
+          "type": "piece",
+          "settings": {
+            "name": "Hemp utility jacket",
+            "fibre": "Hemp",
+            "origin": "Woven in Romania",
+            "price": 188,
+            "colors": "#a39478, #3d3a33"
+          }
+        },
+        "piece-13": {
+          "type": "piece",
+          "settings": {
+            "name": "Hemp-cotton knit pullover",
+            "fibre": "Hemp",
+            "origin": "Knitted in Peru",
+            "price": 146,
+            "colors": "#b9b2a6"
+          }
+        }
+      },
+      "block_order": [
+        "fabric-1",
+        "fabric-2",
+        "fabric-3",
+        "fabric-4",
+        "piece-5",
+        "piece-6",
+        "piece-7",
+        "piece-8",
+        "piece-9",
+        "piece-10",
+        "piece-11",
+        "piece-12",
+        "piece-13"
+      ]
+    }
+  },
+  "order": [
+    "search-results-11"
+  ]
+}

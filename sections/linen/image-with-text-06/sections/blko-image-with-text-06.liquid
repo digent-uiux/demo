@@ -1,0 +1,315 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+<script data-blko-kit="linen">try { if (!new URLSearchParams(location.search).has('static') && !navigator.webdriver && !matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('blko-kit-linen'); } catch (e) {}</script>
+{{ 'blko-linen-motion.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-linen-motion.js' | asset_url }}" defer="defer"></script>
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-image-with-text-06.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture blko_class -%}bimagewithtext06{% if s.tokens == 'theme' %} bimagewithtext06--theme{% endif %}{% if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}{%- endcapture -%}
+{%- assign label = s.heading | strip_html -%}
+{%- capture blko_body -%}
+    <div class="bimagewithtext06__side">
+      <div class="bimagewithtext06__sticky">
+        {%- if s.eyebrow != blank -%}<p class="bx-label bimagewithtext06__eyebrow">{{ s.eyebrow | escape }}</p>{%- endif -%}
+        <h2 class="bimagewithtext06__title">{{ s.heading }}</h2>
+        {%- if s.text != blank -%}<p class="bx-body bimagewithtext06__text">{{ s.text | escape }}</p>{%- endif -%}
+        {%- if s.tag_title != blank -%}
+          <div class="bimagewithtext06__tag">
+            <div class="bimagewithtext06__taghead"><span class="bimagewithtext06__tagtitle">{{ s.tag_title | escape }}</span>{%- if s.tag_weight != blank -%}<span class="bx-label bimagewithtext06__mono">{{ s.tag_weight | escape }}</span>{%- endif -%}</div>
+            {%- if s.tag_spec != blank -%}<p class="bx-small">{{ s.tag_spec | escape }}</p>{%- endif -%}
+            {%- assign dyes = s.tag_dyes | split: ',' -%}
+            {%- if dyes.size > 0 -%}
+              <ul class="bimagewithtext06__dyes">
+                {%- for d in dyes limit: 3 -%}<li class="bx-label"><span class="bimagewithtext06__dye bimagewithtext06__dye--{{ forloop.index }}" aria-hidden="true"></span>{{ d | strip | escape }}</li>{%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+        {%- if s.button_label != blank -%}
+          {%- assign href = s.button_link | default: routes.all_products_collection_url -%}
+          {%- assign lbl = s.button_label | escape -%}
+          {%- render 'blko-ui-button', href: href, variant: 'outline', className: 'bimagewithtext06__btn', children: lbl -%}
+        {%- endif -%}
+      </div>
+    </div>
+    <div class="bimagewithtext06__shots">
+      {%- for b in section.blocks -%}
+        {%- if forloop.first -%}{%- assign ld = 'eager' -%}{%- else -%}{%- assign ld = 'lazy' -%}{%- endif -%}
+        <figure class="bimagewithtext06__shot bimagewithtext06__shot--{{ b.settings.shift }}" {{ b.shopify_attributes }}>
+          <div class="bimagewithtext06__frame bimagewithtext06__frame--{{ b.settings.ratio }}">
+            {%- if b.settings.image != blank -%}
+              {{ b.settings.image | image_url: width: 1400 | image_tag: class: 'bimagewithtext06__img', loading: ld, widths: '500, 800, 1100, 1400', sizes: '(min-width: 1024px) 50vw, 100vw', alt: b.settings.image.alt }}
+            {%- elsif b.settings.demo_photo != blank and request.host == blank or b.settings.demo_photo != blank and request.design_mode -%}<img class="bimagewithtext06__img" src="https://images.unsplash.com/{{ b.settings.demo_photo | escape }}?auto=format&amp;fit=crop&amp;w=1400&amp;q=85" alt="{{ b.settings.note | escape }}" width="1100" height="1375" loading="lazy">
+            {%- else -%}
+              {%- capture ph -%}lifestyle-{{ forloop.index | modulo: 2 | plus: 1 }}{%- endcapture -%}
+              {{ ph | placeholder_svg_tag: 'bimagewithtext06__img' }}
+            {%- endif -%}
+          </div>
+          <figcaption class="bimagewithtext06__cap"><span class="bx-label bimagewithtext06__mono">0{{ forloop.index }}</span><span class="bimagewithtext06__capt">{{ b.settings.note | escape }}</span></figcaption>
+        </figure>
+      {%- endfor -%}
+    </div>
+{%- endcapture -%}
+{%- render 'blko-ui-section', surface: 'bg', bleed: true, label: label, className: blko_class, style: blko_style, inner: 'bx-pad bimagewithtext06__grid', children: blko_body -%}
+
+{% schema %}
+{
+  "name": "Sticky text, photo stack",
+  "tag": "div",
+  "class": "blko-image-with-text-06-wrap",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Field notes \u00b7 Why linen"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "It gets <em>better</em> every summer you wear it",
+      "info": "Wrap a word in <em> to set it in italic."
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Flax needs no irrigation and very little else to grow. Woven loose, it lets air through on the hottest days, and each wash takes the stiffness out until the shirt feels like it was always yours."
+    },
+    {
+      "type": "header",
+      "content": "Cloth label"
+    },
+    {
+      "type": "text",
+      "id": "tag_title",
+      "label": "Label title",
+      "default": "The cloth",
+      "info": "Leave empty to hide the label."
+    },
+    {
+      "type": "text",
+      "id": "tag_weight",
+      "label": "Weight",
+      "default": "185 gsm"
+    },
+    {
+      "type": "text",
+      "id": "tag_spec",
+      "label": "Composition",
+      "default": "100% European flax, stone-washed twice"
+    },
+    {
+      "type": "text",
+      "id": "tag_dyes",
+      "label": "Dye names",
+      "default": "Oat, Clay, Sky",
+      "info": "Up to three, separated by commas."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop linen"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "default": "/collections/all"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_source",
+      "label": "Fonts",
+      "options": [
+        {
+          "value": "bundled",
+          "label": "Bundled (EB Garamond + Albert Sans)"
+        },
+        {
+          "value": "picker",
+          "label": "Pick from the font library"
+        },
+        {
+          "value": "theme",
+          "label": "Use the theme's fonts"
+        }
+      ],
+      "default": "bundled"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors and shapes"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, corners, type style",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case\u2026). Other themes: keep the preset."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:blko.linen.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "photo",
+      "name": "Photo",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo"
+        },
+        {
+          "type": "text",
+          "id": "note",
+          "label": "Note",
+          "default": "Worn: the long robe, loose at the sleeve"
+        },
+        {
+          "type": "select",
+          "id": "ratio",
+          "label": "Shape",
+          "default": "portrait",
+          "options": [
+            {
+              "value": "portrait",
+              "label": "Portrait 4:5"
+            },
+            {
+              "value": "landscape",
+              "label": "Landscape 4:3"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "shift",
+          "label": "Offset on wide screens",
+          "default": "none",
+          "options": [
+            {
+              "value": "none",
+              "label": "None"
+            },
+            {
+              "value": "left",
+              "label": "Indent from left"
+            },
+            {
+              "value": "right",
+              "label": "Indent from right"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "demo_photo",
+          "label": "Preview Unsplash photo ID"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Sticky text, photo stack",
+      "blocks": [
+        {
+          "type": "photo",
+          "settings": {
+            "note": "Worn: the long robe, loose at the sleeve",
+            "ratio": "portrait",
+            "shift": "none"
+          }
+        },
+        {
+          "type": "photo",
+          "settings": {
+            "note": "Folded: three quiet shades for long days",
+            "ratio": "landscape",
+            "shift": "left",
+            "demo_photo": "photo-1713881630214-82c44407cf25"
+          }
+        },
+        {
+          "type": "photo",
+          "settings": {
+            "note": "In the details: a soft handle, right down to the seam",
+            "ratio": "portrait",
+            "shift": "right"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

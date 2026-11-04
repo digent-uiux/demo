@@ -1,0 +1,51 @@
+{
+  "globals": {
+    "request": {
+      "host": "linen.example",
+      "design_mode": false,
+      "page_type": "customers/account"
+    },
+    "customer": {
+      "name": "Avery Example",
+      "email": "avery@example.test",
+      "orders_count": 0,
+      "orders": []
+    },
+    "localization": {
+      "available_countries": [
+        {
+          "iso_code": "US",
+          "name": "United States",
+          "currency": {
+            "iso_code": "USD",
+            "symbol": "$"
+          }
+        },
+        {
+          "iso_code": "FR",
+          "name": "France",
+          "currency": {
+            "iso_code": "EUR",
+            "symbol": "\u20ac"
+          }
+        }
+      ],
+      "country": {
+        "iso_code": "US"
+      },
+      "available_languages": [
+        {
+          "iso_code": "en",
+          "endonym_name": "English"
+        },
+        {
+          "iso_code": "fr",
+          "endonym_name": "Fran\u00e7ais"
+        }
+      ],
+      "language": {
+        "iso_code": "en"
+      }
+    }
+  }
+}

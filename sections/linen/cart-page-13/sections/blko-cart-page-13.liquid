@@ -1,0 +1,768 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-cart-page-13.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture blko_class -%}bcartpage13{% if s.tokens == 'theme' %} bcartpage13--theme{% endif %}{% if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}{%- endcapture -%}
+<script src="{{ 'blko-cart-page-13.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign label = 'blko.cart_page_13.label' | t
+  assign live = false
+  if cart.items.size > 0
+    assign live = true
+  endif
+  if request.page_type == 'cart' and request.host != blank and request.design_mode == false
+    assign live = true
+  endif
+  assign demo = false
+  unless live
+    if request.design_mode or request.page_type != 'cart'
+      assign demo = true
+    endif
+  endunless
+  assign size_opt = s.size_option | default: 'Size' | downcase
+  assign demo_sizes = s.sizes | split: ','
+  assign count = 0
+  assign subtotal = 0
+  if live
+    assign count = cart.item_count
+    assign subtotal = cart.total_price
+  elsif demo
+    for b in section.blocks
+      if b.type == 'line'
+        assign count = count | plus: b.settings.qty
+        assign line_total = b.settings.price | times: b.settings.qty
+        assign subtotal = subtotal | plus: line_total
+      endif
+    endfor
+  endif
+  assign has_lines = false
+  if count > 0
+    assign has_lines = true
+  endif
+  assign wrap_on = ''
+  assign wrap_price = 0
+  assign wrap_none = false
+  for b in section.blocks
+    if b.type == 'wrap'
+      if live
+        if cart.attributes.Wrap == b.settings.name
+          assign wrap_on = b.id
+        endif
+      elsif b.settings.start
+        assign wrap_on = b.id
+      endif
+    endif
+  endfor
+  for b in section.blocks
+    if b.type == 'wrap' and b.id == wrap_on
+      assign wrap_price = b.settings.price
+      assign wrap_none = b.settings.none
+      assign wrap_note = b.settings.note
+    endif
+  endfor
+  if live
+    assign note = cart.attributes['Gift note']
+    assign free_cents = s.free_over | times: 100
+    assign gap = free_cents | minus: subtotal
+    assign total = subtotal
+  else
+    assign note = s.note_default
+    assign gap = s.free_over | minus: subtotal
+    assign ship = s.ship_cost
+    if subtotal >= s.free_over or subtotal == 0
+      assign ship = 0
+    endif
+    assign total = subtotal | plus: ship
+    if has_lines
+      assign total = total | plus: wrap_price
+    endif
+  endif
+  assign cents = live
+-%}
+{%- capture blko_body -%}
+  <blko-cart-page-13 class="bcartpage13__wrap" data-section-id="{{ section.id }}" data-cart-error="{{ 'blko.linen.cart_error' | t | escape }}"{% if live %} data-live{% endif %} data-free="{{ s.free_over }}" data-ship="{{ s.ship_cost }}" data-fmt="{% render 'blko-ui-money', amount: 7 %}">
+    <header class="bcartpage13__head">
+      <div class="bcartpage13__hl">
+        <p class="bx-label bx-muted" data-count-line>{{ s.count_label | escape }} · <span data-count>{{ count }}</span> <span data-one{% if count != 1 %} hidden{% endif %}>{{ s.piece_one | escape }}</span><span data-many{% if count == 1 %} hidden{% endif %}>{{ s.piece_many | escape }}</span></p>
+        <h1 class="bcartpage13__title">{{ s.heading | escape }}</h1>
+      </div>
+      {%- if s.text != blank -%}<p class="bx-small bx-muted bcartpage13__lead">{{ s.text | escape }}</p>{%- endif -%}
+    </header>
+
+    {% if live %}<p data-linen-cart-status role="status" class="blko-linen-error" hidden></p><a data-linen-cart-page-fallback href="{{ routes.cart_url }}" hidden>{{ 'blko.linen.view_bag' | t }}</a>{% endif %}
+    <form action="{{ routes.cart_url }}" method="post" class="bcartpage13__grid"{% unless live %} novalidate{% endunless %}>
+      <ul class="bcartpage13__lines" data-lines>
+        {%- if live -%}
+          {%- for item in cart.items -%}
+            {%- liquid
+              assign p = item.product
+              assign si = -1
+              for o in p.options_with_values
+                assign oname = o.name | downcase
+                if oname == size_opt
+                  assign si = forloop.index0
+                  assign sizes = o.values
+                endif
+              endfor
+              assign size = ''
+              assign colour = ''
+              assign outs = ''
+              assign vids = ''
+              if si >= 0
+                assign size = item.variant.options[si]
+                for z in sizes
+                  assign vid = ''
+                  for v in p.variants
+                    assign match = true
+                    for ov in v.options
+                      if forloop.index0 == si
+                        if ov != z
+                          assign match = false
+                        endif
+                      elsif ov != item.variant.options[forloop.index0]
+                        assign match = false
+                      endif
+                    endfor
+                    if match
+                      assign vid = v.id
+                      unless v.available
+                        assign outs = outs | append: z | append: '|'
+                      endunless
+                    endif
+                  endfor
+                  if vid == ''
+                    assign outs = outs | append: z | append: '|'
+                  endif
+                  assign vids = vids | append: vid | append: '|'
+                endfor
+                for ov in item.variant.options
+                  if forloop.index0 != si
+                    assign colour = colour | append: ov | append: ' / '
+                  endif
+                endfor
+                assign colour = colour | remove_last: ' / '
+              else
+                unless item.product.has_only_default_variant
+                  assign colour = item.variant.title
+                endunless
+                assign sizes = ''
+              endif
+              assign out_list = outs | split: '|'
+              assign vid_list = vids | split: '|'
+              if si < 0
+                assign sizes = '' | split: ','
+              endif
+              assign fits = p.metafields.custom.fit.value | default: ''
+              assign img = item.image | default: p.featured_image
+            -%}
+            {%- render 'blko-cart-page-13-line', live: true, key: item.key, name: p.title, colour: colour, price: item.final_price, line_total: item.final_line_price, original_total: item.original_line_price, cents: true, qty: item.quantity, minimum: item.variant.quantity_rule.min, max: item.variant.quantity_rule.max, step: item.variant.quantity_rule.increment, size: size, sizes: sizes, outs: out_list, variants: vid_list, fits: fits, image: img, url: item.url, s: s -%}
+          {%- endfor -%}
+        {%- elsif demo -%}
+          {%- for b in section.blocks -%}
+            {%- if b.type == 'line' -%}
+              {%- assign bs = b.settings -%}
+              {%- assign outs = bs.out | split: ',' -%}
+              {%- assign out_list = '' | split: ',' -%}
+              {%- for o in outs -%}{%- assign oo = o | strip | split: '~' -%}{%- assign out_list = out_list | concat: oo -%}{%- endfor -%}
+              {%- assign sizes = '' | split: ',' -%}
+              {%- for z in demo_sizes -%}{%- assign zz = z | strip | split: '~' -%}{%- assign sizes = sizes | concat: zz -%}{%- endfor -%}
+              {%- render 'blko-cart-page-13-line', live: false, key: b.id, name: bs.name, colour: bs.colour, price: bs.price, cents: false, qty: bs.qty, max: 5, size: bs.size, sizes: sizes, outs: out_list, fits: bs.fit, image: bs.image, s: s -%}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+        <li class="bcartpage13__empty" data-empty{% if has_lines %} hidden{% endif %}>
+          <p class="bcartpage13__et">{{ s.empty_heading | escape }}</p>
+          <a href="{{ s.empty_url | default: routes.all_products_collection_url }}" class="bx-small bcartpage13__el">{{ s.empty_link | escape }}</a>
+        </li>
+      </ul>
+
+      <aside aria-label="{{ 'blko.cart_page_13.aside' | t }}" class="bcartpage13__side">
+        {%- assign tone = 'bg' -%}
+        {%- for b in section.blocks -%}{%- if b.id == wrap_on -%}{%- assign tone = b.settings.tone -%}{%- endif -%}{%- endfor -%}
+        <fieldset class="bcartpage13__cloth"{% if wrap_none or wrap_on == '' %} data-none{% endif %} style="--tone:var(--c-{{ tone }})">
+          <legend class="bx-sr">{{ s.wrap_heading | escape }}</legend>
+          <div class="bcartpage13__ch">
+            <div class="bcartpage13__ct">
+              <p aria-hidden="true" class="bcartpage13__wh">{{ s.wrap_heading | escape }}</p>
+              {%- if s.wrap_text != blank -%}<p class="bx-small bx-muted">{{ s.wrap_text | escape }}</p>{%- endif -%}
+            </div>
+            <div aria-hidden="true" class="bcartpage13__parcel">
+              <span class="bcartpage13__cloth-sq"></span>
+              <span class="bcartpage13__tie bcartpage13__tie--v"></span>
+              <span class="bcartpage13__tie bcartpage13__tie--h"></span>
+              <span class="bcartpage13__knot"></span>
+            </div>
+          </div>
+          <div class="bcartpage13__sws">
+            {%- for b in section.blocks -%}
+              {%- if b.type == 'wrap' -%}
+                {%- assign bs = b.settings -%}
+                <label class="bcartpage13__sw" style="--sw:var(--c-{{ bs.tone }})" {{ b.shopify_attributes }}>
+                  <input type="radio" name="attributes[Wrap]" value="{{ bs.name | escape }}" class="bx-sr" data-wrap data-price="{% if live %}0{% else %}{{ bs.price }}{% endif %}" data-tone="{{ bs.tone }}" data-note="{{ bs.note | escape }}"{% if bs.none %} data-none{% endif %}{% if b.id == wrap_on %} checked{% endif %}>
+                  <span aria-hidden="true" class="bcartpage13__swatch"></span>
+                  <span class="bcartpage13__swt">
+                    <span class="bx-small bcartpage13__swn">{{ bs.name | escape }}</span>
+                    <span class="bx-label bx-muted bcartpage13__swp">{% if bs.price > 0 and live == false %}+{% render 'blko-ui-money', amount: bs.price %}{% else %}{{ s.free_word | escape }}{% endif %}</span>
+                  </span>
+                </label>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+          <p aria-live="polite" class="bx-small bx-muted" data-wrap-note>{% if wrap_note != blank %}{{ wrap_note | escape }}.{% endif %}</p>
+          {%- capture field -%}
+            {%- assign nid = 'cp13-note-' | append: section.id -%}
+            {%- assign hid = nid | append: '-hint' -%}
+            {%- render 'blko-ui-textarea', id: nid, name: 'attributes[Gift note]', rows: 2, value: note, describedBy: hid, className: 'bcartpage13__note' -%}
+          {%- endcapture -%}
+          {%- capture hint -%}<span data-len>{{ note.size }}</span>/80{%- endcapture -%}
+          {%- assign nlabel = s.note_label | escape -%}
+          <div class="bcartpage13__nf" data-note-field{% if wrap_none or wrap_on == '' %} hidden{% endif %}>
+            {%- render 'blko-ui-field', id: nid, label: nlabel, hint: hint, optional: true, children: field -%}
+          </div>
+        </fieldset>
+
+        {% if live %}<label class="blko-linen-cart__note">{{ 'blko.cart.note' | t }}{% render 'blko-ui-textarea', name: 'note', value: cart.note, rows: 2 %}</label>{% assign update = 'blko.cart.update' | t %}{% render 'blko-ui-button', type: 'submit', variant: 'outline', children: update, attrs: 'name="update"' %}{% endif %}
+        <div class="bcartpage13__sum">
+          {% if live %}{% for discount in cart.cart_level_discount_applications %}<p class="bx-small">{{ discount.title | escape }} (−{{ discount.total_allocated_amount | money }})</p>{% endfor %}{% endif %}
+          <dl class="bx-small bcartpage13__dl">
+            <div><dt class="bx-muted">{{ s.subtotal_label | escape }}</dt><dd data-subtotal>{% render 'blko-ui-money', amount: subtotal, cents: cents %}</dd></div>
+            <div><dt class="bx-muted">{{ s.wrap_label | escape }}</dt><dd data-wrap-cost data-free="{{ s.free_word | escape }}" data-none="{{ s.none_word | escape }}">{% if live %}{% if wrap_none or wrap_on == '' %}{{ s.none_word | escape }}{% else %}{{ s.free_word | escape }}{% endif %}{% elsif has_lines and wrap_price > 0 %}{% render 'blko-ui-money', amount: wrap_price %}{% else %}{{ s.none_word | escape }}{% endif %}</dd></div>
+            <div><dt class="bx-muted">{{ s.shipping_label | escape }}</dt><dd data-ship-cost>{% if live %}{% if gap <= 0 %}{{ s.free_word | escape }}{% else %}{{ s.ship_later | escape }}{% endif %}{% elsif ship > 0 %}{% render 'blko-ui-money', amount: ship %}{% else %}{{ s.free_word | escape }}{% endif %}</dd></div>
+          </dl>
+          <p class="bx-small bx-muted" data-ship-line data-done="{{ s.ship_done | escape }}" data-more="{{ s.ship_more | escape }}">
+            {%- if gap <= 0 -%}{{ s.ship_done | escape }}{%- else -%}{%- capture amt -%}{% render 'blko-ui-money', amount: gap, cents: cents %}{%- endcapture -%}{{ s.ship_more | escape | replace: '[amount]', amt }}{%- endif -%}
+          </p>
+          {%- capture btn -%}{{ s.checkout_label | escape }} · <span data-total>{% render 'blko-ui-money', amount: total, cents: cents %}</span>{%- endcapture -%}
+          {%- capture battrs -%}name="checkout" data-checkout{% unless has_lines %} disabled{% endunless %}{%- endcapture -%}
+          {%- render 'blko-ui-button', type: 'submit', size: 'lg', full: true, icon: 'lock', iconAfter: 'arrow-right', children: btn, attrs: battrs -%}
+          {%- if s.exchange_text != blank -%}
+            <p class="bx-label bx-muted bcartpage13__ex">{%- render 'blko-ui-icon', name: 'rotate-ccw', size: 14, className: 'bcartpage13__exi' -%}{{ s.exchange_text | escape }}</p>
+          {%- endif -%}
+          {%- if s.show_payment -%}{%- render 'blko-ui-payment-marks' -%}{%- endif -%}
+        </div>
+      </aside>
+    </form>
+  </blko-cart-page-13>
+{%- endcapture -%}
+{%- render 'blko-ui-section', surface: 'bg', bleed: true, label: label, className: blko_class, style: blko_style, inner: 'bx-pad bcartpage13__in', children: blko_body -%}
+
+{% schema %}
+{
+  "name": "Cart, size swap",
+  "tag": "div",
+  "class": "blko-cart-page-13-wrap",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "count_label",
+      "label": "Count label",
+      "default": "Bag"
+    },
+    {
+      "type": "text",
+      "id": "piece_one",
+      "label": "One piece",
+      "default": "piece"
+    },
+    {
+      "type": "text",
+      "id": "piece_many",
+      "label": "Several pieces",
+      "default": "pieces"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Your bag, ready for the warm months"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "Not sure of a size? Change it here. Every piece is cut to order within three days."
+    },
+    {
+      "type": "header",
+      "content": "Lines"
+    },
+    {
+      "type": "text",
+      "id": "size_option",
+      "label": "Size option name",
+      "default": "Size",
+      "info": "Products with this option get size chips. Swapping a size replaces the line."
+    },
+    {
+      "type": "text",
+      "id": "size_label",
+      "label": "Size heading",
+      "default": "Change size"
+    },
+    {
+      "type": "text",
+      "id": "fit_word",
+      "label": "Fit word",
+      "default": "Fit"
+    },
+    {
+      "type": "text",
+      "id": "fit_default",
+      "label": "Default fit note",
+      "default": "True to size.",
+      "info": "A product's custom.fit metafield (one 'S | note' per line) wins."
+    },
+    {
+      "type": "text",
+      "id": "remove_label",
+      "label": "Remove label",
+      "default": "Remove"
+    },
+    {
+      "type": "text",
+      "id": "empty_heading",
+      "label": "Empty bag heading",
+      "default": "Your bag is empty."
+    },
+    {
+      "type": "text",
+      "id": "empty_link",
+      "label": "Empty bag link",
+      "default": "Back to the summer edit"
+    },
+    {
+      "type": "url",
+      "id": "empty_url",
+      "label": "Empty bag link URL"
+    },
+    {
+      "type": "header",
+      "content": "Cloth wrap"
+    },
+    {
+      "type": "text",
+      "id": "wrap_heading",
+      "label": "Heading",
+      "default": "Wrap it in cloth"
+    },
+    {
+      "type": "text",
+      "id": "wrap_text",
+      "label": "Text",
+      "default": "A linen square tied with a knot. They keep it, we skip the paper."
+    },
+    {
+      "type": "text",
+      "id": "note_label",
+      "label": "Note label",
+      "default": "Note on the tag"
+    },
+    {
+      "type": "header",
+      "content": "Summary"
+    },
+    {
+      "type": "text",
+      "id": "subtotal_label",
+      "label": "Subtotal label",
+      "default": "Subtotal"
+    },
+    {
+      "type": "text",
+      "id": "wrap_label",
+      "label": "Wrap label",
+      "default": "Cloth wrap"
+    },
+    {
+      "type": "text",
+      "id": "shipping_label",
+      "label": "Shipping label",
+      "default": "Shipping"
+    },
+    {
+      "type": "text",
+      "id": "free_word",
+      "label": "Free word",
+      "default": "Free"
+    },
+    {
+      "type": "text",
+      "id": "none_word",
+      "label": "None word",
+      "default": "None"
+    },
+    {
+      "type": "text",
+      "id": "ship_later",
+      "label": "Shipping, not free yet",
+      "default": "At checkout"
+    },
+    {
+      "type": "number",
+      "id": "free_over",
+      "label": "Free shipping from",
+      "default": 150
+    },
+    {
+      "type": "text",
+      "id": "ship_done",
+      "label": "Free shipping reached",
+      "default": "Shipping is on us."
+    },
+    {
+      "type": "text",
+      "id": "ship_more",
+      "label": "Free shipping gap",
+      "default": "Add [amount] more for free shipping.",
+      "info": "[amount] is the gap."
+    },
+    {
+      "type": "text",
+      "id": "checkout_label",
+      "label": "Checkout label",
+      "default": "Checkout"
+    },
+    {
+      "type": "text",
+      "id": "exchange_text",
+      "label": "Exchange note",
+      "default": "Free size exchanges for 30 days"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment",
+      "label": "Show payment methods",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Demo"
+    },
+    {
+      "type": "paragraph",
+      "content": "Demo lines show in the editor while the cart is empty. The live cart page shows the real bag."
+    },
+    {
+      "type": "text",
+      "id": "sizes",
+      "label": "Demo sizes",
+      "default": "XS, S, M, L, XL"
+    },
+    {
+      "type": "number",
+      "id": "ship_cost",
+      "label": "Demo shipping cost",
+      "default": 9
+    },
+    {
+      "type": "text",
+      "id": "note_default",
+      "label": "Demo note",
+      "default": "For the long summer, love M"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_source",
+      "label": "Fonts",
+      "options": [
+        {
+          "value": "bundled",
+          "label": "Bundled (EB Garamond + Albert Sans)"
+        },
+        {
+          "value": "picker",
+          "label": "Pick from the font library"
+        },
+        {
+          "value": "theme",
+          "label": "Use the theme's fonts"
+        }
+      ],
+      "default": "bundled"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors and shapes"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, corners, type style",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case…). Other themes: keep the preset."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:blko.linen.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "line",
+      "name": "Demo line",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Wrap dress in washed linen"
+        },
+        {
+          "type": "text",
+          "id": "colour",
+          "label": "Colour",
+          "default": "Clay"
+        },
+        {
+          "type": "number",
+          "id": "price",
+          "label": "Price",
+          "default": 168
+        },
+        {
+          "type": "number",
+          "id": "qty",
+          "label": "Quantity",
+          "default": 1
+        },
+        {
+          "type": "text",
+          "id": "size",
+          "label": "Size",
+          "default": "S"
+        },
+        {
+          "type": "text",
+          "id": "out",
+          "label": "Sold-out sizes",
+          "info": "Comma separated."
+        },
+        {
+          "type": "textarea",
+          "id": "fit",
+          "label": "Fit notes",
+          "info": "One 'S | note' per line."
+        }
+      ]
+    },
+    {
+      "type": "wrap",
+      "name": "Cloth wrap",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Undyed"
+        },
+        {
+          "type": "text",
+          "id": "note",
+          "label": "Note",
+          "default": "Natural flax, fringed edge"
+        },
+        {
+          "type": "select",
+          "id": "tone",
+          "label": "Cloth colour",
+          "default": "bg-alt",
+          "options": [
+            {
+              "value": "bg",
+              "label": "Background"
+            },
+            {
+              "value": "bg-alt",
+              "label": "Alternate"
+            },
+            {
+              "value": "pop-1",
+              "label": "Pop 1"
+            },
+            {
+              "value": "pop-2",
+              "label": "Pop 2"
+            },
+            {
+              "value": "pop-3",
+              "label": "Pop 3"
+            },
+            {
+              "value": "pop-4",
+              "label": "Pop 4"
+            }
+          ]
+        },
+        {
+          "type": "number",
+          "id": "price",
+          "label": "Price",
+          "default": 8,
+          "info": "Shown in the demo. A live cart saves the wrap as a cart attribute, free."
+        },
+        {
+          "type": "checkbox",
+          "id": "none",
+          "label": "No wrap option",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "start",
+          "label": "Picked at first",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "Cart, size swap",
+      "blocks": [
+        {
+          "type": "line",
+          "settings": {
+            "name": "Wrap dress in washed linen",
+            "colour": "Clay",
+            "price": 168,
+            "qty": 1,
+            "size": "S",
+            "out": "XS",
+            "fit": "S | Ties at the waist, so S fits a 34 to 36.\nM | Room for a layer underneath.\nL | Falls a little longer, to mid-calf.\nXL | Longest length, just above the ankle."
+          }
+        },
+        {
+          "type": "line",
+          "settings": {
+            "name": "Camp-collar shirt",
+            "colour": "Undyed",
+            "price": 98,
+            "qty": 1,
+            "size": "M",
+            "out": "XL",
+            "fit": "XS | Cut boxy: XS still sits loose.\nS | Easy through the chest, sleeves to the elbow.\nM | Our model wears M, worn open over a tee.\nL | Very relaxed, drops at the shoulder."
+          }
+        },
+        {
+          "type": "line",
+          "settings": {
+            "name": "Two-piece lounge set",
+            "colour": "Sage",
+            "price": 142,
+            "qty": 1,
+            "size": "M",
+            "fit": "XS | Drawstring waist, fits 24 to 26 in.\nS | Drawstring waist, fits 26 to 28 in.\nM | Drawstring waist, fits 28 to 31 in.\nL | Drawstring waist, fits 31 to 34 in.\nXL | Drawstring waist, fits 34 to 37 in."
+          }
+        },
+        {
+          "type": "wrap",
+          "settings": {
+            "name": "No wrap",
+            "note": "Folded in tissue, in a recycled box",
+            "tone": "bg",
+            "price": 0,
+            "none": true
+          }
+        },
+        {
+          "type": "wrap",
+          "settings": {
+            "name": "Undyed",
+            "note": "Natural flax, fringed edge",
+            "tone": "bg-alt",
+            "price": 8
+          }
+        },
+        {
+          "type": "wrap",
+          "settings": {
+            "name": "Clay",
+            "note": "Dyed with madder root",
+            "tone": "pop-2",
+            "price": 8,
+            "start": true
+          }
+        },
+        {
+          "type": "wrap",
+          "settings": {
+            "name": "River",
+            "note": "Dyed with woad, pale blue",
+            "tone": "pop-4",
+            "price": 8
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

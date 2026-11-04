@@ -1,0 +1,238 @@
+{
+  "sections": {
+    "page-header-54": {
+      "type": "blko-page-header-54",
+      "settings": {
+        "tokens": "theme"
+      }
+    },
+    "image-with-text-06": {
+      "type": "blko-image-with-text-06",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "photo-1": {
+          "type": "photo",
+          "settings": {
+            "note": "Worn: the long robe, loose at the sleeve",
+            "ratio": "portrait",
+            "shift": "none"
+          }
+        },
+        "photo-2": {
+          "type": "photo",
+          "settings": {
+            "note": "Folded: three quiet shades for long days",
+            "ratio": "landscape",
+            "shift": "left",
+            "demo_photo": "photo-1713881630214-82c44407cf25"
+          }
+        },
+        "photo-3": {
+          "type": "photo",
+          "settings": {
+            "note": "In the details: a soft handle, right down to the seam",
+            "ratio": "portrait",
+            "shift": "right"
+          }
+        }
+      },
+      "block_order": [
+        "photo-1",
+        "photo-2",
+        "photo-3"
+      ]
+    },
+    "product-story-16": {
+      "type": "blko-product-story-16",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "number-1": {
+          "type": "number",
+          "settings": {
+            "label": "Cloth weight",
+            "note": "Mid-weight: airy, never see-through",
+            "value_a": "185",
+            "unit_a": "g/m\u00b2",
+            "value_b": "5.5",
+            "unit_b": "oz/yd\u00b2"
+          }
+        },
+        "number-2": {
+          "type": "number",
+          "settings": {
+            "label": "Threads",
+            "note": "Counted across the warp",
+            "value_a": "22",
+            "unit_a": "per cm",
+            "value_b": "56",
+            "unit_b": "per inch"
+          }
+        },
+        "number-3": {
+          "type": "number",
+          "settings": {
+            "label": "Yarn in one shirt",
+            "note": "Spun from flax grown nearby",
+            "value_a": "1.6",
+            "unit_a": "km",
+            "value_b": "1",
+            "unit_b": "mile"
+          }
+        },
+        "piece-4": {
+          "type": "piece",
+          "settings": {
+            "demo_title": "Leather holdall",
+            "demo_price": "$298"
+          }
+        },
+        "piece-5": {
+          "type": "piece",
+          "settings": {
+            "demo_title": "Wrap dress",
+            "demo_price": "$168"
+          }
+        }
+      },
+      "block_order": [
+        "number-1",
+        "number-2",
+        "number-3",
+        "piece-4",
+        "piece-5"
+      ]
+    },
+    "icon-list-35": {
+      "type": "blko-icon-list-35",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "value-1": {
+          "type": "value",
+          "settings": {
+            "icon": "leaf",
+            "title": "Only plant fibres",
+            "text": "Flax linen, raw cotton and a little hemp. Nothing spun from oil.",
+            "tone": "pop-4",
+            "drop": 0
+          }
+        },
+        "value-2": {
+          "type": "value",
+          "settings": {
+            "icon": "droplets",
+            "title": "Washed twice",
+            "text": "Every piece is washed and dried before it ships, so it never shrinks on you.",
+            "tone": "pop-2",
+            "drop": 32
+          }
+        },
+        "value-3": {
+          "type": "value",
+          "settings": {
+            "icon": "sun",
+            "title": "Dried on the line",
+            "text": "No tumble dryers in the workroom. The roof terrace does the job in summer.",
+            "tone": "alt",
+            "drop": 12
+          }
+        },
+        "value-4": {
+          "type": "value",
+          "settings": {
+            "icon": "repeat",
+            "title": "Mended for life",
+            "text": "Send back a torn seam or a lost button, at any age, and we fix it free.",
+            "tone": "pop-3",
+            "drop": 44
+          }
+        }
+      },
+      "block_order": [
+        "value-1",
+        "value-2",
+        "value-3",
+        "value-4"
+      ]
+    },
+    "counters-03": {
+      "type": "blko-counters-03",
+      "settings": {
+        "tokens": "theme"
+      }
+    },
+    "team-21": {
+      "type": "blko-team-21",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "maker-1": {
+          "type": "maker",
+          "settings": {
+            "name": "Tomas",
+            "role": "Pattern maker",
+            "where": "Cutting room",
+            "since": 2012
+          }
+        },
+        "maker-2": {
+          "type": "maker",
+          "settings": {
+            "name": "Esme",
+            "role": "Linen sourcing",
+            "where": "Flax mills, north coast",
+            "since": 2014
+          }
+        },
+        "maker-3": {
+          "type": "maker",
+          "settings": {
+            "name": "Ada",
+            "role": "Natural dyer",
+            "where": "Dye kitchen, back studio",
+            "since": 2017
+          }
+        },
+        "maker-4": {
+          "type": "maker",
+          "settings": {
+            "name": "Bruno",
+            "role": "Lead seamster",
+            "where": "Sewing floor",
+            "since": 2019
+          }
+        },
+        "maker-5": {
+          "type": "maker",
+          "settings": {
+            "name": "Zara",
+            "role": "Resort stylist",
+            "where": "Shoots and fittings",
+            "since": 2022
+          }
+        }
+      },
+      "block_order": [
+        "maker-1",
+        "maker-2",
+        "maker-3",
+        "maker-4",
+        "maker-5"
+      ]
+    }
+  },
+  "order": [
+    "page-header-54",
+    "image-with-text-06",
+    "product-story-16",
+    "icon-list-35",
+    "counters-03",
+    "team-21"
+  ]
+}

@@ -1,0 +1,181 @@
+{%- liquid
+  assign s = section.settings
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+<script data-blko-kit="linen">try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-kit-linen')}catch(e){}</script>
+{{ 'blko-linen-motion.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-linen-motion.js' | asset_url }}" defer></script>
+
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-newsletter-09.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture blko_class -%}bnewsletter09{% if s.tokens == 'theme' %} bnewsletter09--theme{% endif %}{%- endcapture -%}
+<script src="{{ 'blko-newsletter-09.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign label = 'blko.newsletter_09.label' | t
+  assign close_label = 'blko.newsletter_09.close' | t
+  assign email_label = s.placeholder | escape
+  assign tid = section.id | append: '-title'
+  assign open = s.open_on_load
+  assign done = false
+-%}
+{%- form 'customer', id: 'blko-nl09-form', class: 'bnewsletter09__formwrap' -%}
+  {%- if form.posted_successfully? -%}{%- assign done = true -%}{%- assign open = true -%}{%- endif -%}
+  {%- capture blko_form_errors -%}{%- if form.errors -%}{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}{%- endif -%}{%- endcapture -%}
+
+{%- capture blko_body -%}<div class="bnewsletter09__letter"><figure class="bnewsletter09__plate">{% if s.image != blank %}{{ s.image | image_url: width: 1000 | image_tag: class: 'bnewsletter09__image', loading: 'lazy', widths: '400, 700, 1000', sizes: '(min-width: 768px) 40vw, 100vw', alt: s.image.alt }}{% else %}{{ 'lifestyle-2' | placeholder_svg_tag: 'bnewsletter09__image' }}{% endif %}<figcaption class="bnewsletter09__caption">{{ s.caption | escape }}</figcaption></figure><div class="bnewsletter09__paper"><p class="bx-label bx-muted">{{ s.kicker | escape }}</p><h2 class="bnewsletter09__title">{% render 'blko-linen-mixed', text: s.heading %}</h2><span aria-hidden="true" class="bnewsletter09__rule"></span><p class="bx-body bx-muted">{{ s.text | escape }}</p>{% if done %}<p role="status" class="bx-body">{{ s.done_text | escape }}</p>{% else %}<div class="bnewsletter09__form"><input type="hidden" name="contact[tags]" value="newsletter"><label for="{{ section.id }}-email" class="bx-small">{{ s.placeholder | escape }}</label><input id="{{ section.id }}-email" type="email" name="contact[email]" required autocomplete="email" class="bx-input" placeholder="{{ s.placeholder | escape }}">{% if blko_form_errors != blank %}<p class="bx-small" role="alert">{{ blko_form_errors }}</p>{% endif %}{% assign lbl = s.button_label | escape %}{% render 'blko-ui-button', type: 'submit', children: lbl %}<p class="bx-small bx-muted">{{ s.consent | escape }}</p></div>{% endif %}</div></div>{%- endcapture -%}
+{%- render 'blko-ui-section', surface: 'bg', bleed: false, full: false, label: label, className: blko_class, style: blko_style, inner: 'bx-pad', children: blko_body -%}
+
+{%- endform -%}
+
+{% schema %}
+{
+  "name": "Journal letter",
+  "tag": "div",
+  "class": "blko-newsletter-09-wrap",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "The journal letter"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Notes to keep."
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "A new way to wear an old favourite. A small repair worth learning. Occasional letters about living with natural cloth."
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "Caption",
+      "default": "From the journal / slow days, natural cloth"
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Placeholder",
+      "default": "Your email address"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Send me the notes"
+    },
+    {
+      "type": "text",
+      "id": "done_text",
+      "label": "Done text",
+      "default": "Thank you for signing up. Please check your inbox."
+    },
+    {
+      "type": "text",
+      "id": "consent",
+      "label": "Consent",
+      "default": "Occasional letters. Unsubscribe whenever you like."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Hero photo"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_source",
+      "label": "Fonts",
+      "options": [
+        {
+          "value": "bundled",
+          "label": "Bundled (EB Garamond + Albert Sans)"
+        },
+        {
+          "value": "picker",
+          "label": "Pick from the font library"
+        },
+        {
+          "value": "theme",
+          "label": "Use the theme's fonts"
+        }
+      ],
+      "default": "bundled"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors and shapes"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, corners, type style",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case\u2026). Other themes: keep the preset."
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "Journal letter"
+    }
+  ]
+}
+{% endschema %}

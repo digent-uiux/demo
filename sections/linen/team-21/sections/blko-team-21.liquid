@@ -1,0 +1,298 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-9'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-team-21.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture blko_class -%}bteam21{% if s.tokens == 'theme' %} bteam21--theme{% endif %}{% if blko_sid != 'scheme-9' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}{%- endcapture -%}
+<script src="{{ 'blko-team-21.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign label = s.heading | strip_html
+  assign caption = s.caption | escape
+-%}
+<blko-team-21>
+{%- capture blko_body -%}
+    <header class="bteam21__head">
+      <h2 class="bteam21__title">{{ s.heading | escape }}</h2>
+      {%- if s.text != blank -%}<p class="bx-body bteam21__text">{{ s.text | escape }}</p>{%- endif -%}
+    </header>
+    <div class="bteam21__ledger">
+      <table class="bteam21__table">
+        <caption class="bx-sr">{{ caption }}</caption>
+        <thead>
+          <tr>
+            <th scope="col" class="bteam21__c1" aria-sort="none" data-col="name"><button type="button" class="bteam21__sort" data-sort="name">{{ s.col_name | escape }}<span class="bteam21__ico bteam21__ico--down">{%- render 'blko-ui-icon', name: 'arrow-down', size: 12 -%}</span><span class="bteam21__ico bteam21__ico--up">{%- render 'blko-ui-icon', name: 'arrow-up', size: 12 -%}</span></button></th>
+            <th scope="col" aria-sort="none" data-col="role"><button type="button" class="bteam21__sort" data-sort="role">{{ s.col_role | escape }}<span class="bteam21__ico bteam21__ico--down">{%- render 'blko-ui-icon', name: 'arrow-down', size: 12 -%}</span><span class="bteam21__ico bteam21__ico--up">{%- render 'blko-ui-icon', name: 'arrow-up', size: 12 -%}</span></button></th>
+            <th scope="col" class="bteam21__where">{{ s.col_where | escape }}</th>
+            <th scope="col" class="bteam21__c4" aria-sort="ascending" data-col="since"><button type="button" class="bteam21__sort" data-sort="since">{{ s.col_since | escape }}<span class="bteam21__ico bteam21__ico--down">{%- render 'blko-ui-icon', name: 'arrow-down', size: 12 -%}</span><span class="bteam21__ico bteam21__ico--up">{%- render 'blko-ui-icon', name: 'arrow-up', size: 12 -%}</span></button></th>
+          </tr>
+        </thead>
+        <tbody data-rows>
+          {%- for b in section.blocks -%}
+            {%- assign alt = b.settings.image.alt | default: b.settings.name -%}
+            <tr data-name="{{ b.settings.name | escape }}" data-role="{{ b.settings.role | escape }}" data-since="{{ b.settings.since }}" {{ b.shopify_attributes }}>
+              <th scope="row">
+                <span class="bteam21__who">
+                  <span class="bteam21__face">
+                    {%- if b.settings.image != blank -%}
+                      {{ b.settings.image | image_url: width: 140 | image_tag: class: 'bteam21__img', loading: 'lazy', width: 48, height: 48, alt: alt }}
+                    {%- else -%}
+                      {{ 'image' | placeholder_svg_tag: 'bteam21__img' }}
+                    {%- endif -%}
+                  </span>
+                  <span class="bteam21__name">{{ b.settings.name | escape }}</span>
+                </span>
+              </th>
+              <td>{{ b.settings.role | escape }}</td>
+              <td class="bteam21__where bx-muted">{{ b.settings.where | escape }}</td>
+              <td class="bteam21__c4">{{ b.settings.since }}</td>
+            </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+{%- endcapture -%}
+{%- render 'blko-ui-section', surface: 'pop-4', bleed: true, label: label, className: blko_class, style: blko_style, inner: 'bx-pad bteam21__grid', children: blko_body -%}
+</blko-team-21>
+
+{% schema %}
+{
+  "name": "Team, maker ledger",
+  "tag": "div",
+  "class": "blko-team-21-wrap",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Every piece, signed by the people who made it"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Our garments carry this list on the inside label. Sort it by name, by craft or by how long each of us has been here."
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "Table caption",
+      "default": "The makers: name, role, where they work and the year they joined",
+      "info": "Read by screen readers."
+    },
+    {
+      "type": "header",
+      "content": "Columns"
+    },
+    {
+      "type": "text",
+      "id": "col_name",
+      "label": "Name column",
+      "default": "Name"
+    },
+    {
+      "type": "text",
+      "id": "col_role",
+      "label": "Role column",
+      "default": "Role"
+    },
+    {
+      "type": "text",
+      "id": "col_where",
+      "label": "Place column",
+      "default": "Works from",
+      "info": "Hidden on phones."
+    },
+    {
+      "type": "text",
+      "id": "col_since",
+      "label": "Year column",
+      "default": "Since"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_source",
+      "label": "Fonts",
+      "options": [
+        {
+          "value": "bundled",
+          "label": "Bundled (EB Garamond + Albert Sans)"
+        },
+        {
+          "value": "picker",
+          "label": "Pick from the font library"
+        },
+        {
+          "value": "theme",
+          "label": "Use the theme's fonts"
+        }
+      ],
+      "default": "bundled"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors and shapes"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, corners, type style",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case…). Other themes: keep the preset."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:blko.linen.color_scheme",
+      "default": "scheme-9"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "maker",
+      "name": "Maker",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Portrait"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Esme"
+        },
+        {
+          "type": "text",
+          "id": "role",
+          "label": "Role",
+          "default": "Linen sourcing"
+        },
+        {
+          "type": "text",
+          "id": "where",
+          "label": "Works from",
+          "default": "Flax mills, north coast"
+        },
+        {
+          "type": "number",
+          "id": "since",
+          "label": "Year joined",
+          "default": 2014
+        }
+      ]
+    }
+  ],
+  "max_blocks": 16,
+  "presets": [
+    {
+      "name": "Team, maker ledger",
+      "blocks": [
+        {
+          "type": "maker",
+          "settings": {
+            "name": "Tomas",
+            "role": "Pattern maker",
+            "where": "Cutting room",
+            "since": 2012
+          }
+        },
+        {
+          "type": "maker",
+          "settings": {
+            "name": "Esme",
+            "role": "Linen sourcing",
+            "where": "Flax mills, north coast",
+            "since": 2014
+          }
+        },
+        {
+          "type": "maker",
+          "settings": {
+            "name": "Ada",
+            "role": "Natural dyer",
+            "where": "Dye kitchen, back studio",
+            "since": 2017
+          }
+        },
+        {
+          "type": "maker",
+          "settings": {
+            "name": "Bruno",
+            "role": "Lead seamster",
+            "where": "Sewing floor",
+            "since": 2019
+          }
+        },
+        {
+          "type": "maker",
+          "settings": {
+            "name": "Zara",
+            "role": "Resort stylist",
+            "where": "Shoots and fittings",
+            "since": 2022
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,9 @@
+{
+  "globals": {
+    "request": {
+      "host": "linen.example",
+      "design_mode": false,
+      "page_type": "page"
+    }
+  }
+}

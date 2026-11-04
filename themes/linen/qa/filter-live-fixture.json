@@ -1,0 +1,210 @@
+{
+  "globals": {
+    "collection": {
+      "id": 18,
+      "title": "Clothing",
+      "url": "/collections/clothing",
+      "products_count": 30,
+      "all_products_count": 30,
+      "products": [
+        {
+          "id": 17,
+          "title": "Catalog shirt",
+          "url": "/products/shirt",
+          "price": 16000,
+          "available": true,
+          "has_only_default_variant": false,
+          "options_with_values": [
+            {
+              "name": "Size",
+              "position": 1,
+              "values": [
+                "M"
+              ]
+            }
+          ],
+          "variants": [
+            {
+              "id": 1720,
+              "options": [
+                "M"
+              ],
+              "available": true,
+              "price": 17550,
+              "inventory_management": "shopify",
+              "inventory_policy": "deny",
+              "inventory_quantity": 3
+            }
+          ],
+          "selected_or_first_available_variant": {
+            "id": 1720,
+            "options": [
+              "M"
+            ],
+            "available": true,
+            "price": 17550,
+            "inventory_management": "shopify",
+            "inventory_policy": "deny",
+            "inventory_quantity": 3
+          }
+        },
+        {
+          "id": 17,
+          "title": "Catalog coat",
+          "url": "/products/catalog-coat",
+          "price": 16000,
+          "compare_at_price": 20000,
+          "selected_or_first_available_variant": {
+            "id": 1702,
+            "options": [
+              "Camel",
+              "M"
+            ],
+            "available": true,
+            "price": 17550,
+            "compare_at_price": 20000
+          },
+          "variants": [
+            {
+              "id": 1701,
+              "options": [
+                "Rust",
+                "M"
+              ],
+              "available": false,
+              "price": 16000,
+              "compare_at_price": null
+            },
+            {
+              "id": 1702,
+              "options": [
+                "Camel",
+                "M"
+              ],
+              "available": true,
+              "price": 17550,
+              "compare_at_price": 20000
+            },
+            {
+              "id": 1703,
+              "options": [
+                "Black",
+                "M"
+              ],
+              "available": true,
+              "price": 18000,
+              "compare_at_price": null
+            }
+          ],
+          "options_with_values": [
+            {
+              "name": "Colour",
+              "position": 1,
+              "values": [
+                "Rust",
+                "Camel",
+                "Black"
+              ]
+            },
+            {
+              "name": "Size",
+              "position": 2,
+              "values": [
+                "M"
+              ]
+            }
+          ],
+          "available": true
+        }
+      ],
+      "all_types": [
+        "Linen"
+      ],
+      "filters": [
+        {
+          "type": "list",
+          "label": "Cloth",
+          "active_values": [
+            {
+              "label": "Linen",
+              "value": "Linen",
+              "param_name": "filter.p.product_type",
+              "count": 0,
+              "active": true,
+              "url_to_remove": "/collections/clothing?sort_by=price-ascending"
+            }
+          ],
+          "values": [
+            {
+              "label": "Linen",
+              "value": "Linen",
+              "param_name": "filter.p.product_type",
+              "count": 0,
+              "active": true,
+              "url_to_remove": "/collections/clothing?sort_by=price-ascending"
+            },
+            {
+              "label": "Wool",
+              "value": "Wool",
+              "param_name": "filter.p.product_type",
+              "count": 0,
+              "active": false
+            }
+          ]
+        },
+        {
+          "type": "price_range",
+          "label": "Price",
+          "active_values": [],
+          "min_value": {
+            "value": 1750,
+            "param_name": "filter.v.price.gte"
+          },
+          "max_value": {
+            "value": 2350,
+            "param_name": "filter.v.price.lte"
+          },
+          "range_max": 50000,
+          "url_to_remove": "/collections/clothing?filter.p.product_type=Linen"
+        }
+      ],
+      "sort_by": "price-ascending",
+      "default_sort_by": "manual",
+      "sort_options": [
+        {
+          "name": "Featured",
+          "value": "manual"
+        },
+        {
+          "name": "Price, low to high",
+          "value": "price-ascending"
+        }
+      ]
+    },
+    "request": {
+      "host": "linen.example",
+      "page_type": "collection",
+      "design_mode": false
+    }
+  },
+  "paginate": {
+    "current_page": 1,
+    "pages": 2,
+    "items": 30,
+    "parts": [
+      {
+        "title": "1",
+        "is_link": false
+      },
+      {
+        "title": "2",
+        "is_link": true,
+        "url": "/collections/clothing?filter.p.product_type=Linen&sort_by=price-ascending&page=2"
+      }
+    ],
+    "previous": null,
+    "next": {
+      "url": "/collections/clothing?filter.p.product_type=Linen&sort_by=price-ascending&page=2"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "globals": {
+    "request": {
+      "host": "linen.example",
+      "design_mode": false,
+      "page_type": "page"
+    },
+    "gift_card": {
+      "initial_value": 5000,
+      "balance": 2500,
+      "enabled": true,
+      "expired": false,
+      "code": "TEST000000000001",
+      "qr_identifier": "fixture-gift-card-token",
+      "pass_url": "https://example.test/wallet"
+    }
+  },
+  "template": "gift_card"
+}

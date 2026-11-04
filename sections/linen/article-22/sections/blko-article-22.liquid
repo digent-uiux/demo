@@ -1,0 +1,481 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-2'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-article-22.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture blko_class -%}barticle22{% if s.tokens == 'theme' %} barticle22--theme{% endif %}{% if blko_sid != 'scheme-2' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}{%- endcapture -%}
+<script src="{{ 'blko-article-22.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign label = 'blko.article_22.label' | t
+  assign title = article.title | default: s.title
+  assign excerpt = s.excerpt
+  if article.excerpt != blank
+    assign excerpt = article.excerpt | strip_html
+  endif
+  assign author = article.author | default: s.author
+  assign date = s.date
+  if article.published_at
+    assign date = article.published_at | date: '%-d %B %Y'
+  endif
+  assign mins = s.read_n
+  if article.content != blank
+    assign words = article.content | strip_html | split: ' '
+    assign mins = words.size | divided_by: 200.0 | ceil | at_least: 1
+  endif
+  assign read = s.read | replace: '[n]', mins
+-%}
+{%- capture blko_body -%}
+  <article class="barticle22__art">
+    <header class="barticle22__head">
+      <h1 class="barticle22__title">{{ title | escape }}</h1>
+      {%- if excerpt != blank -%}<p class="bx-body bx-muted barticle22__lead">{{ excerpt | escape }}</p>{%- endif -%}
+      <p class="bx-small bx-muted barticle22__meta">
+        {%- if author != blank -%}<span>{{ s.by | escape }} <b>{{ author | escape }}</b></span><span aria-hidden="true">·</span>{%- endif -%}
+        <time{% if article.published_at %} datetime="{{ article.published_at | date: '%Y-%m-%d' }}"{% endif %}>{{ date | escape }}</time>
+        {%- if read != blank -%}<span aria-hidden="true">·</span><span>{{ read | escape }}</span>{%- endif -%}
+      </p>
+    </header>
+
+    {%- for b in section.blocks -%}
+      {%- assign bs = b.settings -%}
+      {%- case b.type -%}
+        {%- when 'body' -%}
+          {%- liquid
+            assign html = blank
+            if bs.source == 'article' and article.content != blank
+              assign html = article.content
+            elsif bs.source == 'text' or article.content == blank
+              assign html = bs.text
+            endif
+          -%}
+          {%- if html != blank -%}<div class="bx-body barticle22__body" {{ b.shopify_attributes }}>{{ html }}</div>{%- endif -%}
+        {%- when 'compare' -%}
+          <figure class="barticle22__fig" {{ b.shopify_attributes }}>
+            <blko-article-22-compare class="barticle22__cmp" style="--pos:50%">
+              {%- if bs.after != blank -%}
+                {{ bs.after | image_url: width: 1400 | image_tag: class: 'barticle22__ci', loading: 'lazy', widths: '700, 1000, 1400', sizes: '(min-width: 1024px) 960px, 100vw', alt: bs.after_alt }}
+              {%- else -%}
+                {{ 'lifestyle-2' | placeholder_svg_tag: 'barticle22__ci barticle22__ph' }}
+              {%- endif -%}
+              <div class="barticle22__clip">
+                {%- if bs.before != blank -%}
+                  {{ bs.before | image_url: width: 1400 | image_tag: class: 'barticle22__ci', loading: 'lazy', widths: '700, 1000, 1400', sizes: '(min-width: 1024px) 960px, 100vw', alt: bs.before_alt }}
+                {%- else -%}
+                  {{ 'apparel-1' | placeholder_svg_tag: 'barticle22__ci barticle22__ph' }}
+                {%- endif -%}
+              </div>
+              <div aria-hidden="true" class="barticle22__line"><span class="barticle22__knob">{%- render 'blko-ui-icon', name: 'move-horizontal', size: 20 -%}</span></div>
+              <span class="bx-label barticle22__tag barticle22__tag--a">{{ bs.before_label | escape }}</span>
+              <span class="bx-label barticle22__tag barticle22__tag--b">{{ bs.after_label | escape }}</span>
+              <input type="range" min="0" max="100" value="50" class="barticle22__range" aria-label="{{ bs.aria | escape }}" aria-valuetext="50% {{ bs.before_label | escape }}" data-label="{{ bs.before_label | escape }}">
+            </blko-article-22-compare>
+            {%- if bs.caption != blank -%}<figcaption class="bx-small bx-muted barticle22__cap">{{ bs.caption | escape }}</figcaption>{%- endif -%}
+          </figure>
+        {%- when 'look' -%}
+          {%- assign lid = section.id | append: '-look' -%}
+          <aside aria-labelledby="{{ lid }}" class="barticle22__look" {{ b.shopify_attributes }}>
+            <blko-article-22-look class="barticle22__lk" data-none="{{ bs.none | escape }}" data-one="{{ bs.one | escape }}" data-many="{{ bs.many | escape }}" data-add="{{ bs.add | escape }}">
+              <div class="barticle22__lh">
+                <h2 id="{{ lid }}" class="barticle22__h2">{{ bs.heading | escape }}</h2>
+                {%- if bs.note != blank -%}<p class="bx-small bx-muted">{{ bs.note | escape }}</p>{%- endif -%}
+              </div>
+              <ul class="barticle22__items">
+                {%- if bs.products != blank -%}
+                  {%- for p in bs.products -%}
+                    <li class="barticle22__item" data-item data-name="{{ p.title | escape }}">
+                      <div class="barticle22__thumb">
+                        {%- if p.featured_image -%}
+                          {{ p.featured_image | image_url: width: 300 | image_tag: class: 'barticle22__ti', loading: 'lazy', widths: '150, 300', sizes: '96px', alt: p.featured_image.alt }}
+                        {%- else -%}
+                          {{ 'product-1' | placeholder_svg_tag: 'barticle22__ti barticle22__ph2' }}
+                        {%- endif -%}
+                      </div>
+                      <div class="barticle22__it">
+                        <p class="barticle22__in2">{{ p.title | escape }}</p>
+                        <p class="bx-small bx-muted">{% if p.type != blank %}{{ p.type | escape }} · {% endif %}<span class="barticle22__num">{{ p.price | money_without_trailing_zeros }}</span></p>
+                      </div>
+                      <fieldset class="barticle22__sizes">
+                        <legend class="bx-sr">{{ bs.size_for | escape }} {{ p.title | escape }}</legend>
+                        {%- for v in p.variants -%}
+                          {%- if v.available -%}<button type="button" class="barticle22__sz" aria-pressed="false" data-size="{{ v.option1 | escape }}" data-id="{{ v.id }}" data-price="{{ v.price }}" data-label="{{ v.price | money_without_trailing_zeros }}">{{ v.option1 | escape }}</button>{%- endif -%}
+                        {%- endfor -%}
+                      </fieldset>
+                    </li>
+                  {%- endfor -%}
+                {%- else -%}
+                  {%- assign rows = bs.demo | newline_to_br | split: '<br />' -%}
+                  {%- for r in rows -%}
+                    {%- assign c = r | split: '|' -%}
+                    {%- if c.size > 3 -%}
+                      {%- assign nm = c[0] | strip -%}
+                      {%- assign cents = c[2] | strip | times: 100 -%}
+                      {%- assign label_price = cents | money_without_trailing_zeros -%}
+                      <li class="barticle22__item" data-item data-name="{{ nm | escape }}">
+                        <div class="barticle22__thumb">{{ 'product-1' | placeholder_svg_tag: 'barticle22__ti barticle22__ph2' }}</div>
+                        <div class="barticle22__it">
+                          <p class="barticle22__in2">{{ nm | escape }}</p>
+                          <p class="bx-small bx-muted">{{ c[1] | strip | escape }} · <span class="barticle22__num">{{ label_price }}</span></p>
+                        </div>
+                        <fieldset class="barticle22__sizes">
+                          <legend class="bx-sr">{{ bs.size_for | escape }} {{ nm | escape }}</legend>
+                          {%- assign zs = c[3] | strip | split: ' ' -%}
+                          {%- for z in zs -%}
+                            {%- assign zz = z | remove: '*' -%}
+                            <button type="button" class="barticle22__sz" aria-pressed="{% if z contains '*' %}true{% else %}false{% endif %}" data-size="{{ zz | escape }}" data-price="{{ cents }}" data-label="{{ label_price }}">{{ zz | escape }}</button>
+                          {%- endfor -%}
+                        </fieldset>
+                      </li>
+                    {%- endif -%}
+                  {%- endfor -%}
+                {%- endif -%}
+              </ul>
+              <div class="barticle22__lf">
+                <p aria-live="polite" class="bx-small bx-muted" data-sum>{{ bs.none | escape }}</p>
+                <button type="button" class="barticle22__add" data-add disabled>
+                  <span data-add-text>{{ bs.add | escape }}</span>
+                  <span class="barticle22__done" data-done hidden>{%- render 'blko-ui-icon', name: 'check', size: 16 -%}{{ bs.added | escape }}</span>
+                </button>
+              </div>
+            </blko-article-22-look>
+          </aside>
+      {%- endcase -%}
+    {%- endfor -%}
+  </article>
+{%- endcapture -%}
+{%- render 'blko-ui-section', surface: 'alt', bleed: true, label: label, className: blko_class, style: blko_style, inner: 'bx-pad barticle22__in', children: blko_body -%}
+
+{% schema %}
+{
+  "name": "Article, before and after",
+  "tag": "div",
+  "class": "blko-article-22-wrap",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Head"
+    },
+    {
+      "type": "paragraph",
+      "content": "On an article page the title, excerpt, author, date and text come from the article. These fill in elsewhere."
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "The shirt that got better: three summers in one piece of linen"
+    },
+    {
+      "type": "textarea",
+      "id": "excerpt",
+      "label": "Intro",
+      "default": "We bought it stiff and a little too crisp. Forty washes later it's the softest thing in the wardrobe. Here's what happened in between, and how to help yours along."
+    },
+    {
+      "type": "text",
+      "id": "by",
+      "label": "Byline word",
+      "default": "Words by"
+    },
+    {
+      "type": "text",
+      "id": "author",
+      "label": "Author",
+      "default": "Maren"
+    },
+    {
+      "type": "text",
+      "id": "date",
+      "label": "Date",
+      "default": "14 October 2026"
+    },
+    {
+      "type": "text",
+      "id": "read",
+      "label": "Read time",
+      "default": "[n] min read",
+      "info": "[n] is minutes, worked out from the article."
+    },
+    {
+      "type": "number",
+      "id": "read_n",
+      "label": "Read time, demo minutes",
+      "default": 7
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_source",
+      "label": "Fonts",
+      "options": [
+        {
+          "value": "bundled",
+          "label": "Bundled (EB Garamond + Albert Sans)"
+        },
+        {
+          "value": "picker",
+          "label": "Pick from the font library"
+        },
+        {
+          "value": "theme",
+          "label": "Use the theme's fonts"
+        }
+      ],
+      "default": "bundled"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors and shapes"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, corners, type style",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case…). Other themes: keep the preset."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:blko.linen.color_scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "body",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "select",
+          "id": "source",
+          "label": "Shows",
+          "default": "article",
+          "options": [
+            {
+              "value": "article",
+              "label": "The article, else this text"
+            },
+            {
+              "value": "demo",
+              "label": "This text, when no article"
+            },
+            {
+              "value": "text",
+              "label": "This text, always"
+            }
+          ]
+        },
+        {
+          "type": "html",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Write your story here.</p>"
+        }
+      ]
+    },
+    {
+      "type": "compare",
+      "name": "Before and after",
+      "limit": 2,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "before",
+          "label": "Before photo"
+        },
+        {
+          "type": "text",
+          "id": "before_alt",
+          "label": "Before photo alt",
+          "default": "Day one: a crisp white linen shirt on a wooden hanger"
+        },
+        {
+          "type": "image_picker",
+          "id": "after",
+          "label": "After photo"
+        },
+        {
+          "type": "text",
+          "id": "after_alt",
+          "label": "After photo alt",
+          "default": "Summer three: the same shirt, soft and slouched, worn open on a beach"
+        },
+        {
+          "type": "text",
+          "id": "before_label",
+          "label": "Before label",
+          "default": "Day one"
+        },
+        {
+          "type": "text",
+          "id": "after_label",
+          "label": "After label",
+          "default": "Summer three"
+        },
+        {
+          "type": "text",
+          "id": "aria",
+          "label": "Slider name",
+          "default": "Compare day one with summer three"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Caption",
+          "default": "Drag across the photo, or focus it and use the arrow keys. Same shirt, forty washes apart."
+        }
+      ]
+    },
+    {
+      "type": "look",
+      "name": "Shop the look",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "The summer-three wardrobe"
+        },
+        {
+          "type": "text",
+          "id": "note",
+          "label": "Note",
+          "default": "Pick a size to include a piece."
+        },
+        {
+          "type": "product_list",
+          "id": "products",
+          "label": "Products",
+          "limit": 4
+        },
+        {
+          "type": "textarea",
+          "id": "demo",
+          "label": "Demo pieces",
+          "default": "Camp-collar shirt | Washed flax, oat | 118 | XS S *M L XL\nLong duster coat | Heavy linen, chalk | 186 | S/M M/L L/XL\nSquare-neck shift | Midweight linen, sand | 132 | XS S M L",
+          "info": "Shown when no products are picked. One per line: name | note | price | sizes (* marks a picked size)."
+        },
+        {
+          "type": "text",
+          "id": "size_for",
+          "label": "Size legend",
+          "default": "Size for"
+        },
+        {
+          "type": "text",
+          "id": "none",
+          "label": "Nothing picked",
+          "default": "No pieces picked yet"
+        },
+        {
+          "type": "text",
+          "id": "one",
+          "label": "Piece, one",
+          "default": "piece"
+        },
+        {
+          "type": "text",
+          "id": "many",
+          "label": "Piece, many",
+          "default": "pieces"
+        },
+        {
+          "type": "text",
+          "id": "add",
+          "label": "Button label",
+          "default": "Add to bag"
+        },
+        {
+          "type": "text",
+          "id": "added",
+          "label": "Added label",
+          "default": "Added to bag"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Article, before and after",
+      "blocks": [
+        {
+          "type": "body",
+          "settings": {
+            "source": "article",
+            "text": "<p class=\"lead\">Linen has a reputation for being difficult. It creases if you look at it, it feels like card on the first wear, and it costs more than cotton. All of that is true for about a month.</p>\n<p>The fibre comes from the stem of the flax plant. It's long, hollow and slightly waxy, which is why new linen feels stiff and a little shiny. Every wash and every wear breaks down that wax and loosens the weave. The fibre itself doesn't weaken; it relaxes. That's the change you can see in the two photographs below.</p>\n<h2>Day one</h2>\n<p>Our shirt arrived pressed and folded. The collar stood up on its own, the hem had a sharp line, and the colour was a flat, even oat. It looked good on the hanger and slightly formal on a body, more office than harbour.</p>\n<p>We did the one thing that matters most: washed it before wearing, at 40°, on a gentle cycle, and hung it to dry on a wide hanger. That first wash takes out the finishing starch and lets the fabric settle to its real size, so any shrinkage happens before you've cut the tags off and worn it.</p>"
+          }
+        },
+        {
+          "type": "compare",
+          "settings": {}
+        },
+        {
+          "type": "body",
+          "settings": {
+            "source": "demo",
+            "text": "<h2>Summer three</h2>\n<p>By the third August it had stopped being a shirt we put on carefully and become the one we reached for without thinking. The collar folds instead of standing. The shoulders have dropped to follow the wearer. The oat has gone a shade paler and picked up a faint, uneven bloom where the sun hits most.</p>\n<p>None of that is wear and tear. Look closely at the weave and it's still tight, the seams are intact, and there's not a single thin patch at the elbow. What's gone is the stiffness that made it look new.</p>\n<h2>How to speed it up, gently</h2>\n<p>Wear it often. Body heat and movement soften linen faster than any wash. When you do wash it, use a little less detergent than the bottle says and skip the fabric softener; it coats the fibre and stops it breathing. Shake it hard before hanging, and pull the seams straight while it's damp. That's all the ironing it needs.</p>\n<p>What to avoid: hot tumble-drying, which shrinks and dulls the fibre, and storing it folded in the same place for months, which can set a permanent crease along the fold. Hang it, or roll it.</p>\n<blockquote>\"The best linen in your wardrobe is the piece you've stopped being careful with.\"</blockquote>\n<p>The two pieces we pair it with now are cut from the same mill's cloth: a long duster for the evenings that cool off quickly, and a shift dress for days when even a shirt feels like too much.</p>"
+          }
+        },
+        {
+          "type": "look",
+          "settings": {}
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

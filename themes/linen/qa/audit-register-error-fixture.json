@@ -1,0 +1,21 @@
+{
+  "globals": {
+    "request": {
+      "host": "linen.example",
+      "design_mode": false,
+      "page_type": "page"
+    }
+  },
+  "forms": {
+    "create_customer": {
+      "errors": {
+        "messages": {
+          "email": "Email could not be accepted."
+        },
+        "translated_fields": {
+          "email": "email"
+        }
+      }
+    }
+  }
+}

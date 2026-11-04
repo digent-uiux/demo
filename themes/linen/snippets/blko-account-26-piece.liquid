@@ -1,0 +1,65 @@
+{% capture nl %}
+{% endcapture %}{%- comment -%} One wardrobe piece. mode: btn | panel. idx, name, colour, note (under the name), image, care (array or lines), life ("date | text" lines), on, s (section settings). {%- endcomment -%}
+
+{%- if mode == 'btn' -%}
+  <li>
+    <button type="button" class="baccount26__pc" aria-pressed="{{ on }}" data-piece="{{ idx }}">
+      <span class="baccount26__pimg">
+        {%- if image != blank -%}
+          {{ image | image_url: width: 500 | image_tag: class: 'baccount26__img', loading: 'lazy', widths: '250, 375, 500', sizes: '(min-width: 1024px) 20vw, 50vw', alt: '' }}
+        {%- else -%}
+          {{ 'apparel-1' | placeholder_svg_tag: 'baccount26__img' }}
+        {%- endif -%}
+      </span>
+      <span class="baccount26__pt">
+        <span class="bx-small baccount26__pn">{{ name | escape }}</span>
+        <span class="bx-label bx-muted">{{ note | escape }}</span>
+      </span>
+    </button>
+  </li>
+{%- else -%}
+  {%- liquid
+    if care.first != blank
+      assign list = care
+    else
+      assign list = care | split: nl
+    endif
+    assign lines = life | split: nl
+  -%}
+  <div class="baccount26__panel" data-panel="{{ idx }}"{% unless on %} hidden{% endunless %}>
+    <div class="baccount26__ph">
+      <h2 class="baccount26__pname">{{ name | escape }}</h2>
+      <p class="bx-small bx-muted">{{ colour | escape }}</p>
+    </div>
+    <section aria-label="{{ 'blko.account_26.care' | t }}" class="baccount26__sec">
+      <h3 class="bx-label bx-muted">{{ s.care_label | escape }}</h3>
+      <ul class="baccount26__care">
+        {%- for c in list limit: 4 -%}
+          {%- assign cc = c | strip -%}
+          {%- if cc != blank -%}
+            <li class="bx-small">
+              {%- case forloop.index -%}
+                {%- when 1 -%}{%- render 'blko-ui-icon', name: 'droplets', size: 16, className: 'baccount26__ci' -%}
+                {%- when 2 -%}{%- render 'blko-ui-icon', name: 'sun', size: 16, className: 'baccount26__ci' -%}
+                {%- when 3 -%}{%- render 'blko-ui-icon', name: 'shirt', size: 16, className: 'baccount26__ci' -%}
+                {%- else -%}{%- render 'blko-ui-icon', name: 'wind', size: 16, className: 'baccount26__ci' -%}
+              {%- endcase -%}
+              <span class="baccount26__ct">{{ cc | escape }}</span>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    </section>
+    <section aria-label="{{ 'blko.account_26.history' | t }}" class="baccount26__sec">
+      <h3 class="bx-label bx-muted">{{ s.story_label | escape }}</h3>
+      <ol class="baccount26__life">
+        {%- for l in lines -%}
+          {%- assign bits = l | split: '|' -%}
+          {%- if bits.size > 1 -%}
+            <li><span aria-hidden="true" class="baccount26__dot"></span><span class="bx-label bx-muted baccount26__ld">{{ bits[0] | strip | escape }}</span><span class="bx-small">{{ bits[1] | strip | escape }}</span></li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ol>
+    </section>
+  </div>
+{%- endif -%}

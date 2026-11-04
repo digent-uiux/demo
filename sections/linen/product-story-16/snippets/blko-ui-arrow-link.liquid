@@ -1,0 +1,5 @@
+{%- comment -%}ArrowLink(href='#', inverse, children, className): components/ui/button.tsx. Pill CTA with a round arrow that turns on hover.{%- endcomment -%}
+<a href="{{ href | default: '#' }}" class="blko-ui-arrow-link{% if inverse %} blko-ui-arrow-link--inverse{% endif %}{% if className != blank %} {{ className }}{% endif %}">
+  {{- children -}}
+  <span class="blko-ui-arrow-link__icon" aria-hidden="true">{% render 'blko-ui-icon', name: 'arrow-up-right' %}</span>
+</a>

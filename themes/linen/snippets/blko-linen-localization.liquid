@@ -1,0 +1,14 @@
+{%- if localization.available_countries.size > 1 or localization.available_languages.size > 1 -%}
+  {%- assign localization_id = 'LinenLocalization-' | append: section.id -%}
+  {% form 'localization', id: localization_id, class: 'blko-linen-localization' %}
+    {%- if localization.available_countries.size > 1 -%}
+      <div class="blko-linen-localization__field"><label for="{{ localization_id }}-country">{{ 'blko.linen.country' | t }}</label>
+      <select id="{{ localization_id }}-country" name="country_code">{% for country in localization.available_countries %}<option value="{{ country.iso_code }}"{% if country.iso_code == localization.country.iso_code %} selected{% endif %}>{{ country.name | escape }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})</option>{% endfor %}</select></div>
+    {%- endif -%}
+    {%- if localization.available_languages.size > 1 -%}
+      <div class="blko-linen-localization__field"><label for="{{ localization_id }}-language">{{ 'blko.linen.language' | t }}</label>
+      <select id="{{ localization_id }}-language" name="language_code">{% for language in localization.available_languages %}<option value="{{ language.iso_code }}"{% if language.iso_code == localization.language.iso_code %} selected{% endif %}>{{ language.endonym_name | capitalize | escape }}</option>{% endfor %}</select></div>
+    {%- endif -%}
+    {% assign update_label = 'blko.linen.localization_update' | t %}{% render 'blko-ui-button', type: 'submit', variant: 'inverse', children: update_label %}
+  {% endform %}
+{%- endif -%}

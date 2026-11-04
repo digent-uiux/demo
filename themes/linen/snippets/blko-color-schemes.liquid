@@ -1,0 +1,42 @@
+{%- comment -%}
+  Per-section colour scheme (written by _tools/theme-schemes.py; regenerate instead of editing). A generated section
+  whose picker is off its default gets `color-<scheme> blko-scheme-pick`: .color-scheme-N (blko-theme-styles) sets
+  --color-*, blko-ds-tokens maps them to --blko-*, and this repaints the root + its blko-ui-section band, which beats the
+  section's own (0,2,0) root rule and any surface class. Gradient wins when the scheme sets one.
+{%- endcomment -%}
+<style>
+  .blko-scheme-pick.blko-scheme-pick.blko-scheme-pick,
+  .blko-scheme-pick.blko-scheme-pick .blko-ui-section[class*="blko-ui-surface--"] {
+    background: var(--color-bg-gradient, var(--color-bg)); color: var(--color-text);
+    --blko-color-on-pop-1: var(--color-text); --blko-color-on-pop-2: var(--color-text); --blko-color-on-pop-3: var(--color-text); --blko-color-on-pop-4: var(--color-text);
+  }
+  /* *-inverse buttons were drawn for the section's own dark backdrop; in a picked scheme they take the scheme's button */
+  .blko-scheme-pick.blko-scheme-pick.blko-scheme-pick .blko-ui-button--inverse {
+    --blko-color-bg: var(--color-button); --blko-color-text: var(--color-button-text); --blko-color-bg-alt: var(--color-button-hover);
+  }
+  .blko-scheme-pick.blko-scheme-pick.blko-scheme-pick .blko-ui-button--outline-inverse,
+  .blko-scheme-pick.blko-scheme-pick.blko-scheme-pick .blko-ui-button--ghost-inverse {
+    --blko-color-bg: var(--color-text); --blko-color-text: var(--color-bg);
+  }
+</style><style>
+  /* Linen captured-class sections and their local aliases. Default picks never match. */
+  .blko-scheme-pick.blko-scheme-pick.blko-scheme-pick,
+  .blko-scheme-pick.blko-scheme-pick .bx-flip {
+    --blko-color-bg:var(--color-bg); --blko-color-bg-alt:var(--color-bg-alt);
+    --blko-color-text:var(--color-text); --blko-color-text-muted:var(--color-text-muted);
+    --blko-color-button:var(--color-button); --blko-color-button-text:var(--color-button-text); --blko-color-button-hover:var(--color-button-hover);
+    --blko-color-border:var(--color-border); --blko-color-accent:var(--color-accent);
+    --blko-color-input-bg:var(--color-bg-alt); --blko-color-input-text:var(--color-text);
+    --blko-color-pop-1:var(--color-bg-alt); --blko-color-pop-2:var(--color-bg-alt); --blko-color-pop-3:var(--color-bg-alt); --blko-color-pop-4:var(--color-bg-alt);
+    --blko-color-on-pop-1-muted:var(--color-text-muted); --blko-color-on-pop-2-muted:var(--color-text-muted); --blko-color-on-pop-3-muted:var(--color-text-muted); --blko-color-on-pop-4-muted:var(--color-text-muted);
+    --c-sale:var(--color-text); --c-accent:var(--color-text); --c-on-color:var(--color-bg);
+    --c-bg:var(--color-bg); --c-bg-alt:var(--color-bg-alt); --c-text:var(--color-text); --c-muted:var(--color-text-muted); --c-border:var(--color-border);
+    --c-button:var(--color-button); --c-button-text:var(--color-button-text); --c-button-hover:var(--color-button-hover);
+    --c-input-bg:var(--color-bg-alt); --c-input-text:var(--color-text); --c-footer-bg:var(--color-bg); --c-footer-text:var(--color-text);
+  }
+  .blko-scheme-pick.blko-scheme-pick.blko-scheme-pick .blko-ui-surface--dark {
+    --blko-fx-bg:var(--color-bg); --blko-fx-fg:var(--color-text);
+  }
+  .blko-scheme-pick.blko-scheme-pick.blko-scheme-pick :is(.blko-ui-price__sale,.blko-ui-price__saving) { color:var(--color-text); }
+  .blko-scheme-pick.blko-scheme-pick.blko-scheme-pick :is(.blko-ui-badge--sale,.blko-ui-badge--accent) { background:var(--color-button); color:var(--color-button-text); }
+</style>

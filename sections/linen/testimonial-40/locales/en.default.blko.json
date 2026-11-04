@@ -1,0 +1,7 @@
+{
+  "blko": {
+    "testimonial_40": {
+      "stars": "{{ count }} out of 5 stars"
+    }
+  }
+}

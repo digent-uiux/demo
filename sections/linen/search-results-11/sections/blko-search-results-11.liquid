@@ -1,0 +1,599 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-search-results-11.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture blko_class -%}bsearchresults11{% if s.tokens == 'theme' %} bsearchresults11--theme{% endif %}{% if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}{%- endcapture -%}
+<script src="{{ 'blko-search-results-11.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign label = 'blko.search_results_11.label' | t
+  assign live = false
+  if search.performed and search.results_count > 0
+    assign live = true
+  endif
+  assign demo = false
+  if request.design_mode or request.host == blank
+    assign demo = true
+  endif
+  if search.performed
+    assign demo = false
+  endif
+  if search.performed
+    assign q = search.terms
+  elsif demo
+    assign q = s.query
+  else
+    assign q = ''
+  endif
+  assign on_list = ''
+  for b in section.blocks
+    if b.type == 'fabric' and b.settings.start
+      assign fl = b.settings.name | downcase
+      assign on_list = on_list | append: fl | append: '|'
+    endif
+  endfor
+  unless demo
+    assign on_list = ''
+  endunless
+  assign ons = on_list | split: '|'
+  assign sid = 'sr11-' | append: section.id
+-%}
+{%- capture blko_body -%}
+  <blko-search-results-11 data-preview="{{ demo }}" class="bsearchresults11__wrap" data-in="{{ s.in_word | escape }}" data-and="{{ s.and_word | escape }}" data-every="{{ s.every_word | escape }}" data-tail="{{ s.tail | escape }}">
+    <div class="bsearchresults11__top">
+      <div class="bsearchresults11__bar">
+        <form role="search" action="{{ routes.search_url }}" method="get" class="bsearchresults11__search">
+          <label for="{{ sid }}" class="bx-sr">{{ 'blko.search_results_11.search' | t }}</label>
+          {%- render 'blko-ui-icon', name: 'search', size: 16, className: 'bsearchresults11__si' -%}
+          <input type="hidden" name="type" value="product">
+          <input id="{{ sid }}" type="search" name="q" value="{{ q | escape }}" class="bx-input bsearchresults11__q" data-q>
+        </form>
+        {%- if demo -%}<p class="bx-label bx-muted">{{ s.choose_label | escape }}</p>{%- endif -%}
+      </div>
+      {%- if demo -%}<ul role="group" aria-label="{{ 'blko.search_results_11.filter' | t }}" class="bsearchresults11__fabrics">
+        {%- for b in section.blocks -%}
+          {%- if b.type == 'fabric' -%}
+            {%- assign bs = b.settings -%}{%- assign key = bs.name | downcase -%}
+            {%- assign on = false -%}{%- if ons contains key -%}{%- assign on = true -%}{%- endif -%}
+            <li {{ b.shopify_attributes }}>
+              <button type="button" class="bsearchresults11__fab" aria-pressed="{{ on }}" data-fibre="{{ key | escape }}" data-name="{{ bs.name | escape }}">
+                <span class="bsearchresults11__fi">
+                  {%- if bs.image != blank -%}
+                    {{ bs.image | image_url: width: 200 | image_tag: class: 'bsearchresults11__fimg', loading: 'lazy', widths: '100, 150, 200', sizes: '72px', alt: '' }}
+                  {%- else -%}
+                    {{ 'detailed-apparel-1' | placeholder_svg_tag: 'bsearchresults11__fimg' }}
+                  {%- endif -%}
+                  <span class="bsearchresults11__tick">{%- render 'blko-ui-icon', name: 'check', size: 20 -%}</span>
+                </span>
+                <span class="bsearchresults11__ft">
+                  <span class="bsearchresults11__fn">{{ bs.name | escape }}</span>
+                  <span class="bx-label bx-muted bsearchresults11__ff">{{ bs.feel | escape }}</span>
+                  <span class="bsearchresults11__fw">{{ bs.weight | escape }}</span>
+                </span>
+              </button>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>{%- endif -%}
+    </div>
+
+    {%- capture cards -%}
+      {%- assign total = 0 -%}
+      {%- if live -%}
+        {%- paginate search.results by 24 -%}
+          {%- for r in search.results -%}
+            {%- if r.object_type == 'product' -%}
+              {%- liquid
+                assign fib = r.type | downcase
+                assign origin = r.metafields.custom.origin.value | default: r.vendor
+                assign colors = '' | split: ','
+                for o in r.options_with_values
+                  assign oname = o.name | downcase
+                  if oname == "color" or oname == "colour"
+                    for v in o.values
+                      if v.swatch.color != blank
+                        assign c = v.swatch.color | append: '' | split: '~'
+                        assign colors = colors | concat: c
+                      endif
+                    endfor
+                  endif
+                endfor
+                assign show = true
+                if ons.size > 0
+                  unless ons contains fib
+                    assign show = false
+                  endunless
+                endif
+                if show
+                  assign total = total | plus: 1
+                endif
+              -%}
+              {%- render 'blko-search-results-11-card', idx: forloop.index0, fibre: fib, fibre_name: r.type, name: r.title, origin: origin, price: r.price, compare: r.compare_at_price, cents: true, image: r.featured_image, url: r.url, colors: colors, show: show, s: s -%}
+            {%- endif -%}
+          {%- endfor -%}
+          {%- capture result_pagination -%}{% render 'blko-pagination', paginate: paginate %}{%- endcapture -%}
+        {%- endpaginate -%}
+      {%- elsif demo -%}
+        {%- for b in section.blocks -%}
+          {%- if b.type == 'piece' -%}
+            {%- liquid
+              assign bs = b.settings
+              assign fib = bs.fibre | downcase
+              assign colors = '' | split: ','
+              assign raw = bs.colors | split: ','
+              for c in raw
+                assign cc = c | strip | split: '~'
+                assign colors = colors | concat: cc
+              endfor
+              assign show = true
+              if ons.size > 0
+                unless ons contains fib
+                  assign show = false
+                endunless
+              endif
+              if show
+                assign total = total | plus: 1
+              endif
+            -%}
+            {%- render 'blko-search-results-11-card', idx: forloop.index0, fibre: fib, fibre_name: bs.fibre, name: bs.name, origin: bs.origin, price: bs.price, cents: false, image: bs.image, url: bs.url, colors: colors, show: show, s: s -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    {%- endcapture -%}
+
+    <div class="bsearchresults11__mid">
+      {%- liquid
+        assign listed = ''
+        assign k = 0
+        for b in section.blocks
+          if b.type == 'fabric' and b.settings.start
+            assign nm = b.settings.name | downcase
+            if k > 0
+              assign listed = listed | append: ' ' | append: s.and_word | append: ' '
+            endif
+            assign listed = listed | append: nm
+            assign k = k | plus: 1
+          endif
+        endfor
+        if listed == ''
+          assign listed = s.every_word
+        endif
+        unless demo
+          assign listed = s.every_word
+          assign total = search.results_count | default: 0
+        endunless
+        assign qq = q | default: s.anything_word
+      -%}
+      <h1 class="bsearchresults11__h">
+        <span class="bsearchresults11__it">“<span data-echo data-empty="{{ s.anything_word | escape }}">{{ qq | escape }}</span>”</span> <span class="bx-muted">{{ s.in_word | escape }}</span> <span class="bsearchresults11__it" data-listed>{{ listed | escape }}</span>, <span class="bx-muted" data-tail-line>{{ s.tail | replace: '[n]', total | escape }}</span>
+      </h1>
+      {%- if demo -%}<div class="bsearchresults11__sort">
+        <label for="{{ sid }}-sort" class="bx-label bx-muted">{{ s.sort_label | escape }}</label>
+        <span class="bx-select">
+          <select id="{{ sid }}-sort" class="bx-input" data-sort>
+            <option value="featured">{{ s.sort_featured | escape }}</option>
+            <option value="low">{{ s.sort_low | escape }}</option>
+            <option value="high">{{ s.sort_high | escape }}</option>
+          </select>
+          {%- render 'blko-ui-icon', name: 'chevron-down', size: 16 -%}
+        </span>
+      </div>{%- endif -%}
+    </div>
+
+    <ul aria-live="polite" class="bsearchresults11__grid" data-grid>{{ cards }}</ul>{{ result_pagination }}
+    <p class="bx-small bx-muted" data-empty{% if total > 0 %} hidden{% endif %}>{% if search.performed and live == false %}{{ s.no_results | escape }}{% else %}{{ s.empty_text | escape }}{% endif %}</p>
+  </blko-search-results-11>
+{%- endcapture -%}
+{%- render 'blko-ui-section', surface: 'bg', bleed: true, label: label, className: blko_class, style: blko_style, inner: 'bx-pad bsearchresults11__in', children: blko_body -%}
+
+{% schema %}
+{
+  "name": "Search, fabric swatches",
+  "tag": "div",
+  "class": "blko-search-results-11-wrap",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Results come from the store search. Fabric tiles filter by product type (the tile name must match it)."
+    },
+    {
+      "type": "text",
+      "id": "choose_label",
+      "label": "Fabric row label",
+      "default": "Choose your cloth"
+    },
+    {
+      "type": "text",
+      "id": "in_word",
+      "label": "In word",
+      "default": "in"
+    },
+    {
+      "type": "text",
+      "id": "and_word",
+      "label": "And word",
+      "default": "&"
+    },
+    {
+      "type": "text",
+      "id": "every_word",
+      "label": "No fabric picked",
+      "default": "every fibre"
+    },
+    {
+      "type": "text",
+      "id": "anything_word",
+      "label": "Empty search",
+      "default": "anything"
+    },
+    {
+      "type": "text",
+      "id": "tail",
+      "label": "Result line",
+      "default": "[n] pieces cut to keep you cool.",
+      "info": "[n] is the count."
+    },
+    {
+      "type": "text",
+      "id": "sort_label",
+      "label": "Sort label",
+      "default": "Sort"
+    },
+    {
+      "type": "text",
+      "id": "sort_featured",
+      "label": "Sort, default",
+      "default": "Featured"
+    },
+    {
+      "type": "text",
+      "id": "sort_low",
+      "label": "Sort, low to high",
+      "default": "Price, low to high"
+    },
+    {
+      "type": "text",
+      "id": "sort_high",
+      "label": "Sort, high to low",
+      "default": "Price, high to low"
+    },
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "Fibre badge",
+      "default": "100% [fibre]"
+    },
+    {
+      "type": "text",
+      "id": "empty_text",
+      "label": "No fabric match",
+      "default": "Pick at least one cloth to see pieces."
+    },
+    {
+      "type": "text",
+      "id": "no_results",
+      "label": "No results",
+      "default": "Nothing matches that search yet. Try a cloth or a colour."
+    },
+    {
+      "type": "header",
+      "content": "Demo"
+    },
+    {
+      "type": "text",
+      "id": "query",
+      "label": "Demo search",
+      "default": "summer"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_source",
+      "label": "Fonts",
+      "options": [
+        {
+          "value": "bundled",
+          "label": "Bundled (EB Garamond + Albert Sans)"
+        },
+        {
+          "value": "picker",
+          "label": "Pick from the font library"
+        },
+        {
+          "value": "theme",
+          "label": "Use the theme's fonts"
+        }
+      ],
+      "default": "bundled"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors and shapes"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, corners, type style",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case…). Other themes: keep the preset."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:blko.linen.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "fabric",
+      "name": "Fabric",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Close-up"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Linen"
+        },
+        {
+          "type": "text",
+          "id": "feel",
+          "label": "Hand-feel",
+          "default": "Crisp, cools as you move"
+        },
+        {
+          "type": "text",
+          "id": "weight",
+          "label": "Weight",
+          "default": "180 gsm"
+        },
+        {
+          "type": "checkbox",
+          "id": "start",
+          "label": "Picked at first",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "piece",
+      "name": "Demo piece",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Wide-sleeve linen shirt"
+        },
+        {
+          "type": "text",
+          "id": "fibre",
+          "label": "Fibre",
+          "default": "Linen"
+        },
+        {
+          "type": "text",
+          "id": "origin",
+          "label": "Origin",
+          "default": "Woven in Portugal"
+        },
+        {
+          "type": "number",
+          "id": "price",
+          "label": "Price",
+          "default": 118
+        },
+        {
+          "type": "text",
+          "id": "colors",
+          "label": "Colours",
+          "default": "#efe7d8, #b8a88d",
+          "info": "Comma separated."
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 20,
+  "presets": [
+    {
+      "name": "Search, fabric swatches",
+      "blocks": [
+        {
+          "type": "fabric",
+          "settings": {
+            "name": "Linen",
+            "feel": "Crisp, cools as you move",
+            "weight": "180 gsm",
+            "start": true
+          }
+        },
+        {
+          "type": "fabric",
+          "settings": {
+            "name": "Cotton",
+            "feel": "Soft, breathable voile",
+            "weight": "120 gsm",
+            "start": true
+          }
+        },
+        {
+          "type": "fabric",
+          "settings": {
+            "name": "Silk",
+            "feel": "Fluid, sand-washed",
+            "weight": "16 momme"
+          }
+        },
+        {
+          "type": "fabric",
+          "settings": {
+            "name": "Hemp",
+            "feel": "Dry hand, gets softer",
+            "weight": "210 gsm"
+          }
+        },
+        {
+          "type": "piece",
+          "settings": {
+            "name": "Wide-sleeve linen shirt",
+            "fibre": "Linen",
+            "origin": "Woven in Portugal",
+            "price": 118,
+            "colors": "#efe7d8, #b8a88d"
+          }
+        },
+        {
+          "type": "piece",
+          "settings": {
+            "name": "Tiered linen sundress",
+            "fibre": "Linen",
+            "origin": "Woven in Lithuania",
+            "price": 165,
+            "colors": "#d8c8ae"
+          }
+        },
+        {
+          "type": "piece",
+          "settings": {
+            "name": "Long linen robe coat",
+            "fibre": "Linen",
+            "origin": "Woven in Portugal",
+            "price": 198,
+            "colors": "#cfc3ae, #6f6a5f"
+          }
+        },
+        {
+          "type": "piece",
+          "settings": {
+            "name": "Cotton voile beach shirt",
+            "fibre": "Cotton",
+            "origin": "Woven in India",
+            "price": 84,
+            "colors": "#ffffff, #a9bfc7"
+          }
+        },
+        {
+          "type": "piece",
+          "settings": {
+            "name": "Gauze cotton wrap skirt",
+            "fibre": "Cotton",
+            "origin": "Woven in India",
+            "price": 92,
+            "colors": "#e8d9c4"
+          }
+        },
+        {
+          "type": "piece",
+          "settings": {
+            "name": "Sand-washed silk slip",
+            "fibre": "Silk",
+            "origin": "Woven in Italy",
+            "price": 210,
+            "colors": "#f1ece3, #c9a98e"
+          }
+        },
+        {
+          "type": "piece",
+          "settings": {
+            "name": "Silk-blend palazzo trousers",
+            "fibre": "Silk",
+            "origin": "Woven in Italy",
+            "price": 176,
+            "colors": "#e3b7a8"
+          }
+        },
+        {
+          "type": "piece",
+          "settings": {
+            "name": "Hemp utility jacket",
+            "fibre": "Hemp",
+            "origin": "Woven in Romania",
+            "price": 188,
+            "colors": "#a39478, #3d3a33"
+          }
+        },
+        {
+          "type": "piece",
+          "settings": {
+            "name": "Hemp-cotton knit pullover",
+            "fibre": "Hemp",
+            "origin": "Knitted in Peru",
+            "price": 146,
+            "colors": "#b9b2a6"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

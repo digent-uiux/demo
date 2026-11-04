@@ -1,0 +1,341 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-2'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-blog-53.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture blko_class -%}bblog53{% if s.tokens == 'theme' %} bblog53--theme{% endif %}{% if blko_sid != 'scheme-2' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}{%- endcapture -%}
+<script src="{{ 'blko-blog-53.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign label = 'blko.blog_53.label' | t
+  assign live = false
+  if blog != blank and blog.articles_count > 0
+    assign live = true
+  endif
+-%}
+{%- capture blko_body -%}
+  <blko-blog-53 class="bblog53__app" data-of="{{ 'blko.blog_53.of' | t | escape }}">
+    {%- capture modes -%}item,card{%- endcapture -%}
+    {%- assign modes = modes | split: ',' -%}
+    {%- if live -%}
+      {%- paginate blog.articles by 12 -%}
+        {%- for mode in modes -%}
+          {%- capture out -%}
+            {%- for a in blog.articles -%}
+              {%- liquid
+                assign topic = a.tags.first | default: blog.title
+                assign dek = a.excerpt | strip_html | strip
+                if dek == blank
+                  assign dek = a.content | strip_html | truncatewords: 22
+                endif
+                assign words = a.content | strip_html | split: ' '
+                assign mins = words.size | divided_by: 200.0 | ceil | at_least: 1
+                assign alt = a.image.alt | default: a.title
+              -%}
+              {%- render 'blko-blog-53-post', mode: mode, n: forloop.index0, topic: topic, title: a.title, dek: dek, mins: mins, image: a.image, alt: alt, url: a.url, s: s -%}
+            {%- endfor -%}
+          {%- endcapture -%}
+          {%- if mode == 'item' -%}{%- assign items = out -%}{%- else -%}{%- assign cards = out -%}{%- endif -%}
+        {%- endfor -%}
+        {%- assign count = blog.articles.size -%}
+        {%- capture pager -%}
+          {%- if paginate.pages > 1 -%}
+            <nav class="bx-small bblog53__pager">
+              {%- if paginate.previous -%}<a href="{{ paginate.previous.url }}">{{ 'blko.blog_53.newer' | t }}</a>{%- endif -%}
+              {%- if paginate.next -%}<a href="{{ paginate.next.url }}">{{ 'blko.blog_53.older' | t }}</a>{%- endif -%}
+            </nav>
+          {%- endif -%}
+        {%- endcapture -%}
+      {%- endpaginate -%}
+    {%- else -%}
+      {%- for mode in modes -%}
+        {%- capture out -%}
+          {%- for b in section.blocks -%}
+            {%- assign bs = b.settings -%}
+            {%- assign url = bs.link | default: '#' -%}
+            {%- render 'blko-blog-53-post', mode: mode, n: forloop.index0, topic: bs.topic, title: bs.title, dek: bs.dek, mins: bs.mins, image: bs.image, alt: bs.title, url: url, s: s -%}
+          {%- endfor -%}
+        {%- endcapture -%}
+        {%- if mode == 'item' -%}{%- assign items = out -%}{%- else -%}{%- assign cards = out -%}{%- endif -%}
+      {%- endfor -%}
+      {%- assign count = section.blocks.size -%}
+      {%- assign pager = '' -%}
+    {%- endif -%}
+
+    <div class="bblog53__side">
+      <header class="bblog53__head">
+        <h2 class="bblog53__title">{{ s.heading | escape }}</h2>
+        {%- if s.text != blank -%}<p class="bx-body bx-muted bblog53__lead">{{ s.text | escape }}</p>{%- endif -%}
+      </header>
+      <div class="bblog53__index">
+        <ol aria-label="{{ 'blko.blog_53.stories' | t }}" class="bblog53__list">{{ items }}</ol>
+        {{ pager }}
+      </div>
+    </div>
+
+    <div class="bblog53__main">
+      {%- assign of = 'blko.blog_53.of' | t | replace: '[n]', '1' | replace: '[total]', count -%}
+      <div role="group" aria-roledescription="carousel" aria-label="{{ of | escape }}" tabindex="0" class="bblog53__deck" data-deck>{{ cards }}</div>
+      <nav aria-label="{{ 'blko.blog_53.pages' | t }}" class="bblog53__nav">
+        <button type="button" class="bblog53__arrow" aria-label="{{ 'blko.blog_53.prev' | t }}" data-step="-1" disabled>{%- render 'blko-ui-icon', name: 'arrow-left', size: 20 -%}</button>
+        <div class="bblog53__dots">
+          {%- for i in (1..count) -%}
+            {%- assign sl = 'blko.blog_53.story' | t | replace: '[n]', i -%}
+            <button type="button" class="bblog53__dot" aria-label="{{ sl | escape }}" data-go="{{ forloop.index0 }}"{% if forloop.first %} aria-current="page"{% endif %}><span></span></button>
+          {%- endfor -%}
+        </div>
+        <button type="button" class="bblog53__arrow" aria-label="{{ 'blko.blog_53.next' | t }}" data-step="1"{% if count < 2 %} disabled{% endif %}>{%- render 'blko-ui-icon', name: 'arrow-right', size: 20 -%}</button>
+      </nav>
+      <p class="bx-label bx-muted bblog53__num" data-counter>01 / {% if count < 10 %}0{% endif %}{{ count }}</p>
+    </div>
+  </blko-blog-53>
+{%- endcapture -%}
+{%- render 'blko-ui-section', surface: 'alt', bleed: true, label: label, className: blko_class, style: blko_style, inner: 'bx-pad bblog53__in', children: blko_body -%}
+
+{% schema %}
+{
+  "name": "Blog, story deck",
+  "tag": "div",
+  "class": "blko-blog-53-wrap",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Style guides and fabric stories"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Slow reads on how our clothes are made, worn and kept. Swipe through, or pick from the list."
+    },
+    {
+      "type": "text",
+      "id": "read_label",
+      "label": "Read time on cards",
+      "default": "[n] min read"
+    },
+    {
+      "type": "text",
+      "id": "min_label",
+      "label": "Read time in the list",
+      "default": "[n] min"
+    },
+    {
+      "type": "paragraph",
+      "content": "On a blog page the stories come from the blog, 12 per page. The demo stories below show elsewhere."
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_source",
+      "label": "Fonts",
+      "options": [
+        {
+          "value": "bundled",
+          "label": "Bundled (EB Garamond + Albert Sans)"
+        },
+        {
+          "value": "picker",
+          "label": "Pick from the font library"
+        },
+        {
+          "value": "theme",
+          "label": "Use the theme's fonts"
+        }
+      ],
+      "default": "bundled"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors and shapes"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, corners, type style",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case…). Other themes: keep the preset."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:blko.linen.color_scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "post",
+      "name": "Demo story",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo"
+        },
+        {
+          "type": "text",
+          "id": "topic",
+          "label": "Topic",
+          "default": "Fabric story"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Why linen softens with every wash"
+        },
+        {
+          "type": "textarea",
+          "id": "dek",
+          "label": "Line",
+          "default": "Water and movement open the fibres, wash after wash."
+        },
+        {
+          "type": "range",
+          "id": "mins",
+          "label": "Minutes to read",
+          "min": 1,
+          "max": 30,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "Blog, story deck",
+      "blocks": [
+        {
+          "type": "post",
+          "settings": {
+            "topic": "Fabric story",
+            "title": "Why linen softens with every wash",
+            "dek": "Flax fibres are stiff and hollow. Water and movement break the starch and open them up, wash after wash.",
+            "mins": 6
+          }
+        },
+        {
+          "type": "post",
+          "settings": {
+            "topic": "Style guide",
+            "title": "Ten days, one robe dress",
+            "dek": "Belted for dinner, open over a swimsuit, knotted for the plane. A packing list built around one piece.",
+            "mins": 5
+          }
+        },
+        {
+          "type": "post",
+          "settings": {
+            "topic": "Fit",
+            "title": "The camp shirt: how loose is too loose",
+            "dek": "Shoulder seam just past the bone, hem at the hip, sleeve to mid-bicep.",
+            "mins": 4
+          }
+        },
+        {
+          "type": "post",
+          "settings": {
+            "topic": "Style guide",
+            "title": "White in strong sun",
+            "dek": "What to wear under light linen so it stays cool and opaque from noon to dusk.",
+            "mins": 4
+          }
+        },
+        {
+          "type": "post",
+          "settings": {
+            "topic": "Style guide",
+            "title": "A resort capsule that fits a carry-on",
+            "dek": "Nine pieces in three colours, laid out for a week by the water.",
+            "mins": 7
+          }
+        },
+        {
+          "type": "post",
+          "settings": {
+            "topic": "Fabric story",
+            "title": "Flax to fabric, step by step",
+            "dek": "Retting, scutching, hackling, spinning: the slow work behind a metre of cloth.",
+            "mins": 8
+          }
+        },
+        {
+          "type": "post",
+          "settings": {
+            "topic": "Care",
+            "title": "How veg-tan leather ages",
+            "dek": "Sun and hands darken it to honey. A little balm twice a year is all it needs.",
+            "mins": 3
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

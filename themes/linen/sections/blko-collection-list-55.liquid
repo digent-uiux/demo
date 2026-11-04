@@ -1,0 +1,313 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-4'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-collection-list-55.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture blko_class -%}bcollectionlist55{% if s.tokens == 'theme' %} bcollectionlist55--theme{% endif %}{% if blko_sid != 'scheme-4' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}{%- endcapture -%}
+{%- liquid
+  assign label = s.heading | strip_html
+  assign lc = s.lead_collection
+  if lc != blank
+    assign lead_name = lc.title
+    assign lead_href = lc.url
+    assign lead_count = lc.products_count
+    assign lead_img = s.lead_image | default: lc.image
+  else
+    assign lead_name = s.lead_title
+    assign lead_href = routes.all_products_collection_url
+    assign lead_count = s.lead_count
+    assign lead_img = s.lead_image
+  endif
+-%}
+{%- capture blko_body -%}
+    <a href="{{ lead_href }}" class="bcollectionlist55__lead">
+      {%- if lead_img != blank -%}
+        {{ lead_img | image_url: width: 1400 | image_tag: class: 'bcollectionlist55__img', loading: 'lazy', widths: '500, 800, 1100, 1400', sizes: '(min-width: 768px) 58vw, 100vw', alt: lead_img.alt }}
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'bcollectionlist55__img' }}
+      {%- endif -%}
+      <span class="bcollectionlist55__plate">
+        <span class="bcollectionlist55__pl">
+          {%- if s.lead_kicker != blank -%}<span class="bx-label bcollectionlist55__kick">{{ s.lead_kicker | escape }}</span>{%- endif -%}
+          <span class="bcollectionlist55__lname">{{ lead_name | escape }}</span>
+          {%- if s.lead_cloth != blank -%}<span class="bx-small bcollectionlist55__lcloth">{{ s.lead_cloth | escape }}</span>{%- endif -%}
+        </span>
+        <span class="bcollectionlist55__lcount">{{ 'blko.collection_list_55.pieces' | t: count: lead_count }}{%- render 'blko-ui-icon', name: 'arrow-up-right', size: 16 -%}</span>
+      </span>
+    </a>
+    <div class="bcollectionlist55__side">
+      <div class="bcollectionlist55__head">
+        <h2 class="bcollectionlist55__title">{{ s.heading | escape }}</h2>
+        {%- if s.text != blank -%}<p class="bx-body bcollectionlist55__text">{{ s.text | escape }}</p>{%- endif -%}
+      </div>
+      <ul class="bcollectionlist55__list">
+        {%- for b in section.blocks -%}
+          {%- liquid
+            assign c = b.settings.collection
+            if c != blank
+              assign name = c.title
+              assign href = c.url
+              assign n = c.products_count
+            else
+              assign name = b.settings.demo_title
+              assign href = routes.all_products_collection_url
+              assign n = b.settings.demo_count
+            endif
+          -%}
+          <li class="bcollectionlist55__item" {{ b.shopify_attributes }}>
+            <a href="{{ href }}" class="bcollectionlist55__link">
+              <span class="bcollectionlist55__lt">
+                <span class="bcollectionlist55__name">{{ name | escape }}</span>
+                {%- if b.settings.cloth != blank -%}<span class="bx-small bcollectionlist55__cloth">{{ b.settings.cloth | escape }}</span>{%- endif -%}
+              </span>
+              <span class="bx-label bcollectionlist55__n">{{ n }}</span>
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+      {%- if s.all_label != blank -%}
+        {%- assign href = s.all_link | default: routes.all_products_collection_url -%}
+        <a href="{{ href }}" class="bcollectionlist55__all">{{ s.all_label | escape }}</a>
+      {%- endif -%}
+    </div>
+{%- endcapture -%}
+{%- render 'blko-ui-section', surface: 'pop-3', bleed: true, label: label, className: blko_class, style: blko_style, inner: 'bx-pad bcollectionlist55__grid', children: blko_body -%}
+
+{% schema %}
+{
+  "name": "Collections, photo links",
+  "tag": "div",
+  "class": "blko-collection-list-55-wrap",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Where most people go next"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Nothing lives at this address, but the rails below are restocked every Friday."
+    },
+    {
+      "type": "text",
+      "id": "all_label",
+      "label": "Link label",
+      "default": "See every piece"
+    },
+    {
+      "type": "url",
+      "id": "all_link",
+      "label": "Link",
+      "default": "/collections/all"
+    },
+    {
+      "type": "header",
+      "content": "Large photo"
+    },
+    {
+      "type": "collection",
+      "id": "lead_collection",
+      "label": "Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "lead_image",
+      "label": "Photo",
+      "info": "Overrides the collection image."
+    },
+    {
+      "type": "text",
+      "id": "lead_kicker",
+      "label": "Small label",
+      "default": "Most visited"
+    },
+    {
+      "type": "text",
+      "id": "lead_cloth",
+      "label": "Cloth line",
+      "default": "Washed linen, cut loose"
+    },
+    {
+      "type": "text",
+      "id": "lead_title",
+      "label": "Demo name",
+      "default": "Shirts",
+      "info": "Shown while no collection is picked."
+    },
+    {
+      "type": "range",
+      "id": "lead_count",
+      "label": "Demo count",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 26
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_source",
+      "label": "Fonts",
+      "options": [
+        {
+          "value": "bundled",
+          "label": "Bundled (EB Garamond + Albert Sans)"
+        },
+        {
+          "value": "picker",
+          "label": "Pick from the font library"
+        },
+        {
+          "value": "theme",
+          "label": "Use the theme's fonts"
+        }
+      ],
+      "default": "bundled"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors and shapes"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, corners, type style",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case…). Other themes: keep the preset."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:blko.linen.color_scheme",
+      "default": "scheme-4"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Collection link",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "text",
+          "id": "cloth",
+          "label": "Cloth line",
+          "default": "Slips and shifts in hemp-linen"
+        },
+        {
+          "type": "text",
+          "id": "demo_title",
+          "label": "Demo name",
+          "default": "Dresses",
+          "info": "Shown while no collection is picked."
+        },
+        {
+          "type": "range",
+          "id": "demo_count",
+          "label": "Demo count",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 31
+        }
+      ]
+    }
+  ],
+  "max_blocks": 5,
+  "presets": [
+    {
+      "name": "Collections, photo links",
+      "blocks": [
+        {
+          "type": "link",
+          "settings": {
+            "demo_title": "Dresses",
+            "cloth": "Slips and shifts in hemp-linen",
+            "demo_count": 31
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "demo_title": "Trousers & shorts",
+            "cloth": "Drawstring waists, ramie blends",
+            "demo_count": 22
+          }
+        },
+        {
+          "type": "link",
+          "settings": {
+            "demo_title": "Robes & loungewear",
+            "cloth": "Gauze cotton for slow mornings",
+            "demo_count": 14
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

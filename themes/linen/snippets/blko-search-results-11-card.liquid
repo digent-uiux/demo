@@ -1,0 +1,10 @@
+{%- comment -%} One result. idx, fibre (lowercase key), fibre_name, name, origin, price, compare, cents, image, url, colors (array), show, s. {%- endcomment -%}
+{%- liquid
+  assign fl = fibre_name | downcase
+  assign badge_text = s.badge | replace: '[fibre]', fl
+  assign href = url | default: '#'
+-%}
+<li class="bsearchresults11__card" data-card data-fibre="{{ fibre | escape }}" data-price="{{ price }}" data-order="{{ idx }}"{% unless show %} hidden{% endunless %}>
+  {%- render 'blko-ui-product-card', title: name, vendor: origin, image: image, alt: name, href: href, price: price, compareAt: compare, cents: cents, colors: colors, ratio: 'tall', wishlist: true -%}
+  {%- if fibre_name != blank -%}{%- render 'blko-ui-badge', tone: 'surface', children: badge_text, className: 'bsearchresults11__badge' -%}{%- endif -%}
+</li>

@@ -1,0 +1,33 @@
+{%- assign form_id = 'LinenFacets-' | append: section.id -%}
+{%- assign sort = collection.sort_by | default: collection.default_sort_by -%}
+<details class="blko-linen-filter-shell" data-linen-filter-shell data-close="{{ 'blko.linen.close' | t | escape }}"><summary>{{ 'blko.linen.filter_sort' | t }}</summary>
+<form id="{{ form_id }}" action="{{ collection.url }}" method="get" class="blko-linen-facets">
+  {% render 'blko-linen-filter-heading' %}
+  <div class="blko-linen-facets__groups">
+    {%- for filter in collection.filters -%}
+      <details class="blko-linen-facets__group">
+        <summary>{{ filter.label | escape }}{% if filter.active_values.size > 0 %} ({{ filter.active_values.size }}){% endif %}</summary>
+        {%- if filter.type == 'price_range' -%}
+          <div class="blko-linen-facets__price">
+            <label>{{ 'blko.collection.price_from' | t }}<input class="blko-ui-input" type="number" inputmode="decimal" step="any" min="0" max="{{ filter.range_max | divided_by: 100.0 }}" name="{{ filter.min_value.param_name }}"{% if filter.min_value.value != nil %} value="{{ filter.min_value.value | divided_by: 100.0 }}"{% endif %}></label>
+            <label>{{ 'blko.collection.price_to' | t }}<input class="blko-ui-input" type="number" inputmode="decimal" step="any" min="0" max="{{ filter.range_max | divided_by: 100.0 }}" name="{{ filter.max_value.param_name }}"{% if filter.max_value.value != nil %} value="{{ filter.max_value.value | divided_by: 100.0 }}"{% endif %}></label>
+          </div>
+        {%- else -%}
+          <fieldset><legend class="blko-ui-sr-only">{{ filter.label | escape }}</legend>
+            {%- for value in filter.values -%}<label class="blko-linen-facets__check"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value | escape }}"{% if value.active %} checked{% endif %}{% if value.count == 0 and value.active == false %} disabled{% endif %}><span>{{ value.label | escape }} ({{ value.count }})</span></label>{%- endfor -%}
+          </fieldset>
+        {%- endif -%}
+      </details>
+    {%- endfor -%}
+    <label class="blko-linen-facets__sort">{{ 'blko.collection_grid_34.sort' | t }}<select class="blko-ui-input" name="sort_by">{% for option in collection.sort_options %}<option value="{{ option.value }}"{% if option.value == sort %} selected{% endif %}>{{ option.name | escape }}</option>{% endfor %}</select></label>
+
+  </div>
+  <div class="blko-linen-facets__active">
+    {%- for filter in collection.filters -%}
+      {%- for value in filter.active_values -%}<a href="{{ value.url_to_remove | escape }}">{{ filter.label | escape }}: {{ value.label | escape }} {% render 'blko-ui-icon', name: 'x', size: 16 %}</a>{%- endfor -%}
+      {%- if filter.type == 'price_range' -%}{%- if filter.min_value.value != nil or filter.max_value.value != nil -%}<a href="{{ filter.url_to_remove | escape }}">{{ filter.label | escape }} {% render 'blko-ui-icon', name: 'x', size: 16 %}</a>{%- endif -%}{%- endif -%}
+    {%- endfor -%}
+
+  </div>
+  <footer class="blko-linen-facets__actions"><a href="{{ collection.url }}?sort_by={{ sort | url_encode }}">{{ 'blko.collection.clear_all' | t }}</a>{%- assign apply = 'blko.collection.apply' | t -%}{% render 'blko-ui-button', type: 'submit', children: apply, variant: 'outline', size: 'sm' %}</footer>
+</form></details>

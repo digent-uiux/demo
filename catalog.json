@@ -8361,6 +8361,2508 @@
       ]
     },
     {
+      "id": "linen",
+      "path": "themes/linen",
+      "shopify": true,
+      "demo": "demo/linen",
+      "sections": [
+        {
+          "id": "account-26",
+          "name": "Account, wardrobe",
+          "kind": "section",
+          "category": "customer-account",
+          "description": "Account, wardrobe section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/customer-account--account-26.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/customer-account--account-26.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Account, wardrobe\" (id `account-26`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/customer-account--account-26.html; Shopify bundle: sections/linen/account-26/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/account-26",
+          "files": [
+            "sections/linen/account-26/sections/blko-account-26.liquid",
+            "sections/linen/account-26/snippets/blko-account-26-piece.liquid",
+            "sections/linen/account-26/snippets/blko-fonts-linen.liquid",
+            "sections/linen/account-26/snippets/blko-icon.liquid",
+            "sections/linen/account-26/snippets/blko-linen-account-summary.liquid",
+            "sections/linen/account-26/snippets/blko-pagination.liquid",
+            "sections/linen/account-26/snippets/blko-ui-button.liquid",
+            "sections/linen/account-26/snippets/blko-ui-icon-more.liquid",
+            "sections/linen/account-26/snippets/blko-ui-icon.liquid",
+            "sections/linen/account-26/snippets/blko-ui-option.liquid",
+            "sections/linen/account-26/snippets/blko-ui-section.liquid",
+            "sections/linen/account-26/assets/blko-account-26.css",
+            "sections/linen/account-26/assets/blko-account-26.js",
+            "sections/linen/account-26/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/account-26/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/account-26/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/account-26/assets/blko-ui-commerce.css",
+            "sections/linen/account-26/assets/blko-ui-commerce.js",
+            "sections/linen/account-26/assets/blko-ui-core.css",
+            "sections/linen/account-26/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-account-26.css",
+            "blko-account-26.js",
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-ui-commerce.css",
+            "blko-ui-commerce.js",
+            "blko-ui-core.css"
+          ],
+          "localeKeys": [
+            "blko.account_26.care",
+            "blko.account_26.history",
+            "blko.account_26.label",
+            "blko.account_26.repair",
+            "blko.account_26.repair_type",
+            "blko.general.next",
+            "blko.general.page",
+            "blko.general.pagination",
+            "blko.general.previous",
+            "blko.linen.account_details",
+            "blko.linen.addresses",
+            "blko.linen.log_in",
+            "blko.linen.log_out",
+            "blko.linen.no_orders",
+            "blko.linen.orders",
+            "blko.linen.shop_all"
+          ],
+          "themeSettings": [],
+          "blockTypes": [
+            "piece"
+          ]
+        },
+        {
+          "id": "article-22",
+          "name": "Article, before and after",
+          "kind": "section",
+          "category": "article",
+          "description": "Article, before and after section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/article--article-22.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/article--article-22.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Article, before and after\" (id `article-22`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/article--article-22.html; Shopify bundle: sections/linen/article-22/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/article-22",
+          "files": [
+            "sections/linen/article-22/sections/blko-article-22.liquid",
+            "sections/linen/article-22/snippets/blko-fonts-linen.liquid",
+            "sections/linen/article-22/snippets/blko-ui-icon-more.liquid",
+            "sections/linen/article-22/snippets/blko-ui-icon.liquid",
+            "sections/linen/article-22/snippets/blko-ui-section.liquid",
+            "sections/linen/article-22/assets/blko-article-22.css",
+            "sections/linen/article-22/assets/blko-article-22.js",
+            "sections/linen/article-22/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/article-22/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/article-22/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/article-22/assets/blko-ui-core.css",
+            "sections/linen/article-22/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-article-22.css",
+            "blko-article-22.js",
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-ui-core.css"
+          ],
+          "localeKeys": [
+            "blko.article_22.label"
+          ],
+          "themeSettings": [],
+          "blockTypes": [
+            "body",
+            "compare",
+            "look"
+          ]
+        },
+        {
+          "id": "blog-53",
+          "name": "Blog, story deck",
+          "kind": "section",
+          "category": "main-blog",
+          "description": "Blog, story deck section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/main-blog--blog-53.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/main-blog--blog-53.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Blog, story deck\" (id `blog-53`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/main-blog--blog-53.html; Shopify bundle: sections/linen/blog-53/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/blog-53",
+          "files": [
+            "sections/linen/blog-53/sections/blko-blog-53.liquid",
+            "sections/linen/blog-53/snippets/blko-blog-53-post.liquid",
+            "sections/linen/blog-53/snippets/blko-fonts-linen.liquid",
+            "sections/linen/blog-53/snippets/blko-ui-icon-more.liquid",
+            "sections/linen/blog-53/snippets/blko-ui-icon.liquid",
+            "sections/linen/blog-53/snippets/blko-ui-section.liquid",
+            "sections/linen/blog-53/assets/blko-blog-53.css",
+            "sections/linen/blog-53/assets/blko-blog-53.js",
+            "sections/linen/blog-53/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/blog-53/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/blog-53/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/blog-53/assets/blko-ui-core.css",
+            "sections/linen/blog-53/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-blog-53.css",
+            "blko-blog-53.js",
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-ui-core.css"
+          ],
+          "localeKeys": [
+            "blko.blog_53.label",
+            "blko.blog_53.newer",
+            "blko.blog_53.next",
+            "blko.blog_53.of",
+            "blko.blog_53.older",
+            "blko.blog_53.pages",
+            "blko.blog_53.prev",
+            "blko.blog_53.stories",
+            "blko.blog_53.story"
+          ],
+          "themeSettings": [],
+          "blockTypes": [
+            "post"
+          ]
+        },
+        {
+          "id": "blog-80",
+          "name": "Blog, next story band",
+          "kind": "section",
+          "category": "featured-blog-posts",
+          "description": "Blog, next story band section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/featured-blog-posts--blog-80.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/featured-blog-posts--blog-80.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Blog, next story band\" (id `blog-80`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/featured-blog-posts--blog-80.html; Shopify bundle: sections/linen/blog-80/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/blog-80",
+          "files": [
+            "sections/linen/blog-80/sections/blko-blog-80.liquid",
+            "sections/linen/blog-80/snippets/blko-fonts-linen.liquid",
+            "sections/linen/blog-80/snippets/blko-ui-icon-more.liquid",
+            "sections/linen/blog-80/snippets/blko-ui-icon.liquid",
+            "sections/linen/blog-80/snippets/blko-ui-section.liquid",
+            "sections/linen/blog-80/assets/blko-blog-80.css",
+            "sections/linen/blog-80/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/blog-80/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/blog-80/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/blog-80/assets/blko-ui-core.css",
+            "sections/linen/blog-80/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-blog-80.css",
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-ui-core.css"
+          ],
+          "localeKeys": [
+            "blko.blog_80.label"
+          ],
+          "themeSettings": [],
+          "blockTypes": [
+            "story"
+          ]
+        },
+        {
+          "id": "cart-page-13",
+          "name": "Cart, size swap",
+          "kind": "section",
+          "category": "cart",
+          "description": "Cart, size swap section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/cart--cart-page-13.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/cart--cart-page-13.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Cart, size swap\" (id `cart-page-13`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/cart--cart-page-13.html; Shopify bundle: sections/linen/cart-page-13/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/cart-page-13",
+          "files": [
+            "sections/linen/cart-page-13/sections/blko-cart-page-13.liquid",
+            "sections/linen/cart-page-13/snippets/blko-cart-page-13-line.liquid",
+            "sections/linen/cart-page-13/snippets/blko-fonts-linen.liquid",
+            "sections/linen/cart-page-13/snippets/blko-ui-button.liquid",
+            "sections/linen/cart-page-13/snippets/blko-ui-field.liquid",
+            "sections/linen/cart-page-13/snippets/blko-ui-icon-more.liquid",
+            "sections/linen/cart-page-13/snippets/blko-ui-icon.liquid",
+            "sections/linen/cart-page-13/snippets/blko-ui-input.liquid",
+            "sections/linen/cart-page-13/snippets/blko-ui-money.liquid",
+            "sections/linen/cart-page-13/snippets/blko-ui-option.liquid",
+            "sections/linen/cart-page-13/snippets/blko-ui-payment-marks.liquid",
+            "sections/linen/cart-page-13/snippets/blko-ui-price.liquid",
+            "sections/linen/cart-page-13/snippets/blko-ui-quantity.liquid",
+            "sections/linen/cart-page-13/snippets/blko-ui-section.liquid",
+            "sections/linen/cart-page-13/snippets/blko-ui-textarea.liquid",
+            "sections/linen/cart-page-13/assets/blko-cart-page-13.css",
+            "sections/linen/cart-page-13/assets/blko-cart-page-13.js",
+            "sections/linen/cart-page-13/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/cart-page-13/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/cart-page-13/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/cart-page-13/assets/blko-ui-commerce.css",
+            "sections/linen/cart-page-13/assets/blko-ui-commerce.js",
+            "sections/linen/cart-page-13/assets/blko-ui-core.css",
+            "sections/linen/cart-page-13/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-cart-page-13.css",
+            "blko-cart-page-13.js",
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-ui-commerce.css",
+            "blko-ui-commerce.js",
+            "blko-ui-core.css"
+          ],
+          "localeKeys": [
+            "blko.cart.note",
+            "blko.cart.update",
+            "blko.cart_page_13.aside",
+            "blko.cart_page_13.label",
+            "blko.cart_page_13.photo_alt",
+            "blko.cart_page_13.quantity",
+            "blko.cart_page_13.size_word",
+            "blko.cart_page_13.sold_out",
+            "blko.linen.cart_error",
+            "blko.linen.view_bag",
+            "blko_ui.field.optional",
+            "blko_ui.payment.bank",
+            "blko_ui.payment.card",
+            "blko_ui.payment.gift_card",
+            "blko_ui.payment.label",
+            "blko_ui.payment.pay_later",
+            "blko_ui.payment.wallet",
+            "blko_ui.price.from",
+            "blko_ui.price.save",
+            "blko_ui.price.was",
+            "blko_ui.quantity.decrease",
+            "blko_ui.quantity.increase",
+            "blko_ui.quantity.label"
+          ],
+          "themeSettings": [],
+          "blockTypes": [
+            "line",
+            "wrap"
+          ]
+        },
+        {
+          "id": "collection-banner-58",
+          "name": "Blog opener, oval label",
+          "kind": "section",
+          "category": "collection-banner",
+          "description": "Blog opener, oval label section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/collection-banner--collection-banner-58.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/collection-banner--collection-banner-58.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Blog opener, oval label\" (id `collection-banner-58`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/collection-banner--collection-banner-58.html; Shopify bundle: sections/linen/collection-banner-58/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/collection-banner-58",
+          "files": [
+            "sections/linen/collection-banner-58/sections/blko-collection-banner-58.liquid",
+            "sections/linen/collection-banner-58/snippets/blko-fonts-linen.liquid",
+            "sections/linen/collection-banner-58/snippets/blko-ui-section.liquid",
+            "sections/linen/collection-banner-58/assets/blko-collection-banner-58.css",
+            "sections/linen/collection-banner-58/assets/blko-collection-banner-58.js",
+            "sections/linen/collection-banner-58/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/collection-banner-58/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/collection-banner-58/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/collection-banner-58/assets/blko-ui-core.css",
+            "sections/linen/collection-banner-58/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-collection-banner-58.css",
+            "blko-collection-banner-58.js",
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-ui-core.css"
+          ],
+          "localeKeys": [
+            "blko.collection_banner_58.notes.one",
+            "blko.collection_banner_58.notes.other",
+            "blko.collection_banner_58.topics"
+          ],
+          "themeSettings": [],
+          "blockTypes": [
+            "topic"
+          ]
+        },
+        {
+          "id": "collection-banner-86",
+          "name": "Collection, cloth book",
+          "kind": "section",
+          "category": "collection-banner",
+          "description": "Collection, cloth book section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/collection-banner--collection-banner-86.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/collection-banner--collection-banner-86.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Collection, cloth book\" (id `collection-banner-86`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/collection-banner--collection-banner-86.html; Shopify bundle: sections/linen/collection-banner-86/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/collection-banner-86",
+          "files": [
+            "sections/linen/collection-banner-86/sections/blko-collection-banner-86.liquid",
+            "sections/linen/collection-banner-86/snippets/blko-fonts-linen.liquid",
+            "sections/linen/collection-banner-86/snippets/blko-linen-mixed.liquid",
+            "sections/linen/collection-banner-86/snippets/blko-ui-section.liquid",
+            "sections/linen/collection-banner-86/assets/blko-collection-banner-86.css",
+            "sections/linen/collection-banner-86/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/collection-banner-86/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/collection-banner-86/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/collection-banner-86/assets/blko-linen-motion.css",
+            "sections/linen/collection-banner-86/assets/blko-linen-motion.js",
+            "sections/linen/collection-banner-86/assets/blko-ui-core.css",
+            "sections/linen/collection-banner-86/assets/blko-ui-motion.js",
+            "sections/linen/collection-banner-86/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-collection-banner-86.css",
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-linen-motion.css",
+            "blko-linen-motion.js",
+            "blko-ui-core.css",
+            "blko-ui-motion.js"
+          ],
+          "localeKeys": [
+            "blko.collection_banner_86.breadcrumb",
+            "blko.collection_banner_86.count_html.one",
+            "blko.collection_banner_86.count_html.other",
+            "blko.collection_banner_86.label"
+          ],
+          "themeSettings": [],
+          "blockTypes": []
+        },
+        {
+          "id": "collection-grid-34",
+          "name": "Collection, shelf",
+          "kind": "section",
+          "category": "main-collection-product-grid",
+          "description": "Collection, shelf section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/main-collection-product-grid--collection-grid-34.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/main-collection-product-grid--collection-grid-34.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Collection, shelf\" (id `collection-grid-34`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/main-collection-product-grid--collection-grid-34.html; Shopify bundle: sections/linen/collection-grid-34/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/collection-grid-34",
+          "files": [
+            "sections/linen/collection-grid-34/sections/blko-collection-grid-34.liquid",
+            "sections/linen/collection-grid-34/snippets/blko-collection-grid-34-piece.liquid",
+            "sections/linen/collection-grid-34/snippets/blko-fonts-linen.liquid",
+            "sections/linen/collection-grid-34/snippets/blko-icon.liquid",
+            "sections/linen/collection-grid-34/snippets/blko-linen-facets.liquid",
+            "sections/linen/collection-grid-34/snippets/blko-linen-filter-heading.liquid",
+            "sections/linen/collection-grid-34/snippets/blko-linen-mixed.liquid",
+            "sections/linen/collection-grid-34/snippets/blko-pagination.liquid",
+            "sections/linen/collection-grid-34/snippets/blko-ui-button.liquid",
+            "sections/linen/collection-grid-34/snippets/blko-ui-icon-more.liquid",
+            "sections/linen/collection-grid-34/snippets/blko-ui-icon.liquid",
+            "sections/linen/collection-grid-34/snippets/blko-ui-money.liquid",
+            "sections/linen/collection-grid-34/snippets/blko-ui-section.liquid",
+            "sections/linen/collection-grid-34/assets/blko-collection-grid-34.css",
+            "sections/linen/collection-grid-34/assets/blko-collection-grid-34.js",
+            "sections/linen/collection-grid-34/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/collection-grid-34/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/collection-grid-34/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/collection-grid-34/assets/blko-ui-commerce.css",
+            "sections/linen/collection-grid-34/assets/blko-ui-commerce.js",
+            "sections/linen/collection-grid-34/assets/blko-ui-core.css",
+            "sections/linen/collection-grid-34/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-collection-grid-34.css",
+            "blko-collection-grid-34.js",
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-ui-commerce.css",
+            "blko-ui-commerce.js",
+            "blko-ui-core.css"
+          ],
+          "localeKeys": [
+            "blko.collection.apply",
+            "blko.collection.clear_all",
+            "blko.collection.price_from",
+            "blko.collection.price_to",
+            "blko.collection_grid_34.cloth",
+            "blko.collection_grid_34.label",
+            "blko.collection_grid_34.size_for",
+            "blko.collection_grid_34.sort",
+            "blko.general.next",
+            "blko.general.page",
+            "blko.general.pagination",
+            "blko.general.previous",
+            "blko.linen.cart_error",
+            "blko.linen.choose_options",
+            "blko.linen.close",
+            "blko.linen.collection_empty",
+            "blko.linen.collections",
+            "blko.linen.filter_eyebrow",
+            "blko.linen.filter_heading",
+            "blko.linen.filter_intro",
+            "blko.linen.filter_sort",
+            "blko.linen.grid_compact",
+            "blko.linen.grid_density",
+            "blko.linen.grid_spacious",
+            "blko.linen.in_stock",
+            "blko.products.sold_out",
+            "blko_ui.product.add"
+          ],
+          "themeSettings": [],
+          "blockTypes": [
+            "piece"
+          ]
+        },
+        {
+          "id": "collection-list-55",
+          "name": "Collections, photo links",
+          "kind": "section",
+          "category": "collection-list",
+          "description": "Collections, photo links section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/collection-list--collection-list-55.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/collection-list--collection-list-55.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Collections, photo links\" (id `collection-list-55`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/collection-list--collection-list-55.html; Shopify bundle: sections/linen/collection-list-55/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/collection-list-55",
+          "files": [
+            "sections/linen/collection-list-55/sections/blko-collection-list-55.liquid",
+            "sections/linen/collection-list-55/snippets/blko-fonts-linen.liquid",
+            "sections/linen/collection-list-55/snippets/blko-ui-icon-more.liquid",
+            "sections/linen/collection-list-55/snippets/blko-ui-icon.liquid",
+            "sections/linen/collection-list-55/snippets/blko-ui-section.liquid",
+            "sections/linen/collection-list-55/assets/blko-collection-list-55.css",
+            "sections/linen/collection-list-55/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/collection-list-55/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/collection-list-55/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/collection-list-55/assets/blko-ui-core.css",
+            "sections/linen/collection-list-55/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-collection-list-55.css",
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-ui-core.css"
+          ],
+          "localeKeys": [
+            "blko.collection_list_55.pieces.one",
+            "blko.collection_list_55.pieces.other"
+          ],
+          "themeSettings": [],
+          "blockTypes": [
+            "link"
+          ]
+        },
+        {
+          "id": "contact-23",
+          "name": "Contact, alterations",
+          "kind": "section",
+          "category": "contact",
+          "description": "Contact, alterations section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/contact--contact-23.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/contact--contact-23.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Contact, alterations\" (id `contact-23`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/contact--contact-23.html; Shopify bundle: sections/linen/contact-23/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/contact-23",
+          "files": [
+            "sections/linen/contact-23/sections/blko-contact-23.liquid",
+            "sections/linen/contact-23/snippets/blko-fonts-linen.liquid",
+            "sections/linen/contact-23/snippets/blko-ui-button.liquid",
+            "sections/linen/contact-23/snippets/blko-ui-field.liquid",
+            "sections/linen/contact-23/snippets/blko-ui-icon-more.liquid",
+            "sections/linen/contact-23/snippets/blko-ui-icon.liquid",
+            "sections/linen/contact-23/snippets/blko-ui-input.liquid",
+            "sections/linen/contact-23/snippets/blko-ui-option.liquid",
+            "sections/linen/contact-23/snippets/blko-ui-section.liquid",
+            "sections/linen/contact-23/assets/blko-contact-23.css",
+            "sections/linen/contact-23/assets/blko-contact-23.js",
+            "sections/linen/contact-23/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/contact-23/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/contact-23/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/contact-23/assets/blko-ui-commerce.css",
+            "sections/linen/contact-23/assets/blko-ui-commerce.js",
+            "sections/linen/contact-23/assets/blko-ui-core.css",
+            "sections/linen/contact-23/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-contact-23.css",
+            "blko-contact-23.js",
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-ui-commerce.css",
+            "blko-ui-commerce.js",
+            "blko-ui-core.css"
+          ],
+          "localeKeys": [
+            "blko.contact_23.label",
+            "blko.contact_23.unit",
+            "blko_ui.field.optional"
+          ],
+          "themeSettings": [],
+          "blockTypes": [
+            "piece"
+          ]
+        },
+        {
+          "id": "contact-54",
+          "name": "Contact, shop banner",
+          "kind": "section",
+          "category": "contact",
+          "description": "Contact, shop banner section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/contact--contact-54.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/contact--contact-54.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Contact, shop banner\" (id `contact-54`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/contact--contact-54.html; Shopify bundle: sections/linen/contact-54/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/contact-54",
+          "files": [
+            "sections/linen/contact-54/sections/blko-contact-54.liquid",
+            "sections/linen/contact-54/snippets/blko-fonts-linen.liquid",
+            "sections/linen/contact-54/snippets/blko-ui-button.liquid",
+            "sections/linen/contact-54/snippets/blko-ui-icon-more.liquid",
+            "sections/linen/contact-54/snippets/blko-ui-icon.liquid",
+            "sections/linen/contact-54/snippets/blko-ui-section.liquid",
+            "sections/linen/contact-54/assets/blko-contact-54.css",
+            "sections/linen/contact-54/assets/blko-contact-54.js",
+            "sections/linen/contact-54/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/contact-54/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/contact-54/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/contact-54/assets/blko-linen-motion.css",
+            "sections/linen/contact-54/assets/blko-linen-motion.js",
+            "sections/linen/contact-54/assets/blko-ui-core.css",
+            "sections/linen/contact-54/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-contact-54.css",
+            "blko-contact-54.js",
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-linen-motion.css",
+            "blko-linen-motion.js",
+            "blko-ui-core.css"
+          ],
+          "localeKeys": [
+            "blko.contact_54.label"
+          ],
+          "themeSettings": [],
+          "blockTypes": []
+        },
+        {
+          "id": "counters-03",
+          "name": "Wash study",
+          "kind": "section",
+          "category": "rich-text",
+          "description": "Flip digit countdown.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/rich-text--counters-03.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/rich-text--counters-03.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Wash study\" (id `counters-03`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/rich-text--counters-03.html; Shopify bundle: sections/linen/counters-03/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/counters-03",
+          "files": [
+            "sections/linen/counters-03/sections/blko-counters-03.liquid",
+            "sections/linen/counters-03/snippets/blko-fonts-linen.liquid",
+            "sections/linen/counters-03/snippets/blko-linen-mixed.liquid",
+            "sections/linen/counters-03/snippets/blko-ui-button.liquid",
+            "sections/linen/counters-03/snippets/blko-ui-icon.liquid",
+            "sections/linen/counters-03/snippets/blko-ui-section.liquid",
+            "sections/linen/counters-03/assets/blko-counters-03.css",
+            "sections/linen/counters-03/assets/blko-counters-03.js",
+            "sections/linen/counters-03/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/counters-03/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/counters-03/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/counters-03/assets/blko-linen-motion.css",
+            "sections/linen/counters-03/assets/blko-linen-motion.js",
+            "sections/linen/counters-03/assets/blko-ui-core.css",
+            "sections/linen/counters-03/assets/blko-ui-motion.js"
+          ],
+          "deps": [
+            "blko-counters-03.css",
+            "blko-counters-03.js",
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-linen-motion.css",
+            "blko-linen-motion.js",
+            "blko-ui-core.css",
+            "blko-ui-motion.js"
+          ],
+          "localeKeys": [],
+          "themeSettings": [],
+          "blockTypes": []
+        },
+        {
+          "id": "faq-48",
+          "name": "FAQ, masonry board",
+          "kind": "section",
+          "category": "faq",
+          "description": "FAQ, masonry board section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/faq--faq-48.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/faq--faq-48.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"FAQ, masonry board\" (id `faq-48`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/faq--faq-48.html; Shopify bundle: sections/linen/faq-48/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/faq-48",
+          "files": [
+            "sections/linen/faq-48/sections/blko-faq-48.liquid",
+            "sections/linen/faq-48/snippets/blko-fonts-linen.liquid",
+            "sections/linen/faq-48/snippets/blko-ui-button.liquid",
+            "sections/linen/faq-48/snippets/blko-ui-icon-more.liquid",
+            "sections/linen/faq-48/snippets/blko-ui-icon.liquid",
+            "sections/linen/faq-48/snippets/blko-ui-section.liquid",
+            "sections/linen/faq-48/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/faq-48/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/faq-48/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/faq-48/assets/blko-faq-48.css",
+            "sections/linen/faq-48/assets/blko-faq-48.js",
+            "sections/linen/faq-48/assets/blko-ui-core.css",
+            "sections/linen/faq-48/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-faq-48.css",
+            "blko-faq-48.js",
+            "blko-ui-core.css"
+          ],
+          "localeKeys": [
+            "blko.faq_48.questions.one",
+            "blko.faq_48.questions.other"
+          ],
+          "themeSettings": [],
+          "blockTypes": [
+            "group",
+            "question",
+            "photo",
+            "note"
+          ]
+        },
+        {
+          "id": "featured-products-44",
+          "name": "New in, quick add",
+          "kind": "section",
+          "category": "featured-collection",
+          "description": "New in, quick add section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/featured-collection--featured-products-44.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/featured-collection--featured-products-44.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"New in, quick add\" (id `featured-products-44`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/featured-collection--featured-products-44.html; Shopify bundle: sections/linen/featured-products-44/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/featured-products-44",
+          "files": [
+            "sections/linen/featured-products-44/sections/blko-featured-products-44.liquid",
+            "sections/linen/featured-products-44/snippets/blko-fonts-linen.liquid",
+            "sections/linen/featured-products-44/snippets/blko-ui-button.liquid",
+            "sections/linen/featured-products-44/snippets/blko-ui-icon-more.liquid",
+            "sections/linen/featured-products-44/snippets/blko-ui-icon.liquid",
+            "sections/linen/featured-products-44/snippets/blko-ui-section.liquid",
+            "sections/linen/featured-products-44/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/featured-products-44/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/featured-products-44/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/featured-products-44/assets/blko-featured-products-44.css",
+            "sections/linen/featured-products-44/assets/blko-featured-products-44.js",
+            "sections/linen/featured-products-44/assets/blko-linen-motion.css",
+            "sections/linen/featured-products-44/assets/blko-linen-motion.js",
+            "sections/linen/featured-products-44/assets/blko-ui-core.css",
+            "sections/linen/featured-products-44/assets/blko-ui-motion.js",
+            "sections/linen/featured-products-44/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-featured-products-44.css",
+            "blko-featured-products-44.js",
+            "blko-linen-motion.css",
+            "blko-linen-motion.js",
+            "blko-ui-core.css",
+            "blko-ui-motion.js"
+          ],
+          "localeKeys": [
+            "blko.featured_products_44.added",
+            "blko.featured_products_44.error",
+            "blko.featured_products_44.in_bag",
+            "blko.featured_products_44.quick_add"
+          ],
+          "themeSettings": [],
+          "blockTypes": [
+            "product"
+          ]
+        },
+        {
+          "id": "featured-products-49",
+          "name": "Bestsellers, colour dots",
+          "kind": "section",
+          "category": "featured-collection",
+          "description": "Bestsellers, colour dots section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/featured-collection--featured-products-49.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/featured-collection--featured-products-49.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Bestsellers, colour dots\" (id `featured-products-49`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/featured-collection--featured-products-49.html; Shopify bundle: sections/linen/featured-products-49/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/featured-products-49",
+          "files": [
+            "sections/linen/featured-products-49/sections/blko-featured-products-49.liquid",
+            "sections/linen/featured-products-49/snippets/blko-fonts-linen.liquid",
+            "sections/linen/featured-products-49/snippets/blko-ui-badge.liquid",
+            "sections/linen/featured-products-49/snippets/blko-ui-icon-more.liquid",
+            "sections/linen/featured-products-49/snippets/blko-ui-icon.liquid",
+            "sections/linen/featured-products-49/snippets/blko-ui-section.liquid",
+            "sections/linen/featured-products-49/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/featured-products-49/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/featured-products-49/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/featured-products-49/assets/blko-featured-products-49.css",
+            "sections/linen/featured-products-49/assets/blko-featured-products-49.js",
+            "sections/linen/featured-products-49/assets/blko-linen-motion.css",
+            "sections/linen/featured-products-49/assets/blko-linen-motion.js",
+            "sections/linen/featured-products-49/assets/blko-ui-core.css",
+            "sections/linen/featured-products-49/assets/blko-ui-motion.js",
+            "sections/linen/featured-products-49/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-featured-products-49.css",
+            "blko-featured-products-49.js",
+            "blko-linen-motion.css",
+            "blko-linen-motion.js",
+            "blko-ui-core.css",
+            "blko-ui-motion.js"
+          ],
+          "localeKeys": [
+            "blko.featured_products_49.colours",
+            "blko.featured_products_49.was"
+          ],
+          "themeSettings": [],
+          "blockTypes": [
+            "product"
+          ]
+        },
+        {
+          "id": "footer-06",
+          "name": "Footer, dark accordion",
+          "kind": "section",
+          "category": "footer",
+          "description": "Footer, dark accordion section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/footer--footer-06.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/footer--footer-06.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Footer, dark accordion\" (id `footer-06`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/footer--footer-06.html; Shopify bundle: sections/linen/footer-06/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/footer-06",
+          "files": [
+            "sections/linen/footer-06/sections/blko-footer-06.liquid",
+            "sections/linen/footer-06/snippets/blko-fonts-linen.liquid",
+            "sections/linen/footer-06/snippets/blko-linen-localization.liquid",
+            "sections/linen/footer-06/snippets/blko-linen-mixed.liquid",
+            "sections/linen/footer-06/snippets/blko-ui-button.liquid",
+            "sections/linen/footer-06/snippets/blko-ui-icon-more.liquid",
+            "sections/linen/footer-06/snippets/blko-ui-icon.liquid",
+            "sections/linen/footer-06/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/footer-06/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/footer-06/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/footer-06/assets/blko-footer-06.css",
+            "sections/linen/footer-06/assets/blko-footer-06.js",
+            "sections/linen/footer-06/assets/blko-linen-motion.css",
+            "sections/linen/footer-06/assets/blko-linen-motion.js",
+            "sections/linen/footer-06/assets/blko-ui-core.css",
+            "sections/linen/footer-06/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-footer-06.css",
+            "blko-footer-06.js",
+            "blko-linen-motion.css",
+            "blko-linen-motion.js",
+            "blko-ui-core.css"
+          ],
+          "localeKeys": [
+            "blko.footer_06.legal",
+            "blko.linen.country",
+            "blko.linen.language",
+            "blko.linen.localization_update"
+          ],
+          "themeSettings": [],
+          "blockTypes": [
+            "column"
+          ]
+        },
+        {
+          "id": "header-38",
+          "name": "Header, linen bar",
+          "kind": "section",
+          "category": "header",
+          "description": "Header, linen bar section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/header--header-38.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/header--header-38.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Header, linen bar\" (id `header-38`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/header--header-38.html; Shopify bundle: sections/linen/header-38/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/header-38",
+          "files": [
+            "sections/linen/header-38/sections/blko-header-38.liquid",
+            "sections/linen/header-38/snippets/blko-fonts-linen.liquid",
+            "sections/linen/header-38/snippets/blko-linen-localization.liquid",
+            "sections/linen/header-38/snippets/blko-ui-button.liquid",
+            "sections/linen/header-38/snippets/blko-ui-icon-more.liquid",
+            "sections/linen/header-38/snippets/blko-ui-icon.liquid",
+            "sections/linen/header-38/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/header-38/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/header-38/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/header-38/assets/blko-header-38.css",
+            "sections/linen/header-38/assets/blko-header-38.js",
+            "sections/linen/header-38/assets/blko-ui-core.css",
+            "sections/linen/header-38/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-header-38.css",
+            "blko-header-38.js",
+            "blko-ui-core.css"
+          ],
+          "localeKeys": [
+            "blko.header.account",
+            "blko.header.cart_count.one",
+            "blko.header.cart_count.other",
+            "blko.header_38.account",
+            "blko.header_38.bag.one",
+            "blko.header_38.bag.other",
+            "blko.header_38.close_menu",
+            "blko.header_38.home",
+            "blko.header_38.main",
+            "blko.header_38.menu",
+            "blko.header_38.open_menu",
+            "blko.header_38.pieces_in",
+            "blko.header_38.search",
+            "blko.header_38.search_store",
+            "blko.linen.country",
+            "blko.linen.language",
+            "blko.linen.localization_update",
+            "blko.linen.search_count",
+            "blko.linen.search_error",
+            "blko.linen.search_loading",
+            "blko.linen.search_suggestions"
+          ],
+          "themeSettings": [],
+          "blockTypes": [
+            "cloth"
+          ]
+        },
+        {
+          "id": "hero-53",
+          "name": "Hero, photo + card",
+          "kind": "section",
+          "category": "hero-banner",
+          "description": "Hero, photo + card section from the Linen theme.",
+          "targets": {
+            "html": "gap: no HTML demo for this Liquid section",
+            "shopify": "ok"
+          },
+          "demo": null,
+          "demoUrl": null,
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Hero, photo + card\" (id `hero-53`, theme `linen`; Shopify bundle: sections/linen/hero-53/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/hero-53",
+          "files": [
+            "sections/linen/hero-53/sections/blko-hero-53.liquid",
+            "sections/linen/hero-53/snippets/blko-fonts-linen.liquid",
+            "sections/linen/hero-53/snippets/blko-ui-button.liquid",
+            "sections/linen/hero-53/snippets/blko-ui-icon-more.liquid",
+            "sections/linen/hero-53/snippets/blko-ui-icon.liquid",
+            "sections/linen/hero-53/snippets/blko-ui-section.liquid",
+            "sections/linen/hero-53/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/hero-53/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/hero-53/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/hero-53/assets/blko-hero-53.css",
+            "sections/linen/hero-53/assets/blko-ui-core.css"
+          ],
+          "deps": [
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-hero-53.css",
+            "blko-ui-core.css"
+          ],
+          "localeKeys": [],
+          "themeSettings": [],
+          "blockTypes": []
+        },
+        {
+          "id": "hero-57",
+          "name": "Hero, ripple",
+          "kind": "section",
+          "category": "hero-banner",
+          "description": "Ripple.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/hero-banner--hero-57.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/hero-banner--hero-57.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Hero, ripple\" (id `hero-57`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/hero-banner--hero-57.html; Shopify bundle: sections/linen/hero-57/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/hero-57",
+          "files": [
+            "sections/linen/hero-57/sections/blko-hero-57.liquid",
+            "sections/linen/hero-57/snippets/blko-fonts-linen.liquid",
+            "sections/linen/hero-57/snippets/blko-ui-button.liquid",
+            "sections/linen/hero-57/snippets/blko-ui-icon.liquid",
+            "sections/linen/hero-57/assets/blko-cine-gl.js",
+            "sections/linen/hero-57/assets/blko-cine.css",
+            "sections/linen/hero-57/assets/blko-cine.js",
+            "sections/linen/hero-57/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/hero-57/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/hero-57/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/hero-57/assets/blko-hero-57.css",
+            "sections/linen/hero-57/assets/blko-hero-57.js",
+            "sections/linen/hero-57/assets/blko-ui-core.css",
+            "sections/linen/hero-57/assets/blko-ui-motion.js"
+          ],
+          "deps": [
+            "blko-cine-gl.js",
+            "blko-cine.css",
+            "blko-cine.js",
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-hero-57.css",
+            "blko-hero-57.js",
+            "blko-ui-core.css",
+            "blko-ui-motion.js"
+          ],
+          "localeKeys": [],
+          "themeSettings": [],
+          "blockTypes": []
+        },
+        {
+          "id": "icon-list-35",
+          "name": "Values, hanging swatches",
+          "kind": "section",
+          "category": "multicolumn",
+          "description": "Values, hanging swatches section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/multicolumn--icon-list-35.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/multicolumn--icon-list-35.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Values, hanging swatches\" (id `icon-list-35`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/multicolumn--icon-list-35.html; Shopify bundle: sections/linen/icon-list-35/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/icon-list-35",
+          "files": [
+            "sections/linen/icon-list-35/sections/blko-icon-list-35.liquid",
+            "sections/linen/icon-list-35/snippets/blko-fonts-linen.liquid",
+            "sections/linen/icon-list-35/snippets/blko-ui-icon-more.liquid",
+            "sections/linen/icon-list-35/snippets/blko-ui-icon.liquid",
+            "sections/linen/icon-list-35/snippets/blko-ui-section.liquid",
+            "sections/linen/icon-list-35/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/icon-list-35/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/icon-list-35/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/icon-list-35/assets/blko-icon-list-35.css",
+            "sections/linen/icon-list-35/assets/blko-linen-motion.css",
+            "sections/linen/icon-list-35/assets/blko-linen-motion.js",
+            "sections/linen/icon-list-35/assets/blko-ui-core.css",
+            "sections/linen/icon-list-35/assets/blko-ui-motion.js"
+          ],
+          "deps": [
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-icon-list-35.css",
+            "blko-linen-motion.css",
+            "blko-linen-motion.js",
+            "blko-ui-core.css",
+            "blko-ui-motion.js"
+          ],
+          "localeKeys": [],
+          "themeSettings": [],
+          "blockTypes": [
+            "value"
+          ]
+        },
+        {
+          "id": "image-with-text-06",
+          "name": "Sticky text, photo stack",
+          "kind": "section",
+          "category": "image-with-text",
+          "description": "Sticky text, photo stack section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/image-with-text--image-with-text-06.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/image-with-text--image-with-text-06.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Sticky text, photo stack\" (id `image-with-text-06`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/image-with-text--image-with-text-06.html; Shopify bundle: sections/linen/image-with-text-06/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/image-with-text-06",
+          "files": [
+            "sections/linen/image-with-text-06/sections/blko-image-with-text-06.liquid",
+            "sections/linen/image-with-text-06/snippets/blko-fonts-linen.liquid",
+            "sections/linen/image-with-text-06/snippets/blko-ui-button.liquid",
+            "sections/linen/image-with-text-06/snippets/blko-ui-icon-more.liquid",
+            "sections/linen/image-with-text-06/snippets/blko-ui-icon.liquid",
+            "sections/linen/image-with-text-06/snippets/blko-ui-section.liquid",
+            "sections/linen/image-with-text-06/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/image-with-text-06/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/image-with-text-06/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/image-with-text-06/assets/blko-image-with-text-06.css",
+            "sections/linen/image-with-text-06/assets/blko-linen-motion.css",
+            "sections/linen/image-with-text-06/assets/blko-linen-motion.js",
+            "sections/linen/image-with-text-06/assets/blko-ui-core.css",
+            "sections/linen/image-with-text-06/assets/blko-ui-motion.js"
+          ],
+          "deps": [
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-image-with-text-06.css",
+            "blko-linen-motion.css",
+            "blko-linen-motion.js",
+            "blko-ui-core.css",
+            "blko-ui-motion.js"
+          ],
+          "localeKeys": [],
+          "themeSettings": [],
+          "blockTypes": [
+            "photo"
+          ]
+        },
+        {
+          "id": "login-21",
+          "name": "Sign in, stitched card",
+          "kind": "section",
+          "category": "customer-account",
+          "description": "Sign in, stitched card section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/customer-account--login-21.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/customer-account--login-21.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Sign in, stitched card\" (id `login-21`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/customer-account--login-21.html; Shopify bundle: sections/linen/login-21/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/login-21",
+          "files": [
+            "sections/linen/login-21/sections/blko-login-21.liquid",
+            "sections/linen/login-21/snippets/blko-fonts-linen.liquid",
+            "sections/linen/login-21/snippets/blko-ui-button.liquid",
+            "sections/linen/login-21/snippets/blko-ui-field.liquid",
+            "sections/linen/login-21/snippets/blko-ui-icon-more.liquid",
+            "sections/linen/login-21/snippets/blko-ui-icon.liquid",
+            "sections/linen/login-21/snippets/blko-ui-input.liquid",
+            "sections/linen/login-21/snippets/blko-ui-section.liquid",
+            "sections/linen/login-21/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/login-21/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/login-21/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/login-21/assets/blko-login-21.css",
+            "sections/linen/login-21/assets/blko-login-21.js",
+            "sections/linen/login-21/assets/blko-ui-commerce.css",
+            "sections/linen/login-21/assets/blko-ui-commerce.js",
+            "sections/linen/login-21/assets/blko-ui-core.css",
+            "sections/linen/login-21/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-login-21.css",
+            "blko-login-21.js",
+            "blko-ui-commerce.css",
+            "blko-ui-commerce.js",
+            "blko-ui-core.css"
+          ],
+          "localeKeys": [
+            "blko.login_21.label",
+            "blko_ui.field.optional"
+          ],
+          "themeSettings": [],
+          "blockTypes": []
+        },
+        {
+          "id": "main-activate-account",
+          "name": "Activate account",
+          "kind": "section",
+          "category": "customer-account",
+          "description": "Account activation form that sets a first password.",
+          "targets": {
+            "html": "gap: no HTML demo for this Liquid section",
+            "shopify": "ok"
+          },
+          "demo": null,
+          "demoUrl": null,
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Activate account\" (id `main-activate-account`, theme `linen`; Shopify bundle: sections/linen/main-activate-account/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/main-activate-account",
+          "files": [
+            "sections/linen/main-activate-account/sections/blko-main-activate-account.liquid",
+            "sections/linen/main-activate-account/snippets/blko-account-shell.liquid",
+            "sections/linen/main-activate-account/snippets/blko-fallback-image.liquid",
+            "sections/linen/main-activate-account/assets/blko-customer.css",
+            "sections/linen/main-activate-account/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-customer.css"
+          ],
+          "localeKeys": [
+            "blko.customer.activate_submit",
+            "blko.customer.decline",
+            "blko.customer.password",
+            "blko.customer.password_confirm"
+          ],
+          "themeSettings": [],
+          "blockTypes": []
+        },
+        {
+          "id": "main-addresses",
+          "name": "Customer addresses",
+          "kind": "section",
+          "category": "customer-account",
+          "description": "Saved addresses list with add and edit forms.",
+          "targets": {
+            "html": "gap: no HTML demo for this Liquid section",
+            "shopify": "ok"
+          },
+          "demo": null,
+          "demoUrl": null,
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Customer addresses\" (id `main-addresses`, theme `linen`; Shopify bundle: sections/linen/main-addresses/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/main-addresses",
+          "files": [
+            "sections/linen/main-addresses/sections/blko-main-addresses.liquid",
+            "sections/linen/main-addresses/snippets/blko-account-shell.liquid",
+            "sections/linen/main-addresses/snippets/blko-fallback-image.liquid",
+            "sections/linen/main-addresses/snippets/blko-icon.liquid",
+            "sections/linen/main-addresses/snippets/blko-pagination.liquid",
+            "sections/linen/main-addresses/assets/blko-addresses.js",
+            "sections/linen/main-addresses/assets/blko-customer.css",
+            "sections/linen/main-addresses/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-addresses.js",
+            "blko-customer.css"
+          ],
+          "localeKeys": [
+            "blko.customer.add_address",
+            "blko.customer.address1",
+            "blko.customer.address2",
+            "blko.customer.back_to_account",
+            "blko.customer.city",
+            "blko.customer.company",
+            "blko.customer.country",
+            "blko.customer.default",
+            "blko.customer.delete",
+            "blko.customer.delete_confirm",
+            "blko.customer.edit",
+            "blko.customer.first_name",
+            "blko.customer.last_name",
+            "blko.customer.phone",
+            "blko.customer.province",
+            "blko.customer.save_address",
+            "blko.customer.set_default",
+            "blko.customer.zip",
+            "blko.general.next",
+            "blko.general.page",
+            "blko.general.pagination",
+            "blko.general.previous"
+          ],
+          "themeSettings": [],
+          "blockTypes": []
+        },
+        {
+          "id": "main-list-collections",
+          "name": "Collections list",
+          "kind": "section",
+          "category": "collection-list",
+          "description": "Paginated grid of every collection.",
+          "targets": {
+            "html": "gap: no HTML demo for this Liquid section",
+            "shopify": "ok"
+          },
+          "demo": null,
+          "demoUrl": null,
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Collections list\" (id `main-list-collections`, theme `linen`; Shopify bundle: sections/linen/main-list-collections/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/main-list-collections",
+          "files": [
+            "sections/linen/main-list-collections/sections/blko-main-list-collections.liquid",
+            "sections/linen/main-list-collections/snippets/blko-demo-tile.liquid",
+            "sections/linen/main-list-collections/snippets/blko-fallback-image.liquid",
+            "sections/linen/main-list-collections/snippets/blko-icon.liquid",
+            "sections/linen/main-list-collections/snippets/blko-pagination.liquid",
+            "sections/linen/main-list-collections/locales/en.default.blko.json"
+          ],
+          "deps": [],
+          "localeKeys": [
+            "blko.collections.count.one",
+            "blko.collections.count.other",
+            "blko.collections.empty",
+            "blko.general.next",
+            "blko.general.page",
+            "blko.general.pagination",
+            "blko.general.previous"
+          ],
+          "themeSettings": [],
+          "blockTypes": []
+        },
+        {
+          "id": "main-order",
+          "name": "Customer order",
+          "kind": "section",
+          "category": "customer-account",
+          "description": "Single order detail with line items, totals and addresses.",
+          "targets": {
+            "html": "gap: no HTML demo for this Liquid section",
+            "shopify": "ok"
+          },
+          "demo": null,
+          "demoUrl": null,
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Customer order\" (id `main-order`, theme `linen`; Shopify bundle: sections/linen/main-order/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/main-order",
+          "files": [
+            "sections/linen/main-order/sections/blko-main-order.liquid",
+            "sections/linen/main-order/snippets/blko-account-shell.liquid",
+            "sections/linen/main-order/snippets/blko-fallback-image.liquid",
+            "sections/linen/main-order/assets/blko-customer.css",
+            "sections/linen/main-order/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-customer.css"
+          ],
+          "localeKeys": [
+            "blko.cart.product",
+            "blko.cart.quantity",
+            "blko.cart.subtotal",
+            "blko.cart.total",
+            "blko.customer.back_to_account",
+            "blko.customer.billing",
+            "blko.customer.cancelled",
+            "blko.customer.fulfilled_on",
+            "blko.customer.fulfillment",
+            "blko.customer.order_title",
+            "blko.customer.payment",
+            "blko.customer.placed_on",
+            "blko.customer.price",
+            "blko.customer.shipping",
+            "blko.customer.shipping_address",
+            "blko.customer.tax",
+            "blko.customer.track"
+          ],
+          "themeSettings": [],
+          "blockTypes": []
+        },
+        {
+          "id": "main-page",
+          "name": "Page",
+          "kind": "section",
+          "category": "page-header",
+          "description": "Generic page title and rich content.",
+          "targets": {
+            "html": "gap: no HTML demo for this Liquid section",
+            "shopify": "ok"
+          },
+          "demo": null,
+          "demoUrl": null,
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Page\" (id `main-page`, theme `linen`; Shopify bundle: sections/linen/main-page/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/main-page",
+          "files": [
+            "sections/linen/main-page/sections/blko-main-page.liquid"
+          ],
+          "deps": [],
+          "localeKeys": [],
+          "themeSettings": [],
+          "blockTypes": []
+        },
+        {
+          "id": "main-password",
+          "name": "Password page",
+          "kind": "section",
+          "category": "page",
+          "description": "Password page with shop message and email sign-up.",
+          "targets": {
+            "html": "gap: no HTML demo for this Liquid section",
+            "shopify": "ok"
+          },
+          "demo": null,
+          "demoUrl": null,
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Password page\" (id `main-password`, theme `linen`; Shopify bundle: sections/linen/main-password/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/main-password",
+          "files": [
+            "sections/linen/main-password/sections/blko-main-password.liquid",
+            "sections/linen/main-password/snippets/blko-fallback-image.liquid",
+            "sections/linen/main-password/snippets/blko-icon.liquid",
+            "sections/linen/main-password/snippets/blko-social-icons.liquid",
+            "sections/linen/main-password/locales/en.default.blko.json"
+          ],
+          "deps": [],
+          "localeKeys": [
+            "blko.newsletter.email",
+            "blko.newsletter.success",
+            "blko.password.enter",
+            "blko.password.label",
+            "blko.password.notify",
+            "blko.password.owner",
+            "blko.social.facebook",
+            "blko.social.instagram",
+            "blko.social.pinterest",
+            "blko.social.tiktok",
+            "blko.social.x",
+            "blko.social.youtube"
+          ],
+          "themeSettings": [
+            "logo",
+            "logo_text",
+            "logo_width"
+          ],
+          "blockTypes": []
+        },
+        {
+          "id": "main-register",
+          "name": "Customer register",
+          "kind": "section",
+          "category": "customer-account",
+          "description": "New customer registration form.",
+          "targets": {
+            "html": "gap: no HTML demo for this Liquid section",
+            "shopify": "ok"
+          },
+          "demo": null,
+          "demoUrl": null,
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Customer register\" (id `main-register`, theme `linen`; Shopify bundle: sections/linen/main-register/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/main-register",
+          "files": [
+            "sections/linen/main-register/sections/blko-main-register.liquid",
+            "sections/linen/main-register/snippets/blko-account-shell.liquid",
+            "sections/linen/main-register/snippets/blko-fallback-image.liquid",
+            "sections/linen/main-register/assets/blko-customer.css",
+            "sections/linen/main-register/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-customer.css"
+          ],
+          "localeKeys": [
+            "blko.customer.accepts_marketing",
+            "blko.customer.create",
+            "blko.customer.email",
+            "blko.customer.first_name",
+            "blko.customer.have_account",
+            "blko.customer.last_name",
+            "blko.customer.password"
+          ],
+          "themeSettings": [],
+          "blockTypes": []
+        },
+        {
+          "id": "main-reset-password",
+          "name": "Reset password",
+          "kind": "section",
+          "category": "customer-account",
+          "description": "Form to set a new account password.",
+          "targets": {
+            "html": "gap: no HTML demo for this Liquid section",
+            "shopify": "ok"
+          },
+          "demo": null,
+          "demoUrl": null,
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Reset password\" (id `main-reset-password`, theme `linen`; Shopify bundle: sections/linen/main-reset-password/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/main-reset-password",
+          "files": [
+            "sections/linen/main-reset-password/sections/blko-main-reset-password.liquid",
+            "sections/linen/main-reset-password/snippets/blko-account-shell.liquid",
+            "sections/linen/main-reset-password/snippets/blko-fallback-image.liquid",
+            "sections/linen/main-reset-password/assets/blko-customer.css",
+            "sections/linen/main-reset-password/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-customer.css"
+          ],
+          "localeKeys": [
+            "blko.customer.password",
+            "blko.customer.password_confirm",
+            "blko.customer.reset_submit"
+          ],
+          "themeSettings": [],
+          "blockTypes": []
+        },
+        {
+          "id": "newsletter-09",
+          "name": "Journal letter",
+          "kind": "section",
+          "category": "newsletter",
+          "description": "Animated modal on hero.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/newsletter--newsletter-09.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/newsletter--newsletter-09.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Journal letter\" (id `newsletter-09`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/newsletter--newsletter-09.html; Shopify bundle: sections/linen/newsletter-09/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/newsletter-09",
+          "files": [
+            "sections/linen/newsletter-09/sections/blko-newsletter-09.liquid",
+            "sections/linen/newsletter-09/snippets/blko-fonts-linen.liquid",
+            "sections/linen/newsletter-09/snippets/blko-linen-mixed.liquid",
+            "sections/linen/newsletter-09/snippets/blko-ui-button.liquid",
+            "sections/linen/newsletter-09/snippets/blko-ui-icon.liquid",
+            "sections/linen/newsletter-09/snippets/blko-ui-section.liquid",
+            "sections/linen/newsletter-09/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/newsletter-09/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/newsletter-09/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/newsletter-09/assets/blko-linen-motion.css",
+            "sections/linen/newsletter-09/assets/blko-linen-motion.js",
+            "sections/linen/newsletter-09/assets/blko-newsletter-09.css",
+            "sections/linen/newsletter-09/assets/blko-newsletter-09.js",
+            "sections/linen/newsletter-09/assets/blko-ui-core.css",
+            "sections/linen/newsletter-09/assets/blko-ui-motion.js",
+            "sections/linen/newsletter-09/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-linen-motion.css",
+            "blko-linen-motion.js",
+            "blko-newsletter-09.css",
+            "blko-newsletter-09.js",
+            "blko-ui-core.css",
+            "blko-ui-motion.js"
+          ],
+          "localeKeys": [
+            "blko.newsletter_09.close",
+            "blko.newsletter_09.label"
+          ],
+          "themeSettings": [],
+          "blockTypes": []
+        },
+        {
+          "id": "newsletter-52",
+          "name": "Sign-up, member perks",
+          "kind": "section",
+          "category": "newsletter",
+          "description": "Sign-up, member perks section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/newsletter--newsletter-52.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/newsletter--newsletter-52.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Sign-up, member perks\" (id `newsletter-52`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/newsletter--newsletter-52.html; Shopify bundle: sections/linen/newsletter-52/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/newsletter-52",
+          "files": [
+            "sections/linen/newsletter-52/sections/blko-newsletter-52.liquid",
+            "sections/linen/newsletter-52/snippets/blko-fonts-linen.liquid",
+            "sections/linen/newsletter-52/snippets/blko-ui-button.liquid",
+            "sections/linen/newsletter-52/snippets/blko-ui-icon-more.liquid",
+            "sections/linen/newsletter-52/snippets/blko-ui-icon.liquid",
+            "sections/linen/newsletter-52/snippets/blko-ui-section.liquid",
+            "sections/linen/newsletter-52/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/newsletter-52/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/newsletter-52/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/newsletter-52/assets/blko-linen-motion.css",
+            "sections/linen/newsletter-52/assets/blko-linen-motion.js",
+            "sections/linen/newsletter-52/assets/blko-newsletter-52.css",
+            "sections/linen/newsletter-52/assets/blko-ui-core.css",
+            "sections/linen/newsletter-52/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-linen-motion.css",
+            "blko-linen-motion.js",
+            "blko-newsletter-52.css",
+            "blko-ui-core.css"
+          ],
+          "localeKeys": [
+            "blko.newsletter_52.label"
+          ],
+          "themeSettings": [],
+          "blockTypes": [
+            "perk"
+          ]
+        },
+        {
+          "id": "not-found-23",
+          "name": "Not found, loose thread",
+          "kind": "section",
+          "category": "404-page",
+          "description": "Loose thread to home.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/404-page--not-found-23.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/404-page--not-found-23.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Not found, loose thread\" (id `not-found-23`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/404-page--not-found-23.html; Shopify bundle: sections/linen/not-found-23/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/not-found-23",
+          "files": [
+            "sections/linen/not-found-23/sections/blko-not-found-23.liquid",
+            "sections/linen/not-found-23/snippets/blko-fonts-linen.liquid",
+            "sections/linen/not-found-23/snippets/blko-ui-button.liquid",
+            "sections/linen/not-found-23/snippets/blko-ui-icon.liquid",
+            "sections/linen/not-found-23/snippets/blko-ui-section.liquid",
+            "sections/linen/not-found-23/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/not-found-23/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/not-found-23/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/not-found-23/assets/blko-not-found-23.css",
+            "sections/linen/not-found-23/assets/blko-ui-core.css",
+            "sections/linen/not-found-23/assets/blko-ui-motion.js",
+            "sections/linen/not-found-23/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-not-found-23.css",
+            "blko-ui-core.css",
+            "blko-ui-motion.js"
+          ],
+          "localeKeys": [
+            "blko.not_found_23.label",
+            "blko.not_found_23.nav"
+          ],
+          "themeSettings": [],
+          "blockTypes": [
+            "stop"
+          ]
+        },
+        {
+          "id": "page-header-54",
+          "name": "Page header, swatch card",
+          "kind": "section",
+          "category": "page-header",
+          "description": "Page header, swatch card section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/page-header--page-header-54.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/page-header--page-header-54.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Page header, swatch card\" (id `page-header-54`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/page-header--page-header-54.html; Shopify bundle: sections/linen/page-header-54/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/page-header-54",
+          "files": [
+            "sections/linen/page-header-54/sections/blko-page-header-54.liquid",
+            "sections/linen/page-header-54/snippets/blko-fonts-linen.liquid",
+            "sections/linen/page-header-54/snippets/blko-ui-section.liquid",
+            "sections/linen/page-header-54/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/page-header-54/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/page-header-54/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/page-header-54/assets/blko-page-header-54.css",
+            "sections/linen/page-header-54/assets/blko-ui-core.css",
+            "sections/linen/page-header-54/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-page-header-54.css",
+            "blko-ui-core.css"
+          ],
+          "localeKeys": [
+            "blko.page_header_54.breadcrumb"
+          ],
+          "themeSettings": [],
+          "blockTypes": []
+        },
+        {
+          "id": "page-header-55",
+          "name": "Page header, hang tag",
+          "kind": "section",
+          "category": "page-header",
+          "description": "Page header, hang tag section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/page-header--page-header-55.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/page-header--page-header-55.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Page header, hang tag\" (id `page-header-55`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/page-header--page-header-55.html; Shopify bundle: sections/linen/page-header-55/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/page-header-55",
+          "files": [
+            "sections/linen/page-header-55/sections/blko-page-header-55.liquid",
+            "sections/linen/page-header-55/snippets/blko-fonts-linen.liquid",
+            "sections/linen/page-header-55/snippets/blko-ui-section.liquid",
+            "sections/linen/page-header-55/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/page-header-55/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/page-header-55/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/page-header-55/assets/blko-page-header-55.css",
+            "sections/linen/page-header-55/assets/blko-ui-core.css",
+            "sections/linen/page-header-55/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-page-header-55.css",
+            "blko-ui-core.css"
+          ],
+          "localeKeys": [
+            "blko.page_header_55.breadcrumb",
+            "blko.page_header_55.hours",
+            "blko.page_header_55.reply"
+          ],
+          "themeSettings": [],
+          "blockTypes": []
+        },
+        {
+          "id": "page-header-56",
+          "name": "Page header, FAQ finder",
+          "kind": "section",
+          "category": "page-header",
+          "description": "Page header, FAQ finder section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/page-header--page-header-56.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/page-header--page-header-56.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Page header, FAQ finder\" (id `page-header-56`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/page-header--page-header-56.html; Shopify bundle: sections/linen/page-header-56/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/page-header-56",
+          "files": [
+            "sections/linen/page-header-56/sections/blko-page-header-56.liquid",
+            "sections/linen/page-header-56/snippets/blko-fonts-linen.liquid",
+            "sections/linen/page-header-56/snippets/blko-ui-section.liquid",
+            "sections/linen/page-header-56/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/page-header-56/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/page-header-56/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/page-header-56/assets/blko-page-header-56.css",
+            "sections/linen/page-header-56/assets/blko-page-header-56.js",
+            "sections/linen/page-header-56/assets/blko-ui-core.css",
+            "sections/linen/page-header-56/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-page-header-56.css",
+            "blko-page-header-56.js",
+            "blko-ui-core.css"
+          ],
+          "localeKeys": [
+            "blko.page_header_56.answers.one",
+            "blko.page_header_56.answers.other",
+            "blko.page_header_56.breadcrumb"
+          ],
+          "themeSettings": [],
+          "blockTypes": [
+            "question"
+          ]
+        },
+        {
+          "id": "product-detail-27",
+          "name": "Product, seasonal plan",
+          "kind": "section",
+          "category": "main-product",
+          "description": "Product, seasonal plan section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/main-product--product-detail-27.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/main-product--product-detail-27.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Product, seasonal plan\" (id `product-detail-27`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/main-product--product-detail-27.html; Shopify bundle: sections/linen/product-detail-27/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/product-detail-27",
+          "files": [
+            "sections/linen/product-detail-27/sections/blko-product-detail-27.liquid",
+            "sections/linen/product-detail-27/snippets/blko-fonts-linen.liquid",
+            "sections/linen/product-detail-27/snippets/blko-linen-mixed.liquid",
+            "sections/linen/product-detail-27/snippets/blko-linen-product-form.liquid",
+            "sections/linen/product-detail-27/snippets/blko-ui-button.liquid",
+            "sections/linen/product-detail-27/snippets/blko-ui-icon-more.liquid",
+            "sections/linen/product-detail-27/snippets/blko-ui-icon.liquid",
+            "sections/linen/product-detail-27/snippets/blko-ui-money.liquid",
+            "sections/linen/product-detail-27/snippets/blko-ui-option.liquid",
+            "sections/linen/product-detail-27/snippets/blko-ui-quantity.liquid",
+            "sections/linen/product-detail-27/snippets/blko-ui-section.liquid",
+            "sections/linen/product-detail-27/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/product-detail-27/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/product-detail-27/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/product-detail-27/assets/blko-linen-product.js",
+            "sections/linen/product-detail-27/assets/blko-product-detail-27.css",
+            "sections/linen/product-detail-27/assets/blko-product-detail-27.js",
+            "sections/linen/product-detail-27/assets/blko-ui-commerce.css",
+            "sections/linen/product-detail-27/assets/blko-ui-commerce.js",
+            "sections/linen/product-detail-27/assets/blko-ui-core.css",
+            "sections/linen/product-detail-27/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-linen-product.js",
+            "blko-product-detail-27.css",
+            "blko-product-detail-27.js",
+            "blko-ui-commerce.css",
+            "blko-ui-commerce.js",
+            "blko-ui-core.css"
+          ],
+          "localeKeys": [
+            "blko.linen.care",
+            "blko.linen.in_stock",
+            "blko.linen.materials",
+            "blko.linen.one_time",
+            "blko.linen.pairs_with",
+            "blko.linen.purchase_option",
+            "blko.linen.quantity",
+            "blko.linen.sold_out",
+            "blko.linen.unavailable",
+            "blko.linen.variant",
+            "blko.product_detail_27.label",
+            "blko.product_detail_27.parcels",
+            "blko.product_detail_27.plan",
+            "blko.product_detail_27.size",
+            "blko_ui.quantity.decrease",
+            "blko_ui.quantity.increase",
+            "blko_ui.quantity.label"
+          ],
+          "themeSettings": [],
+          "blockTypes": [
+            "@app",
+            "plan",
+            "colourway"
+          ]
+        },
+        {
+          "id": "product-story-16",
+          "name": "Mill story, sample card",
+          "kind": "section",
+          "category": "image-with-text",
+          "description": "Mill story, sample card section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/image-with-text--product-story-16.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/image-with-text--product-story-16.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Mill story, sample card\" (id `product-story-16`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/image-with-text--product-story-16.html; Shopify bundle: sections/linen/product-story-16/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/product-story-16",
+          "files": [
+            "sections/linen/product-story-16/sections/blko-product-story-16.liquid",
+            "sections/linen/product-story-16/snippets/blko-fonts-linen.liquid",
+            "sections/linen/product-story-16/snippets/blko-ui-arrow-link.liquid",
+            "sections/linen/product-story-16/snippets/blko-ui-icon-more.liquid",
+            "sections/linen/product-story-16/snippets/blko-ui-icon.liquid",
+            "sections/linen/product-story-16/snippets/blko-ui-media.liquid",
+            "sections/linen/product-story-16/snippets/blko-ui-section.liquid",
+            "sections/linen/product-story-16/snippets/blko-ui-tabs.liquid",
+            "sections/linen/product-story-16/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/product-story-16/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/product-story-16/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/product-story-16/assets/blko-product-story-16.css",
+            "sections/linen/product-story-16/assets/blko-product-story-16.js",
+            "sections/linen/product-story-16/assets/blko-ui-commerce.css",
+            "sections/linen/product-story-16/assets/blko-ui-commerce.js",
+            "sections/linen/product-story-16/assets/blko-ui-core.css",
+            "sections/linen/product-story-16/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-product-story-16.css",
+            "blko-product-story-16.js",
+            "blko-ui-commerce.css",
+            "blko-ui-commerce.js",
+            "blko-ui-core.css"
+          ],
+          "localeKeys": [
+            "blko.product_story_16.card",
+            "blko.product_story_16.units"
+          ],
+          "themeSettings": [],
+          "blockTypes": [
+            "number",
+            "piece"
+          ]
+        },
+        {
+          "id": "reviews-31",
+          "name": "Reviews, wash thread",
+          "kind": "section",
+          "category": "reviews",
+          "description": "Reviews, wash thread section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/reviews--reviews-31.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/reviews--reviews-31.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Reviews, wash thread\" (id `reviews-31`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/reviews--reviews-31.html; Shopify bundle: sections/linen/reviews-31/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/reviews-31",
+          "files": [
+            "sections/linen/reviews-31/sections/blko-reviews-31.liquid",
+            "sections/linen/reviews-31/snippets/blko-fonts-linen.liquid",
+            "sections/linen/reviews-31/snippets/blko-reviews-31-stars.liquid",
+            "sections/linen/reviews-31/snippets/blko-ui-icon-more.liquid",
+            "sections/linen/reviews-31/snippets/blko-ui-icon.liquid",
+            "sections/linen/reviews-31/snippets/blko-ui-section.liquid",
+            "sections/linen/reviews-31/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/reviews-31/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/reviews-31/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/reviews-31/assets/blko-reviews-31.css",
+            "sections/linen/reviews-31/assets/blko-reviews-31.js",
+            "sections/linen/reviews-31/assets/blko-ui-core.css",
+            "sections/linen/reviews-31/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-reviews-31.css",
+            "blko-reviews-31.js",
+            "blko-ui-core.css"
+          ],
+          "localeKeys": [
+            "blko.reviews_31.label",
+            "blko.reviews_31.stars"
+          ],
+          "themeSettings": [],
+          "blockTypes": [
+            "stage",
+            "review"
+          ]
+        },
+        {
+          "id": "scroll-images-09",
+          "name": "Scroll images, pinned",
+          "kind": "section",
+          "category": "scroll-images",
+          "description": "Pinned zoom story.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/scroll-images--scroll-images-09.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/scroll-images--scroll-images-09.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Scroll images, pinned\" (id `scroll-images-09`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/scroll-images--scroll-images-09.html; Shopify bundle: sections/linen/scroll-images-09/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/scroll-images-09",
+          "files": [
+            "sections/linen/scroll-images-09/sections/blko-scroll-images-09.liquid",
+            "sections/linen/scroll-images-09/snippets/blko-fonts-linen.liquid",
+            "sections/linen/scroll-images-09/snippets/blko-ui-button.liquid",
+            "sections/linen/scroll-images-09/snippets/blko-ui-icon.liquid",
+            "sections/linen/scroll-images-09/assets/blko-cine.css",
+            "sections/linen/scroll-images-09/assets/blko-cine.js",
+            "sections/linen/scroll-images-09/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/scroll-images-09/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/scroll-images-09/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/scroll-images-09/assets/blko-scroll-images-09.css",
+            "sections/linen/scroll-images-09/assets/blko-scroll-images-09.js",
+            "sections/linen/scroll-images-09/assets/blko-ui-core.css",
+            "sections/linen/scroll-images-09/assets/blko-ui-motion.js"
+          ],
+          "deps": [
+            "blko-cine.css",
+            "blko-cine.js",
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-scroll-images-09.css",
+            "blko-scroll-images-09.js",
+            "blko-ui-core.css",
+            "blko-ui-motion.js"
+          ],
+          "localeKeys": [],
+          "themeSettings": [],
+          "blockTypes": []
+        },
+        {
+          "id": "search-results-11",
+          "name": "Search, fabric swatches",
+          "kind": "section",
+          "category": "main-search",
+          "description": "Search, fabric swatches section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/main-search--search-results-11.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/main-search--search-results-11.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Search, fabric swatches\" (id `search-results-11`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/main-search--search-results-11.html; Shopify bundle: sections/linen/search-results-11/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/search-results-11",
+          "files": [
+            "sections/linen/search-results-11/sections/blko-search-results-11.liquid",
+            "sections/linen/search-results-11/snippets/blko-fonts-linen.liquid",
+            "sections/linen/search-results-11/snippets/blko-icon.liquid",
+            "sections/linen/search-results-11/snippets/blko-pagination.liquid",
+            "sections/linen/search-results-11/snippets/blko-search-results-11-card.liquid",
+            "sections/linen/search-results-11/snippets/blko-ui-badge.liquid",
+            "sections/linen/search-results-11/snippets/blko-ui-icon-more.liquid",
+            "sections/linen/search-results-11/snippets/blko-ui-icon.liquid",
+            "sections/linen/search-results-11/snippets/blko-ui-money.liquid",
+            "sections/linen/search-results-11/snippets/blko-ui-number.liquid",
+            "sections/linen/search-results-11/snippets/blko-ui-price.liquid",
+            "sections/linen/search-results-11/snippets/blko-ui-product-card.liquid",
+            "sections/linen/search-results-11/snippets/blko-ui-rating.liquid",
+            "sections/linen/search-results-11/snippets/blko-ui-section.liquid",
+            "sections/linen/search-results-11/snippets/blko-ui-stars.liquid",
+            "sections/linen/search-results-11/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/search-results-11/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/search-results-11/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/search-results-11/assets/blko-search-results-11.css",
+            "sections/linen/search-results-11/assets/blko-search-results-11.js",
+            "sections/linen/search-results-11/assets/blko-ui-commerce.css",
+            "sections/linen/search-results-11/assets/blko-ui-commerce.js",
+            "sections/linen/search-results-11/assets/blko-ui-core.css",
+            "sections/linen/search-results-11/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-search-results-11.css",
+            "blko-search-results-11.js",
+            "blko-ui-commerce.css",
+            "blko-ui-commerce.js",
+            "blko-ui-core.css"
+          ],
+          "localeKeys": [
+            "blko.general.next",
+            "blko.general.page",
+            "blko.general.pagination",
+            "blko.general.previous",
+            "blko.search_results_11.filter",
+            "blko.search_results_11.label",
+            "blko.search_results_11.search",
+            "blko_ui.price.from",
+            "blko_ui.price.save",
+            "blko_ui.price.was",
+            "blko_ui.product.add",
+            "blko_ui.product.colors",
+            "blko_ui.product.save",
+            "blko_ui.rating.stars"
+          ],
+          "themeSettings": [],
+          "blockTypes": [
+            "fabric",
+            "piece"
+          ]
+        },
+        {
+          "id": "team-21",
+          "name": "Team, maker ledger",
+          "kind": "section",
+          "category": "team",
+          "description": "Team, maker ledger section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/team--team-21.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/team--team-21.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Team, maker ledger\" (id `team-21`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/team--team-21.html; Shopify bundle: sections/linen/team-21/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/team-21",
+          "files": [
+            "sections/linen/team-21/sections/blko-team-21.liquid",
+            "sections/linen/team-21/snippets/blko-fonts-linen.liquid",
+            "sections/linen/team-21/snippets/blko-ui-icon-more.liquid",
+            "sections/linen/team-21/snippets/blko-ui-icon.liquid",
+            "sections/linen/team-21/snippets/blko-ui-section.liquid",
+            "sections/linen/team-21/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/team-21/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/team-21/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/team-21/assets/blko-team-21.css",
+            "sections/linen/team-21/assets/blko-team-21.js",
+            "sections/linen/team-21/assets/blko-ui-core.css"
+          ],
+          "deps": [
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-team-21.css",
+            "blko-team-21.js",
+            "blko-ui-core.css"
+          ],
+          "localeKeys": [],
+          "themeSettings": [],
+          "blockTypes": [
+            "maker"
+          ]
+        },
+        {
+          "id": "testimonial-40",
+          "name": "Reviews, face cards",
+          "kind": "section",
+          "category": "testimonials",
+          "description": "Reviews, face cards section from the Linen theme.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/testimonials--testimonial-40.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/testimonials--testimonial-40.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Reviews, face cards\" (id `testimonial-40`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/testimonials--testimonial-40.html; Shopify bundle: sections/linen/testimonial-40/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/testimonial-40",
+          "files": [
+            "sections/linen/testimonial-40/sections/blko-testimonial-40.liquid",
+            "sections/linen/testimonial-40/snippets/blko-fonts-linen.liquid",
+            "sections/linen/testimonial-40/snippets/blko-testimonial-40-stars.liquid",
+            "sections/linen/testimonial-40/snippets/blko-ui-button.liquid",
+            "sections/linen/testimonial-40/snippets/blko-ui-icon-more.liquid",
+            "sections/linen/testimonial-40/snippets/blko-ui-icon.liquid",
+            "sections/linen/testimonial-40/snippets/blko-ui-section.liquid",
+            "sections/linen/testimonial-40/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/testimonial-40/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/testimonial-40/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/testimonial-40/assets/blko-linen-motion.css",
+            "sections/linen/testimonial-40/assets/blko-linen-motion.js",
+            "sections/linen/testimonial-40/assets/blko-testimonial-40.css",
+            "sections/linen/testimonial-40/assets/blko-ui-core.css",
+            "sections/linen/testimonial-40/locales/en.default.blko.json"
+          ],
+          "deps": [
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-linen-motion.css",
+            "blko-linen-motion.js",
+            "blko-testimonial-40.css",
+            "blko-ui-core.css"
+          ],
+          "localeKeys": [
+            "blko.testimonial_40.stars"
+          ],
+          "themeSettings": [],
+          "blockTypes": [
+            "note"
+          ]
+        },
+        {
+          "id": "text-scroll-13",
+          "name": "Text scroll, ink",
+          "kind": "section",
+          "category": "text-scroll",
+          "description": "Statement ink.",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "demo": "demo/linen/sections/text-scroll--text-scroll-13.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/sections/text-scroll--text-scroll-13.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Text scroll, ink\" (id `text-scroll-13`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/sections/text-scroll--text-scroll-13.html; Shopify bundle: sections/linen/text-scroll-13/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/linen/text-scroll-13",
+          "files": [
+            "sections/linen/text-scroll-13/sections/blko-text-scroll-13.liquid",
+            "sections/linen/text-scroll-13/snippets/blko-fonts-linen.liquid",
+            "sections/linen/text-scroll-13/snippets/blko-ui-section.liquid",
+            "sections/linen/text-scroll-13/assets/blko-cine.css",
+            "sections/linen/text-scroll-13/assets/blko-cine.js",
+            "sections/linen/text-scroll-13/assets/blko-f-albert-sans-normal.woff2",
+            "sections/linen/text-scroll-13/assets/blko-f-eb-garamond-italic.woff2",
+            "sections/linen/text-scroll-13/assets/blko-f-eb-garamond-normal.woff2",
+            "sections/linen/text-scroll-13/assets/blko-text-scroll-13.css",
+            "sections/linen/text-scroll-13/assets/blko-text-scroll-13.js",
+            "sections/linen/text-scroll-13/assets/blko-ui-core.css",
+            "sections/linen/text-scroll-13/assets/blko-ui-motion.js"
+          ],
+          "deps": [
+            "blko-cine.css",
+            "blko-cine.js",
+            "blko-f-albert-sans-normal.woff2",
+            "blko-f-eb-garamond-italic.woff2",
+            "blko-f-eb-garamond-normal.woff2",
+            "blko-text-scroll-13.css",
+            "blko-text-scroll-13.js",
+            "blko-ui-core.css",
+            "blko-ui-motion.js"
+          ],
+          "localeKeys": [],
+          "themeSettings": [],
+          "blockTypes": []
+        }
+      ],
+      "pages": [
+        {
+          "id": "home",
+          "name": "Linen — Home",
+          "kind": "page",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "sections": [
+            "hero-57",
+            "text-scroll-13",
+            "featured-products-49",
+            "testimonial-40",
+            "scroll-images-09",
+            "featured-products-44",
+            "newsletter-52"
+          ],
+          "demo": "demo/linen/templates/home.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/templates/home.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to build the page \"Linen — Home\" (template `home`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/templates/home.html) in my project. It is made of these sections in order: hero-57, text-scroll-13, featured-products-49, testimonial-40, scroll-images-09, featured-products-44, newsletter-52 (bundles under sections/linen/, HTML in demo/linen/sections/). Before changing any code, ask me which project/theme it belongs to, whether it should be a new page/template or replace/extend an existing one (and which), which sections to keep or drop, and whether the target is a Shopify theme (JSON template) or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify)."
+        },
+        {
+          "id": "collection",
+          "name": "Shop",
+          "kind": "page",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "sections": [
+            "collection-banner-86",
+            "collection-grid-34"
+          ],
+          "demo": "demo/linen/templates/collection.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/templates/collection.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to build the page \"Shop\" (template `collection`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/templates/collection.html) in my project. It is made of these sections in order: collection-banner-86, collection-grid-34 (bundles under sections/linen/, HTML in demo/linen/sections/). Before changing any code, ask me which project/theme it belongs to, whether it should be a new page/template or replace/extend an existing one (and which), which sections to keep or drop, and whether the target is a Shopify theme (JSON template) or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify)."
+        },
+        {
+          "id": "collections",
+          "name": "Collections",
+          "kind": "page",
+          "targets": {
+            "html": "gap: no HTML demo for this Liquid section",
+            "shopify": "ok"
+          },
+          "sections": [
+            "main-list-collections"
+          ],
+          "demo": null,
+          "demoUrl": null,
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to build the page \"Collections\" (template `collections`, theme `linen`) in my project. It is made of these sections in order: main-list-collections (bundles under sections/linen/, HTML in demo/linen/sections/). Before changing any code, ask me which project/theme it belongs to, whether it should be a new page/template or replace/extend an existing one (and which), which sections to keep or drop, and whether the target is a Shopify theme (JSON template) or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify)."
+        },
+        {
+          "id": "product",
+          "name": "Product",
+          "kind": "page",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "sections": [
+            "product-detail-27",
+            "reviews-31"
+          ],
+          "demo": "demo/linen/templates/product.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/templates/product.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to build the page \"Product\" (template `product`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/templates/product.html) in my project. It is made of these sections in order: product-detail-27, reviews-31 (bundles under sections/linen/, HTML in demo/linen/sections/). Before changing any code, ask me which project/theme it belongs to, whether it should be a new page/template or replace/extend an existing one (and which), which sections to keep or drop, and whether the target is a Shopify theme (JSON template) or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify)."
+        },
+        {
+          "id": "product-alternate",
+          "name": "Product (alternate)",
+          "kind": "page",
+          "targets": {
+            "html": "gap: no HTML demo for this Liquid section",
+            "shopify": "ok"
+          },
+          "sections": [
+            "product-detail-27",
+            "reviews-31"
+          ],
+          "demo": null,
+          "demoUrl": null,
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to build the page \"Product (alternate)\" (template `product-alternate`, theme `linen`) in my project. It is made of these sections in order: product-detail-27, reviews-31 (bundles under sections/linen/, HTML in demo/linen/sections/). Before changing any code, ask me which project/theme it belongs to, whether it should be a new page/template or replace/extend an existing one (and which), which sections to keep or drop, and whether the target is a Shopify theme (JSON template) or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify)."
+        },
+        {
+          "id": "cart",
+          "name": "Your cart",
+          "kind": "page",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "sections": [
+            "cart-page-13"
+          ],
+          "demo": "demo/linen/templates/cart.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/templates/cart.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to build the page \"Your cart\" (template `cart`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/templates/cart.html) in my project. It is made of these sections in order: cart-page-13 (bundles under sections/linen/, HTML in demo/linen/sections/). Before changing any code, ask me which project/theme it belongs to, whether it should be a new page/template or replace/extend an existing one (and which), which sections to keep or drop, and whether the target is a Shopify theme (JSON template) or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify)."
+        },
+        {
+          "id": "search",
+          "name": "Search",
+          "kind": "page",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "sections": [
+            "search-results-11"
+          ],
+          "demo": "demo/linen/templates/search.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/templates/search.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to build the page \"Search\" (template `search`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/templates/search.html) in my project. It is made of these sections in order: search-results-11 (bundles under sections/linen/, HTML in demo/linen/sections/). Before changing any code, ask me which project/theme it belongs to, whether it should be a new page/template or replace/extend an existing one (and which), which sections to keep or drop, and whether the target is a Shopify theme (JSON template) or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify)."
+        },
+        {
+          "id": "blog",
+          "name": "Journal",
+          "kind": "page",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "sections": [
+            "collection-banner-58",
+            "blog-53",
+            "newsletter-09"
+          ],
+          "demo": "demo/linen/templates/blog.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/templates/blog.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to build the page \"Journal\" (template `blog`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/templates/blog.html) in my project. It is made of these sections in order: collection-banner-58, blog-53, newsletter-09 (bundles under sections/linen/, HTML in demo/linen/sections/). Before changing any code, ask me which project/theme it belongs to, whether it should be a new page/template or replace/extend an existing one (and which), which sections to keep or drop, and whether the target is a Shopify theme (JSON template) or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify)."
+        },
+        {
+          "id": "article",
+          "name": "Article",
+          "kind": "page",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "sections": [
+            "article-22",
+            "blog-80"
+          ],
+          "demo": "demo/linen/templates/article.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/templates/article.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to build the page \"Article\" (template `article`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/templates/article.html) in my project. It is made of these sections in order: article-22, blog-80 (bundles under sections/linen/, HTML in demo/linen/sections/). Before changing any code, ask me which project/theme it belongs to, whether it should be a new page/template or replace/extend an existing one (and which), which sections to keep or drop, and whether the target is a Shopify theme (JSON template) or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify)."
+        },
+        {
+          "id": "404",
+          "name": "Page not found",
+          "kind": "page",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "sections": [
+            "not-found-23",
+            "collection-list-55"
+          ],
+          "demo": "demo/linen/templates/404.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/templates/404.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to build the page \"Page not found\" (template `404`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/templates/404.html) in my project. It is made of these sections in order: not-found-23, collection-list-55 (bundles under sections/linen/, HTML in demo/linen/sections/). Before changing any code, ask me which project/theme it belongs to, whether it should be a new page/template or replace/extend an existing one (and which), which sections to keep or drop, and whether the target is a Shopify theme (JSON template) or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify)."
+        },
+        {
+          "id": "page",
+          "name": "Page",
+          "kind": "page",
+          "targets": {
+            "html": "gap: no HTML demo for this Liquid section",
+            "shopify": "ok"
+          },
+          "sections": [
+            "main-page"
+          ],
+          "demo": null,
+          "demoUrl": null,
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to build the page \"Page\" (template `page`, theme `linen`) in my project. It is made of these sections in order: main-page (bundles under sections/linen/, HTML in demo/linen/sections/). Before changing any code, ask me which project/theme it belongs to, whether it should be a new page/template or replace/extend an existing one (and which), which sections to keep or drop, and whether the target is a Shopify theme (JSON template) or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify)."
+        },
+        {
+          "id": "about",
+          "name": "About",
+          "kind": "page",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "sections": [
+            "page-header-54",
+            "image-with-text-06",
+            "product-story-16",
+            "icon-list-35",
+            "counters-03",
+            "team-21"
+          ],
+          "demo": "demo/linen/templates/about.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/templates/about.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to build the page \"About\" (template `about`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/templates/about.html) in my project. It is made of these sections in order: page-header-54, image-with-text-06, product-story-16, icon-list-35, counters-03, team-21 (bundles under sections/linen/, HTML in demo/linen/sections/). Before changing any code, ask me which project/theme it belongs to, whether it should be a new page/template or replace/extend an existing one (and which), which sections to keep or drop, and whether the target is a Shopify theme (JSON template) or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify)."
+        },
+        {
+          "id": "contact",
+          "name": "Contact",
+          "kind": "page",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "sections": [
+            "page-header-55",
+            "contact-23"
+          ],
+          "demo": "demo/linen/templates/contact.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/templates/contact.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to build the page \"Contact\" (template `contact`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/templates/contact.html) in my project. It is made of these sections in order: page-header-55, contact-23 (bundles under sections/linen/, HTML in demo/linen/sections/). Before changing any code, ask me which project/theme it belongs to, whether it should be a new page/template or replace/extend an existing one (and which), which sections to keep or drop, and whether the target is a Shopify theme (JSON template) or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify)."
+        },
+        {
+          "id": "faq",
+          "name": "FAQ",
+          "kind": "page",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "sections": [
+            "page-header-56",
+            "faq-48",
+            "contact-54"
+          ],
+          "demo": "demo/linen/templates/faq.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/templates/faq.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to build the page \"FAQ\" (template `faq`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/templates/faq.html) in my project. It is made of these sections in order: page-header-56, faq-48, contact-54 (bundles under sections/linen/, HTML in demo/linen/sections/). Before changing any code, ask me which project/theme it belongs to, whether it should be a new page/template or replace/extend an existing one (and which), which sections to keep or drop, and whether the target is a Shopify theme (JSON template) or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify)."
+        },
+        {
+          "id": "password",
+          "name": "Coming soon",
+          "kind": "page",
+          "targets": {
+            "html": "gap: no HTML demo for this Liquid section",
+            "shopify": "ok"
+          },
+          "sections": [
+            "main-password"
+          ],
+          "demo": null,
+          "demoUrl": null,
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to build the page \"Coming soon\" (template `password`, theme `linen`) in my project. It is made of these sections in order: main-password (bundles under sections/linen/, HTML in demo/linen/sections/). Before changing any code, ask me which project/theme it belongs to, whether it should be a new page/template or replace/extend an existing one (and which), which sections to keep or drop, and whether the target is a Shopify theme (JSON template) or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify)."
+        },
+        {
+          "id": "account-login",
+          "name": "Sign in",
+          "kind": "page",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "sections": [
+            "login-21"
+          ],
+          "demo": "demo/linen/templates/account-login.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/templates/account-login.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to build the page \"Sign in\" (template `account-login`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/templates/account-login.html) in my project. It is made of these sections in order: login-21 (bundles under sections/linen/, HTML in demo/linen/sections/). Before changing any code, ask me which project/theme it belongs to, whether it should be a new page/template or replace/extend an existing one (and which), which sections to keep or drop, and whether the target is a Shopify theme (JSON template) or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify)."
+        },
+        {
+          "id": "account-register",
+          "name": "Create account",
+          "kind": "page",
+          "targets": {
+            "html": "gap: no HTML demo for this Liquid section",
+            "shopify": "ok"
+          },
+          "sections": [
+            "main-register"
+          ],
+          "demo": null,
+          "demoUrl": null,
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to build the page \"Create account\" (template `account-register`, theme `linen`) in my project. It is made of these sections in order: main-register (bundles under sections/linen/, HTML in demo/linen/sections/). Before changing any code, ask me which project/theme it belongs to, whether it should be a new page/template or replace/extend an existing one (and which), which sections to keep or drop, and whether the target is a Shopify theme (JSON template) or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify)."
+        },
+        {
+          "id": "account-reset-password",
+          "name": "Reset password",
+          "kind": "page",
+          "targets": {
+            "html": "gap: no HTML demo for this Liquid section",
+            "shopify": "ok"
+          },
+          "sections": [
+            "main-reset-password"
+          ],
+          "demo": null,
+          "demoUrl": null,
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to build the page \"Reset password\" (template `account-reset-password`, theme `linen`) in my project. It is made of these sections in order: main-reset-password (bundles under sections/linen/, HTML in demo/linen/sections/). Before changing any code, ask me which project/theme it belongs to, whether it should be a new page/template or replace/extend an existing one (and which), which sections to keep or drop, and whether the target is a Shopify theme (JSON template) or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify)."
+        },
+        {
+          "id": "account-activate",
+          "name": "Activate account",
+          "kind": "page",
+          "targets": {
+            "html": "gap: no HTML demo for this Liquid section",
+            "shopify": "ok"
+          },
+          "sections": [
+            "main-activate-account"
+          ],
+          "demo": null,
+          "demoUrl": null,
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to build the page \"Activate account\" (template `account-activate`, theme `linen`) in my project. It is made of these sections in order: main-activate-account (bundles under sections/linen/, HTML in demo/linen/sections/). Before changing any code, ask me which project/theme it belongs to, whether it should be a new page/template or replace/extend an existing one (and which), which sections to keep or drop, and whether the target is a Shopify theme (JSON template) or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify)."
+        },
+        {
+          "id": "account",
+          "name": "Your account",
+          "kind": "page",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "sections": [
+            "account-26"
+          ],
+          "demo": "demo/linen/templates/account.html",
+          "demoUrl": "https://demo.blocko.ai/html/linen/templates/account.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to build the page \"Your account\" (template `account`, theme `linen`; live demo: https://demo.blocko.ai/html/linen/templates/account.html) in my project. It is made of these sections in order: account-26 (bundles under sections/linen/, HTML in demo/linen/sections/). Before changing any code, ask me which project/theme it belongs to, whether it should be a new page/template or replace/extend an existing one (and which), which sections to keep or drop, and whether the target is a Shopify theme (JSON template) or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify)."
+        },
+        {
+          "id": "account-order",
+          "name": "Order details",
+          "kind": "page",
+          "targets": {
+            "html": "gap: no HTML demo for this Liquid section",
+            "shopify": "ok"
+          },
+          "sections": [
+            "main-order"
+          ],
+          "demo": null,
+          "demoUrl": null,
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to build the page \"Order details\" (template `account-order`, theme `linen`) in my project. It is made of these sections in order: main-order (bundles under sections/linen/, HTML in demo/linen/sections/). Before changing any code, ask me which project/theme it belongs to, whether it should be a new page/template or replace/extend an existing one (and which), which sections to keep or drop, and whether the target is a Shopify theme (JSON template) or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify)."
+        },
+        {
+          "id": "account-addresses",
+          "name": "Addresses",
+          "kind": "page",
+          "targets": {
+            "html": "gap: no HTML demo for this Liquid section",
+            "shopify": "ok"
+          },
+          "sections": [
+            "main-addresses"
+          ],
+          "demo": null,
+          "demoUrl": null,
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to build the page \"Addresses\" (template `account-addresses`, theme `linen`) in my project. It is made of these sections in order: main-addresses (bundles under sections/linen/, HTML in demo/linen/sections/). Before changing any code, ask me which project/theme it belongs to, whether it should be a new page/template or replace/extend an existing one (and which), which sections to keep or drop, and whether the target is a Shopify theme (JSON template) or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify)."
+        }
+      ]
+    },
+    {
       "id": "roast",
       "path": "themes/roast",
       "shopify": true,

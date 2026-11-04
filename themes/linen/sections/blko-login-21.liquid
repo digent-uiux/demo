@@ -1,0 +1,371 @@
+{%- liquid
+  assign s = section.settings
+  assign preview = false
+  if request.design_mode or request.host == blank
+    assign preview = true
+  endif
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-2'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-login-21.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture blko_class -%}blogin21{% if s.tokens == 'theme' %} blogin21--theme{% endif %}{% if blko_sid != 'scheme-2' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}{%- endcapture -%}
+<script src="{{ 'blko-login-21.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign label = 'blko.login_21.label' | t
+  assign id_email = section.id | append: '-email'
+  assign id_pass = section.id | append: '-pass'
+  assign id_rec = section.id | append: '-rec'
+-%}
+{%- capture blko_body -%}
+  {%- if s.texture != blank -%}
+    {{ s.texture | image_url: width: 1600 | image_tag: class: 'blogin21__tex', loading: 'lazy', widths: '800, 1200, 1600', sizes: '100vw', alt: '' }}
+  {%- endif -%}
+  <blko-login-21 class="blogin21__wrap">
+    {%- if s.show_swatch -%}
+      <div aria-hidden="true" class="blogin21__swatch">
+        <div class="blogin21__sw">
+          {%- if s.swatch != blank -%}
+            {{ s.swatch | image_url: width: 300 | image_tag: class: 'blogin21__swimg', loading: 'lazy', alt: '' }}
+          {%- else -%}
+            {{ 'product-1' | placeholder_svg_tag: 'blogin21__swimg' }}
+          {%- endif -%}
+        </div>
+        {%- if s.swatch_caption != blank -%}<p class="blogin21__swcap">{{ s.swatch_caption | escape }}</p>{%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="blogin21__card" data-login>
+      {%- form 'customer_login', class: 'blogin21__form' -%}
+        <div class="blogin21__head">
+          <h1 class="blogin21__title">{{ s.heading | escape }}</h1>
+          {%- if s.text != blank -%}<p class="bx-small bx-muted">{{ s.text | escape }}</p>{%- endif -%}
+        </div>
+        {%- if form.errors -%}<p class="bx-small blogin21__err" role="alert">{{ form.errors | default_errors }}</p>{%- endif -%}
+        {%- capture email_in -%}{%- render 'blko-ui-input', id: id_email, name: 'customer[email]', type: 'email', autocomplete: 'email', placeholder: s.email_placeholder, required: true -%}{%- endcapture -%}
+        {%- assign email_label = s.email_label | escape -%}
+        {%- render 'blko-ui-field', id: id_email, label: email_label, children: email_in -%}
+        {%- capture pass_in -%}{%- render 'blko-ui-input', id: id_pass, name: 'customer[password]', type: 'password', autocomplete: 'current-password', required: true -%}{%- endcapture -%}
+        {%- assign pass_label = s.password_label | escape -%}
+        {%- render 'blko-ui-field', id: id_pass, label: pass_label, children: pass_in -%}
+        <div class="blogin21__go">
+          {%- assign sign = s.button_label | escape -%}
+          {%- render 'blko-ui-button', type: 'submit', size: 'lg', shape: 'pill', full: true, children: sign -%}
+          {%- assign forgot = s.forgot_label | escape -%}
+          {%- render 'blko-ui-button', href: '#recover', variant: 'link', className: 'blogin21__forgot', attrs: 'data-show="recover"', children: forgot -%}
+        </div>
+<div class="blogin21__alts">
+  {%- if s.show_alts and preview -%}
+    <p class="bx-label bx-muted blogin21__c">{{ s.alts_label | escape }}</p>
+    <div class="blogin21__altrow">
+      {%- assign lb = s.alt_1 | escape -%}
+      {%- capture kids -%}<span class="bx-small">{{ lb }}</span>{%- endcapture -%}
+      {%- capture at -%}aria-pressed="false" data-via="{{ lb }}"{%- endcapture -%}
+      {%- render 'blko-ui-button', variant: 'outline', shape: 'pill', icon: 'smartphone', className: 'blogin21__alt', attrs: at, children: kids -%}
+      {%- assign lb = s.alt_2 | escape -%}
+      {%- capture kids -%}<span class="bx-small">{{ lb }}</span>{%- endcapture -%}
+      {%- capture at -%}aria-pressed="false" data-via="{{ lb }}"{%- endcapture -%}
+      {%- render 'blko-ui-button', variant: 'outline', shape: 'pill', icon: 'key-round', className: 'blogin21__alt', attrs: at, children: kids -%}
+      {%- assign lb = s.alt_3 | escape -%}
+      {%- capture kids -%}<span class="bx-small">{{ lb }}</span>{%- endcapture -%}
+      {%- capture at -%}aria-pressed="false" data-via="{{ lb }}"{%- endcapture -%}
+      {%- render 'blko-ui-button', variant: 'outline', shape: 'pill', icon: 'mail', className: 'blogin21__alt', attrs: at, children: kids -%}
+    </div>
+    <p role="status" class="bx-small bx-muted blogin21__c" data-status data-tpl="{{ s.alt_status | escape }}" hidden></p>
+  {%- endif -%}
+  <p class="bx-small bx-muted blogin21__c">{{ s.register_text | escape }} {%- assign reg = s.register_label | escape -%}{%- render 'blko-ui-button', href: routes.account_register_url, variant: 'link', className: 'blogin21__reg', children: reg -%}</p>
+</div>
+      {%- endform -%}
+    </div>
+
+    <div id="recover" class="blogin21__card" data-recover hidden>
+      {%- form 'recover_customer_password', class: 'blogin21__form' -%}
+        <div class="blogin21__head">
+          <h2 class="blogin21__title">{{ s.recover_heading | escape }}</h2>
+          {%- if form.posted_successfully? -%}
+            <p class="bx-small" role="status" data-recovered>{{ s.recover_done | escape }}</p>
+          {%- else -%}
+            <p class="bx-small bx-muted">{{ s.recover_text | escape }}</p>
+          {%- endif -%}
+        </div>
+        {%- if form.errors -%}<p class="bx-small blogin21__err" role="alert" data-recovered>{{ form.errors | default_errors }}</p>{%- endif -%}
+        {%- capture rec_in -%}{%- render 'blko-ui-input', id: id_rec, name: 'email', type: 'email', autocomplete: 'email', placeholder: s.email_placeholder, required: true -%}{%- endcapture -%}
+        {%- render 'blko-ui-field', id: id_rec, label: email_label, children: rec_in -%}
+        <div class="blogin21__go">
+          {%- assign send = s.recover_button | escape -%}
+          {%- render 'blko-ui-button', type: 'submit', size: 'lg', shape: 'pill', full: true, children: send -%}
+          {%- assign back = s.cancel_label | escape -%}
+          {%- render 'blko-ui-button', href: '#login', variant: 'link', className: 'blogin21__forgot', attrs: 'data-show="login"', children: back -%}
+        </div>
+      {%- endform -%}
+    </div>
+    <noscript><style>.blogin21 [data-recover][hidden]{display:block!important}</style></noscript>
+  </blko-login-21>
+{%- endcapture -%}
+{%- render 'blko-ui-section', surface: 'alt', bleed: true, label: label, className: blko_class, style: blko_style, inner: 'bx-pad blogin21__in', children: blko_body -%}
+
+{% schema %}
+{
+  "name": "Sign in, stitched card",
+  "tag": "div",
+  "class": "blko-login-21-wrap",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Sign in"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "Mend requests, your fabric notes and slow-made pieces waiting in your bag."
+    },
+    {
+      "type": "text",
+      "id": "email_label",
+      "label": "Email label",
+      "default": "Email"
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "Email placeholder",
+      "default": "you@example.com"
+    },
+    {
+      "type": "text",
+      "id": "password_label",
+      "label": "Password label",
+      "default": "Password"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Sign in"
+    },
+    {
+      "type": "text",
+      "id": "forgot_label",
+      "label": "Forgot link",
+      "default": "Forgot password?"
+    },
+    {
+      "type": "text",
+      "id": "register_text",
+      "label": "Sign-up line",
+      "default": "New to the atelier?"
+    },
+    {
+      "type": "text",
+      "id": "register_label",
+      "label": "Sign-up link",
+      "default": "Make an account"
+    },
+    {
+      "type": "header",
+      "content": "Other sign-ins"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_alts",
+      "label": "Show other sign-ins",
+      "default": true,
+      "info": "Demonstration controls in editor/preview only. Live customers use the native Shopify login and recovery forms."
+    },
+    {
+      "type": "text",
+      "id": "alts_label",
+      "label": "Heading",
+      "default": "Or continue with"
+    },
+    {
+      "type": "text",
+      "id": "alt_1",
+      "label": "Button 1",
+      "default": "Phone"
+    },
+    {
+      "type": "text",
+      "id": "alt_2",
+      "label": "Button 2",
+      "default": "Passkey"
+    },
+    {
+      "type": "text",
+      "id": "alt_3",
+      "label": "Button 3",
+      "default": "Email link"
+    },
+    {
+      "type": "text",
+      "id": "alt_status",
+      "label": "Status",
+      "default": "We'll continue with your [method] on the next screen.",
+      "info": "[method] is the button picked."
+    },
+    {
+      "type": "header",
+      "content": "Password reset"
+    },
+    {
+      "type": "text",
+      "id": "recover_heading",
+      "label": "Heading",
+      "default": "Reset your password"
+    },
+    {
+      "type": "text",
+      "id": "recover_text",
+      "label": "Text",
+      "default": "We'll email you a link to set a new one."
+    },
+    {
+      "type": "text",
+      "id": "recover_button",
+      "label": "Button label",
+      "default": "Send the link"
+    },
+    {
+      "type": "text",
+      "id": "recover_done",
+      "label": "Sent message",
+      "default": "Check your inbox for the reset link."
+    },
+    {
+      "type": "text",
+      "id": "cancel_label",
+      "label": "Back link",
+      "default": "Back to sign in"
+    },
+    {
+      "type": "header",
+      "content": "Look"
+    },
+    {
+      "type": "image_picker",
+      "id": "texture",
+      "label": "Background texture"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_swatch",
+      "label": "Show swatch tag",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "swatch",
+      "label": "Swatch photo"
+    },
+    {
+      "type": "text",
+      "id": "swatch_caption",
+      "label": "Swatch caption",
+      "default": "No. 12 · Flax"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_source",
+      "label": "Fonts",
+      "options": [
+        {
+          "value": "bundled",
+          "label": "Bundled (EB Garamond + Albert Sans)"
+        },
+        {
+          "value": "picker",
+          "label": "Pick from the font library"
+        },
+        {
+          "value": "theme",
+          "label": "Use the theme's fonts"
+        }
+      ],
+      "default": "bundled"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors and shapes"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, corners, type style",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case…). Other themes: keep the preset."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:blko.linen.color_scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sign in, stitched card"
+    }
+  ]
+}
+{% endschema %}

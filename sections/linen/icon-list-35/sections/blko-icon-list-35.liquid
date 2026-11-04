@@ -1,0 +1,283 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+<script data-blko-kit="linen">try { if (!new URLSearchParams(location.search).has('static') && !navigator.webdriver && !matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('blko-kit-linen'); } catch (e) {}</script>
+{{ 'blko-linen-motion.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-linen-motion.js' | asset_url }}" defer="defer"></script>
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-icon-list-35.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture blko_class -%}biconlist35{% if s.tokens == 'theme' %} biconlist35--theme{% endif %}{% if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}{%- endcapture -%}
+{%- assign label = s.heading | strip_html -%}
+{%- capture blko_body -%}
+    <div class="biconlist35__wrap">
+      <header class="biconlist35__head">
+        <h2 class="biconlist35__title">{{ s.heading | escape }}</h2>
+        {%- if s.text != blank -%}<p class="bx-body bx-muted biconlist35__text">{{ s.text | escape }}</p>{%- endif -%}
+      </header>
+      <div class="biconlist35__rodwrap">
+        <span aria-hidden="true" class="biconlist35__rod"></span>
+        <ol class="biconlist35__list">
+          {%- for b in section.blocks -%}
+            <li class="biconlist35__item" style="--drop:{{ b.settings.drop }}px" {{ b.shopify_attributes }}>
+              <span aria-hidden="true" class="biconlist35__str biconlist35__str--a"></span>
+              <span aria-hidden="true" class="biconlist35__str biconlist35__str--b"></span>
+              <div class="biconlist35__card biconlist35__card--{{ b.settings.tone }}">
+                <div class="biconlist35__top">
+                  <span class="biconlist35__num">{{ forloop.index }}</span>
+                  {%- render 'blko-ui-icon', name: b.settings.icon, size: 20, stroke: 1.25, className: 'biconlist35__icon' -%}
+                </div>
+                <h3 class="biconlist35__name">{{ b.settings.title | escape }}</h3>
+                <p class="bx-small bx-muted biconlist35__line">{{ b.settings.text | escape }}</p>
+              </div>
+            </li>
+          {%- endfor -%}
+        </ol>
+      </div>
+    </div>
+{%- endcapture -%}
+{%- render 'blko-ui-section', surface: 'bg', bleed: true, label: label, className: blko_class, style: blko_style, inner: 'bx-pad biconlist35__in', children: blko_body -%}
+
+{% schema %}
+{
+  "name": "Values, hanging swatches",
+  "tag": "div",
+  "class": "blko-icon-list-35-wrap",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Four ways we keep it slow"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Small habits from the workroom, written down so we never drop them."
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_source",
+      "label": "Fonts",
+      "options": [
+        {
+          "value": "bundled",
+          "label": "Bundled (EB Garamond + Albert Sans)"
+        },
+        {
+          "value": "picker",
+          "label": "Pick from the font library"
+        },
+        {
+          "value": "theme",
+          "label": "Use the theme's fonts"
+        }
+      ],
+      "default": "bundled"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors and shapes"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, corners, type style",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case…). Other themes: keep the preset."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:blko.linen.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "value",
+      "name": "Value",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "leaf",
+          "options": [
+            {
+              "value": "leaf",
+              "label": "Leaf"
+            },
+            {
+              "value": "droplets",
+              "label": "Droplets"
+            },
+            {
+              "value": "sun",
+              "label": "Sun"
+            },
+            {
+              "value": "repeat",
+              "label": "Repeat"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Only plant fibres"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Flax linen, raw cotton and a little hemp. Nothing spun from oil."
+        },
+        {
+          "type": "select",
+          "id": "tone",
+          "label": "Card tone",
+          "default": "pop-4",
+          "options": [
+            {
+              "value": "pop-4",
+              "label": "Sage"
+            },
+            {
+              "value": "pop-2",
+              "label": "Clay"
+            },
+            {
+              "value": "alt",
+              "label": "Linen"
+            },
+            {
+              "value": "pop-3",
+              "label": "Terracotta"
+            }
+          ]
+        },
+        {
+          "type": "range",
+          "id": "drop",
+          "label": "Drop on wide screens",
+          "min": 0,
+          "max": 48,
+          "step": 4,
+          "unit": "px",
+          "default": 0
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Values, hanging swatches",
+      "blocks": [
+        {
+          "type": "value",
+          "settings": {
+            "icon": "leaf",
+            "title": "Only plant fibres",
+            "text": "Flax linen, raw cotton and a little hemp. Nothing spun from oil.",
+            "tone": "pop-4",
+            "drop": 0
+          }
+        },
+        {
+          "type": "value",
+          "settings": {
+            "icon": "droplets",
+            "title": "Washed twice",
+            "text": "Every piece is washed and dried before it ships, so it never shrinks on you.",
+            "tone": "pop-2",
+            "drop": 32
+          }
+        },
+        {
+          "type": "value",
+          "settings": {
+            "icon": "sun",
+            "title": "Dried on the line",
+            "text": "No tumble dryers in the workroom. The roof terrace does the job in summer.",
+            "tone": "alt",
+            "drop": 12
+          }
+        },
+        {
+          "type": "value",
+          "settings": {
+            "icon": "repeat",
+            "title": "Mended for life",
+            "text": "Send back a torn seam or a lost button, at any age, and we fix it free.",
+            "tone": "pop-3",
+            "drop": 44
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

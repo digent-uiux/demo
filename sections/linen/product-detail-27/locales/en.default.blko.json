@@ -1,0 +1,29 @@
+{
+  "blko": {
+    "linen": {
+      "care": "Care",
+      "in_stock": "In stock",
+      "materials": "Materials",
+      "one_time": "One-time purchase",
+      "pairs_with": "Pairs with",
+      "purchase_option": "Purchase option",
+      "quantity": "Quantity",
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable combination",
+      "variant": "Variant"
+    },
+    "product_detail_27": {
+      "label": "Product",
+      "parcels": "Upcoming parcels",
+      "plan": "Plan",
+      "size": "Size"
+    }
+  },
+  "blko_ui": {
+    "quantity": {
+      "decrease": "Decrease {{ label }}",
+      "increase": "Increase {{ label }}",
+      "label": "Quantity"
+    }
+  }
+}

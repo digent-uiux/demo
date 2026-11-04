@@ -1,0 +1,243 @@
+{%- comment -%} Text Scroll 13 - statement ink (Linen). Port of design-system/site/registry/text-scroll/text-scroll-13.tsx.
+  Statement syntax: words separated by spaces; *words* in stars take the accent; [1] [2] [3] right after a word drop the
+  photo chip 1, 2 or 3 there. {%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-2'
+  assign plain = s.statement | remove: '*' | remove: '[1]' | remove: '[2]' | remove: '[3]' | strip
+  assign words = s.statement | strip | split: ' '
+  assign n = words.size
+-%}
+<script>try{if(!/[?&]static\b/.test(location.search)&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-cine')}catch(e){}</script>
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-cine.css' | asset_url | stylesheet_tag }}
+{{ 'blko-text-scroll-13.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-cine.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-text-scroll-13.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture blko_class -%}btextscroll13{% if s.tokens == 'theme' %} btextscroll13--theme{% endif %}{% if blko_sid != 'scheme-2' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}{%- endcapture -%}
+{%- capture blko_body -%}
+  <div class="btextscroll13__side" data-cine data-head>
+    <h2 class="btextscroll13__label btextscroll13__title">
+      <span aria-hidden="true" class="btextscroll13__rule"></span>
+      <span class="btextscroll13__sr">{{ s.label | escape }}</span>
+      <span aria-hidden="true">{%- assign chars = s.label | split: '' -%}{%- for ch in chars -%}<span class="cine-c" style="--i:{{ forloop.index0 }}">{{ ch | escape }}</span>{%- endfor -%}</span>
+    </h2>
+    {%- if s.note != blank -%}<div class="cine-rise btextscroll13__note" style="--cine-d:420ms"><p class="btextscroll13__label">{{ s.note | escape }}</p></div>{%- endif -%}
+  </div>
+  <div class="btextscroll13__main">
+    <p class="btextscroll13__text" aria-label="{{ plain | escape }}" data-box data-n="{{ n }}">
+      {%- assign em = false -%}
+      {%- for raw in words -%}
+        {%- liquid
+          assign w = raw
+          assign chip = 0
+          if w contains '[1]'
+            assign chip = 1
+          elsif w contains '[2]'
+            assign chip = 2
+          elsif w contains '[3]'
+            assign chip = 3
+          endif
+          assign w = w | remove: '[1]' | remove: '[2]' | remove: '[3]'
+          assign first = w | slice: 0
+          if first == '*'
+            assign em = true
+          endif
+          assign last_ch = w | slice: -1
+          assign close = false
+          if last_ch == '*'
+            assign close = true
+          endif
+          assign w = w | remove: '*'
+        -%}
+        {%- if em -%}<em data-w data-em aria-hidden="true" class="btextscroll13__em">{{ w | escape }}</em>{%- else -%}<span data-w aria-hidden="true">{{ w | escape }}</span>{%- endif -%}
+        {%- if chip > 0 -%}
+          {%- liquid
+            assign ik = 'chip_' | append: chip
+            assign img = s[ik]
+          -%}
+          <span data-chip="{{ forloop.index0 }}" aria-hidden="true" class="btextscroll13__chip"><span>
+            {%- if img != blank -%}{{ img | image_url: width: 320 | image_tag: loading: 'lazy', width: 320, height: 140, alt: '' }}{%- else -%}{{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}{%- endif -%}
+          </span></span>
+        {%- endif -%}
+        {%- if close -%}{%- assign em = false -%}{%- endif -%}
+        {%- unless forloop.last %} {% endunless -%}
+      {%- endfor -%}
+    </p>
+    <div class="cine-rise btextscroll13__sign" data-cine data-sign>
+      <span aria-hidden="true" class="btextscroll13__dash"></span>
+      {%- if s.signoff != blank -%}<p class="btextscroll13__label">{{ s.signoff | escape }}</p>{%- endif -%}
+      {%- if s.since != blank -%}<p class="btextscroll13__since">{{ s.since | escape }}</p>{%- endif -%}
+      {%- if s.link_label != blank -%}<p class="btextscroll13__more"><a href="{{ s.link | default: routes.root_url }}">{{ s.link_label | escape }}</a></p>{%- endif -%}
+    </div>
+  </div>
+{%- endcapture -%}
+<div class="btextscroll13-root" data-blko-textscroll13>
+{%- render 'blko-ui-section', surface: 'alt', label: s.label, className: blko_class, style: blko_style, inner: 'btextscroll13__grid', children: blko_body -%}
+</div>
+
+{% schema %}
+{
+  "name": "Text scroll, ink",
+  "tag": "div",
+  "class": "blko-text-scroll-13-wrap",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Why we go slow"
+    },
+    {
+      "type": "text",
+      "id": "note",
+      "label": "Note",
+      "default": "Field notes \u00b7 No. 03"
+    },
+    {
+      "type": "textarea",
+      "id": "statement",
+      "label": "Statement",
+      "default": "We grow our flax by the sea[1] wash it soft with river stones,[2] cut each piece slowly, so the dress you buy this June[3] still feels like yours after *twenty summers.*",
+      "info": "*words* in stars take the accent colour. [1] [2] [3] right after a word place photo chip 1, 2 or 3."
+    },
+    {
+      "type": "image_picker",
+      "id": "chip_1",
+      "label": "Photo chip 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "chip_2",
+      "label": "Photo chip 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "chip_3",
+      "label": "Photo chip 3"
+    },
+    {
+      "type": "text",
+      "id": "signoff",
+      "label": "Sign-off",
+      "default": "Ines & Joa, founders"
+    },
+    {
+      "type": "text",
+      "id": "since",
+      "label": "Sign-off note",
+      "default": "Weaving in small runs since 2014"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label",
+      "default": "Read the field notes"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_source",
+      "label": "Fonts",
+      "options": [
+        {
+          "value": "bundled",
+          "label": "Bundled (EB Garamond + Albert Sans)"
+        },
+        {
+          "value": "picker",
+          "label": "Pick from the font library"
+        },
+        {
+          "value": "theme",
+          "label": "Use the theme's fonts"
+        }
+      ],
+      "default": "bundled"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors and shapes"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, corners, type style",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case\u2026). Other themes: keep the preset."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:blko.linen.color_scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128,
+      "info": "Phones use 44% (56px at the default)."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128
+    }
+  ],
+  "presets": [
+    {
+      "name": "Text scroll, ink"
+    }
+  ]
+}
+{% endschema %}

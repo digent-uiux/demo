@@ -1,0 +1,147 @@
+{%- comment -%} Scroll Images 09 - pinned zoom story (Linen). Port of design-system/site/registry/scroll-images/scroll-images-09.tsx.
+  Both frames are in the markup: the static one (final frame, unpinned) shows by default; html.blko-cine (motion allowed,
+  set by the inline gate before the markup) swaps in the pinned scene, so there is no flash and nothing to rewrite. {%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign pos = '50% 40%'
+  if s.image != blank and s.image.presentation.focal_point != blank
+    assign pos = s.image.presentation.focal_point | append: ''
+  endif
+  assign pos_style = 'object-position: ' | append: pos
+-%}
+<script>try{if(!/[?&]static\b/.test(location.search)&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-cine')}catch(e){}</script>
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-cine.css' | asset_url | stylesheet_tag }}
+{{ 'blko-scroll-images-09.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-cine.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-scroll-images-09.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture cta -%}
+  {%- if s.button_label != blank -%}
+    {%- capture kids -%}<span class="cine-btn__l">{{ s.button_label | escape }}</span>{% render 'blko-ui-icon', name: 'arrow-up-right', className: 'cine-btn__a' %}{%- endcapture -%}
+    {%- assign href = s.button_link | default: routes.all_products_collection_url -%}
+    <div class="bscrollimages09__cta">{%- render 'blko-ui-button', href: href, size: 'lg', variant: 'inverse', className: 'cine-btn cine-btn--light', children: kids -%}</div>
+  {%- endif -%}
+{%- endcapture -%}
+<section class="bscrollimages09{% if s.tokens == 'theme' %} bscrollimages09--theme{% endif %}" style="{{ blko_style }}" aria-label="{{ s.eyebrow | escape }}" data-blko-scrollimages09>
+  {%- comment -%} Pinned scene (motion only). {%- endcomment -%}
+  <div class="bscrollimages09__pin" data-track style="height: {{ s.length }}svh">
+    <div class="bscrollimages09__stage">
+      <div class="bscrollimages09__frame" data-frame>
+        {%- if s.image != blank -%}
+          {{ s.image | image_url: width: 2400 | image_tag: class: 'bscrollimages09__img', loading: 'lazy', widths: '1200, 1800, 2400', sizes: '100vw', alt: s.image.alt, style: pos_style }}
+        {%- else -%}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'bscrollimages09__img placeholder-svg' }}
+        {%- endif -%}
+        <span aria-hidden="true" class="bscrollimages09__scrim" data-scrim></span>
+      </div>
+      {%- if s.plate != blank -%}<p aria-hidden="true" class="bscrollimages09__label bscrollimages09__plate" data-plate>{{ s.plate | escape }}</p>{%- endif -%}
+      <div class="bscrollimages09__caps">
+        {%- for i in (1..3) -%}
+          {%- liquid
+            assign k = 'step_' | append: i | append: '_label'
+            assign hk = 'step_' | append: i | append: '_heading'
+            assign tk = 'step_' | append: i | append: '_text'
+          -%}
+          <div class="bscrollimages09__cap bscrollimages09__cap--{{ i }}" data-cap{% if i > 1 %} style="opacity:0;visibility:hidden"{% endif %}>
+            <p class="bscrollimages09__label bscrollimages09__k">0{{ i }} · {{ s[k] | escape }}</p>
+            <h2 class="bscrollimages09__h">{{ s[hk] | escape }}</h2>
+            <p class="bscrollimages09__t">{{ s[tk] | escape }}</p>
+            {%- if i == 3 -%}{{ cta }}{%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+      {%- if s.eyebrow != blank -%}
+        <p class="bscrollimages09__label bscrollimages09__eyebrow" data-cine data-eyebrow>
+          <span class="bscrollimages09__sr">{{ s.eyebrow | escape }}</span>
+          <span aria-hidden="true">{%- assign chars = s.eyebrow | split: '' -%}{%- for ch in chars -%}<span class="cine-c" style="--i:{{ forloop.index0 }}">{{ ch | escape }}</span>{%- endfor -%}</span>
+        </p>
+      {%- endif -%}
+      <div aria-hidden="true" class="bscrollimages09__foot" data-foot>
+        <span class="bscrollimages09__label bscrollimages09__count"><span data-count>01</span> / 03</span>
+        <span class="bscrollimages09__line"><span class="bscrollimages09__bar" data-bar></span></span>
+      </div>
+    </div>
+  </div>
+  {%- comment -%} Static / reduced motion / ?static: the final frame, unpinned, then the three steps. {%- endcomment -%}
+  <div class="bscrollimages09__static">
+    <div class="bscrollimages09__still">
+      {%- if s.image != blank -%}
+        {{ s.image | image_url: width: 2400 | image_tag: class: 'bscrollimages09__img', loading: 'lazy', widths: '1200, 1800, 2400', sizes: '100vw', alt: s.image.alt, style: pos_style }}
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'bscrollimages09__img placeholder-svg' }}
+      {%- endif -%}
+      <span aria-hidden="true" class="bscrollimages09__scrim"></span>
+      <div class="bscrollimages09__end">
+        <p class="bscrollimages09__label bscrollimages09__k">03 · {{ s.step_3_label | escape }}</p>
+        <h2 class="bscrollimages09__h">{{ s.step_3_heading | escape }}</h2>
+        <p class="bscrollimages09__t">{{ s.step_3_text | escape }}</p>
+        {{ cta }}
+      </div>
+    </div>
+    <ol class="bscrollimages09__steps">
+      {%- for i in (1..3) -%}
+        {%- liquid
+          assign k = 'step_' | append: i | append: '_label'
+          assign hk = 'step_' | append: i | append: '_heading'
+          assign tk = 'step_' | append: i | append: '_text'
+        -%}
+        <li class="bscrollimages09__step">
+          <p class="bscrollimages09__label bscrollimages09__k">0{{ i }} · {{ s[k] | escape }}</p>
+          <h3 class="bscrollimages09__h3">{{ s[hk] | escape }}</h3>
+          <p class="bscrollimages09__st">{{ s[tk] | escape }}</p>
+        </li>
+      {%- endfor -%}
+    </ol>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Scroll images, pinned",
+  "tag": "div",
+  "class": "blko-scroll-images-09-wrap",
+  "settings": [
+    { "type": "header", "content": "Content" },
+    { "type": "image_picker", "id": "image", "label": "Photo", "info": "Wide photo; set a focal point. The first plate shows the right side of it." },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "From flax to the shore" },
+    { "type": "text", "id": "plate", "label": "Plate caption", "default": "Plate 04 · The shore, late June" },
+    { "type": "header", "content": "Step 1" },
+    { "type": "text", "id": "step_1_label", "label": "Label", "default": "Grown" },
+    { "type": "text", "id": "step_1_heading", "label": "Heading", "default": "Flax from the coast fields" },
+    { "type": "textarea", "id": "step_1_text", "label": "Text", "default": "Sown in March a few miles from the sea, pulled by hand in July and left to ret in the dew." },
+    { "type": "header", "content": "Step 2" },
+    { "type": "text", "id": "step_2_label", "label": "Label", "default": "Washed" },
+    { "type": "text", "id": "step_2_heading", "label": "Heading", "default": "Softened three times" },
+    { "type": "textarea", "id": "step_2_text", "label": "Text", "default": "Woven loose, then washed with river stones so it feels lived-in before you ever wear it." },
+    { "type": "header", "content": "Step 3 (on the photo)" },
+    { "type": "text", "id": "step_3_label", "label": "Label", "default": "Worn" },
+    { "type": "text", "id": "step_3_heading", "label": "Heading", "default": "Made for twenty summers" },
+    { "type": "textarea", "id": "step_3_text", "label": "Text", "default": "A shirt that creases, breathes and fades well. Wear it to the shore, then wear it again." },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop linen shirts" },
+    { "type": "url", "id": "button_link", "label": "Button link", "default": "/collections/all" },
+    { "type": "header", "content": "Motion" },
+    { "type": "range", "id": "length", "label": "Pin length", "min": 200, "max": 400, "step": 50, "unit": "svh", "default": 300, "info": "Scroll distance of the pinned scene (300 = three screens)." },
+    { "type": "header", "content": "Typography" },
+    { "type": "select", "id": "font_source", "label": "Fonts", "options": [
+      { "value": "bundled", "label": "Bundled (EB Garamond + Albert Sans)" },
+      { "value": "picker", "label": "Pick from the font library" },
+      { "value": "theme", "label": "Use the theme's fonts" }
+    ], "default": "bundled" },
+    { "type": "font_picker", "id": "heading_font", "label": "Heading font", "default": "assistant_n4" },
+    { "type": "font_picker", "id": "body_font", "label": "Body font", "default": "assistant_n4" },
+    { "type": "header", "content": "Colors and shapes" },
+    { "type": "select", "id": "tokens", "label": "Colors, corners, type style", "options": [
+      { "value": "preset", "label": "Bundled preset (Linen)" },
+      { "value": "theme", "label": "Read the theme's tokens" }
+    ], "default": "preset", "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case…). Other themes: keep the preset." },
+    { "type": "header", "content": "Spacing" },
+    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 0, "info": "Phones use 70%." },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 0 }
+  ],
+  "presets": [{ "name": "Scroll images, pinned" }]
+}
+{% endschema %}

@@ -1,0 +1,799 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-reviews-31.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture blko_class -%}breviews31{% if s.tokens == 'theme' %} breviews31--theme{% endif %}{% if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}{%- endcapture -%}
+<script src="{{ 'blko-reviews-31.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign label = 'blko.reviews_31.label' | t
+  assign stages = section.blocks | where: 'type', 'stage'
+  assign reviews = section.blocks | where: 'type', 'review'
+  assign start = 'all'
+  for st in stages
+    if st.settings.start
+      assign start = forloop.index0
+    endif
+  endfor
+  assign total = s.n5 | plus: s.n4 | plus: s.n3 | plus: s.n2 | plus: s.n1
+  assign total_safe = total | at_least: 1
+  assign counts = '5,4,3,2,1' | split: ','
+-%}
+{%- capture blko_body -%}
+  <blko-reviews-31 class="breviews31__app" data-start="{{ start }}" data-one="{{ s.one | escape }}" data-many="{{ s.many | escape }}" data-at="{{ s.at | escape }}" data-stars="{{ s.stars_word | escape }}" data-more="{{ s.more_label | escape }}">
+    <div class="breviews31__top">
+      <header class="breviews31__head">
+        <h2 class="breviews31__title">{{ s.heading | escape }}</h2>
+        {%- if s.text != blank -%}<p class="bx-body bx-muted breviews31__lead">{{ s.text | escape }}</p>{%- endif -%}
+      </header>
+      <div class="breviews31__score">
+        <div class="breviews31__sum">
+          <span class="breviews31__num">{{ s.score }}</span>
+          <span class="breviews31__sumr">
+            {%- assign stars_label = 'blko.reviews_31.stars' | t: count: s.score -%}
+            {%- render 'blko-reviews-31-stars', value: s.score, label: stars_label -%}
+            <span class="bx-small bx-muted">{{ total }} {{ s.many | escape }}</span>
+          </span>
+        </div>
+        <div aria-hidden="true" class="breviews31__bar">
+          {%- for c in counts -%}
+            {%- assign key = 'n' | append: c -%}
+            {%- assign w = s[key] | times: 100.0 | divided_by: total_safe -%}
+            <span class="breviews31__seg breviews31__t{{ forloop.index }}" data-seg="{{ c }}" style="width:{{ w }}%"></span>
+          {%- endfor -%}
+        </div>
+        <div role="group" aria-label="{{ s.rating_label | escape }}" class="breviews31__chips">
+          {%- for c in counts -%}
+            {%- assign key = 'n' | append: c -%}
+            <button type="button" class="breviews31__chip" aria-pressed="false" data-star="{{ c }}"><span aria-hidden="true" class="breviews31__dot breviews31__t{{ forloop.index }}"></span>{{ c }}★ {{ s[key] }}</button>
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+
+    <div class="breviews31__board">
+      <div class="breviews31__track">
+        <div role="group" aria-label="{{ s.stage_label | escape }}" class="breviews31__thread" style="--n:{{ stages.size | plus: 1 }}">
+          <span aria-hidden="true" class="breviews31__line"></span>
+          <button type="button" class="breviews31__stage" aria-pressed="{% if start == 'all' %}true{% else %}false{% endif %}" data-stage="all">
+            <span class="breviews31__knot">{%- render 'blko-ui-icon', name: 'droplets', size: 16 -%}</span>
+            <span class="bx-small breviews31__sl">{{ s.all_label | escape }}</span>
+            <span class="bx-label bx-muted breviews31__sc">{{ reviews.size }} {{ s.many | escape }}</span>
+          </button>
+          {%- for st in stages -%}
+            {%- assign n = 0 -%}
+            {%- assign me = forloop.index0 -%}
+            {%- for r in reviews -%}
+              {%- assign si = 0 -%}
+              {%- for x in stages -%}{%- if r.settings.washes >= x.settings.min -%}{%- assign si = forloop.index0 -%}{%- endif -%}{%- endfor -%}
+              {%- if si == me -%}{%- assign n = n | plus: 1 -%}{%- endif -%}
+            {%- endfor -%}
+            <button type="button" class="breviews31__stage" aria-pressed="{% if start == me %}true{% else %}false{% endif %}" data-stage="{{ me }}" data-label="{{ st.settings.label | escape }}" {{ st.shopify_attributes }}>
+              <span class="breviews31__knot"><span class="bx-label breviews31__kn">{{ st.settings.knot | escape }}</span></span>
+              <span class="bx-small breviews31__sl">{{ st.settings.label | escape }}</span>
+              <span class="bx-label bx-muted breviews31__sc">{{ n }} {{ s.many | escape }}</span>
+            </button>
+          {%- endfor -%}
+        </div>
+      </div>
+      {%- for st in stages -%}
+        <div class="breviews31__panel" data-panel="{{ forloop.index0 }}"{% unless start == forloop.index0 %} hidden{% endunless %}>
+          <p class="breviews31__say">{{ st.settings.intro | escape }}: {{ st.settings.line | escape }}</p>
+          <dl class="breviews31__meters">
+            {%- assign mk = 'soft,colour,shape' | split: ',' -%}
+            {%- for k in mk -%}
+              {%- assign lk = 'm_' | append: k -%}
+              <div class="breviews31__meter">
+                <dt class="bx-small breviews31__mt"><span>{{ s[lk] | escape }}</span><span class="bx-muted">{{ st.settings[k] }}%</span></dt>
+                <dd class="breviews31__mb"><span style="width:{{ st.settings[k] }}%"></span></dd>
+              </div>
+            {%- endfor -%}
+          </dl>
+        </div>
+      {%- endfor -%}
+      <p class="bx-small bx-muted breviews31__panel breviews31__allp" data-panel="all"{% unless start == 'all' %} hidden{% endunless %}>{{ s.all_text | escape }}</p>
+    </div>
+
+    <div class="breviews31__bar2">
+      <p aria-live="polite" class="bx-small bx-muted" data-count>{{ reviews.size }} {{ s.many | escape }}</p>
+      <label class="bx-small breviews31__sort">
+        {{ s.sort_label | escape }}
+        <span class="bx-select breviews31__sel">
+          <select class="bx-input" data-sort>
+            <option value="washes">{{ s.sort_washes | escape }}</option>
+            <option value="recent">{{ s.sort_recent | escape }}</option>
+            <option value="helpful">{{ s.sort_helpful | escape }}</option>
+          </select>
+          {%- render 'blko-ui-icon', name: 'chevron-down', size: 16 -%}
+        </span>
+      </label>
+    </div>
+
+    <ul class="breviews31__list" data-list>
+      {%- for r in reviews -%}
+        {%- assign rs = r.settings -%}
+        {%- assign si = 0 -%}
+        {%- for x in stages -%}{%- if rs.washes >= x.settings.min -%}{%- assign si = forloop.index0 -%}{%- endif -%}{%- endfor -%}
+        {%- assign has_photo = false -%}
+        {%- if rs.photo != blank or rs.placeholder -%}{%- assign has_photo = true -%}{%- endif -%}
+        <li class="breviews31__card{% if has_photo %} breviews31__card--photo{% endif %}" data-review data-stage="{{ si }}" data-stars="{{ rs.stars }}" data-washes="{{ rs.washes }}" data-order="{{ forloop.index0 }}" data-helpful="{{ rs.helpful }}" {{ r.shopify_attributes }}>
+          {%- if has_photo -%}
+            <div class="breviews31__ph">
+              {%- if rs.photo != blank -%}
+                {{ rs.photo | image_url: width: 800 | image_tag: class: 'breviews31__img', loading: 'lazy', widths: '400, 600, 800', sizes: '(min-width: 768px) 50vw, 100vw', alt: rs.photo.alt }}
+              {%- else -%}
+                {{ 'apparel-1' | placeholder_svg_tag: 'breviews31__img' }}
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+          <div class="breviews31__row">
+            <span class="bx-label breviews31__wash">{{ s.wash_label | escape }} {{ rs.washes }}</span>
+            {%- assign stars_label = 'blko.reviews_31.stars' | t: count: rs.stars -%}
+            {%- render 'blko-reviews-31-stars', value: rs.stars, label: stars_label -%}
+          </div>
+          <h3 class="breviews31__rt">{{ rs.title | escape }}</h3>
+          <p class="bx-body bx-muted breviews31__rb">{{ rs.body | escape }}</p>
+          <ul aria-label="{{ s.care_label | escape }}" class="bx-label breviews31__care">
+            {%- if rs.colour != blank -%}<li>{{ rs.colour | escape }}</li>{%- endif -%}
+            {%- assign care = rs.care | split: ',' -%}
+            {%- for c in care -%}{%- assign cc = c | strip -%}{%- if cc != blank -%}<li>{{ cc | escape }}</li>{%- endif -%}{%- endfor -%}
+          </ul>
+          <div class="breviews31__foot">
+            <span class="bx-small"><span class="breviews31__who">{{ rs.who | escape }}</span> <span class="bx-muted">· {{ rs.place | escape }} · {{ rs.date | escape }}</span></span>
+            <button type="button" class="breviews31__use" aria-pressed="false" data-useful data-n="{{ rs.helpful }}">
+              {%- render 'blko-ui-icon', name: 'check', size: 16, className: 'breviews31__uc' -%}
+              <span>{{ s.useful_label | escape }} · <span data-un>{{ rs.helpful }}</span></span>
+            </button>
+          </div>
+        </li>
+      {%- endfor -%}
+      <li class="breviews31__card breviews31__empty" data-empty hidden>
+        <p class="breviews31__et">{{ s.empty_title | escape }}</p>
+        <button type="button" class="bx-small breviews31__reset" data-reset>{{ s.empty_reset | escape }}</button>
+      </li>
+    </ul>
+
+    <div class="breviews31__morew" data-morew hidden>
+      <button type="button" class="breviews31__more" data-moreb>{{ s.more_label | escape }}</button>
+    </div>
+  </blko-reviews-31>
+{%- endcapture -%}
+{%- render 'blko-ui-section', surface: 'soft-2', bleed: true, label: label, className: blko_class, style: blko_style, inner: 'bx-pad breviews31__in', children: blko_body -%}
+
+{% schema %}
+{
+  "name": "Reviews, wash thread",
+  "tag": "div",
+  "class": "blko-reviews-31-wrap",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "How it wears after twenty washes"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "Linen changes as you live in it. Pick a point on the thread to read reviews from people that far in."
+    },
+    {
+      "type": "header",
+      "content": "Score"
+    },
+    {
+      "type": "range",
+      "id": "score",
+      "label": "Average score",
+      "min": 1,
+      "max": 5,
+      "step": 0.1,
+      "default": 4.8
+    },
+    {
+      "type": "number",
+      "id": "n5",
+      "label": "5-star reviews",
+      "default": 268
+    },
+    {
+      "type": "number",
+      "id": "n4",
+      "label": "4-star reviews",
+      "default": 52
+    },
+    {
+      "type": "number",
+      "id": "n3",
+      "label": "3-star reviews",
+      "default": 14
+    },
+    {
+      "type": "number",
+      "id": "n2",
+      "label": "2-star reviews",
+      "default": 5
+    },
+    {
+      "type": "number",
+      "id": "n1",
+      "label": "1-star reviews",
+      "default": 2
+    },
+    {
+      "type": "header",
+      "content": "Labels"
+    },
+    {
+      "type": "text",
+      "id": "rating_label",
+      "label": "Rating filter label",
+      "default": "Filter by rating"
+    },
+    {
+      "type": "text",
+      "id": "stage_label",
+      "label": "Stage filter label",
+      "default": "Filter by number of washes"
+    },
+    {
+      "type": "text",
+      "id": "all_label",
+      "label": "All stages",
+      "default": "All stages"
+    },
+    {
+      "type": "textarea",
+      "id": "all_text",
+      "label": "All stages text",
+      "default": "Every stage, from the first wear to forty washes and beyond. Pick a knot on the thread to see how the shirt changes."
+    },
+    {
+      "type": "text",
+      "id": "m_soft",
+      "label": "Meter 1",
+      "default": "Softness"
+    },
+    {
+      "type": "text",
+      "id": "m_colour",
+      "label": "Meter 2",
+      "default": "Colour held"
+    },
+    {
+      "type": "text",
+      "id": "m_shape",
+      "label": "Meter 3",
+      "default": "Shape held"
+    },
+    {
+      "type": "text",
+      "id": "one",
+      "label": "Review, one",
+      "default": "review"
+    },
+    {
+      "type": "text",
+      "id": "many",
+      "label": "Review, many",
+      "default": "reviews"
+    },
+    {
+      "type": "text",
+      "id": "at",
+      "label": "Word before stage",
+      "default": "at"
+    },
+    {
+      "type": "text",
+      "id": "stars_word",
+      "label": "Word after star count",
+      "default": "stars"
+    },
+    {
+      "type": "text",
+      "id": "sort_label",
+      "label": "Sort label",
+      "default": "Sort by"
+    },
+    {
+      "type": "text",
+      "id": "sort_washes",
+      "label": "Sort, washes",
+      "default": "Most washes"
+    },
+    {
+      "type": "text",
+      "id": "sort_recent",
+      "label": "Sort, newest",
+      "default": "Newest"
+    },
+    {
+      "type": "text",
+      "id": "sort_helpful",
+      "label": "Sort, useful",
+      "default": "Most useful"
+    },
+    {
+      "type": "text",
+      "id": "care_label",
+      "label": "Care list label",
+      "default": "How they care for it"
+    },
+    {
+      "type": "text",
+      "id": "wash_label",
+      "label": "Wash pill prefix",
+      "default": "Wash"
+    },
+    {
+      "type": "text",
+      "id": "useful_label",
+      "label": "Useful button",
+      "default": "Useful"
+    },
+    {
+      "type": "text",
+      "id": "empty_title",
+      "label": "Empty title",
+      "default": "No reviews at this stage with that rating"
+    },
+    {
+      "type": "text",
+      "id": "empty_reset",
+      "label": "Empty reset link",
+      "default": "Show every review"
+    },
+    {
+      "type": "text",
+      "id": "more_label",
+      "label": "Show more label",
+      "default": "Show more reviews"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_source",
+      "label": "Fonts",
+      "options": [
+        {
+          "value": "bundled",
+          "label": "Bundled (EB Garamond + Albert Sans)"
+        },
+        {
+          "value": "picker",
+          "label": "Pick from the font library"
+        },
+        {
+          "value": "theme",
+          "label": "Use the theme's fonts"
+        }
+      ],
+      "default": "bundled"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors and shapes"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, corners, type style",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case…). Other themes: keep the preset."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:blko.linen.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stage",
+      "name": "Stage",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "20 washes"
+        },
+        {
+          "type": "text",
+          "id": "knot",
+          "label": "Knot text",
+          "default": "20"
+        },
+        {
+          "type": "number",
+          "id": "min",
+          "label": "From washes",
+          "default": 20,
+          "info": "Stages go from fewest to most washes."
+        },
+        {
+          "type": "range",
+          "id": "soft",
+          "label": "Meter 1, %",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 90
+        },
+        {
+          "type": "range",
+          "id": "colour",
+          "label": "Meter 2, %",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 90
+        },
+        {
+          "type": "range",
+          "id": "shape",
+          "label": "Meter 3, %",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 90
+        },
+        {
+          "type": "text",
+          "id": "intro",
+          "label": "Lead-in",
+          "default": "At 20 washes"
+        },
+        {
+          "type": "text",
+          "id": "line",
+          "label": "What reviewers say",
+          "default": "Buttery hand, colour mellowed a shade."
+        },
+        {
+          "type": "checkbox",
+          "id": "start",
+          "label": "Selected at start",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "text",
+          "id": "who",
+          "label": "Name",
+          "default": "Odile"
+        },
+        {
+          "type": "text",
+          "id": "place",
+          "label": "Place",
+          "default": "Lisbon"
+        },
+        {
+          "type": "text",
+          "id": "date",
+          "label": "Date",
+          "default": "Oct 19"
+        },
+        {
+          "type": "number",
+          "id": "washes",
+          "label": "Washes",
+          "default": 10
+        },
+        {
+          "type": "range",
+          "id": "stars",
+          "label": "Stars",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Better every summer"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Review",
+          "default": "Soft, easy and it keeps its shape."
+        },
+        {
+          "type": "text",
+          "id": "colour",
+          "label": "Colour",
+          "default": "Natural"
+        },
+        {
+          "type": "text",
+          "id": "care",
+          "label": "Care",
+          "default": "Cold wash, Line dried",
+          "info": "Comma separated."
+        },
+        {
+          "type": "number",
+          "id": "helpful",
+          "label": "Useful votes",
+          "default": 0
+        },
+        {
+          "type": "image_picker",
+          "id": "photo",
+          "label": "Photo"
+        },
+        {
+          "type": "checkbox",
+          "id": "placeholder",
+          "label": "Photo slot when empty",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "max_blocks": 30,
+  "presets": [
+    {
+      "name": "Reviews, wash thread",
+      "blocks": [
+        {
+          "type": "stage",
+          "settings": {
+            "label": "New",
+            "knot": "0",
+            "min": 0,
+            "soft": 48,
+            "colour": 100,
+            "shape": 98,
+            "intro": "At the first wear",
+            "line": "Crisp, a little stiff, slubby texture you can see."
+          }
+        },
+        {
+          "type": "stage",
+          "settings": {
+            "label": "5 washes",
+            "knot": "5",
+            "min": 5,
+            "soft": 66,
+            "colour": 99,
+            "shape": 97,
+            "intro": "At 5 washes",
+            "line": "Stiffness gone; the collar starts to roll on its own."
+          }
+        },
+        {
+          "type": "stage",
+          "settings": {
+            "label": "10 washes",
+            "knot": "10",
+            "min": 10,
+            "soft": 79,
+            "colour": 97,
+            "shape": 96,
+            "intro": "At 10 washes",
+            "line": "Soft against the skin, creases look lived-in, not messy."
+          }
+        },
+        {
+          "type": "stage",
+          "settings": {
+            "label": "20 washes",
+            "knot": "20",
+            "min": 20,
+            "soft": 91,
+            "colour": 94,
+            "shape": 95,
+            "intro": "At 20 washes",
+            "line": "Buttery hand, colour mellowed a shade, seams still flat.",
+            "start": true
+          }
+        },
+        {
+          "type": "stage",
+          "settings": {
+            "label": "40+ washes",
+            "knot": "40+",
+            "min": 40,
+            "soft": 97,
+            "colour": 88,
+            "shape": 92,
+            "intro": "At 40+ washes",
+            "line": "Like an old favourite; cuffs show gentle wear, no holes."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "who": "Odile",
+            "place": "Lisbon",
+            "washes": 23,
+            "care": "Cold wash, Line dried",
+            "colour": "Natural",
+            "stars": 5,
+            "date": "Oct 19",
+            "title": "Better every summer",
+            "body": "Two summers in and it's the softest thing I own. The natural has gone a touch paler, which I prefer. No pilling, every seam intact.",
+            "helpful": 73,
+            "placeholder": true
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "who": "Ben",
+            "place": "Bristol",
+            "washes": 2,
+            "care": "30°C, Tumble low",
+            "colour": "Olive",
+            "stars": 4,
+            "date": "Oct 14",
+            "title": "Stiff at first, as promised",
+            "body": "Out of the parcel it felt like a sail. After one wash it relaxed a lot. Shrank about 1 cm in length on a low tumble.",
+            "helpful": 21
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "who": "Rania",
+            "place": "Marseille",
+            "washes": 41,
+            "care": "Cold wash, Line dried, Never ironed",
+            "colour": "Sea salt",
+            "stars": 5,
+            "date": "Oct 08",
+            "title": "Forty-odd washes, still my holiday shirt",
+            "body": "Worn over swimsuits, to dinners, on planes. The cuffs have a soft fuzz now. Colour held better than any cotton I've had.",
+            "helpful": 58
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "who": "Tom",
+            "place": "Leeds",
+            "washes": 11,
+            "care": "40°C, Line dried",
+            "colour": "Natural",
+            "stars": 5,
+            "date": "Oct 01",
+            "title": "Boxy in the right way",
+            "body": "Ten washes and it hangs better than new. Collar rolls nicely. I size up for a looser beach fit.",
+            "helpful": 16
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "who": "Mei",
+            "place": "Sydney",
+            "washes": 20,
+            "care": "Cold wash, Line dried",
+            "colour": "Olive",
+            "stars": 4,
+            "date": "Sep 23",
+            "title": "Olive fades, gently",
+            "body": "Twenty washes in strong sun and the olive is a shade softer along the shoulders. Fabric is lovely. Dry it inside out.",
+            "helpful": 34
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "who": "Jonas",
+            "place": "Hamburg",
+            "washes": 6,
+            "care": "30°C, Line dried",
+            "colour": "Sea salt",
+            "stars": 5,
+            "date": "Sep 16",
+            "title": "The texture is the best part",
+            "body": "You can see the slub in the weave. After a few washes it creases into soft lines rather than sharp ones.",
+            "helpful": 9
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "who": "Ana",
+            "place": "Valencia",
+            "washes": 28,
+            "care": "Cold wash, Line dried",
+            "colour": "Natural",
+            "stars": 3,
+            "date": "Sep 09",
+            "title": "One button came loose",
+            "body": "Fabric has aged beautifully but a coconut button worked free around wash twenty-five. Easy to sew back; a spare was in the bag.",
+            "helpful": 27
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "who": "Priya",
+            "place": "Goa",
+            "washes": 33,
+            "care": "Cold wash, Shade dried",
+            "colour": "Sea salt",
+            "stars": 5,
+            "date": "Sep 01",
+            "title": "Wears like a second skin in the heat",
+            "body": "Thirty-odd washes through a monsoon season. It dries in an hour on the line and never smells musty. The pale blue is barely faded.",
+            "helpful": 19
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

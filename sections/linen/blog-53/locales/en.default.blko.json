@@ -1,0 +1,15 @@
+{
+  "blko": {
+    "blog_53": {
+      "label": "Field notes",
+      "newer": "Newer stories",
+      "next": "Next story",
+      "of": "Story [n] of [total]",
+      "older": "Older stories",
+      "pages": "Story pages",
+      "prev": "Previous story",
+      "stories": "All stories",
+      "story": "Story [n]"
+    }
+  }
+}

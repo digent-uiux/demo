@@ -1,0 +1,113 @@
+[
+  {
+    "page": "home",
+    "title": "Linen \u2014 Home",
+    "sectionIds": [
+      "hero-57",
+      "text-scroll-13",
+      "featured-products-49",
+      "testimonial-40",
+      "scroll-images-09",
+      "featured-products-44",
+      "newsletter-52"
+    ]
+  },
+  {
+    "page": "collection",
+    "title": "Shop",
+    "sectionIds": [
+      "collection-banner-86",
+      "collection-grid-34"
+    ]
+  },
+  {
+    "page": "product",
+    "title": "Product",
+    "sectionIds": [
+      "product-detail-27",
+      "reviews-31"
+    ]
+  },
+  {
+    "page": "cart",
+    "title": "Your cart",
+    "sectionIds": [
+      "cart-page-13"
+    ]
+  },
+  {
+    "page": "search",
+    "title": "Search",
+    "sectionIds": [
+      "search-results-11"
+    ]
+  },
+  {
+    "page": "blog",
+    "title": "Journal",
+    "sectionIds": [
+      "collection-banner-58",
+      "blog-53",
+      "newsletter-09"
+    ]
+  },
+  {
+    "page": "article",
+    "title": "Article",
+    "sectionIds": [
+      "article-22",
+      "blog-80"
+    ]
+  },
+  {
+    "page": "404",
+    "title": "Page not found",
+    "sectionIds": [
+      "not-found-23",
+      "collection-list-55"
+    ]
+  },
+  {
+    "page": "about",
+    "title": "About",
+    "sectionIds": [
+      "page-header-54",
+      "image-with-text-06",
+      "product-story-16",
+      "icon-list-35",
+      "counters-03",
+      "team-21"
+    ]
+  },
+  {
+    "page": "contact",
+    "title": "Contact",
+    "sectionIds": [
+      "page-header-55",
+      "contact-23"
+    ]
+  },
+  {
+    "page": "faq",
+    "title": "FAQ",
+    "sectionIds": [
+      "page-header-56",
+      "faq-48",
+      "contact-54"
+    ]
+  },
+  {
+    "page": "account-login",
+    "title": "Sign in",
+    "sectionIds": [
+      "login-21"
+    ]
+  },
+  {
+    "page": "account",
+    "title": "Your account",
+    "sectionIds": [
+      "account-26"
+    ]
+  }
+]

@@ -1,0 +1,35 @@
+{
+  "blko": {
+    "header": {
+      "account": "Account",
+      "cart_count": {
+        "one": "Bag, {{ count }} item",
+        "other": "Bag, {{ count }} items"
+      }
+    },
+    "header_38": {
+      "account": "Account",
+      "bag": {
+        "one": "Bag, {{ count }} item",
+        "other": "Bag, {{ count }} items"
+      },
+      "close_menu": "Close menu",
+      "home": "home",
+      "main": "Main",
+      "menu": "Menu",
+      "open_menu": "Open menu",
+      "pieces_in": "{{ count }} pieces in {{ cloth }}",
+      "search": "Search",
+      "search_store": "Search {{ store }}"
+    },
+    "linen": {
+      "country": "Country / region",
+      "language": "Language",
+      "localization_update": "Update",
+      "search_count": "Suggested pieces: {{ count }}",
+      "search_error": "Suggestions could not load. Use Search to see all results.",
+      "search_loading": "Finding pieces…",
+      "search_suggestions": "Suggested pieces"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "blko": {
+    "reviews_31": {
+      "label": "Reviews",
+      "stars": "{{ count }} out of 5 stars"
+    }
+  }
+}

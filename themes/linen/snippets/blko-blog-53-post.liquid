@@ -1,0 +1,24 @@
+{%- comment -%} One story. mode: card | item. n (0-based), topic, title, dek, mins, image, alt, url, s. {%- endcomment -%}
+{%- assign read = s.read_label | replace: '[n]', mins -%}
+{%- if mode == 'item' -%}
+  <li class="bblog53__li">
+    <button type="button" class="bblog53__ib" data-go="{{ n }}"{% if n == 0 %} aria-current="true"{% endif %}>
+      <span class="bx-label bblog53__num">{% if n < 9 %}0{% endif %}{{ n | plus: 1 }}</span>
+      <span class="bblog53__it">{{ title | escape }}</span>
+      <span class="bx-label bblog53__num">{{ s.min_label | replace: '[n]', mins | escape }}</span>
+    </button>
+  </li>
+{%- else -%}
+  <article class="bblog53__card" data-card="{{ n }}"{% if n > 0 %} aria-hidden="true"{% endif %} style="--d:{{ n }}"{% if n > 2 %} hidden{% endif %}>
+    {%- if image != blank -%}
+      {{ image | image_url: width: 800 | image_tag: class: 'bblog53__img', draggable: 'false', loading: 'lazy', widths: '400, 600, 800', sizes: '(min-width: 768px) 416px, 100vw', alt: alt }}
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'bblog53__img' }}
+    {%- endif -%}
+    <div class="bblog53__cb">
+      <p class="bx-label bx-muted bblog53__ct"><span>{{ topic | escape }}</span><span class="bblog53__num">{{ read | escape }}</span></p>
+      <h2 class="bblog53__ch"><a href="{{ url }}"{% if n > 0 %} tabindex="-1"{% endif %}>{{ title | escape }}</a></h2>
+      {%- if dek != blank -%}<p class="bx-small bx-muted bblog53__cd">{{ dek | escape }}</p>{%- endif -%}
+    </div>
+  </article>
+{%- endif -%}

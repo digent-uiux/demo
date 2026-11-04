@@ -1,0 +1,148 @@
+{
+  "globals": {
+    "product": {
+      "id": 17,
+      "title": "Washed linen shirt",
+      "url": "/products/shirt",
+      "description": "<p>Soft oat linen, cut for everyday wear.</p>",
+      "has_only_default_variant": false,
+      "requires_selling_plan": false,
+      "selected_or_first_available_variant": {
+        "id": 1702,
+        "title": "Oat / M",
+        "options": [
+          "Oat",
+          "M"
+        ],
+        "price": 17550,
+        "compare_at_price": 20000,
+        "available": true,
+        "quantity_rule": {
+          "min": 2,
+          "increment": 2,
+          "max": 8
+        },
+        "selling_plan_allocations": [
+          {
+            "selling_plan": {
+              "id": 51,
+              "name": "Every month"
+            },
+            "price": 12345,
+            "compare_at_price": 17550
+          }
+        ],
+        "featured_media": {
+          "src": "file:///tmp/linen-product-oat.svg",
+          "alt": "oat catalog media"
+        }
+      },
+      "variants": [
+        {
+          "id": 1702,
+          "title": "Oat / M",
+          "options": [
+            "Oat",
+            "M"
+          ],
+          "price": 17550,
+          "compare_at_price": 20000,
+          "available": true,
+          "quantity_rule": {
+            "min": 2,
+            "increment": 2,
+            "max": 8
+          },
+          "selling_plan_allocations": [
+            {
+              "selling_plan": {
+                "id": 51,
+                "name": "Every month"
+              },
+              "price": 12345,
+              "compare_at_price": 17550
+            }
+          ],
+          "featured_media": {
+            "src": "file:///tmp/linen-product-oat.svg",
+            "alt": "oat catalog media"
+          }
+        },
+        {
+          "id": 1703,
+          "title": "Black / M",
+          "options": [
+            "Black",
+            "M"
+          ],
+          "price": 18000,
+          "compare_at_price": 20000,
+          "available": true,
+          "quantity_rule": {
+            "min": 2,
+            "increment": 2,
+            "max": 8
+          },
+          "selling_plan_allocations": [],
+          "featured_media": {
+            "src": "file:///tmp/linen-product-black.svg",
+            "alt": "black catalog media"
+          }
+        },
+        {
+          "id": 1704,
+          "title": "Oat / L",
+          "options": [
+            "Oat",
+            "L"
+          ],
+          "price": 19000,
+          "compare_at_price": 20000,
+          "available": false,
+          "quantity_rule": {
+            "min": 2,
+            "increment": 2,
+            "max": 8
+          },
+          "selling_plan_allocations": []
+        }
+      ],
+      "options_with_values": [
+        {
+          "name": "Colour",
+          "values": [
+            "Oat",
+            "Black"
+          ]
+        },
+        {
+          "name": "Size",
+          "values": [
+            "M",
+            "L"
+          ]
+        }
+      ],
+      "selling_plan_groups": [
+        {
+          "name": "Recurring linen",
+          "selling_plans": [
+            {
+              "id": 51,
+              "name": "Every month"
+            }
+          ]
+        }
+      ],
+      "featured_media": {
+        "src": "file:///tmp/linen-product-cloth.svg",
+        "alt": "cloth catalog media"
+      }
+    },
+    "request": {
+      "host": "linen.example",
+      "page_type": "product",
+      "design_mode": false
+    }
+  }
+}

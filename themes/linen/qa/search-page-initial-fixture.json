@@ -1,0 +1,33 @@
+{
+  "globals": {
+    "request": {
+      "host": "linen.example",
+      "design_mode": false
+    },
+    "search": {
+      "performed": false,
+      "results_count": 0,
+      "terms": "linen",
+      "results": []
+    }
+  },
+  "paginate": {
+    "current_page": 1,
+    "pages": 2,
+    "items": 30,
+    "parts": [
+      {
+        "title": 1,
+        "is_link": false
+      },
+      {
+        "title": 2,
+        "is_link": true,
+        "url": "/search?q=linen&type=product&page=2"
+      }
+    ],
+    "next": {
+      "url": "/search?q=linen&type=product&page=2"
+    }
+  }
+}

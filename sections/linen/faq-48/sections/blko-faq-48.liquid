@@ -1,0 +1,563 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-2'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-faq-48.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture blko_class -%}bfaq48{% if s.tokens == 'theme' %} bfaq48--theme{% endif %}{% if blko_sid != 'scheme-2' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}{%- endcapture -%}
+<script src="{{ 'blko-faq-48.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign label = s.heading | strip_html
+  assign total = 0
+  for b in section.blocks
+    if b.type == 'question'
+      assign total = total | plus: 1
+    endif
+  endfor
+  assign kicker = s.kicker | replace: '[count]', total
+  assign thanks = s.thanks | escape
+  assign help_href = s.help_link | default: routes.root_url
+  assign first_done = false
+  assign in_group = false
+-%}
+<blko-faq-48>
+{%- capture blko_body -%}
+    <header class="bfaq48__head">
+      <div class="bfaq48__ht">
+        {%- if s.kicker != blank -%}<p class="bx-label bx-muted">{{ kicker | escape }}</p>{%- endif -%}
+        <h2 class="bfaq48__title">{{ s.heading | escape }}</h2>
+      </div>
+      {%- if s.text != blank -%}<p class="bx-body bx-muted bfaq48__text">{{ s.text | escape }}</p>{%- endif -%}
+    </header>
+    <div class="bfaq48__board">
+      {%- for b in section.blocks -%}
+        {%- if b.type != 'question' and in_group -%}</ul></section>{%- assign in_group = false -%}{%- endif -%}
+        {%- case b.type -%}
+          {%- when 'group' -%}
+            {%- liquid
+              assign n = 0
+              assign start = forloop.index
+              for q in section.blocks offset: start
+                if q.type != 'question'
+                  break
+                endif
+                assign n = n | plus: 1
+              endfor
+              assign hid = section.id | append: '-' | append: b.id
+              assign in_group = true
+            -%}
+            <section aria-labelledby="{{ hid }}" class="bfaq48__card bfaq48__card--{{ b.settings.tone }}" {{ b.shopify_attributes }}>
+              <p class="bx-label bx-muted">{{ b.settings.tag | escape }} · {{ 'blko.faq_48.questions' | t: count: n }}</p>
+              <h2 id="{{ hid }}" class="bfaq48__ctitle">{{ b.settings.title | escape }}</h2>
+              <ul class="bfaq48__qs">
+          {%- when 'question' -%}
+            {%- liquid
+              assign aid = section.id | append: '-a-' | append: b.id
+              assign open = false
+              if s.open_first and first_done == false
+                assign open = true
+              endif
+              assign first_done = true
+            -%}
+            {%- unless in_group -%}<section class="bfaq48__card bfaq48__card--bg"><ul class="bfaq48__qs">{%- assign in_group = true -%}{%- endunless -%}
+            <li class="bfaq48__q"{% if b.settings.anchor != blank %} id="{{ b.settings.anchor | escape }}"{% endif %} {{ b.shopify_attributes }}>
+              <h3>
+                <button type="button" class="bfaq48__qbtn" aria-expanded="{{ open }}" aria-controls="{{ aid }}" data-q>
+                  <span class="bfaq48__qt">{{ b.settings.question | escape }}</span>
+                  {%- render 'blko-ui-icon', name: 'chevron-down', size: 16, className: 'bfaq48__chev' -%}
+                </button>
+              </h3>
+              <div id="{{ aid }}" class="bfaq48__a"{% unless open %} hidden{% endunless %}>
+                <div class="bx-small bfaq48__rte">{{ b.settings.answer }}</div>
+                <div class="bfaq48__vote" aria-live="polite" data-vote>
+                  <span class="bx-muted">{{ s.vote_q | escape }}</span>
+                  <button type="button" class="bfaq48__vbtn" data-yes>{%- render 'blko-ui-icon', name: 'thumbs-up', size: 14 -%}{{ s.vote_yes | escape }}</button>
+                  <button type="button" class="bfaq48__vbtn" data-no>{%- render 'blko-ui-icon', name: 'thumbs-down', size: 14 -%}{{ s.vote_no | escape }}</button>
+                </div>
+              </div>
+            </li>
+          {%- when 'photo' -%}
+            <figure class="bfaq48__card bfaq48__photo" {{ b.shopify_attributes }}>
+              {%- if b.settings.image != blank -%}
+                {{ b.settings.image | image_url: width: 900 | image_tag: class: 'bfaq48__img', loading: 'lazy', widths: '400, 600, 900', sizes: '(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw', alt: b.settings.image.alt }}
+              {%- else -%}
+                {{ 'product-2' | placeholder_svg_tag: 'bfaq48__img' }}
+              {%- endif -%}
+              {%- if b.settings.caption != blank -%}<figcaption class="bx-small bx-muted bfaq48__cap">{{ b.settings.caption | escape }}</figcaption>{%- endif -%}
+            </figure>
+          {%- when 'note' -%}
+            <div class="bfaq48__card bfaq48__note" {{ b.shopify_attributes }}>
+              <p class="bfaq48__ntitle">{{ b.settings.title | escape }}</p>
+              <p class="bx-small bfaq48__ntext">{{ b.settings.text | escape }}</p>
+              {%- if b.settings.button_label != blank -%}
+                {%- assign href = b.settings.link | default: routes.root_url -%}
+                {%- assign lbl = b.settings.button_label | escape -%}
+                {%- render 'blko-ui-button', href: href, variant: 'inverse', className: 'bfaq48__nbtn', children: lbl -%}
+              {%- endif -%}
+            </div>
+        {%- endcase -%}
+      {%- endfor -%}
+      {%- if in_group -%}</ul></section>{%- endif -%}
+    </div>
+    <template data-thanks><span class="bx-muted">{{ thanks }}</span></template>
+    <template data-sorry><span class="bx-muted">{{ s.sorry | escape }} <a href="{{ help_href }}" class="bfaq48__sorrylink">{{ s.sorry_link | escape }}</a> {{ s.sorry_after | escape }}</span></template>
+{%- endcapture -%}
+{%- render 'blko-ui-section', surface: 'alt', bleed: true, label: label, className: blko_class, style: blko_style, inner: 'bx-pad bfaq48__wrap', children: blko_body -%}
+</blko-faq-48>
+
+{% schema %}
+{
+  "name": "FAQ, masonry board",
+  "tag": "div",
+  "class": "blko-faq-48-wrap",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Small line",
+      "default": "Help \u00b7 [count] answers on size, returns and care",
+      "info": "[count] becomes the number of questions."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Questions, kindly answered"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Linen asks a little more of you than cotton, and gives a lot back. Here's what people ask us before and after their first piece."
+    },
+    {
+      "type": "checkbox",
+      "id": "open_first",
+      "label": "Open the first answer",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Helpful vote"
+    },
+    {
+      "type": "text",
+      "id": "vote_q",
+      "label": "Question",
+      "default": "Was this helpful?"
+    },
+    {
+      "type": "text",
+      "id": "vote_yes",
+      "label": "Yes label",
+      "default": "Yes"
+    },
+    {
+      "type": "text",
+      "id": "vote_no",
+      "label": "No label",
+      "default": "No"
+    },
+    {
+      "type": "text",
+      "id": "thanks",
+      "label": "After yes",
+      "default": "Thank you, glad it helped."
+    },
+    {
+      "type": "text",
+      "id": "sorry",
+      "label": "After no",
+      "default": "Sorry about that."
+    },
+    {
+      "type": "text",
+      "id": "sorry_link",
+      "label": "After no, link label",
+      "default": "Ask a stylist"
+    },
+    {
+      "type": "text",
+      "id": "sorry_after",
+      "label": "After no, last word",
+      "default": "instead."
+    },
+    {
+      "type": "url",
+      "id": "help_link",
+      "label": "Stylist link"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_source",
+      "label": "Fonts",
+      "options": [
+        {
+          "value": "bundled",
+          "label": "Bundled (EB Garamond + Albert Sans)"
+        },
+        {
+          "value": "picker",
+          "label": "Pick from the font library"
+        },
+        {
+          "value": "theme",
+          "label": "Use the theme's fonts"
+        }
+      ],
+      "default": "bundled"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors and shapes"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, corners, type style",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case\u2026). Other themes: keep the preset."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:blko.linen.color_scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "group",
+      "name": "Card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "tag",
+          "label": "Tag",
+          "default": "Size"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Finding your fit"
+        },
+        {
+          "type": "select",
+          "id": "tone",
+          "label": "Tint",
+          "default": "bg",
+          "options": [
+            {
+              "value": "bg",
+              "label": "Plain"
+            },
+            {
+              "value": "pop-4",
+              "label": "Sky"
+            },
+            {
+              "value": "pop-2",
+              "label": "Dusty rose"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "content": "Add Question blocks right after this card."
+        }
+      ]
+    },
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Do your linen pieces run large?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Most are cut relaxed on purpose, with room to move in the heat.</p>"
+        },
+        {
+          "type": "text",
+          "id": "anchor",
+          "label": "Anchor id",
+          "info": "Lets other sections link straight to this answer."
+        }
+      ]
+    },
+    {
+      "type": "photo",
+      "name": "Photo card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Caption",
+          "default": "The band-collar shirt, size M, after twelve washes."
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "name": "Fit note card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Not sure about a size?"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Send us your height and usual size and a stylist replies with how it will fall on you, usually the same day."
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "Ask a stylist"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ, masonry board",
+      "blocks": [
+        {
+          "type": "group",
+          "settings": {
+            "tag": "Size",
+            "title": "Finding your fit",
+            "tone": "bg"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Do your linen pieces run large?",
+            "answer": "<p>Most are cut relaxed on purpose, with room to move in the heat. If you like a closer line, size down; each product page says how the model wears it.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "I'm between two sizes. Which one?",
+            "answer": "<p>Take the smaller one in dresses and shirts, the larger one in trousers. Linen gives a little across the hips after a few wears but never shrinks back.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Where do I find the measurements?",
+            "answer": "<p>Under the size selector on every product: bust, waist, hip and length for each size, measured flat on the finished garment.</p>"
+          }
+        },
+        {
+          "type": "photo",
+          "settings": {
+            "caption": "The band-collar shirt, size M, after twelve washes."
+          }
+        },
+        {
+          "type": "group",
+          "settings": {
+            "tag": "Size",
+            "title": "Lengths and petite",
+            "tone": "pop-4"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Do you make petite or tall lengths?",
+            "answer": "<p>Trousers come in short (74 cm inside leg), regular (79 cm) and long (84 cm). Dresses are one length; free hemming is offered on the product page.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "How long is the midi dress on me?",
+            "answer": "<p>It ends 20 cm below the knee on someone 168 cm tall. Every 5 cm of height moves it about 3 cm.</p>"
+          }
+        },
+        {
+          "type": "group",
+          "settings": {
+            "tag": "Returns",
+            "title": "Sending it back",
+            "tone": "pop-2"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "How long do I have to return something?",
+            "answer": "<p>Thirty days from delivery, unworn and unwashed, with the paper tag still on. Returns in the US are free with the label in your parcel.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Can I return something I've washed?",
+            "answer": "<p>Not for a refund, but if it shrank or lost its shape after one wash on our care instructions, we replace it.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "When will I get my money back?",
+            "answer": "<p>Within three working days of your parcel reaching our studio. You get an email the moment we scan it.</p>"
+          }
+        },
+        {
+          "type": "note",
+          "settings": {}
+        },
+        {
+          "type": "group",
+          "settings": {
+            "tag": "Returns",
+            "title": "Exchanges",
+            "tone": "bg"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Can I swap for another size?",
+            "answer": "<p>Yes, free both ways. Start the swap in your account and we ship the new size as soon as yours is on its way back.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "What if the colour I want has sold out?",
+            "answer": "<p>Pick \u201cnotify me\u201d on the product page. We cut small runs every six weeks and email you first when it's back.</p>"
+          }
+        },
+        {
+          "type": "group",
+          "settings": {
+            "tag": "Washing",
+            "title": "Washing linen",
+            "tone": "pop-4"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Can I machine wash it?",
+            "answer": "<p>Yes, at 30\u00b0C on a gentle cycle, inside out, with a mild liquid detergent. Skip fabric softener: it coats the fibres and stops linen softening on its own.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Can it go in the tumble dryer?",
+            "answer": "<p>Better not. Dry it on a line or a hanger in the shade; ten minutes in the dryer on low before hanging is the most we'd risk.</p>"
+          }
+        },
+        {
+          "type": "group",
+          "settings": {
+            "tag": "Washing",
+            "title": "Creases and softness",
+            "tone": "pop-2"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "How do I deal with the creases?",
+            "answer": "<p>Hang it while still damp and smooth the seams by hand. If you iron, do it slightly damp on a medium setting, inside out. A few soft creases are part of the look.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Will it get softer?",
+            "answer": "<p>Yes. Every piece is stone-washed before it reaches you, and it keeps softening for the first ten or so washes.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

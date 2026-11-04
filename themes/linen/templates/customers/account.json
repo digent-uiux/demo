@@ -1,0 +1,65 @@
+{
+  "sections": {
+    "account-26": {
+      "type": "blko-account-26",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "piece-1": {
+          "type": "piece",
+          "settings": {
+            "name": "Washed linen midi dress",
+            "colour": "Clay",
+            "bought": "May 2025",
+            "wears": 46,
+            "care": "Wash cool, 30°\nDry on the line, in shade\nIron damp, medium\nNo tumble dryer",
+            "life": "May 2025 | Bought, size S\nAug 2025 | Hem taken up 3 cm, free\nJun 2026 | Worn to 4 weddings"
+          }
+        },
+        "piece-2": {
+          "type": "piece",
+          "settings": {
+            "name": "Relaxed linen shirt",
+            "colour": "Oat",
+            "bought": "Mar 2024",
+            "wears": 88,
+            "care": "Wash cool, 30°\nDry flat or line\nIron while damp\nSoftens with every wash",
+            "life": "Mar 2024 | Bought, size M\nJan 2025 | Two buttons replaced\nSep 2026 | Elbow darned, invisible"
+          }
+        },
+        "piece-3": {
+          "type": "piece",
+          "settings": {
+            "name": "Linen house robe",
+            "colour": "Sand",
+            "bought": "Dec 2025",
+            "wears": 120,
+            "care": "Wash warm, 40°\nLine dry\nNo iron needed\nWash with like colours",
+            "life": "Dec 2025 | Bought, one size\nOct 2026 | Still going strong"
+          }
+        },
+        "piece-4": {
+          "type": "piece",
+          "settings": {
+            "name": "Resort shirt and short set",
+            "colour": "Sage",
+            "bought": "Jun 2026",
+            "wears": 14,
+            "care": "Wash cool, 30°\nDry in shade\nIron medium\nWash inside out",
+            "life": "Jun 2026 | Bought, size S"
+          }
+        }
+      },
+      "block_order": [
+        "piece-1",
+        "piece-2",
+        "piece-3",
+        "piece-4"
+      ]
+    }
+  },
+  "order": [
+    "account-26"
+  ]
+}

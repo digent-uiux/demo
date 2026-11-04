@@ -1,0 +1,76 @@
+{
+  "sections": {
+    "not-found-23": {
+      "type": "blko-not-found-23",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "stop-1": {
+          "type": "stop",
+          "settings": {
+            "name": "Linen dresses"
+          }
+        },
+        "stop-2": {
+          "type": "stop",
+          "settings": {
+            "name": "Shirts and tops"
+          }
+        },
+        "stop-3": {
+          "type": "stop",
+          "settings": {
+            "name": "Resort edit"
+          }
+        }
+      },
+      "block_order": [
+        "stop-1",
+        "stop-2",
+        "stop-3"
+      ]
+    },
+    "collection-list-55": {
+      "type": "blko-collection-list-55",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "link-1": {
+          "type": "link",
+          "settings": {
+            "demo_title": "Dresses",
+            "cloth": "Slips and shifts in hemp-linen",
+            "demo_count": 31
+          }
+        },
+        "link-2": {
+          "type": "link",
+          "settings": {
+            "demo_title": "Trousers & shorts",
+            "cloth": "Drawstring waists, ramie blends",
+            "demo_count": 22
+          }
+        },
+        "link-3": {
+          "type": "link",
+          "settings": {
+            "demo_title": "Robes & loungewear",
+            "cloth": "Gauze cotton for slow mornings",
+            "demo_count": 14
+          }
+        }
+      },
+      "block_order": [
+        "link-1",
+        "link-2",
+        "link-3"
+      ]
+    }
+  },
+  "order": [
+    "not-found-23",
+    "collection-list-55"
+  ]
+}

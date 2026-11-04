@@ -1,0 +1,43 @@
+{
+  "blko": {
+    "cart": {
+      "note": "Order note",
+      "update": "Update bag"
+    },
+    "cart_page_13": {
+      "aside": "Gift wrap and summary",
+      "label": "Your bag",
+      "photo_alt": "[name] in [colour]",
+      "quantity": "[name] quantity",
+      "size_word": "Size",
+      "sold_out": ", sold out"
+    },
+    "linen": {
+      "cart_error": "Your bag could not be updated. Please try again.",
+      "view_bag": "View bag"
+    }
+  },
+  "blko_ui": {
+    "field": {
+      "optional": "(optional)"
+    },
+    "payment": {
+      "bank": "Bank",
+      "card": "Card",
+      "gift_card": "Gift card",
+      "label": "Payment methods we accept",
+      "pay_later": "Pay later",
+      "wallet": "Wallet"
+    },
+    "price": {
+      "from": "From",
+      "save": "Save",
+      "was": "Was"
+    },
+    "quantity": {
+      "decrease": "Decrease {{ label }}",
+      "increase": "Increase {{ label }}",
+      "label": "Quantity"
+    }
+  }
+}

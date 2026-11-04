@@ -1,0 +1,13 @@
+{
+  "blko": {
+    "contact_23": {
+      "label": "Alterations and repairs",
+      "unit": "Unit"
+    }
+  },
+  "blko_ui": {
+    "field": {
+      "optional": "(optional)"
+    }
+  }
+}

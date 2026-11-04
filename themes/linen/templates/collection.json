@@ -1,0 +1,63 @@
+{
+  "sections": {
+    "collection-banner-86": {
+      "type": "blko-collection-banner-86",
+      "settings": {
+        "tokens": "theme"
+      }
+    },
+    "collection-grid-34": {
+      "type": "blko-collection-grid-34",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "piece-1": {
+          "type": "piece",
+          "settings": {
+            "name": "The collarless linen shirt",
+            "cloth": "Linen",
+            "note": "Short sleeve \u00b7 chalk",
+            "price": 88,
+            "stock": "XS:2, S:4, M:3, L:0, XL:1",
+            "demo_photo": "photo-1713881604560-085594ed2c3d",
+            "compare_price": 110
+          }
+        },
+        "piece-2": {
+          "type": "piece",
+          "settings": {
+            "name": "The button-through linen shirt",
+            "cloth": "Linen",
+            "note": "Short sleeve \u00b7 blue flax",
+            "price": 98,
+            "stock": "XS:0, S:2, M:2, L:3, XL:0",
+            "demo_photo": "photo-1713881842156-3d9ef36418cc",
+            "compare_price": 0
+          }
+        },
+        "piece-3": {
+          "type": "piece",
+          "settings": {
+            "name": "The gathered linen shirt",
+            "cloth": "Linen",
+            "note": "Soft hem \u00b7 natural",
+            "price": 92,
+            "stock": "XS:0, S:0, M:0, L:0, XL:0",
+            "demo_photo": "photo-1713881676551-b16f22ce4719",
+            "compare_price": 0
+          }
+        }
+      },
+      "block_order": [
+        "piece-1",
+        "piece-2",
+        "piece-3"
+      ]
+    }
+  },
+  "order": [
+    "collection-banner-86",
+    "collection-grid-34"
+  ]
+}

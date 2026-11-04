@@ -1,0 +1,659 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-4'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-product-detail-27.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture blko_class -%}bproductdetail27{% if s.tokens == 'theme' %} bproductdetail27--theme{% endif %}{% if blko_sid != 'scheme-4' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}{%- endcapture -%}
+<script src="{{ 'blko-product-detail-27.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-linen-product.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign live = false
+  if product != blank and product.id != blank
+    assign live = true
+  endif
+  assign size_opt = s.size_option | default: 'Size' | downcase
+  if live
+    assign title = product.title
+    assign variant = product.selected_or_first_available_variant
+    assign base = variant.price
+    assign cents = true
+    assign fit = product.metafields.custom.fit_note.value | default: s.fit_note
+    assign cloth = product.metafields.custom.cloth.value | default: s.cloth_text
+    assign media = variant.featured_media | default: product.featured_media
+    assign alt = media.alt | default: product.title
+    assign si = -1
+    for o in product.options_with_values
+      assign oname = o.name | downcase
+      if oname == size_opt
+        assign si = forloop.index0
+        assign sizes = o.values
+      endif
+    endfor
+    if si >= 0
+      assign size = variant.options[si]
+    else
+      assign sizes = '' | split: ','
+    endif
+  else
+    assign title = s.heading
+    assign base = s.price
+    assign cents = false
+    assign fit = s.fit_note
+    assign cloth = s.cloth_text
+    assign media = s.image
+    assign alt = s.image.alt | default: s.heading
+    assign sizes = '' | split: ','
+    assign raw = s.sizes | split: ','
+    for z in raw
+      assign zz = z | strip | split: '~'
+      assign sizes = sizes | concat: zz
+    endfor
+    assign size = s.size_start
+  endif
+  assign label = title
+  if label == blank
+    assign label = 'blko.product_detail_27.label' | t
+  endif
+  assign on_plan = ''
+  assign off = 0
+  assign months = ''
+  assign n_plans = 0
+  capture plan_buttons
+    for b in section.blocks
+      if b.type != 'plan'
+        continue
+      endif
+      assign bs = b.settings
+      assign spid = ''
+      assign p_off = bs.off
+      assign ok = true
+      if live
+        if bs.plan_name == blank
+          if product.requires_selling_plan
+            assign ok = false
+          endif
+          assign p_off = 0
+        else
+          assign ok = false
+          for g in product.selling_plan_groups
+            for sp in g.selling_plans
+              if sp.name == bs.plan_name
+                assign ok = true
+                assign spid = sp.id
+                assign adj = sp.price_adjustments.first
+                if adj.value_type == 'percentage'
+                  assign p_off = adj.value
+                else
+                  assign p_off = 0
+                endif
+              endif
+            endfor
+          endfor
+        endif
+      endif
+      if ok
+        assign n_plans = n_plans | plus: 1
+        assign pressed = false
+        if bs.start and on_plan == ''
+          assign pressed = true
+          assign on_plan = b.id
+          assign off = p_off
+          assign months = bs.months
+        endif
+        assign e_m = bs.months | escape
+        assign e_l = bs.label | escape
+        echo '<button type="button" class="bproductdetail27__pl" aria-pressed="' | append: pressed | append: '" data-plan="' | append: spid | append: '" data-off="' | append: p_off | append: '" data-months="' | append: e_m | append: '" data-label="' | append: e_l | append: '">' | append: e_l | append: '</button>'
+      endif
+    endfor
+  endcapture
+  if on_plan == '' and n_plans > 0
+    for b in section.blocks
+      if b.type == 'plan' and on_plan == ''
+        assign on_plan = b.id
+        assign off = b.settings.off
+        assign months = b.settings.months
+      endif
+    endfor
+  endif
+  assign unit = 100 | minus: off | times: base | divided_by: 100.0
+  if cents
+    assign unit = unit | round
+  endif
+-%}
+{%- capture blko_body -%}
+  <blko-product-detail-27 data-live="{{ live }}" class="bproductdetail27__grid" data-fmt="{% render 'blko-ui-money', amount: 7 %}" data-cents="{{ cents }}" data-base="{{ base }}"
+    data-now="{{ s.now_word | escape }}" data-seasonal="{{ s.seasonal_word | escape }}" data-off-text="{{ s.off_text | escape }}"
+    data-plan-note="{{ s.plan_note | escape }}" data-once-note="{{ s.once_note | escape }}" data-start="{{ s.start_label | escape }}"
+    data-add="{{ s.add_label | escape }}" data-added="{{ s.added_label | escape }}" data-msg="{{ s.added_msg | escape }}">
+    <div class="bproductdetail27__info">
+      {%- if live -%}{% render 'blko-linen-product-form', product: product, section: section %}{%- else -%}
+      <div class="bproductdetail27__ti">
+        <h1 class="bproductdetail27__title">{{ title | escape }}</h1>
+        <p class="bproductdetail27__price">
+          <span class="bproductdetail27__unit" data-unit>{% render 'blko-ui-money', amount: unit, cents: cents %}</span>
+          <s class="bx-small bx-muted bproductdetail27__was" data-was{% if off == 0 %} hidden{% endif %}>{% render 'blko-ui-money', amount: base, cents: cents %}</s>
+          <span class="bx-small" data-off{% if off == 0 %} hidden{% endif %}>{{ s.off_text | replace: '[n]', off | escape }}</span>
+        </p>
+      </div>
+
+      {%- assign product_form_id = 'LinenProduct-' | append: section.id -%}
+      {%- form 'product', product, id: product_form_id, class: 'bproductdetail27__form', data-form: '' -%}
+        {%- if n_plans > 1 -%}
+          <fieldset class="bproductdetail27__plan">
+            <legend class="bx-label bproductdetail27__lg">{{ s.step_plan | escape }}</legend>
+            <div role="group" aria-label="{{ 'blko.product_detail_27.plan' | t }}" class="bproductdetail27__tog">{{ plan_buttons }}</div>
+            <ol aria-label="{{ 'blko.product_detail_27.parcels' | t }}" class="bproductdetail27__parcels" data-parcels>
+              {%- assign ms = months | split: ',' -%}
+              {%- for m in ms -%}
+                {%- assign mm = m | strip -%}
+                {%- assign cname = s.seasonal_word -%}{%- assign chex = '' -%}
+                {%- for b in section.blocks -%}{%- if b.type == 'colourway' and b.settings.month == mm -%}{%- assign cname = b.settings.name -%}{%- assign chex = b.settings.colour -%}{%- endif -%}{%- endfor -%}
+                <li class="bproductdetail27__pc"><span aria-hidden="true" class="bproductdetail27__sw" style="background:{{ chex }}"></span><span class="bproductdetail27__pt"><span class="bx-small bproductdetail27__pm">{% if forloop.first %}{{ s.now_word | escape }}{% else %}{{ mm | escape }}{% endif %}</span><span class="bx-label bx-muted">{{ cname | escape }}</span></span></li>
+              {%- endfor -%}
+            </ol>
+            <p class="bx-small bx-muted bproductdetail27__note">{%- render 'blko-ui-icon', name: 'recycle', size: 16, className: 'bproductdetail27__ic' -%}<span data-plan-note>{% if off > 0 %}{{ s.plan_note | escape }}{% else %}{{ s.once_note | escape }}{% endif %}</span></p>
+            <ul hidden data-colourways>
+              {%- for b in section.blocks -%}{%- if b.type == 'colourway' -%}<li data-month="{{ b.settings.month | escape }}" data-name="{{ b.settings.name | escape }}" data-hex="{{ b.settings.colour }}"></li>{%- endif -%}{%- endfor -%}
+            </ul>
+          </fieldset>
+        {%- endif -%}
+        <input type="hidden" name="selling_plan" value="" data-sp>
+        <input type="hidden" name="id" value="{{ variant.id }}" data-variant>
+
+        {%- if sizes.size > 0 -%}
+          <div class="bproductdetail27__size">
+            <p class="bx-label">{{ s.step_size | escape }} <span class="bx-muted">· <span data-size-now>{{ size | escape }}</span></span></p>
+            <div role="group" aria-label="{{ 'blko.product_detail_27.size' | t }}" class="bproductdetail27__chips" data-blko-ui-options>
+              {%- for z in sizes -%}
+                {%- liquid
+                  assign on = false
+                  if z == size
+                    assign on = true
+                  endif
+                  assign vid = ''
+                  assign vprice = base
+                  assign out = false
+                  if live
+                    assign out = true
+                    for v in product.variants
+                      assign match = true
+                      for ov in v.options
+                        if forloop.index0 == si
+                          if ov != z
+                            assign match = false
+                          endif
+                        elsif ov != variant.options[forloop.index0]
+                          assign match = false
+                        endif
+                      endfor
+                      if match
+                        assign vid = v.id
+                        assign vprice = v.price
+                        if v.available
+                          assign out = false
+                        endif
+                      endif
+                    endfor
+                  endif
+                -%}
+                {%- render 'blko-ui-option', selected: on, soldOut: out, disabled: out, value: z, children: z, className: 'bproductdetail27__chip' -%}
+                <span hidden data-opt="{{ z | escape }}" data-vid="{{ vid }}" data-price="{{ vprice }}"></span>
+              {%- endfor -%}
+            </div>
+            {%- if fit != blank -%}<p class="bx-small bx-muted">{{ fit | escape }}</p>{%- endif -%}
+          </div>
+        {%- endif -%}
+
+        {%- if cloth != blank -%}
+          <p class="bx-small bproductdetail27__cloth"><span class="bproductdetail27__cw">{{ s.cloth_word | escape }}</span> {{ cloth | escape }}</p>
+        {%- endif -%}
+
+        <div class="bproductdetail27__buy">
+          <div class="bproductdetail27__row">
+            {%- render 'blko-ui-quantity', value: 1, max: s.max_qty, name: 'quantity' -%}
+            {%- capture blabel -%}<span data-btn>{% if off > 0 %}{{ s.start_label | escape }}{% else %}{{ s.add_label | escape }}{% endif %} · {% assign t1 = unit %}{% render 'blko-ui-money', amount: t1, cents: cents %}</span>{%- endcapture -%}
+            {%- assign bat = 'data-add' -%}
+            {%- if live and variant.available == false -%}{%- assign bat = 'data-add disabled' -%}{%- endif -%}
+            {%- render 'blko-ui-button', type: 'submit', size: 'lg', shape: 'pill', className: 'bproductdetail27__add', children: blabel, attrs: bat -%}
+          </div>
+          <p aria-live="polite" class="bx-small bx-muted bproductdetail27__msg" data-msg-line></p>
+          {%- if s.delivery != blank -%}<p class="bx-small bproductdetail27__note">{%- render 'blko-ui-icon', name: 'truck', size: 16, className: 'bproductdetail27__ic' -%}<span>{{ s.delivery | escape }}</span></p>{%- endif -%}
+        </div>
+        {%- for block in section.blocks -%}{%- if block.type == '@app' -%}{% render block %}{%- endif -%}{%- endfor -%}
+      {%- endform -%}
+      {%- endif -%}
+    </div>
+
+    <figure class="bproductdetail27__fig">
+      <div class="bproductdetail27__frame">
+        {%- if media != blank -%}
+          {{ media | image_url: width: 1000 | image_tag: class: 'bproductdetail27__img', widths: '500, 750, 1000, 1400', sizes: '(min-width: 1024px) 45vw, 100vw', alt: alt }}
+        {%- else -%}
+          {{ 'product-apparel-1' | placeholder_svg_tag: 'bproductdetail27__img' }}
+        {%- endif -%}
+      </div>
+      {%- if live and media.alt != blank -%}<figcaption class="bx-small bx-muted bproductdetail27__cap">{{ media.alt | escape }}</figcaption>{%- elsif live == false and s.caption != blank -%}<figcaption class="bx-small bx-muted bproductdetail27__cap">{{ s.caption | escape }}</figcaption>{%- endif -%}
+    </figure>
+    {%- render 'blko-ui-icon', name: 'check', size: 16, className: 'bproductdetail27__tick' -%}
+  </blko-product-detail-27>
+{%- endcapture -%}
+{%- render 'blko-ui-section', surface: 'pop-3', bleed: true, label: label, className: blko_class, style: blko_style, inner: 'bx-pad bproductdetail27__band', children: blko_body -%}
+
+{% schema %}
+{
+  "name": "Product, seasonal plan",
+  "tag": "div",
+  "class": "blko-product-detail-27-wrap",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "On a product page this shows the product. The plan blocks match its selling plans by name; the content below fills in elsewhere."
+    },
+    {
+      "type": "header",
+      "content": "Plan"
+    },
+    {
+      "type": "text",
+      "id": "step_plan",
+      "label": "Plan heading",
+      "default": "1 \u00b7 How often"
+    },
+    {
+      "type": "text",
+      "id": "off_text",
+      "label": "Saving text",
+      "default": "[n]% off each parcel"
+    },
+    {
+      "type": "text",
+      "id": "now_word",
+      "label": "First parcel word",
+      "default": "Now"
+    },
+    {
+      "type": "text",
+      "id": "seasonal_word",
+      "label": "No colourway word",
+      "default": "Seasonal"
+    },
+    {
+      "type": "textarea",
+      "id": "plan_note",
+      "label": "Plan note",
+      "default": "Each parcel has a prepaid bag: send the old shirt back and we mend it or spin it into new yarn. Skip or stop any time."
+    },
+    {
+      "type": "textarea",
+      "id": "once_note",
+      "label": "One-off note",
+      "default": "One shirt, no plan. You can still send a worn one back for mending."
+    },
+    {
+      "type": "header",
+      "content": "Size and cloth"
+    },
+    {
+      "type": "text",
+      "id": "step_size",
+      "label": "Size heading",
+      "default": "2 \u00b7 Size"
+    },
+    {
+      "type": "text",
+      "id": "size_option",
+      "label": "Size option name",
+      "default": "Size"
+    },
+    {
+      "type": "textarea",
+      "id": "fit_note",
+      "label": "Fit note",
+      "default": "Boxy and dropped at the shoulder; take your usual size. Softens and grows about 1 cm in the first wash.",
+      "info": "A product's custom.fit_note metafield wins."
+    },
+    {
+      "type": "text",
+      "id": "cloth_word",
+      "label": "Cloth word",
+      "default": "Cloth:"
+    },
+    {
+      "type": "text",
+      "id": "cloth_text",
+      "label": "Cloth",
+      "default": "100% European flax linen, 185 g/m\u00b2, stone-washed, coconut-shell buttons.",
+      "info": "A product's custom.cloth metafield wins."
+    },
+    {
+      "type": "header",
+      "content": "Buy"
+    },
+    {
+      "type": "range",
+      "id": "max_qty",
+      "label": "Most per order",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "text",
+      "id": "start_label",
+      "label": "Plan button",
+      "default": "Start plan"
+    },
+    {
+      "type": "text",
+      "id": "add_label",
+      "label": "One-off button",
+      "default": "Add to bag"
+    },
+    {
+      "type": "text",
+      "id": "added_label",
+      "label": "Added label",
+      "default": "Added"
+    },
+    {
+      "type": "text",
+      "id": "added_msg",
+      "label": "Added message",
+      "default": "[q] \u00d7 size [s], [plan], added.",
+      "info": "[q] quantity, [s] size, [plan] the plan."
+    },
+    {
+      "type": "text",
+      "id": "delivery",
+      "label": "Delivery line",
+      "default": "Carbon-neutral delivery in 3\u20135 days; 30-day returns on the first parcel."
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "Photo caption",
+      "default": "Shown in Natural, the May colourway."
+    },
+    {
+      "type": "header",
+      "content": "Demo product"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Title",
+      "default": "The camp shirt, on a seasonal refresh"
+    },
+    {
+      "type": "number",
+      "id": "price",
+      "label": "Price",
+      "default": 88
+    },
+    {
+      "type": "text",
+      "id": "sizes",
+      "label": "Sizes",
+      "default": "XS, S, M, L, XL"
+    },
+    {
+      "type": "text",
+      "id": "size_start",
+      "label": "Size picked",
+      "default": "M"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Photo"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_source",
+      "label": "Fonts",
+      "options": [
+        {
+          "value": "bundled",
+          "label": "Bundled (EB Garamond + Albert Sans)"
+        },
+        {
+          "value": "picker",
+          "label": "Pick from the font library"
+        },
+        {
+          "value": "theme",
+          "label": "Use the theme's fonts"
+        }
+      ],
+      "default": "bundled"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors and shapes"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, corners, type style",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case\u2026). Other themes: keep the preset."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:blko.linen.color_scheme",
+      "default": "scheme-4"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "textarea",
+      "id": "care_details",
+      "label": "Care accordion text"
+    },
+    {
+      "type": "textarea",
+      "id": "material_details",
+      "label": "Materials accordion text"
+    },
+    {
+      "type": "product_list",
+      "id": "pairs_with",
+      "label": "Pairs with",
+      "limit": 2
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "plan",
+      "name": "Plan",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Every season"
+        },
+        {
+          "type": "text",
+          "id": "plan_name",
+          "label": "Selling plan name",
+          "info": "Empty: a one-off purchase."
+        },
+        {
+          "type": "range",
+          "id": "off",
+          "label": "Demo saving",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "unit": "%",
+          "default": 15
+        },
+        {
+          "type": "text",
+          "id": "months",
+          "label": "Parcel months",
+          "default": "May, Aug, Nov, Feb",
+          "info": "Comma separated, first one ships now."
+        },
+        {
+          "type": "checkbox",
+          "id": "start",
+          "label": "Picked at first",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "colourway",
+      "name": "Colourway",
+      "settings": [
+        {
+          "type": "text",
+          "id": "month",
+          "label": "Month",
+          "default": "May"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Natural"
+        },
+        {
+          "type": "color",
+          "id": "colour",
+          "label": "Colour",
+          "default": "#e4dccb"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 16,
+  "presets": [
+    {
+      "name": "Product, seasonal plan",
+      "blocks": [
+        {
+          "type": "plan",
+          "settings": {
+            "label": "Just this one",
+            "off": 0,
+            "months": "May"
+          }
+        },
+        {
+          "type": "plan",
+          "settings": {
+            "label": "Twice a year",
+            "plan_name": "Twice a year",
+            "off": 10,
+            "months": "May, Nov"
+          }
+        },
+        {
+          "type": "plan",
+          "settings": {
+            "label": "Every season",
+            "plan_name": "Every season",
+            "off": 15,
+            "months": "May, Aug, Nov, Feb",
+            "start": true
+          }
+        },
+        {
+          "type": "colourway",
+          "settings": {
+            "month": "May",
+            "name": "Natural",
+            "colour": "#e4dccb"
+          }
+        },
+        {
+          "type": "colourway",
+          "settings": {
+            "month": "Aug",
+            "name": "Sea salt",
+            "colour": "#bcd0d6"
+          }
+        },
+        {
+          "type": "colourway",
+          "settings": {
+            "month": "Nov",
+            "name": "Olive",
+            "colour": "#8a8a5c"
+          }
+        },
+        {
+          "type": "colourway",
+          "settings": {
+            "month": "Feb",
+            "name": "Clay",
+            "colour": "#c28a6c"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

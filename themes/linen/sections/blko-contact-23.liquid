@@ -1,0 +1,515 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-2'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-contact-23.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture blko_class -%}bcontact23{% if s.tokens == 'theme' %} bcontact23--theme{% endif %}{% if blko_sid != 'scheme-2' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}{%- endcapture -%}
+<script src="{{ 'blko-contact-23.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign label = 'blko.contact_23.label' | t
+  assign fid = section.id
+  assign first = section.blocks.first
+  for b in section.blocks
+    if b.settings.start
+      assign first = b
+      break
+    endif
+  endfor
+-%}
+<blko-contact-23 data-err-jobs="{{ s.err_jobs | escape }}" data-err-want="{{ s.err_want | escape }}" data-err-email="{{ s.err_email | escape }}">
+{%- capture blko_body -%}
+    <div class="bcontact23__docket">
+      <div aria-hidden="true" class="bcontact23__tape"></div>
+      {%- form 'contact', id: 'blko-ct23-form', class: 'bcontact23__form', novalidate: 'novalidate', data-form: '' -%}
+        {%- if form.posted_successfully? -%}
+          <div role="status" class="bcontact23__done">
+            <p class="bx-label bx-muted">{{ s.done_kicker | escape }}</p>
+            <h2 class="bcontact23__title">{{ s.done_heading | escape }}</h2>
+            <p class="bx-body bx-muted bcontact23__donetext">{{ s.done_text | escape }}</p>
+            {%- assign again = s.again_label | escape -%}
+            {%- render 'blko-ui-button', href: request.path, variant: 'outline', children: again -%}
+          </div>
+        {%- else -%}
+          <div class="bcontact23__top">
+            <h2 class="bcontact23__title">{{ s.heading | escape }}</h2>
+            {%- if s.note != blank -%}<p class="bx-small bx-muted">{{ s.note | escape }}</p>{%- endif -%}
+          </div>
+          {%- if form.errors -%}<p class="bx-small bcontact23__err" role="alert">{{ form.errors | default_errors }}</p>{%- endif -%}
+          <input type="hidden" name="contact[Piece]" value="{{ first.settings.name | escape }}" data-piece-input>
+          <input type="hidden" name="contact[Change]" value="" data-jobs-input>
+          <input type="hidden" name="contact[Unit]" value="cm" data-unit-input>
+          <input type="hidden" name="contact[Getting it to us]" value="{{ s.method_a | escape }}" data-method-input>
+
+          <fieldset class="bcontact23__fs">
+            <legend class="bx-label bx-muted bcontact23__lg">{{ s.step_1 | escape }}</legend>
+            <div class="bcontact23__chips" data-blko-ui-options>
+              {%- for b in section.blocks -%}
+                {%- assign nm = b.settings.name | escape -%}{%- assign sel = false -%}{%- if b.id == first.id -%}{%- assign sel = true -%}{%- endif -%}
+                {%- render 'blko-ui-option', selected: sel, value: nm, className: 'bcontact23__chip', children: nm -%}
+              {%- endfor -%}
+            </div>
+          </fieldset>
+
+          <fieldset class="bcontact23__fs" aria-describedby="{{ fid }}-jobs-error">
+            <legend class="bx-label bx-muted bcontact23__lg">{{ s.step_2 | escape }}</legend>
+            {%- for b in section.blocks -%}
+              {%- assign jobs = b.settings.jobs | split: ',' -%}
+              <div class="bcontact23__jobs" data-for="{{ b.settings.name | escape }}"{% unless b.id == first.id %} hidden{% endunless %} {{ b.shopify_attributes }}>
+                {%- for j in jobs -%}
+                  {%- assign jt = j | strip -%}
+                  <button type="button" class="bcontact23__job" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}" data-job="{{ jt | escape }}">
+                    <span aria-hidden="true" class="bcontact23__box">{%- render 'blko-ui-icon', name: 'check', size: 12, stroke: 3 -%}</span>
+                    <span class="bcontact23__jt">{{ jt | escape }}</span>
+                  </button>
+                {%- endfor -%}
+              </div>
+            {%- endfor -%}
+            <p id="{{ fid }}-jobs-error" role="alert" class="bx-small bcontact23__err" data-err="jobs" hidden></p>
+          </fieldset>
+
+          <fieldset class="bcontact23__fs">
+            <legend class="bx-label bx-muted bcontact23__lg bcontact23__lgrow">
+              <span>{{ s.step_3 | escape }}</span>
+              <span role="radiogroup" aria-label="{{ 'blko.contact_23.unit' | t }}" class="bcontact23__units">
+                <button type="button" role="radio" aria-checked="true" class="bcontact23__u" data-u="cm">cm</button>
+                <button type="button" role="radio" aria-checked="false" class="bcontact23__u" data-u="in">in</button>
+              </span>
+            </legend>
+            {%- for b in section.blocks -%}
+              <p class="bx-small bx-muted bcontact23__measure" data-for="{{ b.settings.name | escape }}"{% unless b.id == first.id %} hidden{% endunless %}>{{ b.settings.measure | escape }}. {{ s.measure_hint | escape }}</p>
+            {%- endfor -%}
+            <div class="bcontact23__ms">
+              {%- capture now_label -%}{{ s.now_label | escape }} (<span data-unit>cm</span>) <span class="blko-ui-field__optional">{{ 'blko_ui.field.optional' | t }}</span>{%- endcapture -%}
+              {%- capture want_label -%}{{ s.want_label | escape }} (<span data-unit>cm</span>){%- endcapture -%}
+              {%- assign id_now = fid | append: '-now' -%}{%- assign id_want = fid | append: '-want' -%}{%- assign id_want_err = fid | append: '-want-error' -%}{%- assign id_email = fid | append: '-email' -%}{%- assign id_email_err = fid | append: '-email-error' -%}
+              {%- capture now_in -%}{%- render 'blko-ui-input', id: id_now, name: 'contact[Now]', placeholder: '82', className: 'bcontact23__num' -%}{%- endcapture -%}
+              {%- capture want_in -%}{%- render 'blko-ui-input', id: id_want, name: 'contact[Wanted]', placeholder: '78', describedBy: id_want_err, className: 'bcontact23__num' -%}{%- endcapture -%}
+              {%- render 'blko-ui-field', id: id_now, label: now_label, children: now_in, className: 'bcontact23__f' -%}
+              <div class="bcontact23__f">
+                {%- render 'blko-ui-field', id: id_want, label: want_label, children: want_in -%}
+                <p id="{{ fid }}-want-error" role="alert" class="blko-ui-field__error" data-err="want" hidden></p>
+              </div>
+              <div aria-live="polite" class="bcontact23__diff">
+                <span class="bx-label bx-muted">{{ s.diff_label | escape }}</span>
+                <span class="bcontact23__dv" data-diff>–</span>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="bcontact23__fs">
+            <legend class="bx-label bx-muted bcontact23__lg">{{ s.step_4 | escape }}</legend>
+            {%- assign step4 = s.step_4 | escape -%}
+            <div role="radiogroup" aria-label="{{ step4 }}" class="bcontact23__methods">
+              <button type="button" role="radio" aria-checked="true" class="bcontact23__m" data-m="{{ s.method_a | escape }}">
+                {%- render 'blko-ui-icon', name: 'store', size: 16, className: 'bcontact23__mi' -%}
+                <span class="bcontact23__mt"><span class="bcontact23__mh">{{ s.method_a | escape }}</span><span class="bx-muted">{{ s.method_a_note | escape }}</span></span>
+              </button>
+              <button type="button" role="radio" aria-checked="false" class="bcontact23__m" data-m="{{ s.method_b | escape }}">
+                {%- render 'blko-ui-icon', name: 'package', size: 16, className: 'bcontact23__mi' -%}
+                <span class="bcontact23__mt"><span class="bcontact23__mh">{{ s.method_b | escape }}</span><span class="bx-muted">{{ s.method_b_note | escape }}</span></span>
+              </button>
+            </div>
+          </fieldset>
+
+          <div class="bcontact23__send">
+            {%- capture email_in -%}{%- render 'blko-ui-input', id: id_email, name: 'contact[email]', type: 'email', autocomplete: 'email', placeholder: 'you@example.com', describedBy: id_email_err -%}{%- endcapture -%}
+            {%- assign email_label = s.email_label | escape -%}
+            <div class="bcontact23__f">
+              {%- render 'blko-ui-field', id: id_email, label: email_label, children: email_in -%}
+              <p id="{{ fid }}-email-error" role="alert" class="blko-ui-field__error" data-err="email" hidden></p>
+            </div>
+            {%- assign lbl = s.button_label | escape -%}
+            {%- render 'blko-ui-button', type: 'submit', icon: 'scissors', className: 'bcontact23__submit', children: lbl -%}
+          </div>
+        {%- endif -%}
+      {%- endform -%}
+    </div>
+
+    <aside class="bcontact23__aside">
+      {%- if s.image != blank -%}
+        {{ s.image | image_url: width: 900 | image_tag: class: 'bcontact23__img', loading: 'lazy', widths: '450, 700, 900', sizes: '(min-width: 1024px) 33vw, 100vw', alt: s.image.alt }}
+      {%- else -%}
+        {{ 'image' | placeholder_svg_tag: 'bcontact23__img' }}
+      {%- endif -%}
+      <div class="bcontact23__shop">
+        {%- if s.shop_kicker != blank -%}<p class="bx-label bx-muted">{{ s.shop_kicker | escape }}</p>{%- endif -%}
+        <p class="bcontact23__shopname">{{ s.shop_title | escape }}</p>
+        {%- if s.address != blank -%}<p class="bx-small bx-muted bcontact23__line">{%- render 'blko-ui-icon', name: 'map-pin', size: 16, className: 'bcontact23__li' -%}{{ s.address | escape }}</p>{%- endif -%}
+        {%- if s.hours != blank -%}<p class="bx-small bx-muted bcontact23__line">{%- render 'blko-ui-icon', name: 'clock', size: 16, className: 'bcontact23__li' -%}{{ s.hours | escape }}</p>{%- endif -%}
+      </div>
+      {%- assign prices = s.prices | newline_to_br | split: '<br />' -%}
+      {%- if s.prices != blank -%}
+        <dl class="bcontact23__prices">
+          {%- for row in prices -%}
+            {%- assign parts = row | strip | split: '|' -%}
+            {%- if parts.size > 1 -%}<div><dt class="bx-muted">{{ parts[0] | strip | escape }}</dt><dd>{{ parts[1] | strip | escape }}</dd></div>{%- endif -%}
+          {%- endfor -%}
+        </dl>
+      {%- endif -%}
+    </aside>
+{%- endcapture -%}
+{%- render 'blko-ui-section', surface: 'alt', bleed: true, label: label, className: blko_class, style: blko_style, inner: 'bx-pad bcontact23__grid', children: blko_body -%}
+</blko-contact-23>
+
+{% schema %}
+{
+  "name": "Contact, alterations",
+  "tag": "div",
+  "class": "blko-contact-23-wrap",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Docket"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Make it fit, keep it longer"
+    },
+    {
+      "type": "text",
+      "id": "note",
+      "label": "Note",
+      "default": "Free on pieces bought here"
+    },
+    {
+      "type": "text",
+      "id": "step_1",
+      "label": "Step 1",
+      "default": "1 · The piece"
+    },
+    {
+      "type": "text",
+      "id": "step_2",
+      "label": "Step 2",
+      "default": "2 · The change"
+    },
+    {
+      "type": "text",
+      "id": "step_3",
+      "label": "Step 3",
+      "default": "3 · Measurements"
+    },
+    {
+      "type": "text",
+      "id": "measure_hint",
+      "label": "Measuring hint",
+      "default": "Measure flat, seam to seam."
+    },
+    {
+      "type": "text",
+      "id": "now_label",
+      "label": "Now label",
+      "default": "Now"
+    },
+    {
+      "type": "text",
+      "id": "want_label",
+      "label": "Wanted label",
+      "default": "Wanted"
+    },
+    {
+      "type": "text",
+      "id": "diff_label",
+      "label": "Difference label",
+      "default": "Difference"
+    },
+    {
+      "type": "text",
+      "id": "step_4",
+      "label": "Step 4",
+      "default": "4 · Getting it to us"
+    },
+    {
+      "type": "text",
+      "id": "method_a",
+      "label": "First option",
+      "default": "Drop at the workshop"
+    },
+    {
+      "type": "text",
+      "id": "method_a_note",
+      "label": "First option note",
+      "default": "No booking needed"
+    },
+    {
+      "type": "text",
+      "id": "method_b",
+      "label": "Second option",
+      "default": "Post it in"
+    },
+    {
+      "type": "text",
+      "id": "method_b_note",
+      "label": "Second option note",
+      "default": "Prepaid label by email"
+    },
+    {
+      "type": "text",
+      "id": "email_label",
+      "label": "Email label",
+      "default": "Email for your ticket"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Request alteration"
+    },
+    {
+      "type": "text",
+      "id": "err_jobs",
+      "label": "Error: no change",
+      "default": "Choose at least one change."
+    },
+    {
+      "type": "text",
+      "id": "err_want",
+      "label": "Error: length",
+      "default": "Enter the length you want, in [unit]."
+    },
+    {
+      "type": "text",
+      "id": "err_email",
+      "label": "Error: email",
+      "default": "Enter an email like you@example.com."
+    },
+    {
+      "type": "header",
+      "content": "After sending"
+    },
+    {
+      "type": "text",
+      "id": "done_kicker",
+      "label": "Small line",
+      "default": "Request received"
+    },
+    {
+      "type": "text",
+      "id": "done_heading",
+      "label": "Heading",
+      "default": "We'll take it from here"
+    },
+    {
+      "type": "textarea",
+      "id": "done_text",
+      "label": "Text",
+      "default": "Bring it to the workshop, or watch your inbox for a prepaid postage label. Most pieces are back in 7 to 10 days."
+    },
+    {
+      "type": "text",
+      "id": "again_label",
+      "label": "Button label",
+      "default": "Add another piece"
+    },
+    {
+      "type": "header",
+      "content": "Workshop"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Photo"
+    },
+    {
+      "type": "text",
+      "id": "shop_kicker",
+      "label": "Small line",
+      "default": "The workshop"
+    },
+    {
+      "type": "text",
+      "id": "shop_title",
+      "label": "Title",
+      "default": "Two tailors, one long table"
+    },
+    {
+      "type": "text",
+      "id": "address",
+      "label": "Address",
+      "default": "Unit 4, Ropewalk Yard, 18 Harbour Road"
+    },
+    {
+      "type": "text",
+      "id": "hours",
+      "label": "Hours",
+      "default": "Wed – Sat, 10:00 – 17:00"
+    },
+    {
+      "type": "textarea",
+      "id": "prices",
+      "label": "Prices",
+      "default": "Hems | from $18\nWaist | from $26\nSleeves | from $24\nMending | from $12",
+      "info": "One per line: name | price."
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_source",
+      "label": "Fonts",
+      "options": [
+        {
+          "value": "bundled",
+          "label": "Bundled (EB Garamond + Albert Sans)"
+        },
+        {
+          "value": "picker",
+          "label": "Pick from the font library"
+        },
+        {
+          "value": "theme",
+          "label": "Use the theme's fonts"
+        }
+      ],
+      "default": "bundled"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors and shapes"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, corners, type style",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case…). Other themes: keep the preset."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:blko.linen.color_scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "piece",
+      "name": "Piece",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Trousers"
+        },
+        {
+          "type": "text",
+          "id": "jobs",
+          "label": "Changes",
+          "default": "Shorten hem, Take in waist, Taper leg",
+          "info": "Comma separated."
+        },
+        {
+          "type": "text",
+          "id": "measure",
+          "label": "What to measure",
+          "default": "Inside leg"
+        },
+        {
+          "type": "checkbox",
+          "id": "start",
+          "label": "Selected at start",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Contact, alterations",
+      "blocks": [
+        {
+          "type": "piece",
+          "settings": {
+            "name": "Dress",
+            "jobs": "Shorten hem, Take in waist, Adjust straps",
+            "measure": "Length, shoulder to hem"
+          }
+        },
+        {
+          "type": "piece",
+          "settings": {
+            "name": "Trousers",
+            "jobs": "Shorten hem, Take in waist, Taper leg",
+            "measure": "Inside leg",
+            "start": true
+          }
+        },
+        {
+          "type": "piece",
+          "settings": {
+            "name": "Shirt",
+            "jobs": "Shorten sleeves, Take in sides, Mend a seam",
+            "measure": "Sleeve, shoulder to cuff"
+          }
+        },
+        {
+          "type": "piece",
+          "settings": {
+            "name": "Jacket",
+            "jobs": "Shorten sleeves, Replace buttons, Mend lining",
+            "measure": "Sleeve, shoulder to cuff"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

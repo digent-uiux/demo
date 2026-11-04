@@ -1,0 +1,81 @@
+{
+  "sections": {
+    "article-22": {
+      "type": "blko-article-22",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "body-1": {
+          "type": "body",
+          "settings": {
+            "source": "article",
+            "text": "<p class=\"lead\">Linen has a reputation for being difficult. It creases if you look at it, it feels like card on the first wear, and it costs more than cotton. All of that is true for about a month.</p>\n<p>The fibre comes from the stem of the flax plant. It's long, hollow and slightly waxy, which is why new linen feels stiff and a little shiny. Every wash and every wear breaks down that wax and loosens the weave. The fibre itself doesn't weaken; it relaxes. That's the change you can see in the two photographs below.</p>\n<h2>Day one</h2>\n<p>Our shirt arrived pressed and folded. The collar stood up on its own, the hem had a sharp line, and the colour was a flat, even oat. It looked good on the hanger and slightly formal on a body, more office than harbour.</p>\n<p>We did the one thing that matters most: washed it before wearing, at 40°, on a gentle cycle, and hung it to dry on a wide hanger. That first wash takes out the finishing starch and lets the fabric settle to its real size, so any shrinkage happens before you've cut the tags off and worn it.</p>"
+          }
+        },
+        "compare-2": {
+          "type": "compare",
+          "settings": {}
+        },
+        "body-3": {
+          "type": "body",
+          "settings": {
+            "source": "demo",
+            "text": "<h2>Summer three</h2>\n<p>By the third August it had stopped being a shirt we put on carefully and become the one we reached for without thinking. The collar folds instead of standing. The shoulders have dropped to follow the wearer. The oat has gone a shade paler and picked up a faint, uneven bloom where the sun hits most.</p>\n<p>None of that is wear and tear. Look closely at the weave and it's still tight, the seams are intact, and there's not a single thin patch at the elbow. What's gone is the stiffness that made it look new.</p>\n<h2>How to speed it up, gently</h2>\n<p>Wear it often. Body heat and movement soften linen faster than any wash. When you do wash it, use a little less detergent than the bottle says and skip the fabric softener; it coats the fibre and stops it breathing. Shake it hard before hanging, and pull the seams straight while it's damp. That's all the ironing it needs.</p>\n<p>What to avoid: hot tumble-drying, which shrinks and dulls the fibre, and storing it folded in the same place for months, which can set a permanent crease along the fold. Hang it, or roll it.</p>\n<blockquote>\"The best linen in your wardrobe is the piece you've stopped being careful with.\"</blockquote>\n<p>The two pieces we pair it with now are cut from the same mill's cloth: a long duster for the evenings that cool off quickly, and a shift dress for days when even a shirt feels like too much.</p>"
+          }
+        },
+        "look-4": {
+          "type": "look",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "body-1",
+        "compare-2",
+        "body-3",
+        "look-4"
+      ]
+    },
+    "blog-80": {
+      "type": "blko-blog-80",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "story-1": {
+          "type": "story",
+          "settings": {
+            "title": "Undyed, clay and indigo: the summer palette",
+            "topic": "Lookbook",
+            "mins": 4
+          }
+        },
+        "story-2": {
+          "type": "story",
+          "settings": {
+            "title": "Washing linen by hand on a slow Sunday",
+            "topic": "Fabric care",
+            "mins": 5
+          }
+        },
+        "story-3": {
+          "type": "story",
+          "settings": {
+            "title": "Ten days by the sea in one small bag",
+            "topic": "Travel",
+            "mins": 6
+          }
+        }
+      },
+      "block_order": [
+        "story-1",
+        "story-2",
+        "story-3"
+      ]
+    }
+  },
+  "order": [
+    "article-22",
+    "blog-80"
+  ]
+}

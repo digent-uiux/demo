@@ -1,0 +1,10 @@
+{
+  "blko": {
+    "collection_list_55": {
+      "pieces": {
+        "one": "{{ count }} piece",
+        "other": "{{ count }} pieces"
+      }
+    }
+  }
+}

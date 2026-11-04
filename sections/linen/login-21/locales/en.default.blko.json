@@ -1,0 +1,12 @@
+{
+  "blko": {
+    "login_21": {
+      "label": "Sign in"
+    }
+  },
+  "blko_ui": {
+    "field": {
+      "optional": "(optional)"
+    }
+  }
+}

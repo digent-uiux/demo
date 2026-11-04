@@ -1,0 +1,355 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-header-38.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture blko_class -%}bheader38{% if s.tokens == 'theme' %} bheader38--theme{% endif %}{% if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}{%- endcapture -%}
+{%- liquid
+  assign menu = linklists[s.menu]
+  assign demo_names = 'New in,Dresses,Shirts,Trousers,Resort' | split: ','
+  assign demo_counts = '18,24,19,12,31' | split: ','
+  assign regions = s.regions | newline_to_br | split: '<br />'
+-%}
+<blko-header-38 class="{{ blko_class }}" style="{{ blko_style }}">
+  <header class="bheader38__bar">
+    <div class="bheader38__row">
+      <div class="bheader38__left">
+        {%- capture burger -%}<span class="bheader38__when-closed">{% render 'blko-ui-icon', name: 'menu', size: 20 %}</span><span class="bheader38__when-open">{% render 'blko-ui-icon', name: 'x', size: 20 %}</span>{%- endcapture -%}
+        {%- capture burger_attrs -%}aria-expanded="false" aria-controls="{{ section.id }}-menu" data-open="{{ 'blko.header_38.open_menu' | t }}" data-close="{{ 'blko.header_38.close_menu' | t }}" data-toggle{%- endcapture -%}
+        {%- assign open_label = 'blko.header_38.open_menu' | t -%}
+        {%- render 'blko-ui-button', variant: 'ghost', size: 'icon', className: 'bheader38__ico bheader38__burger', label: open_label, attrs: burger_attrs, children: burger -%}
+        <nav class="bheader38__nav" aria-label="{{ 'blko.header_38.main' | t }}">
+          <ul class="bheader38__navlist">
+            {%- if menu.links.size > 0 -%}
+              {%- for l in menu.links -%}<li><a href="{{ l.url }}" class="bheader38__link bx-nav">{{ l.title | escape }}</a></li>{%- endfor -%}
+            {%- else -%}
+              {%- for n in demo_names -%}<li><a href="{{ routes.collections_url }}" class="bheader38__link bx-nav">{{ n }}</a></li>{%- endfor -%}
+            {%- endif -%}
+          </ul>
+        </nav>
+      </div>
+      <a href="{{ routes.root_url }}" class="bheader38__mark" aria-label="{{ s.brand | escape }}, {{ s.tagline | escape }}, {{ 'blko.header_38.home' | t }}">
+        <span class="bheader38__brand">{{ s.brand | escape }}</span>
+        {%- if s.tagline != blank -%}<span class="bheader38__tag" aria-hidden="true">{{ s.tagline | escape }}</span>{%- endif -%}
+      </a>
+      <div class="bheader38__right">
+        {%- if s.notes_label != blank -%}
+          <a href="{{ s.notes_link | default: routes.blogs_url | default: '/blogs/news' }}" class="bheader38__link bheader38__notes bx-nav"><span class="bheader38__dot" aria-hidden="true"></span>{{ s.notes_label | escape }}</a>
+        {%- endif -%}
+        {%- capture ic -%}{% render 'blko-ui-icon', name: 'search', size: 20 %}{%- endcapture -%}
+        {%- assign lbl = 'blko.header_38.search' | t -%}
+        {%- render 'blko-ui-button', href: routes.search_url, variant: 'ghost', size: 'icon', className: 'bheader38__ico bheader38__wide', label: lbl, children: ic, attrs: 'data-linen-search-open' -%}
+        {%- capture ic -%}{% render 'blko-ui-icon', name: 'user', size: 20 %}{%- endcapture -%}
+        {%- assign lbl = 'blko.header_38.account' | t -%}
+        {%- render 'blko-ui-button', href: routes.account_url, variant: 'ghost', size: 'icon', className: 'bheader38__ico bheader38__wide', label: lbl, children: ic -%}
+        {%- capture ic -%}{% render 'blko-ui-icon', name: 'shopping-bag', size: 20 %}<span class="bheader38__count" data-linen-count aria-hidden="true"{% if cart.item_count == 0 %} hidden{% endif %}>{{ cart.item_count }}</span>{%- endcapture -%}
+        {%- assign lbl = 'blko.header_38.bag' | t: count: cart.item_count -%}
+        {% capture cart_attrs %}data-linen-cart-open data-count-one="{{ 'blko.header.cart_count' | t: count: 1 | escape }}" data-count-many="{{ 'blko.header.cart_count' | t: count: '[count]' | escape }}"{% endcapture %}
+        {%- render 'blko-ui-button', href: routes.cart_url, variant: 'ghost', size: 'icon', className: 'bheader38__ico', label: lbl, children: ic, attrs: cart_attrs -%}
+      </div>
+    </div>
+    <div class="bheader38__selvedge" aria-hidden="true"><span></span><span class="bheader38__stitch"></span><span></span></div>
+
+    <nav id="{{ section.id }}-menu" class="bheader38__sheet" aria-label="{{ 'blko.header_38.menu' | t }}" hidden>
+      <form action="{{ routes.search_url }}" method="get" role="search" class="bheader38__search" data-linen-predictive-form data-endpoint="{{ routes.predictive_search_url }}" data-loading="{{ 'blko.linen.search_loading' | t | escape }}" data-error="{{ 'blko.linen.search_error' | t | escape }}" data-count="{{ 'blko.linen.search_count' | t: count: '[count]' | escape }}">
+        <label class="bheader38__searchbox">
+          <span class="bx-sr">{{ 'blko.header_38.search_store' | t: store: s.brand }}</span>
+          {% render 'blko-ui-icon', name: 'search', size: 16, className: 'bheader38__searchicon' %}
+          <input type="search" name="q" class="bx-input bheader38__searchinput" placeholder="{{ s.search_placeholder | escape }}">
+        </label>
+        <input type="hidden" name="type" value="product,article"><input type="hidden" name="options[prefix]" value="last">
+        <p class="blko-linen-search__status" data-linen-search-status role="status" aria-live="polite"></p><div id="LinenHeaderSearch-{{ section.id }}" data-linen-predictive-panel role="listbox" aria-label="{{ 'blko.linen.search_suggestions' | t | escape }}" hidden></div>
+      </form>
+      <ul class="bheader38__rows">
+        {%- if menu.links.size > 0 -%}
+          {%- for l in menu.links -%}
+            <li class="bheader38__rowitem"><a href="{{ l.url }}" class="bheader38__rowlink">
+              <span class="bheader38__num bx-label">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+              <span class="bheader38__rowname bx-h3">{{ l.title | escape }}</span>
+              <span class="bheader38__rowcount bx-label">{% if l.type == 'collection_link' %}{{ l.object.products_count }}{% endif %}</span>
+              {% render 'blko-ui-icon', name: 'arrow-right', size: 16, className: 'bheader38__arrow' %}
+            </a></li>
+          {%- endfor -%}
+        {%- else -%}
+          {%- for n in demo_names -%}
+            <li class="bheader38__rowitem"><a href="{{ routes.collections_url }}" class="bheader38__rowlink">
+              <span class="bheader38__num bx-label">0{{ forloop.index }}</span>
+              <span class="bheader38__rowname bx-h3">{{ n }}</span>
+              <span class="bheader38__rowcount bx-label">{{ demo_counts[forloop.index0] }}</span>
+              {% render 'blko-ui-icon', name: 'arrow-right', size: 16, className: 'bheader38__arrow' %}
+            </a></li>
+          {%- endfor -%}
+        {%- endif -%}
+      </ul>
+      {%- if section.blocks.size > 0 -%}
+        <div class="bheader38__cloths">
+          <p class="bx-label bx-muted">{{ s.cloth_heading | escape }}</p>
+          <div class="bheader38__chips">
+            {%- for b in section.blocks -%}
+              <button type="button" class="bx-chip" aria-pressed="false" data-chip="{{ forloop.index0 }}" {{ b.shopify_attributes }}>{{ b.settings.name | escape }}</button>
+            {%- endfor -%}
+          </div>
+          <p class="bheader38__live bx-small bx-muted" aria-live="polite" data-live>{{ s.cloth_hint | escape }}</p>
+          {%- for b in section.blocks -%}
+            <template data-pick="{{ forloop.index0 }}"><a href="{{ b.settings.link | default: routes.all_products_collection_url }}" class="bheader38__picklink">{{ 'blko.header_38.pieces_in' | t: count: b.settings.picks, cloth: b.settings.name | downcase }}</a>, {{ b.settings.note | escape }}.</template>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+      <div class="bheader38__card">
+        {%- if s.note != blank -%}<div class="bheader38__note bx-small">{{ s.note }}</div>{%- endif -%}
+        <div class="blko-linen-menu__bottom"><a href="{{ routes.account_url }}">{{ 'blko.header.account' | t }}</a>{% if localization.available_countries.size > 1 or localization.available_languages.size > 1 %}<details><summary>{{ 'blko.linen.country' | t }} {% render 'blko-ui-icon', name: 'chevron-down', size: 16 %}</summary>{% render 'blko-linen-localization' %}</details>{% endif %}</div>
+      </div>
+    </nav>
+  </header>
+</blko-header-38>
+<script src="{{ 'blko-header-38.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Header, linen bar",
+  "tag": "div",
+  "class": "blko-header-38-wrap",
+  "enabled_on": {
+    "groups": [
+      "header"
+    ]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Store"
+    },
+    {
+      "type": "text",
+      "id": "brand",
+      "label": "Store name",
+      "default": "Linnet"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tag next to the name",
+      "default": "slow linen"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "info": "Blank: the demo links."
+    },
+    {
+      "type": "text",
+      "id": "notes_label",
+      "label": "Journal link label",
+      "default": "Cloth notes"
+    },
+    {
+      "type": "url",
+      "id": "notes_link",
+      "label": "Journal link"
+    },
+    {
+      "type": "header",
+      "content": "Phone menu"
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Search placeholder",
+      "default": "Search dresses, shirts, gauze"
+    },
+    {
+      "type": "text",
+      "id": "cloth_heading",
+      "label": "Cloth chips heading",
+      "default": "Shop by cloth"
+    },
+    {
+      "type": "text",
+      "id": "cloth_hint",
+      "label": "Line before a pick",
+      "default": "Pick a cloth to see what we make in it."
+    },
+    {
+      "type": "richtext",
+      "id": "note",
+      "label": "Note card",
+      "default": "<p><em>Free hemming</em> on every pair of trousers. Tell us your inside leg at checkout.</p>"
+    },
+    {
+      "type": "text",
+      "id": "ship_label",
+      "label": "Region picker label",
+      "default": "Ship to"
+    },
+    {
+      "type": "textarea",
+      "id": "regions",
+      "label": "Regions",
+      "info": "One per line.",
+      "default": "Portugal · EUR\nUnited Kingdom · GBP\nUnited States · USD\nAustralia · AUD"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_source",
+      "label": "Fonts",
+      "options": [
+        {
+          "value": "bundled",
+          "label": "Bundled (EB Garamond + Albert Sans)"
+        },
+        {
+          "value": "picker",
+          "label": "Pick from the font library"
+        },
+        {
+          "value": "theme",
+          "label": "Use the theme's fonts"
+        }
+      ],
+      "default": "bundled"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors and shapes"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, corners, type style",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case…). Other themes: keep the preset."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:blko.linen.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 0,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "cloth",
+      "name": "Cloth chip",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Cloth",
+          "default": "Washed linen"
+        },
+        {
+          "type": "number",
+          "id": "picks",
+          "label": "Pieces in it",
+          "default": 42
+        },
+        {
+          "type": "text",
+          "id": "note",
+          "label": "Note",
+          "default": "stone-washed for a soft, lived-in hand"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header, linen bar",
+      "blocks": [
+        {
+          "type": "cloth",
+          "settings": {
+            "name": "Washed linen",
+            "picks": 42,
+            "note": "stone-washed for a soft, lived-in hand"
+          }
+        },
+        {
+          "type": "cloth",
+          "settings": {
+            "name": "Linen-cotton",
+            "picks": 17,
+            "note": "a little smoother, creases less"
+          }
+        },
+        {
+          "type": "cloth",
+          "settings": {
+            "name": "Heavy linen",
+            "picks": 9,
+            "note": "260 g/m², for jackets and wide trousers"
+          }
+        },
+        {
+          "type": "cloth",
+          "settings": {
+            "name": "Gauze",
+            "picks": 11,
+            "note": "open weave, made for the hottest days"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

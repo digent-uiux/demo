@@ -1,0 +1,88 @@
+{%- comment -%} One shelf cell. idx, name, url, image, alt, cloth, note, price (major units; cents: true for Shopify), sizes (array), stock ("XS:2|S:0" counts), vids ("XS:123|…" live variant ids), plain (live variant id when the product has no size option), s (section settings), hidden. {%- endcomment -%}
+{%- liquid
+  assign pairs = stock | split: '|'
+  assign vpairs = vids | split: '|'
+  assign k = 0
+  for z in sizes
+    for pr in pairs
+      assign kv = pr | split: ':'
+      if kv[0] == z and kv[1] != '0'
+        assign k = k | plus: 1
+      endif
+    endfor
+  endfor
+  assign tilt = 'l'
+  assign odd = idx | modulo: 2
+  if odd == 1
+    assign tilt = 'r'
+  endif
+  assign card_variant = catalog_product.selected_or_first_available_variant
+  assign card_price = price
+  if cents and card_variant != blank
+    assign card_price = card_variant.price
+  endif
+  assign card_compare = card_variant.compare_at_price | default: compare_price
+  assign second_image = catalog_product.images[1]
+  assign gl = 'blko.collection_grid_34.size_for' | t | replace: '[name]', name
+-%}
+<li class="bcollectiongrid34__cell" data-cell data-order="{{ idx }}" data-price="{{ price }}" data-cloth="{{ cloth | escape }}" data-stock="{{ stock }}"{% if plain != blank %} data-plain="{{ plain }}"{% endif %}{% if hidden %} hidden{% endif %}>
+  <a href="{{ url | default: '#' }}" class="bcollectiongrid34__ph" tabindex="-1">
+    {%- if image != blank -%}
+      {{ image | image_url: width: 700 | image_tag: class: 'bcollectiongrid34__img', loading: 'lazy', widths: '350, 525, 700', sizes: '(min-width: 768px) 30vw, 50vw', alt: alt }}
+      {%- if second_image != blank -%}{{ second_image | image_url: width: 700 | image_tag: class: 'blko-linen-card__alternate', loading: 'lazy', widths: '350, 525, 700', sizes: '(min-width: 768px) 30vw, 50vw', alt: second_image.alt }}{%- endif -%}
+    {%- elsif demo_photo != blank and cents != true -%}<img class="bcollectiongrid34__img" src="https://images.unsplash.com/{{ demo_photo | escape }}?auto=format&amp;fit=crop&amp;w=700&amp;q=85" alt="{{ name | escape }}" loading="lazy" width="700" height="933">
+    {%- else -%}
+      {{ 'apparel-1'  | placeholder_svg_tag: 'bcollectiongrid34__img' }}
+    {%- endif -%}
+  </a>
+  {%- if cents or k == 0 -%}
+    <div class="blko-linen-card__tools">
+      {%- if cents and available == false or cents != true and k == 0 -%}<span class="blko-linen-card__stock">{{ 'blko.products.sold_out' | t }}</span>{%- endif -%}
+      {%- if available -%}{%- if choose_options -%}<a class="blko-linen-card__quick" href="{{ url }}" aria-label="{{ 'blko.linen.choose_options' | t }} — {{ name | escape }}">{% render 'blko-ui-icon', name: 'shopping-bag', size: 18 %}<span>{{ 'blko.linen.choose_options' | t }}</span></a>{%- else -%}<button type="button" class="blko-linen-card__quick" data-card-quick aria-label="{{ 'blko_ui.product.add' | t: title: name | escape }}">{% render 'blko-ui-icon', name: 'shopping-bag', size: 18 %}<span>{{ s.add_plain | escape }}</span></button>{%- endif -%}{%- endif -%}
+    </div>
+  {%- endif -%}
+  <span aria-hidden="true" class="bcollectiongrid34__plank"></span>
+  <span aria-hidden="true" class="bcollectiongrid34__string"></span>
+  <div class="bcollectiongrid34__tag bcollectiongrid34__tag--{{ tilt }}">
+    <span aria-hidden="true" class="bcollectiongrid34__hole"></span>
+    <h3 class="bcollectiongrid34__nm"><a href="{{ url | default: '#' }}">{{ name | escape }}</a></h3>
+    <p class="bx-label bx-muted">{{ cloth | escape }}{% if note != blank %} · {{ note | escape }}{% endif %}</p>
+    <p class="blko-linen-card__price"><span class="bx-price__now">{% render 'blko-ui-money', amount: card_price, cents: cents %}</span> <s data-card-compare{% unless card_compare > card_price %} hidden{% endunless %}>{% if card_compare > card_price %}{% render 'blko-ui-money', amount: card_compare, cents: cents %}{% endif %}</s></p>
+    {%- if sizes.size > 0 -%}
+      <div role="group" aria-label="{{ gl | escape }}" class="bcollectiongrid34__sz">
+        {%- for z in sizes -%}
+          {%- liquid
+            assign n = '0'
+            for pr in pairs
+              assign kv = pr | split: ':'
+              if kv[0] == z
+                assign n = kv[1]
+              endif
+            endfor
+            assign vid = ''
+            for pr in vpairs
+              assign kv = pr | split: ':'
+              if kv[0] == z
+                assign vid = kv[1]
+              endif
+            endfor
+            if n == '0'
+              assign zl = z | append: ', ' | append: s.sold_word
+            elsif cents
+              assign zl = 'blko.linen.in_stock' | t | prepend: ', ' | prepend: z
+            else
+              assign zl = s.left_aria | replace: '[n]', n | prepend: ', ' | prepend: z
+            endif
+          -%}
+          {% assign size_price = '' %}{% assign size_compare = '' %}{% for variant in catalog_product.variants %}{% assign variant_key = variant.id | append: '' %}{% if variant_key == vid %}{% assign size_price = variant.price | money_without_trailing_zeros %}{% if variant.compare_at_price > variant.price %}{% assign size_compare = variant.compare_at_price | money_without_trailing_zeros %}{% endif %}{% break %}{% endif %}{% endfor %}
+          <button type="button" class="bcollectiongrid34__s" data-price="{{ size_price | escape }}" data-compare="{{ size_compare | escape }}" aria-pressed="false" aria-label="{{ zl | escape }}" data-size="{{ z | escape }}" data-n="{{ n }}"{% if vid != '' %} data-variant="{{ vid }}"{% endif %}{% if n == '0' %} disabled{% endif %}>{{ z | escape }}</button>
+        {%- endfor -%}
+      </div>
+      <p class="bx-label bx-muted bcollectiongrid34__left" data-left>{{ s.sizes_left | replace: '[k]', k | replace: '[n]', sizes.size | escape }}</p>
+      <button type="button" class="bcollectiongrid34__add" data-add disabled>{% if k == 0 %}{{ 'blko.products.sold_out' | t }}{% else %}{{ s.pick_label | escape }}{% endif %}</button>
+    {%- else -%}
+      <p class="bx-label bx-muted bcollectiongrid34__left" data-left></p>
+      {% if choose_options %}<a class="bcollectiongrid34__add" href="{{ url }}">{{ 'blko.linen.choose_options' | t }}</a>{% else %}<button type="button" class="bcollectiongrid34__add" data-add{% if cents and available == false %} disabled{% endif %}>{% if cents and available == false %}{{ 'blko.products.sold_out' | t }}{% else %}{{ s.add_plain | escape }}{% endif %}</button>{% endif %}
+    {%- endif -%}
+  </div>
+</li>

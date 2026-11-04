@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "login-21": {
+      "type": "blko-login-21",
+      "settings": {
+        "tokens": "theme"
+      }
+    }
+  },
+  "order": [
+    "login-21"
+  ]
+}

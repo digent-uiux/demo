@@ -1,0 +1,10 @@
+{
+  "blko": {
+    "featured_products_44": {
+      "added": "{{ product }} added to bag",
+      "error": "Couldn't add it. Try again.",
+      "in_bag": "{{ count }} new pieces in your bag",
+      "quick_add": "Quick add {{ product }}"
+    }
+  }
+}

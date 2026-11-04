@@ -1,0 +1,269 @@
+{
+  "sections": {
+    "page-header-56": {
+      "type": "blko-page-header-56",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "question-1": {
+          "type": "question",
+          "settings": {
+            "question": "Will the linen shrink in the wash?",
+            "anchor": "faq-shrink"
+          }
+        },
+        "question-2": {
+          "type": "question",
+          "settings": {
+            "question": "How do I get creases out without an iron?",
+            "anchor": "faq-creases"
+          }
+        },
+        "question-3": {
+          "type": "question",
+          "settings": {
+            "question": "Which size if I am between two?",
+            "anchor": "faq-size"
+          }
+        },
+        "question-4": {
+          "type": "question",
+          "settings": {
+            "question": "Do you mend pieces bought years ago?",
+            "anchor": "faq-mend"
+          }
+        },
+        "question-5": {
+          "type": "question",
+          "settings": {
+            "question": "How long does a made-to-order dress take?",
+            "anchor": "faq-made-to-order"
+          }
+        },
+        "question-6": {
+          "type": "question",
+          "settings": {
+            "question": "Can I return a washed piece?",
+            "anchor": "faq-return-washed"
+          }
+        },
+        "question-7": {
+          "type": "question",
+          "settings": {
+            "question": "Where is the flax grown and woven?",
+            "anchor": "faq-flax"
+          }
+        }
+      },
+      "block_order": [
+        "question-1",
+        "question-2",
+        "question-3",
+        "question-4",
+        "question-5",
+        "question-6",
+        "question-7"
+      ]
+    },
+    "faq-48": {
+      "type": "blko-faq-48",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "group-1": {
+          "type": "group",
+          "settings": {
+            "tag": "Size",
+            "title": "Finding your fit",
+            "tone": "bg"
+          }
+        },
+        "question-2": {
+          "type": "question",
+          "settings": {
+            "question": "Do your linen pieces run large?",
+            "answer": "<p>Most are cut relaxed on purpose, with room to move in the heat. If you like a closer line, size down; each product page says how the model wears it.</p>"
+          }
+        },
+        "question-3": {
+          "type": "question",
+          "settings": {
+            "question": "I'm between two sizes. Which one?",
+            "answer": "<p>Take the smaller one in dresses and shirts, the larger one in trousers. Linen gives a little across the hips after a few wears but never shrinks back.</p>"
+          }
+        },
+        "question-4": {
+          "type": "question",
+          "settings": {
+            "question": "Where do I find the measurements?",
+            "answer": "<p>Under the size selector on every product: bust, waist, hip and length for each size, measured flat on the finished garment.</p>"
+          }
+        },
+        "photo-5": {
+          "type": "photo",
+          "settings": {
+            "caption": "The band-collar shirt, size M, after twelve washes."
+          }
+        },
+        "group-6": {
+          "type": "group",
+          "settings": {
+            "tag": "Size",
+            "title": "Lengths and petite",
+            "tone": "pop-4"
+          }
+        },
+        "question-7": {
+          "type": "question",
+          "settings": {
+            "question": "Do you make petite or tall lengths?",
+            "answer": "<p>Trousers come in short (74 cm inside leg), regular (79 cm) and long (84 cm). Dresses are one length; free hemming is offered on the product page.</p>"
+          }
+        },
+        "question-8": {
+          "type": "question",
+          "settings": {
+            "question": "How long is the midi dress on me?",
+            "answer": "<p>It ends 20 cm below the knee on someone 168 cm tall. Every 5 cm of height moves it about 3 cm.</p>"
+          }
+        },
+        "group-9": {
+          "type": "group",
+          "settings": {
+            "tag": "Returns",
+            "title": "Sending it back",
+            "tone": "pop-2"
+          }
+        },
+        "question-10": {
+          "type": "question",
+          "settings": {
+            "question": "How long do I have to return something?",
+            "answer": "<p>Thirty days from delivery, unworn and unwashed, with the paper tag still on. Returns in the US are free with the label in your parcel.</p>"
+          }
+        },
+        "question-11": {
+          "type": "question",
+          "settings": {
+            "question": "Can I return something I've washed?",
+            "answer": "<p>Not for a refund, but if it shrank or lost its shape after one wash on our care instructions, we replace it.</p>"
+          }
+        },
+        "question-12": {
+          "type": "question",
+          "settings": {
+            "question": "When will I get my money back?",
+            "answer": "<p>Within three working days of your parcel reaching our studio. You get an email the moment we scan it.</p>"
+          }
+        },
+        "note-13": {
+          "type": "note",
+          "settings": {}
+        },
+        "group-14": {
+          "type": "group",
+          "settings": {
+            "tag": "Returns",
+            "title": "Exchanges",
+            "tone": "bg"
+          }
+        },
+        "question-15": {
+          "type": "question",
+          "settings": {
+            "question": "Can I swap for another size?",
+            "answer": "<p>Yes, free both ways. Start the swap in your account and we ship the new size as soon as yours is on its way back.</p>"
+          }
+        },
+        "question-16": {
+          "type": "question",
+          "settings": {
+            "question": "What if the colour I want has sold out?",
+            "answer": "<p>Pick “notify me” on the product page. We cut small runs every six weeks and email you first when it's back.</p>"
+          }
+        },
+        "group-17": {
+          "type": "group",
+          "settings": {
+            "tag": "Washing",
+            "title": "Washing linen",
+            "tone": "pop-4"
+          }
+        },
+        "question-18": {
+          "type": "question",
+          "settings": {
+            "question": "Can I machine wash it?",
+            "answer": "<p>Yes, at 30°C on a gentle cycle, inside out, with a mild liquid detergent. Skip fabric softener: it coats the fibres and stops linen softening on its own.</p>"
+          }
+        },
+        "question-19": {
+          "type": "question",
+          "settings": {
+            "question": "Can it go in the tumble dryer?",
+            "answer": "<p>Better not. Dry it on a line or a hanger in the shade; ten minutes in the dryer on low before hanging is the most we'd risk.</p>"
+          }
+        },
+        "group-20": {
+          "type": "group",
+          "settings": {
+            "tag": "Washing",
+            "title": "Creases and softness",
+            "tone": "pop-2"
+          }
+        },
+        "question-21": {
+          "type": "question",
+          "settings": {
+            "question": "How do I deal with the creases?",
+            "answer": "<p>Hang it while still damp and smooth the seams by hand. If you iron, do it slightly damp on a medium setting, inside out. A few soft creases are part of the look.</p>"
+          }
+        },
+        "question-22": {
+          "type": "question",
+          "settings": {
+            "question": "Will it get softer?",
+            "answer": "<p>Yes. Every piece is stone-washed before it reaches you, and it keeps softening for the first ten or so washes.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "group-1",
+        "question-2",
+        "question-3",
+        "question-4",
+        "photo-5",
+        "group-6",
+        "question-7",
+        "question-8",
+        "group-9",
+        "question-10",
+        "question-11",
+        "question-12",
+        "note-13",
+        "group-14",
+        "question-15",
+        "question-16",
+        "group-17",
+        "question-18",
+        "question-19",
+        "group-20",
+        "question-21",
+        "question-22"
+      ]
+    },
+    "contact-54": {
+      "type": "blko-contact-54",
+      "settings": {
+        "tokens": "theme"
+      }
+    }
+  },
+  "order": [
+    "page-header-56",
+    "faq-48",
+    "contact-54"
+  ]
+}

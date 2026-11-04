@@ -1,0 +1,289 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-2'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-page-header-56.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture blko_class -%}bpageheader56{% if s.tokens == 'theme' %} bpageheader56--theme{% endif %}{% if blko_sid != 'scheme-2' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}{%- endcapture -%}
+<script src="{{ 'blko-page-header-56.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign crumb = s.crumb | default: page.title | default: s.heading
+  assign label = s.heading | strip_html
+  assign crumbs_label = 'blko.page_header_56.breadcrumb' | t
+  assign total = section.blocks.size
+  assign hints = s.hints | split: ','
+-%}
+<blko-page-header-56 data-one="{{ 'blko.page_header_56.answers.one' | t }}" data-other="{{ 'blko.page_header_56.answers.other' | t }}">
+{%- capture blko_body -%}
+    <div class="bpageheader56__grid">
+      <div class="bpageheader56__copy">
+        <nav aria-label="{{ crumbs_label }}">
+          <ol class="bpageheader56__crumbs">
+            <li><a href="{{ routes.root_url }}">{{ s.home_label | escape }}</a></li>
+            <li aria-hidden="true">~</li>
+            <li aria-current="page" class="bpageheader56__here">{{ crumb | escape }}</li>
+          </ol>
+        </nav>
+        <h1 class="bpageheader56__title">{{ s.heading | escape }}</h1>
+        {%- if s.text != blank -%}<p class="bx-body bx-muted bpageheader56__text">{{ s.text | escape }}</p>{%- endif -%}
+      </div>
+      <div class="bpageheader56__find">
+        <form role="search" action="{{ routes.search_url }}" method="get" class="bpageheader56__form">
+          <label for="{{ section.id }}-q">{{ s.prompt | escape }}</label>
+          <input id="{{ section.id }}-q" type="search" name="q" autocomplete="off" placeholder="{{ s.placeholder | escape }}" class="bpageheader56__input" data-q>
+        </form>
+        <div class="bpageheader56__row">
+          {%- if s.try_label != blank -%}<span>{{ s.try_label | escape }}</span>{%- endif -%}
+          {%- for h in hints -%}
+            {%- assign t = h | strip -%}
+            <button type="button" class="bpageheader56__hint" data-hint="{{ t | escape }}">{{ t | escape }}</button>
+          {%- endfor -%}
+          <span aria-live="polite" class="bpageheader56__count" data-count>{{ 'blko.page_header_56.answers' | t: count: total }}</span>
+        </div>
+        <ul class="bpageheader56__hits" data-hits hidden>
+          {%- for b in section.blocks -%}
+            {%- assign anchor = b.settings.anchor | default: b.settings.question | handleize -%}
+            <li data-question="{{ b.settings.question | downcase | escape }}" hidden {{ b.shopify_attributes }}><a href="#{{ anchor }}" class="bpageheader56__hit">{{ b.settings.question | escape }}</a></li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+{%- endcapture -%}
+{%- render 'blko-ui-section', surface: 'alt', bleed: true, label: label, className: blko_class, style: blko_style, inner: 'bx-pad bpageheader56__in', children: blko_body -%}
+</blko-page-header-56>
+
+{% schema %}
+{
+  "name": "Page header, FAQ finder",
+  "tag": "div",
+  "class": "blko-page-header-56-wrap",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "home_label",
+      "label": "Home crumb",
+      "default": "home"
+    },
+    {
+      "type": "text",
+      "id": "crumb",
+      "label": "Current crumb",
+      "default": "questions",
+      "info": "Leave empty to use the page title."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Asked across the cutting table"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Washing, sizing, mending and the slow bits in between."
+    },
+    {
+      "type": "header",
+      "content": "Finder"
+    },
+    {
+      "type": "text",
+      "id": "prompt",
+      "label": "Sentence",
+      "default": "I would like to know about"
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Placeholder",
+      "default": "washing…"
+    },
+    {
+      "type": "text",
+      "id": "try_label",
+      "label": "Hints label",
+      "default": "Try"
+    },
+    {
+      "type": "text",
+      "id": "hints",
+      "label": "Hint words",
+      "default": "shrink, mend, size",
+      "info": "Comma separated."
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_source",
+      "label": "Fonts",
+      "options": [
+        {
+          "value": "bundled",
+          "label": "Bundled (EB Garamond + Albert Sans)"
+        },
+        {
+          "value": "picker",
+          "label": "Pick from the font library"
+        },
+        {
+          "value": "theme",
+          "label": "Use the theme's fonts"
+        }
+      ],
+      "default": "bundled"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors and shapes"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, corners, type style",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case…). Other themes: keep the preset."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:blko.linen.color_scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Will the linen shrink in the wash?"
+        },
+        {
+          "type": "text",
+          "id": "anchor",
+          "label": "Anchor on the page",
+          "default": "faq-shrink",
+          "info": "The id of the answer it links to. Leave empty to use the question."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 24,
+  "presets": [
+    {
+      "name": "Page header, FAQ finder",
+      "blocks": [
+        {
+          "type": "question",
+          "settings": {
+            "question": "Will the linen shrink in the wash?",
+            "anchor": "faq-shrink"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "How do I get creases out without an iron?",
+            "anchor": "faq-creases"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Which size if I am between two?",
+            "anchor": "faq-size"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Do you mend pieces bought years ago?",
+            "anchor": "faq-mend"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "How long does a made-to-order dress take?",
+            "anchor": "faq-made-to-order"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Can I return a washed piece?",
+            "anchor": "faq-return-washed"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Where is the flax grown and woven?",
+            "anchor": "faq-flax"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

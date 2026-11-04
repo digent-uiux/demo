@@ -1,0 +1,10 @@
+{
+  "blko": {
+    "faq_48": {
+      "questions": {
+        "one": "{{ count }} question",
+        "other": "{{ count }} questions"
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "blko": {
+    "featured_products_49": {
+      "colours": "{{ product }} colours",
+      "was": "Was"
+    }
+  }
+}

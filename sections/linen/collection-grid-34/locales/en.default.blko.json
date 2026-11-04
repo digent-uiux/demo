@@ -1,0 +1,45 @@
+{
+  "blko": {
+    "collection": {
+      "apply": "Apply",
+      "clear_all": "Clear all",
+      "price_from": "From",
+      "price_to": "To"
+    },
+    "collection_grid_34": {
+      "cloth": "Cloth",
+      "label": "Collection",
+      "size_for": "Size for [name]",
+      "sort": "Sort"
+    },
+    "general": {
+      "next": "Next",
+      "page": "Page {{ page }}",
+      "pagination": "Pagination",
+      "previous": "Previous"
+    },
+    "linen": {
+      "cart_error": "Your bag could not be updated. Please try again.",
+      "choose_options": "Choose options",
+      "close": "Close",
+      "collection_empty": "No pieces match these filters. Try removing one.",
+      "collections": "Collections",
+      "filter_eyebrow": "The wardrobe index",
+      "filter_heading": "Find your fit.",
+      "filter_intro": "Cloth, cut and the way it falls.",
+      "filter_sort": "Filter & sort",
+      "grid_compact": "The full shelf",
+      "grid_density": "Wardrobe density",
+      "grid_spacious": "A closer look",
+      "in_stock": "In stock"
+    },
+    "products": {
+      "sold_out": "Sold out"
+    }
+  },
+  "blko_ui": {
+    "product": {
+      "add": "Add {{ title }} to bag"
+    }
+  }
+}

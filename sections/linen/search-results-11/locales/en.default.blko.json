@@ -1,0 +1,30 @@
+{
+  "blko": {
+    "general": {
+      "next": "Next",
+      "page": "Page {{ page }}",
+      "pagination": "Pagination",
+      "previous": "Previous"
+    },
+    "search_results_11": {
+      "filter": "Filter by fabric",
+      "label": "Search results",
+      "search": "Search the collection"
+    }
+  },
+  "blko_ui": {
+    "price": {
+      "from": "From",
+      "save": "Save",
+      "was": "Was"
+    },
+    "product": {
+      "add": "Add {{ title }} to bag",
+      "colors": "{{ count }} colours",
+      "save": "Save {{ title }}"
+    },
+    "rating": {
+      "stars": "{{ value }} out of 5 stars"
+    }
+  }
+}

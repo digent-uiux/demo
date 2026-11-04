@@ -1,0 +1,11 @@
+{
+  "globals": {
+    "predictive_search": {
+      "performed": true,
+      "terms": "linen",
+      "resources": {
+        "products": []
+      }
+    }
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "globals": {
+    "request": {
+      "host": "linen.example",
+      "design_mode": false,
+      "page_type": "page"
+    },
+    "customer": {
+      "name": "Avery Example",
+      "email": "avery@example.test",
+      "orders_count": 1,
+      "addresses_count": 1,
+      "default_address": {
+        "id": 101,
+        "name": "Avery Example",
+        "first_name": "Avery",
+        "last_name": "Example",
+        "address1": "1 Sample Street",
+        "city": "Montreal",
+        "country": "Canada",
+        "province": "Quebec",
+        "zip": "H1A 0A1"
+      },
+      "addresses": [
+        {
+          "id": 101,
+          "name": "Avery Example",
+          "first_name": "Avery",
+          "last_name": "Example",
+          "address1": "1 Sample Street",
+          "city": "Montreal",
+          "country": "Canada",
+          "province": "Quebec",
+          "zip": "H1A 0A1"
+        }
+      ],
+      "new_address": {
+        "country": "Canada",
+        "province": "Ontario"
+      }
+    },
+    "order": {
+      "id": 1001,
+      "name": "#1001",
+      "created_at": "2026-11-01",
+      "line_items": [
+        {
+          "id": 1702,
+          "title": "Washed linen shirt",
+          "variant": {
+            "title": "Oat / M"
+          },
+          "product": {
+            "title": "Washed linen shirt"
+          },
+          "quantity": 3,
+          "price": 1750,
+          "final_price": 1750,
+          "original_price": 2000,
+          "line_price": 5251,
+          "final_line_price": 5251,
+          "original_line_price": 6000,
+          "discount_allocations": []
+        }
+      ],
+      "line_items_subtotal_price": 5251,
+      "subtotal_price": 5251,
+      "total_price": 5251,
+      "total_net_amount": 5251,
+      "total_refunded_amount": 0,
+      "financial_status_label": "Paid",
+      "fulfillment_status_label": "Unfulfilled",
+      "billing_address": {
+        "id": 101,
+        "name": "Avery Example",
+        "first_name": "Avery",
+        "last_name": "Example",
+        "address1": "1 Sample Street",
+        "city": "Montreal",
+        "country": "Canada",
+        "province": "Quebec",
+        "zip": "H1A 0A1"
+      },
+      "shipping_address": {
+        "id": 101,
+        "name": "Avery Example",
+        "first_name": "Avery",
+        "last_name": "Example",
+        "address1": "1 Sample Street",
+        "city": "Montreal",
+        "country": "Canada",
+        "province": "Quebec",
+        "zip": "H1A 0A1"
+      },
+      "shipping_methods": [],
+      "tax_lines": []
+    }
+  }
+}

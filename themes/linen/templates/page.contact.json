@@ -1,0 +1,61 @@
+{
+  "sections": {
+    "page-header-55": {
+      "type": "blko-page-header-55",
+      "settings": {
+        "tokens": "theme"
+      }
+    },
+    "contact-23": {
+      "type": "blko-contact-23",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "piece-1": {
+          "type": "piece",
+          "settings": {
+            "name": "Dress",
+            "jobs": "Shorten hem, Take in waist, Adjust straps",
+            "measure": "Length, shoulder to hem"
+          }
+        },
+        "piece-2": {
+          "type": "piece",
+          "settings": {
+            "name": "Trousers",
+            "jobs": "Shorten hem, Take in waist, Taper leg",
+            "measure": "Inside leg",
+            "start": true
+          }
+        },
+        "piece-3": {
+          "type": "piece",
+          "settings": {
+            "name": "Shirt",
+            "jobs": "Shorten sleeves, Take in sides, Mend a seam",
+            "measure": "Sleeve, shoulder to cuff"
+          }
+        },
+        "piece-4": {
+          "type": "piece",
+          "settings": {
+            "name": "Jacket",
+            "jobs": "Shorten sleeves, Replace buttons, Mend lining",
+            "measure": "Sleeve, shoulder to cuff"
+          }
+        }
+      },
+      "block_order": [
+        "piece-1",
+        "piece-2",
+        "piece-3",
+        "piece-4"
+      ]
+    }
+  },
+  "order": [
+    "page-header-55",
+    "contact-23"
+  ]
+}

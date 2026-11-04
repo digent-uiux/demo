@@ -1,0 +1,6 @@
+/* Display + regular: large editorial type stays expressive; small commerce/UI roles stay readable. */
+body.blko-theme :is([class*="__name"],[class*="__price"],[class*="__meta"],[class*="__caption"],[class*="__tagtitle"],[class*="__by"],[class*="__label"],button,input,select,textarea),
+body.blko-theme :is([class*="__name"],[class*="__price"],[class*="__meta"],[class*="__caption"],[class*="__tagtitle"],[class*="__by"],[class*="__label"],button) *{font-family:var(--font-body,system-ui,sans-serif)!important;font-style:normal!important}
+.blko-mixed-regular{font-family:var(--font-body,system-ui,sans-serif)!important;font-style:normal!important;font-weight:400!important}
+
+.bheader38 .bheader38__note em{font-family:var(--font-body,system-ui)!important;font-style:normal!important}

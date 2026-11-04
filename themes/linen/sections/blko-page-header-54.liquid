@@ -1,0 +1,206 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-2'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-page-header-54.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture blko_class -%}bpageheader54{% if s.tokens == 'theme' %} bpageheader54--theme{% endif %}{% if blko_sid != 'scheme-2' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}{%- endcapture -%}
+{%- liquid
+  assign crumb = s.crumb | default: page.title | default: s.heading
+  assign label = s.heading | strip_html
+  assign crumbs_label = 'blko.page_header_54.breadcrumb' | t
+-%}
+{%- capture blko_body -%}
+    <div class="bpageheader54__grid">
+      <div class="bpageheader54__copy">
+        <nav aria-label="{{ crumbs_label }}">
+          <ol class="bpageheader54__crumbs">
+            <li><a href="{{ routes.root_url }}">{{ s.home_label | escape }}</a></li>
+            <li aria-hidden="true">~</li>
+            <li aria-current="page" class="bpageheader54__here">{{ crumb | escape }}</li>
+          </ol>
+        </nav>
+        <h1 class="bpageheader54__title">{{ s.heading | escape }}</h1>
+        {%- if s.text != blank -%}<p class="bx-body bx-muted bpageheader54__text">{{ s.text | escape }}</p>{%- endif -%}
+      </div>
+      {%- if s.show_card -%}
+        <figure class="bpageheader54__card">
+          <span aria-hidden="true" class="bpageheader54__hole"></span>
+          <div class="bpageheader54__cut">
+            {%- if s.image != blank -%}
+              {{ s.image | image_url: width: 500 | image_tag: class: 'bpageheader54__img', loading: 'lazy', widths: '250, 500', sizes: '(min-width: 768px) 184px, 96px', alt: s.image.alt }}
+            {%- else -%}
+              {{ 'lifestyle-2' | placeholder_svg_tag: 'bpageheader54__img' }}
+            {%- endif -%}
+          </div>
+          <figcaption class="bpageheader54__cap bx-label bx-muted">
+            {%- if s.card_title != blank -%}<span class="bpageheader54__captitle">{{ s.card_title | escape }}</span>{%- endif -%}
+            {%- if s.card_text != blank -%}<span class="bpageheader54__capmore">{{ s.card_text | escape }}</span>{%- endif -%}
+          </figcaption>
+        </figure>
+      {%- endif -%}
+    </div>
+{%- endcapture -%}
+{%- render 'blko-ui-section', surface: 'alt', bleed: true, label: label, className: blko_class, style: blko_style, inner: 'bx-pad bpageheader54__in', children: blko_body -%}
+
+{% schema %}
+{
+  "name": "Page header, swatch card",
+  "tag": "div",
+  "class": "blko-page-header-54-wrap",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "home_label",
+      "label": "Home crumb",
+      "default": "home"
+    },
+    {
+      "type": "text",
+      "id": "crumb",
+      "label": "Current crumb",
+      "default": "our story",
+      "info": "Leave empty to use the page title."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Clothes that soften the more you wear them"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "We cut flax linen and raw cotton into a few easy shapes, wash them twice before they leave, and mend them if you send them back."
+    },
+    {
+      "type": "header",
+      "content": "Swatch card"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_card",
+      "label": "Show swatch card",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Photo"
+    },
+    {
+      "type": "text",
+      "id": "card_title",
+      "label": "Card label",
+      "default": "No. 12 · Oat"
+    },
+    {
+      "type": "text",
+      "id": "card_text",
+      "label": "Card detail",
+      "default": "Washed flax, 185 g/m²",
+      "info": "Hidden on phones."
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_source",
+      "label": "Fonts",
+      "options": [
+        {
+          "value": "bundled",
+          "label": "Bundled (EB Garamond + Albert Sans)"
+        },
+        {
+          "value": "picker",
+          "label": "Pick from the font library"
+        },
+        {
+          "value": "theme",
+          "label": "Use the theme's fonts"
+        }
+      ],
+      "default": "bundled"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors and shapes"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, corners, type style",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case…). Other themes: keep the preset."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:blko.linen.color_scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "Page header, swatch card"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,198 @@
+{
+  "sections": {
+    "featured-products-49": {
+      "type": "blko-featured-products-49",
+      "settings": {
+        "tokens": "theme",
+        "heading": "The everyday edit"
+      },
+      "blocks": {
+        "product-1": {
+          "type": "product",
+          "settings": {
+            "demo_title": "The indigo camp shirt",
+            "demo_price": 98,
+            "demo_photo": "photo-1713881649391-a1c8ddaf83cd",
+            "demo_alt": "Short-sleeved indigo linen shirt hanging from a branch above pale sand",
+            "demo_compare": 0,
+            "demo_colors": "Indigo #25333c, Ink #17252e",
+            "zoom_origin": "50% 40%"
+          }
+        },
+        "product-2": {
+          "type": "product",
+          "settings": {
+            "demo_title": "The chalk band-collar shirt",
+            "demo_price": 88,
+            "demo_photo": "photo-1713881587420-113c1c43e28a",
+            "demo_alt": "Short-sleeved chalk linen shirt on the same branch and pale sand backdrop",
+            "demo_compare": 110,
+            "demo_colors": "Chalk #f4eee7, Natural #d8c9ad",
+            "zoom_origin": "50% 40%"
+          }
+        }
+      },
+      "block_order": [
+        "product-1",
+        "product-2"
+      ]
+    },
+    "testimonial-40": {
+      "type": "blko-testimonial-40",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "note-1": {
+          "type": "note",
+          "settings": {
+            "quote": "Softer after every wash. I live in it from May to September.",
+            "name": "Iris B.",
+            "piece": "Linen camp shirt, sand"
+          }
+        },
+        "note-2": {
+          "type": "note",
+          "settings": {
+            "quote": "Cool on a hot train, and the creases look on purpose.",
+            "name": "Leila M.",
+            "piece": "Smock maxi dress, clay"
+          }
+        },
+        "note-3": {
+          "type": "note",
+          "settings": {
+            "quote": "Drawstring waist, deep pockets, long enough for my legs.",
+            "name": "Hanne J.",
+            "piece": "Wide linen trouser, oat"
+          }
+        },
+        "note-4": {
+          "type": "note",
+          "settings": {
+            "quote": "Packed it for the beach and wore it to dinner too.",
+            "name": "Rosa T.",
+            "piece": "Gauze beach robe, olive"
+          }
+        }
+      },
+      "block_order": [
+        "note-1",
+        "note-2",
+        "note-3",
+        "note-4"
+      ]
+    },
+    "featured-products-44": {
+      "type": "blko-featured-products-44",
+      "settings": {
+        "tokens": "theme",
+        "subheading": "Three linen cuts for long summer days."
+      },
+      "blocks": {
+        "product-1": {
+          "type": "product",
+          "settings": {
+            "demo_title": "Sleeveless linen shift",
+            "demo_price": 128,
+            "demo_photo": "photo-1747396206869-75ea57b325ce",
+            "demo_alt": "Sand-coloured sleeveless linen shift on a pale studio backdrop",
+            "day": "Mon 27",
+            "badge": "New"
+          }
+        },
+        "product-2": {
+          "type": "product",
+          "settings": {
+            "demo_title": "Gathered linen midi",
+            "demo_price": 138,
+            "demo_photo": "photo-1789110519607-6176d668fb72",
+            "demo_alt": "Pale sage gathered linen midi dress on a white studio backdrop",
+            "day": "Wed 29",
+            "badge": "Restock"
+          }
+        },
+        "product-3": {
+          "type": "product",
+          "settings": {
+            "demo_title": "Rope-tie linen dress",
+            "demo_price": 118,
+            "demo_photo": "photo-1789110520302-3df8ce0410f0",
+            "demo_alt": "Short chalk linen dress with a rope waist tie on a white studio backdrop",
+            "day": "Fri 31",
+            "badge": "New"
+          }
+        }
+      },
+      "block_order": [
+        "product-1",
+        "product-2",
+        "product-3"
+      ]
+    },
+    "newsletter-52": {
+      "type": "blko-newsletter-52",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "perk-1": {
+          "type": "perk",
+          "settings": {
+            "icon": "percent",
+            "title": "10% off your first order",
+            "text": "Sent the moment you confirm."
+          }
+        },
+        "perk-2": {
+          "type": "perk",
+          "settings": {
+            "icon": "sparkles",
+            "title": "First look at each season",
+            "text": "Two days before the shop opens it."
+          }
+        },
+        "perk-3": {
+          "type": "perk",
+          "settings": {
+            "icon": "book-open",
+            "title": "Care notes for natural fabric",
+            "text": "Washing, drying and mending linen."
+          }
+        }
+      },
+      "block_order": [
+        "perk-1",
+        "perk-2",
+        "perk-3"
+      ]
+    },
+    "hero-57": {
+      "type": "blko-hero-57",
+      "settings": {
+        "tokens": "theme"
+      }
+    },
+    "text-scroll-13": {
+      "type": "blko-text-scroll-13",
+      "settings": {
+        "tokens": "theme"
+      }
+    },
+    "scroll-images-09": {
+      "type": "blko-scroll-images-09",
+      "settings": {
+        "tokens": "theme"
+      }
+    }
+  },
+  "order": [
+    "hero-57",
+    "text-scroll-13",
+    "featured-products-49",
+    "testimonial-40",
+    "scroll-images-09",
+    "featured-products-44",
+    "newsletter-52"
+  ]
+}

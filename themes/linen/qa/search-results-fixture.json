@@ -1,0 +1,26 @@
+{
+  "globals": {
+    "predictive_search": {
+      "performed": true,
+      "terms": "linen",
+      "resources": {
+        "products": [
+          {
+            "title": "Soft <oat> & linen shirt",
+            "url": "https://linen.example/fr/products/shirt?variant=1702",
+            "price": 17550,
+            "price_varies": false,
+            "available": true
+          },
+          {
+            "title": "Travel wrap",
+            "url": "https://linen.example/fr/products/wrap",
+            "price": 12000,
+            "price_varies": true,
+            "available": false
+          }
+        ]
+      }
+    }
+  }
+}

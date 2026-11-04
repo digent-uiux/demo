@@ -1,0 +1,42 @@
+{
+  "globals": {
+    "request": {
+      "host": "linen.example",
+      "design_mode": false
+    },
+    "search": {
+      "performed": true,
+      "results_count": 30,
+      "terms": "linen",
+      "results": [
+        {
+          "object_type": "product",
+          "id": 17,
+          "title": "Catalog linen shirt",
+          "url": "/products/shirt",
+          "type": "Clothing",
+          "price": 17550
+        }
+      ]
+    }
+  },
+  "paginate": {
+    "current_page": 1,
+    "pages": 2,
+    "items": 30,
+    "parts": [
+      {
+        "title": 1,
+        "is_link": false
+      },
+      {
+        "title": 2,
+        "is_link": true,
+        "url": "/search?q=linen&type=product&page=2"
+      }
+    ],
+    "next": {
+      "url": "/search?q=linen&type=product&page=2"
+    }
+  }
+}

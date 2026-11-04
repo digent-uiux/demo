@@ -1,0 +1,231 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-not-found-23.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture blko_class -%}bnotfound23{% if s.tokens == 'theme' %} bnotfound23--theme{% endif %}{% if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}{%- endcapture -%}
+{%- liquid
+  assign label = 'blko.not_found_23.label' | t
+  assign nav = 'blko.not_found_23.nav' | t
+  assign pos = '30,56|52,34|74,60' | split: '|'
+  assign thread = 'M2 60 C 12 10, 20 92, 30 56 S 44 6, 52 34 S 66 98, 74 60 S 88 20, 96 42'
+  assign home = s.home_url | default: routes.root_url
+  assign home_label = s.home_label | escape
+-%}
+{%- capture blko_body -%}
+  <div class="bnotfound23__head">
+    <h1 class="bnotfound23__title">{{ s.heading | escape }}</h1>
+    {%- if s.text != blank -%}<p class="bx-body bx-muted bnotfound23__lead">{{ s.text | escape }}</p>{%- endif -%}
+  </div>
+
+  <nav aria-label="{{ nav | escape }}" class="bnotfound23__wide">
+    <svg aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none" class="bnotfound23__svg">
+      <path d="{{ thread }}" fill="none" stroke="currentColor" stroke-opacity=".35" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+      <path d="{{ thread }}" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="10 8" stroke-linecap="round" vector-effect="non-scaling-stroke" class="bnotfound23__sew"/>
+    </svg>
+    <span aria-hidden="true" class="bnotfound23__needle"><span></span></span>
+    {%- for b in section.blocks limit: 3 -%}
+      {%- assign xy = pos[forloop.index0] | split: ',' -%}
+      {%- assign c = b.settings.collection -%}
+      {%- assign nm = b.settings.name | default: c.title -%}
+      {%- assign href = b.settings.link | default: c.url | default: routes.all_products_collection_url -%}
+      <a href="{{ href }}" class="bnotfound23__stop" style="left:{{ xy[0] }}%;top:{{ xy[1] }}%" {{ b.shopify_attributes }}>
+        <span aria-hidden="true" class="bnotfound23__knot"></span>
+        <span class="bnotfound23__tag">{{ nm | escape }}</span>
+      </a>
+    {%- endfor -%}
+    {%- render 'blko-ui-button', href: home, className: 'bnotfound23__home', children: home_label -%}
+  </nav>
+
+  <nav aria-label="{{ nav | escape }}" class="bnotfound23__narrow">
+    <span aria-hidden="true" class="bnotfound23__rail"></span>
+    {%- for b in section.blocks limit: 3 -%}
+      {%- assign c = b.settings.collection -%}
+      {%- assign nm = b.settings.name | default: c.title -%}
+      {%- assign href = b.settings.link | default: c.url | default: routes.all_products_collection_url -%}
+      <a href="{{ href }}" class="bnotfound23__nstop"><span aria-hidden="true" class="bnotfound23__knot bnotfound23__nknot"></span>{{ nm | escape }}</a>
+    {%- endfor -%}
+    {%- render 'blko-ui-button', href: home, className: 'bnotfound23__nhome', children: home_label -%}
+  </nav>
+{%- endcapture -%}
+{%- render 'blko-ui-section', surface: 'bg', bleed: true, label: label, className: blko_class, style: blko_style, inner: 'bx-pad bnotfound23__in', children: blko_body -%}
+
+{% schema %}
+{
+  "name": "Not found, loose thread",
+  "tag": "div",
+  "class": "blko-not-found-23-wrap",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "We seem to have dropped a stitch."
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "The page came loose somewhere along the seam. Follow the thread and it will lead you back."
+    },
+    {
+      "type": "text",
+      "id": "home_label",
+      "label": "Home button label",
+      "default": "Back to home"
+    },
+    {
+      "type": "url",
+      "id": "home_url",
+      "label": "Home button link",
+      "info": "Empty: the home page."
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_source",
+      "label": "Fonts",
+      "options": [
+        {
+          "value": "bundled",
+          "label": "Bundled (EB Garamond + Albert Sans)"
+        },
+        {
+          "value": "picker",
+          "label": "Pick from the font library"
+        },
+        {
+          "value": "theme",
+          "label": "Use the theme's fonts"
+        }
+      ],
+      "default": "bundled"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors and shapes"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, corners, type style",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case…). Other themes: keep the preset."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:blko.linen.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stop",
+      "name": "Stop on the thread",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Label",
+          "info": "Empty: the collection title."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "info": "Empty: the collection."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 3,
+  "presets": [
+    {
+      "name": "Not found, loose thread",
+      "blocks": [
+        {
+          "type": "stop",
+          "settings": {
+            "name": "Linen dresses"
+          }
+        },
+        {
+          "type": "stop",
+          "settings": {
+            "name": "Shirts and tops"
+          }
+        },
+        {
+          "type": "stop",
+          "settings": {
+            "name": "Resort edit"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

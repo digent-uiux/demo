@@ -1,0 +1,56 @@
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "header-38": {
+      "type": "blko-header-38",
+      "settings": {
+        "tokens": "theme",
+        "brand": "Linen"
+      },
+      "blocks": {
+        "cloth-1": {
+          "type": "cloth",
+          "settings": {
+            "name": "Washed linen",
+            "picks": 42,
+            "note": "stone-washed for a soft, lived-in hand"
+          }
+        },
+        "cloth-2": {
+          "type": "cloth",
+          "settings": {
+            "name": "Linen-cotton",
+            "picks": 17,
+            "note": "a little smoother, creases less"
+          }
+        },
+        "cloth-3": {
+          "type": "cloth",
+          "settings": {
+            "name": "Heavy linen",
+            "picks": 9,
+            "note": "260 g/m\u00b2, for jackets and wide trousers"
+          }
+        },
+        "cloth-4": {
+          "type": "cloth",
+          "settings": {
+            "name": "Gauze",
+            "picks": 11,
+            "note": "open weave, made for the hottest days"
+          }
+        }
+      },
+      "block_order": [
+        "cloth-1",
+        "cloth-2",
+        "cloth-3",
+        "cloth-4"
+      ]
+    }
+  },
+  "order": [
+    "header-38"
+  ]
+}

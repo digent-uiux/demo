@@ -1,0 +1,15 @@
+{
+  "globals": {
+    "request": {
+      "host": "linen.example",
+      "design_mode": false,
+      "page_type": "page"
+    }
+  },
+  "forms": {
+    "recover_customer_password": {
+      "posted_successfully": true,
+      "posted_successfully?": true
+    }
+  }
+}

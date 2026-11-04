@@ -1,0 +1,11 @@
+{
+  "blko": {
+    "collection_banner_58": {
+      "notes": {
+        "one": "{{ count }} note",
+        "other": "{{ count }} notes"
+      },
+      "topics": "Note topics"
+    }
+  }
+}

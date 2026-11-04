@@ -1,0 +1,271 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+<script data-blko-kit="linen">try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-kit-linen')}catch(e){}</script>
+{{ 'blko-linen-motion.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-linen-motion.js' | asset_url }}" defer></script>
+
+{{ 'blko-newsletter-52.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-fonts-linen', mode: 'faces', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font -%}
+{%- capture blko_style -%}{% render 'blko-fonts-linen', mode: 'vars', source: s.font_source, heading_font: s.heading_font, body_font: s.body_font %}--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px{%- endcapture -%}
+{%- capture blko_class -%}bnewsletter52{% if s.tokens == 'theme' %} bnewsletter52--theme{% endif %}{% if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}{%- endcapture -%}
+{%- assign label = 'blko.newsletter_52.label' | t -%}
+{%- capture blko_body -%}
+    <div class="bnewsletter52__main">
+      <div class="bnewsletter52__intro">
+        <p class="bx-label bnewsletter52__kicker">{{ s.kicker | escape }}</p><h2 class="bnewsletter52__title">{{ s.heading | escape }}</h2>
+        {%- if s.text != blank -%}<p class="bx-body bx-muted bnewsletter52__lead">{{ s.text | escape }}</p>{%- endif -%}
+      </div>
+      <div aria-live="polite">
+        {%- form 'customer', id: 'blko-nl52-form', class: 'bnewsletter52__form' -%}
+          {%- if form.posted_successfully? -%}
+            <p class="bnewsletter52__done bx-body">{{ s.success | escape }}</p>
+          {%- else -%}
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            <label for="{{ section.id }}-email" class="bnewsletter52__label bx-small">{{ s.email_label | escape }}</label>
+            <input id="{{ section.id }}-email" type="email" name="contact[email]" required autocomplete="email" class="bx-input" placeholder="{{ s.placeholder | escape }}">
+            {%- if form.errors -%}<p class="bnewsletter52__error bx-small" role="alert">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</p>{%- endif -%}
+            {%- assign lbl = s.button_label | escape -%}
+            {%- render 'blko-ui-button', type: 'submit', shape: 'pill', className: 'bnewsletter52__submit', children: lbl -%}
+            {%- if s.note != blank -%}<p class="bx-small bx-muted">{{ s.note | escape }}</p>{%- endif -%}
+          {%- endif -%}
+        {%- endform -%}
+      </div>
+    </div>
+    <ul class="bnewsletter52__perks">
+      {%- for b in section.blocks -%}
+        <li class="bnewsletter52__perk" {{ b.shopify_attributes }}>
+          <span class="bnewsletter52__number" aria-hidden="true">0{{ forloop.index }}</span>
+          <p class="bnewsletter52__perktext">
+            <span class="bx-body bnewsletter52__perktitle">{{ b.settings.title | escape }}</span>
+            <span class="bx-small bx-muted">{{ b.settings.text | escape }}</span>
+          </p>
+        </li>
+      {%- endfor -%}
+    </ul>
+{%- endcapture -%}
+{%- render 'blko-ui-section', surface: 'bg', bleed: true, label: label, className: blko_class, style: blko_style, inner: 'bx-pad bnewsletter52__in', children: blko_body -%}
+
+{% schema %}
+{
+  "name": "Sign-up, member perks",
+  "tag": "div",
+  "class": "blko-newsletter-52-wrap",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "default": "Correspondence / from the workroom",
+      "label": "Index label"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Join the slow list"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "A short letter when something new is sewn."
+    },
+    {
+      "type": "text",
+      "id": "email_label",
+      "label": "Email label",
+      "default": "Email address"
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Email placeholder",
+      "default": "you@example.com"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Sign up"
+    },
+    {
+      "type": "text",
+      "id": "note",
+      "label": "Note under the form",
+      "default": "One or two emails a month. Leave whenever you like."
+    },
+    {
+      "type": "text",
+      "id": "success",
+      "label": "Thank-you message",
+      "default": "Welcome. Your 10% code is waiting in your inbox."
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_source",
+      "label": "Fonts",
+      "options": [
+        {
+          "value": "bundled",
+          "label": "Bundled (EB Garamond + Albert Sans)"
+        },
+        {
+          "value": "picker",
+          "label": "Pick from the font library"
+        },
+        {
+          "value": "theme",
+          "label": "Use the theme's fonts"
+        }
+      ],
+      "default": "bundled"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors and shapes"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, corners, type style",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-radius-card, --blko-theme-button-case\u2026). Other themes: keep the preset."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:blko.linen.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "perk",
+      "name": "Perk",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "percent",
+          "options": [
+            {
+              "value": "percent",
+              "label": "Percent"
+            },
+            {
+              "value": "sparkles",
+              "label": "Sparkles"
+            },
+            {
+              "value": "book-open",
+              "label": "Book"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "10% off your first order"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Sent the moment you confirm."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Sign-up, member perks",
+      "blocks": [
+        {
+          "type": "perk",
+          "settings": {
+            "icon": "percent",
+            "title": "10% off your first order",
+            "text": "Sent the moment you confirm."
+          }
+        },
+        {
+          "type": "perk",
+          "settings": {
+            "icon": "sparkles",
+            "title": "First look at each season",
+            "text": "Two days before the shop opens it."
+          }
+        },
+        {
+          "type": "perk",
+          "settings": {
+            "icon": "book-open",
+            "title": "Care notes for natural fabric",
+            "text": "Washing, drying and mending linen."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

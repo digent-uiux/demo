@@ -1,0 +1,11 @@
+{
+  "blko": {
+    "page_header_56": {
+      "answers": {
+        "one": "{{ count }} answer",
+        "other": "{{ count }} answers"
+      },
+      "breadcrumb": "Breadcrumb"
+    }
+  }
+}

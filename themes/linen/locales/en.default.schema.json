@@ -1,0 +1,15 @@
+{
+  "linen": {
+    "cart": {
+      "name": "Bag drawer"
+    },
+    "search": {
+      "results_name": "Search suggestions"
+    }
+  },
+  "blko": {
+    "linen": {
+      "color_scheme": "Color scheme"
+    }
+  }
+}

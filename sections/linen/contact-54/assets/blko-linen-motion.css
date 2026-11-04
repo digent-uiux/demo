@@ -1,0 +1,59 @@
+/* Linen motion kit. GENERATED from components/ui/kits/linen.ts by kits/liquid.mjs; do not edit.
+   Runs only under html.blko-kit-linen (added by blko-linen-motion.js when motion is allowed). */
+/* Entry: a slow fade and a long, gentle rise (r3: 28px, so it reads). */
+html.blko-kit-linen:root [data-reveal-group][data-shown] > :not(h1, h2) { animation-name: linen-fade; }
+@keyframes linen-fade { from { opacity: 0; transform: translateY(calc(var(--blko-motion-distance, 16px) * 1.75)); } }
+
+/* Headings: out of a soft blur. */
+html.blko-kit-linen:root [data-reveal-group][data-shown] :is(h1, h2) { animation: linen-blur calc(var(--blko-motion-duration, 1100ms) * 1.3) var(--blko-motion-ease, cubic-bezier(.25,.6,.3,1)) calc(var(--blko-motion-stagger, 120ms) + 120ms) backwards; }
+@keyframes linen-blur { from { opacity: 0; filter: blur(10px); } }
+
+/* Buttons: an outline ring closes in around the button. */
+html.blko-kit-linen:root .blko-ui-button:not(.blko-ui-button--link) { outline: 1px solid transparent; outline-offset: 9px; transition: outline-color .6s var(--blko-motion-ease, cubic-bezier(.25,.6,.3,1)), outline-offset .6s var(--blko-motion-ease, cubic-bezier(.25,.6,.3,1)); }
+html.blko-kit-linen:root .blko-ui-button:not(.blko-ui-button--link):is(:hover, :focus-visible) { outline-color: currentColor; outline-offset: 3px; }
+html.blko-kit-linen:root .blko-ui-button:not(.blko-ui-button--link):not([class*="primary"]):not(.blko-ui-button--primary):is(:hover, :focus-visible) { outline-color: color-mix(in oklab, currentColor 55%, transparent); }
+
+/* Cine text, linen's way (block-cine-motion-brief Phase 3): held-back headings rise line by line out of a soft blur, slow
+   (1.25s, 120ms a line); the eyebrow words surface from a light blur first; the lead drifts up word by word after them.
+   kitText splits them while the group is pending and undoes it once they have landed. */
+html.blko-kit-linen:root [data-linen-t] :is(.cine-m, .cine-l, .cine-w) { display: inline-block; }
+html.blko-kit-linen:root [data-linen-t] .cine-m { vertical-align: top; }
+html.blko-kit-linen:root [data-pending] [data-linen-t] :is(.cine-l, .cine-w) { opacity: 0; }
+html.blko-kit-linen:root [data-reveal-group][data-shown] :is(h1, h2)[data-linen-t] { animation: none; }
+html.blko-kit-linen:root [data-reveal-group][data-shown] [data-linen-t="h"] .cine-l { animation: linen-t-line 1.25s var(--blko-motion-ease, cubic-bezier(.25,.6,.3,1)) calc(160ms + var(--l, 0) * 120ms) both; }
+@keyframes linen-t-line { from { opacity: 0; filter: blur(9px); transform: translateY(.45em); } }
+html.blko-kit-linen:root [data-reveal-group][data-shown] [data-linen-t="e"] .cine-w { animation: linen-t-soft .9s var(--blko-motion-ease, cubic-bezier(.25,.6,.3,1)) calc(min(var(--i, 0), 10) * 70ms) both; }
+@keyframes linen-t-soft { from { opacity: 0; filter: blur(5px); } }
+html.blko-kit-linen:root [data-reveal-group][data-shown] [data-linen-t="b"] .cine-w { animation: linen-t-word 1s var(--blko-motion-ease, cubic-bezier(.25,.6,.3,1)) calc(420ms + min(var(--i, 0), 24) * 28ms) both; }
+@keyframes linen-t-word { from { opacity: 0; filter: blur(6px); transform: translateY(.35em); } }
+/* Press: the ring button settles a touch (it never moves on hover). */
+html.blko-kit-linen:root :is(.blko-ui-button:not(.blko-ui-button--link), .blko-ui-arrow-link):active { scale: .98; }
+
+/* Pictures: lift like a curtain when their section reveals. */
+html.blko-kit-linen:root [data-reveal-group][data-shown] :is(img, svg[data-placeholder]) { animation: linen-curtain calc(var(--blko-motion-duration, 1100ms) * 1.6) var(--blko-motion-ease, cubic-bezier(.25,.6,.3,1)) calc(var(--blko-motion-stagger, 120ms) * 2) backwards; }
+@keyframes linen-curtain { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
+
+/* Links: an underline grows out from the centre. */
+html.blko-kit-linen:root :is(nav, footer, p) a:not(.blko-ui-button):not(.blko-ui-arrow-link):not(:has(img, svg)) { background-image: linear-gradient(currentColor, currentColor); background-repeat: no-repeat; background-position: 50% 100%; background-size: 0% 1px; transition: background-size .6s var(--blko-motion-ease, cubic-bezier(.25,.6,.3,1)); }
+html.blko-kit-linen:root :is(nav, footer, p) a:not(.blko-ui-button):not(.blko-ui-arrow-link):not(:has(img, svg)):is(:hover, :focus-visible) { background-size: 100% 1px; }
+
+/* r3 load: heading out of a blur behind a soft sweep from the top, then the text, a ring around the buttons, the picture. */
+html.blko-kit-linen:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(h1, h2) { animation: linen-l-head 1.15s var(--blko-motion-ease, cubic-bezier(.25,.6,.3,1)) 60ms backwards; }
+@keyframes linen-l-head {
+  from { opacity: 0; filter: blur(14px); transform: translateY(26px); mask-image: linear-gradient(#000 33%, transparent 66%); mask-size: 100% 300%; mask-repeat: no-repeat; mask-position: 0 100%; }
+  to { mask-image: linear-gradient(#000 33%, transparent 66%); mask-size: 100% 300%; mask-repeat: no-repeat; mask-position: 0 0; }
+}
+html.blko-kit-linen:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(p, span):has(+ :is(h1, h2)) { animation: linen-l-eb .9s var(--blko-motion-ease, cubic-bezier(.25,.6,.3,1)) backwards; }
+@keyframes linen-l-eb { from { opacity: 0; filter: blur(5px); } }
+html.blko-kit-linen:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(h1, h2) ~ p { animation: linen-l-up .9s var(--blko-motion-ease, cubic-bezier(.25,.6,.3,1)) 420ms backwards; }
+@keyframes linen-l-up { from { opacity: 0; filter: blur(6px); transform: translateY(24px); } }
+/* Buttons never move (user, 30/10): fade + ring only, no rise. */
+html.blko-kit-linen:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(.blko-ui-button:not(.blko-ui-button--link), .blko-ui-arrow-link) { animation: linen-l-ring .9s var(--blko-motion-ease, cubic-bezier(.25,.6,.3,1)) 650ms backwards; }
+@keyframes linen-l-ring { from { opacity: 0; outline: 1px solid currentColor; outline-offset: 18px; } 60% { outline: 1px solid currentColor; outline-offset: 3px; } to { outline: 1px solid transparent; outline-offset: 3px; } }
+html.blko-kit-linen:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(img, svg[data-placeholder]) { animation: linen-l-img 1.2s var(--blko-motion-ease, cubic-bezier(.25,.6,.3,1)) 120ms backwards; }
+@keyframes linen-l-img { from { clip-path: inset(100% 0 0 0); transform: scale(1.12); } to { clip-path: inset(0 0 0 0); transform: none; } }
+
+/* r3 scroll: big pictures unveil from an inset frame as they rise (the script sets --linen-u 0..1; replaces the curtain). */
+html.blko-kit-linen:root [data-shown] :is(img, svg[data-placeholder])[data-linen-u] { animation: none; clip-path: inset(calc((1 - var(--linen-u, 1)) * 12%) calc((1 - var(--linen-u, 1)) * 8%)); scale: calc(1.14 - var(--linen-u, 1) * .14); }
+/* r3 scroll: section headings pull into focus as they rise (--linen-f 0..1; replaces the reveal blur on them). */
+html.blko-kit-linen:root [data-reveal-group][data-shown] h2[data-linen-f] { animation: none; filter: blur(calc((1 - var(--linen-f, 1)) * 8px)); opacity: calc(.2 + var(--linen-f, 1) * .8); translate: 0 calc((1 - var(--linen-f, 1)) * 28px); }
