@@ -1,0 +1,267 @@
+{
+  "sections": {
+    "wishlist-01": {
+      "type": "blko-wishlist-01",
+      "settings": {},
+      "blocks": {
+        "item-1": {
+          "type": "item",
+          "settings": {
+            "title": "Peptide Glow Serum",
+            "sizes": "30 ml:48, 50 ml:68",
+            "was": 56
+          }
+        },
+        "item-2": {
+          "type": "item",
+          "settings": {
+            "title": "Sheer Skin Tint SPF 30",
+            "sizes": "32 ml:38",
+            "shades": "Porcelain 01:#f1d9c4\nSand 03:#e2bc98\nHoney 05:#c99466:back\nMocha 08:#7f5236"
+          }
+        },
+        "item-3": {
+          "type": "item",
+          "settings": {
+            "title": "Cream Blush Balm",
+            "sizes": "6 g:24",
+            "shades": "Petal:#e9a4a6\nTerracotta:#c8694c\nBerry:#8e2f4a:out"
+          }
+        },
+        "item-4": {
+          "type": "item",
+          "settings": {
+            "title": "Barrier Night Cream",
+            "sizes": "15 ml:16, 50 ml:42",
+            "low": 3
+          }
+        },
+        "item-5": {
+          "type": "item",
+          "settings": {
+            "title": "Squalane Face Oil",
+            "sizes": "30 ml:34",
+            "was": 40
+          }
+        },
+        "item-6": {
+          "type": "item",
+          "settings": {
+            "title": "Blurring Loose Powder",
+            "sizes": "9 g:30",
+            "shades": "Translucent:#efe4d8\nWarm:#d9b48f"
+          }
+        }
+      },
+      "block_order": [
+        "item-1",
+        "item-2",
+        "item-3",
+        "item-4",
+        "item-5",
+        "item-6"
+      ]
+    },
+    "trust-badges-05": {
+      "type": "blko-trust-badges-05",
+      "settings": {},
+      "blocks": {
+        "claim-1": {
+          "type": "claim",
+          "settings": {
+            "key": "vegan",
+            "icon": "leaf",
+            "title": "Vegan",
+            "body": "No animal-derived ingredients, not even beeswax or lanolin."
+          }
+        },
+        "claim-2": {
+          "type": "claim",
+          "settings": {
+            "key": "cruelty-free",
+            "icon": "rabbit",
+            "title": "Cruelty-free",
+            "body": "Never tested on animals, product or ingredients, anywhere."
+          }
+        },
+        "claim-3": {
+          "type": "claim",
+          "settings": {
+            "key": "derm-tested",
+            "icon": "flask-conical",
+            "title": "Dermatologist tested",
+            "body": "Patch-tested on 50 people with sensitive skin. No reactions."
+          }
+        },
+        "claim-4": {
+          "type": "claim",
+          "settings": {
+            "key": "fragrance-free",
+            "icon": "sprout",
+            "title": "Fragrance-free",
+            "body": "No added fragrance or essential oils to irritate reactive skin."
+          }
+        },
+        "claim-5": {
+          "type": "claim",
+          "settings": {
+            "key": "non-comedogenic",
+            "icon": "droplets",
+            "title": "Non-comedogenic",
+            "body": "Tested on acne-prone skin: it does not clog pores."
+          }
+        },
+        "claim-6": {
+          "type": "claim",
+          "settings": {
+            "key": "mineral-spf",
+            "icon": "sun",
+            "title": "Mineral SPF 30",
+            "body": "Zinc oxide only, with no white cast on deeper skin."
+          }
+        },
+        "claim-7": {
+          "type": "claim",
+          "settings": {
+            "key": "refillable",
+            "icon": "recycle",
+            "title": "Refillable glass",
+            "body": "Buy the bottle once, then top up with a refill pouch."
+          }
+        },
+        "product-8": {
+          "type": "product",
+          "settings": {
+            "title": "Barrier Cleansing Foam",
+            "alt": "Close-up of airy white cleansing foam",
+            "claims": "vegan, cruelty-free, derm-tested, fragrance-free"
+          }
+        },
+        "product-9": {
+          "type": "product",
+          "settings": {
+            "title": "Clarity Serum 30 ml",
+            "alt": "A white dropper bottle of serum on a mossy branch",
+            "claims": "non-comedogenic, refillable, vegan"
+          }
+        },
+        "product-10": {
+          "type": "product",
+          "settings": {
+            "title": "Daily Mineral SPF 30",
+            "alt": "A white tube of mineral sunscreen beside two small jars",
+            "claims": "mineral-spf"
+          }
+        }
+      },
+      "block_order": [
+        "claim-1",
+        "claim-2",
+        "claim-3",
+        "claim-4",
+        "claim-5",
+        "claim-6",
+        "claim-7",
+        "product-8",
+        "product-9",
+        "product-10"
+      ]
+    },
+    "shoppable-image-06": {
+      "type": "blko-shoppable-image-06",
+      "settings": {},
+      "blocks": {
+        "look-1": {
+          "type": "look",
+          "settings": {
+            "title": "Weekend glow",
+            "caption": "Skin tint, cream blush and a clear brow gel"
+          }
+        },
+        "look-2": {
+          "type": "look",
+          "settings": {
+            "title": "Office, but dewy",
+            "caption": "A five-minute base that lasts through every meeting"
+          }
+        },
+        "look-3": {
+          "type": "look",
+          "settings": {
+            "title": "Evening plans",
+            "caption": "One bronzer, two lip shades, endless ways"
+          }
+        }
+      },
+      "block_order": [
+        "look-1",
+        "look-2",
+        "look-3"
+      ]
+    },
+    "coupon-07": {
+      "type": "blko-coupon-07",
+      "settings": {}
+    },
+    "recommendations-07": {
+      "type": "blko-recommendations-07",
+      "settings": {},
+      "blocks": {
+        "item-1": {
+          "type": "item",
+          "settings": {
+            "title": "Jelly lip tint",
+            "price": 18,
+            "rating": 4.9
+          }
+        },
+        "item-2": {
+          "type": "item",
+          "settings": {
+            "title": "Glow drops",
+            "price": 34,
+            "rating": 4.7
+          }
+        },
+        "item-3": {
+          "type": "item",
+          "settings": {
+            "title": "Avocado night mask",
+            "price": 29,
+            "rating": 4.8
+          }
+        },
+        "item-4": {
+          "type": "item",
+          "settings": {
+            "title": "Blur setting powder",
+            "price": 28,
+            "rating": 4.6
+          }
+        },
+        "item-5": {
+          "type": "item",
+          "settings": {
+            "title": "Bouncy gel cream",
+            "price": 32,
+            "rating": 4.8
+          }
+        }
+      },
+      "block_order": [
+        "item-1",
+        "item-2",
+        "item-3",
+        "item-4",
+        "item-5"
+      ]
+    }
+  },
+  "order": [
+    "wishlist-01",
+    "trust-badges-05",
+    "shoppable-image-06",
+    "coupon-07",
+    "recommendations-07"
+  ]
+}

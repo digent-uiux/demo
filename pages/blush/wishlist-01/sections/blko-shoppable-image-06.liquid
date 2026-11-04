@@ -1,0 +1,113 @@
+{%- comment -%}
+  Shoppable image 06, "Lookbook tiles, makeup looks" (registry/shoppable-image/shoppable-image-06.tsx).
+  A heading with a "view every look" link, then one big 4:5 look beside two stacked looks. Each tile has a "Shop look"
+  pill on the photo and a caption card at the bottom.
+  Look blocks: the first is the big tile, the rest stack on the right. A look links to its collection or product (else
+  its own link); its photo falls back to that collection's or product's image.
+  Theme-neutral: colours, fonts and radius come from the DS tokens, with the DS default look as fallback.
+{%- endcomment -%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-shoppable-image-06.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-ui-fonts' -%}
+
+{%- liquid
+  assign s = section.settings
+  assign looks = section.blocks | where: 'type', 'look'
+-%}
+<div class="blko-si06" style="--pt: {{ s.padding_top }}px; --pb: {{ s.padding_bottom }}px;">
+  <section class="blko-si06__band"{% if s.label != blank %} aria-label="{{ s.label | escape }}"{% endif %}>
+    <div class="blko-si06__inner">
+      <div class="blko-si06__head">
+        <h2 class="blko-si06__title">{{ s.heading }}</h2>
+        {%- if s.all_label != blank -%}
+          <a href="{{ s.all_link | default: routes.collections_url }}" class="blko-si06__all">{{ s.all_label | escape }}</a>
+        {%- endif -%}
+      </div>
+      <div class="blko-si06__grid">
+        {%- for block in looks -%}
+          {%- liquid
+            assign b = block.settings
+            assign big = forloop.first
+            assign url = b.link
+            assign media = b.image
+            if b.collection != blank
+              assign url = b.collection.url
+              if media == blank
+                assign media = b.collection.featured_image
+              endif
+            elsif b.product != blank
+              assign url = b.product.url
+              if media == blank
+                assign media = b.product.featured_media
+              endif
+            endif
+            assign alt = b.image.alt | default: b.title
+          -%}
+          {%- if forloop.index == 2 -%}<div class="blko-si06__stack">{%- endif -%}
+          <figure class="blko-si06__tile{% if big %} blko-si06__tile--big{% endif %}" {{ block.shopify_attributes }}>
+            {%- if media != blank -%}
+              {%- if big -%}
+                {{ media | image_url: width: 1100 | image_tag: loading: 'lazy', widths: '550, 825, 1100', sizes: '(min-width: 768px) 55vw, 100vw', alt: alt, class: 'blko-si06__img' }}
+              {%- else -%}
+                {{ media | image_url: width: 700 | image_tag: loading: 'lazy', widths: '350, 525, 700', sizes: '(min-width: 768px) 38vw, 100vw', alt: alt, class: 'blko-si06__img' }}
+              {%- endif -%}
+            {%- else -%}
+              {{ 'lifestyle-2' | placeholder_svg_tag: 'blko-si06__img blko-si06__ph' }}
+            {%- endif -%}
+            {%- if s.shop_label != blank -%}
+              <a href="{{ url | default: routes.all_products_collection_url }}" class="blko-si06__shop">{{ s.shop_label | escape }}{% render 'blko-shoppable-image-06-icon', name: 'arrow-right', size: 14 %}</a>
+            {%- endif -%}
+            <figcaption class="blko-si06__cap">
+              <span class="blko-si06__ctitle">{{ b.title | escape }}</span>
+              {%- if b.caption != blank -%}<span class="blko-si06__ctext">{{ b.caption | escape }}</span>{%- endif -%}
+            </figcaption>
+          </figure>
+          {%- if forloop.last and forloop.index > 1 -%}</div>{%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "Shoppable, lookbook tiles",
+  "tag": "div",
+  "class": "blko-section-si06",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Section label (screen readers)", "default": "Makeup looks" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading (italic part in <em>)", "default": "One palette. <em>Three looks.</em>" },
+    { "type": "text", "id": "all_label", "label": "Link label", "default": "View every look" },
+    { "type": "url", "id": "all_link", "label": "Link" },
+    { "type": "text", "id": "shop_label", "label": "Pill on each photo", "default": "Shop look" },
+    { "type": "header", "content": "Spacing (desktop; phones use 7/12)" },
+    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 96 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 96 }
+  ],
+  "blocks": [
+    {
+      "type": "look",
+      "name": "Look",
+      "limit": 3,
+      "settings": [
+        { "type": "collection", "id": "collection", "label": "Collection" },
+        { "type": "product", "id": "product", "label": "Product (when no collection)" },
+        { "type": "image_picker", "id": "image", "label": "Photo (blank = the collection's or product's)" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Weekend glow" },
+        { "type": "text", "id": "caption", "label": "Caption", "default": "Skin tint, cream blush and a clear brow gel" },
+        { "type": "url", "id": "link", "label": "Link (no collection or product)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shoppable, lookbook tiles",
+      "blocks": [
+        { "type": "look", "settings": { "title": "Weekend glow", "caption": "Skin tint, cream blush and a clear brow gel" } },
+        { "type": "look", "settings": { "title": "Office, but dewy", "caption": "A five-minute base that lasts through every meeting" } },
+        { "type": "look", "settings": { "title": "Evening plans", "caption": "One bronzer, two lip shades, endless ways" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

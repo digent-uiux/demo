@@ -1,0 +1,79 @@
+{%- comment -%}
+  Coupon 07, "Dark ticket, serif, beauty" (registry/coupon/coupon-07.tsx).
+  On a dark band: a serif heading and lead, a notched ticket (the offer and its date on the left, the code set vertically
+  on the stub with a copy button), a link, and a tall photo on the right from @3xl. The notches are cut with a mask, so
+  the ticket works on any background. On the dark surface every token flips, so the ticket in the text colour reads as
+  a cream stub.
+  Theme-neutral: colours, fonts and radius come from the DS tokens, with the DS default look as fallback.
+{%- endcomment -%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-coupon-07.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-coupon-07.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-ui-fonts' -%}
+
+{%- liquid
+  assign s = section.settings
+  assign pad_style = '--pt: ' | append: s.padding_top | append: 'px; --pb: ' | append: s.padding_bottom | append: 'px;'
+  assign code = s.code | strip
+  assign copy_label = s.copy_label | replace: '[code]', code
+-%}
+<blko-coupon-07 class="blko-cp07">
+{%- capture body -%}
+  <div class="blko-cp07__copy">
+    {%- render 'blko-ui-section-heading', font: 'display', size: 'lg', title: s.heading, lead: s.lead -%}
+
+    <div class="blko-cp07__ticket">
+      <div class="blko-cp07__offer">
+        {%- if s.until != blank -%}<p class="blko-cp07__until">{{ s.until | escape }}</p>{%- endif -%}
+        <p class="blko-cp07__value">{{ s.value }}</p>
+      </div>
+      <div class="blko-cp07__stub">
+        <span class="blko-cp07__code"><span class="blko-ui-sr-only">{{ s.code_label | escape }} </span><span data-code>{{ code | escape }}</span></span>
+        <button type="button" class="blko-cp07__btn" aria-label="{{ copy_label | escape }}" data-copy data-label="{{ copy_label | escape }}" data-done-label="{{ s.copied_label | escape }}">
+          <span data-i-copy>{% render 'blko-coupon-07-icon', name: 'copy', size: 16 %}</span><span data-i-done hidden>{% render 'blko-coupon-07-icon', name: 'check', size: 16 %}</span>
+        </button>
+      </div>
+    </div>
+    <p role="status" class="blko-ui-sr-only" data-status data-text="{{ s.status_text | escape }}"></p>
+
+    {%- if s.link_label != blank -%}
+      {%- assign href = s.link | default: routes.all_products_collection_url -%}
+      {%- render 'blko-ui-arrow-link', href: href, className: 'blko-cp07__link', children: s.link_label -%}
+    {%- endif -%}
+  </div>
+
+  {%- assign alt = s.image.alt | default: s.alt -%}
+  {%- render 'blko-ui-media', image: s.image, alt: alt, ratio: 'tall', placeholder: 'lifestyle-1', className: 'blko-cp07__media' -%}
+{%- endcapture -%}
+{%- render 'blko-ui-section', surface: 'dark', label: s.label, className: 'blko-cp07__band', inner: 'blko-cp07__inner', style: pad_style, children: body -%}
+</blko-coupon-07>
+
+{% schema %}
+{
+  "name": "Coupon, dark ticket",
+  "tag": "div",
+  "class": "blko-section-cp07",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Section label (screen readers)", "default": "Gift set offer" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "A little glow for the season" },
+    { "type": "text", "id": "lead", "label": "Lead", "default": "$20 off orders over $100, plus a free travel serum and gift wrap." },
+    { "type": "header", "content": "Ticket" },
+    { "type": "text", "id": "until", "label": "Validity", "default": "Valid to 24 Dec" },
+    { "type": "inline_richtext", "id": "value", "label": "Offer (italic part in <em>)", "default": "$20 <em>off</em>" },
+    { "type": "text", "id": "code", "label": "Discount code", "default": "GLOW20" },
+    { "type": "text", "id": "code_label", "label": "Code (screen readers)", "default": "Code" },
+    { "type": "text", "id": "copy_label", "label": "Copy button ([code]; screen readers)", "default": "Copy code [code]" },
+    { "type": "text", "id": "copied_label", "label": "Copied (screen readers)", "default": "Code copied" },
+    { "type": "text", "id": "status_text", "label": "Copied message (screen readers)", "default": "Code copied to clipboard" },
+    { "type": "header", "content": "Link and photo" },
+    { "type": "text", "id": "link_label", "label": "Link label", "default": "Shop gift sets" },
+    { "type": "url", "id": "link", "label": "Link" },
+    { "type": "image_picker", "id": "image", "label": "Photo (from 768px wide)" },
+    { "type": "text", "id": "alt", "label": "Photo description", "default": "A woman with short natural hair and glowing skin, hand at her patterned collar" },
+    { "type": "header", "content": "Spacing" },
+    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80 }
+  ],
+  "presets": [{ "name": "Coupon, dark ticket" }]
+}
+{% endschema %}

@@ -1,0 +1,3 @@
+{%- comment -%}Eyebrow(children, as='p', tone='default', className): components/ui/section.tsx.{%- endcomment -%}
+{%- assign tag = as | default: 'p' -%}
+<{{ tag }} class="blko-ui-eyebrow{% if tone == 'inherit' %} blko-ui-eyebrow--inherit{% endif %}{% if className != blank %} {{ className }}{% endif %}">{{ children }}</{{ tag }}>

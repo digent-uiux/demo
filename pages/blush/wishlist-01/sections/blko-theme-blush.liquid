@@ -1,0 +1,87 @@
+{%- comment -%}
+  The Blush look for the blko sections on this page: the DS theme tokens (themes/blush.css) on :root and the
+  theme's fonts. Sections read only these tokens, so removing this section gives them the DS default look.
+{%- endcomment -%}
+<script data-blko-kit="blush">try { if (!new URLSearchParams(location.search).has('static') && !navigator.webdriver && !matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('blko-kit-blush'); } catch (e) {}</script>
+{{ 'blko-blush-motion.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-blush-motion.js' | asset_url }}" defer="defer"></script>
+{%- style -%}
+  @font-face { font-family: 'Poppins'; font-style: normal; font-weight: 400; font-display: swap; src: url({{ 'blko-font-poppins-e1fdbc.woff2' | asset_url }}) format('woff2'); }
+  @font-face { font-family: 'Poppins'; font-style: normal; font-weight: 500; font-display: swap; src: url({{ 'blko-font-poppins-f8670f.woff2' | asset_url }}) format('woff2'); }
+  @font-face { font-family: 'Poppins'; font-style: normal; font-weight: 700; font-display: swap; src: url({{ 'blko-font-poppins-4cd3c7.woff2' | asset_url }}) format('woff2'); }
+  :root {
+  --blko-color-bg: #fffafb;
+  --blko-color-bg-alt: #f6e1e9;
+  --blko-color-text: #2a1520;
+  --blko-color-text-muted: #6c5462;
+  --blko-color-border: #ecd3dd;
+  --blko-color-button: #2a1520;
+  --blko-color-button-text: #fffafb;
+  --blko-color-button-hover: #4a2a3a;
+  --blko-color-accent: #b42c67;
+  --blko-color-on-color: #ffffff;
+  --blko-color-sale: #a80f3d;
+  --blko-color-input-bg: #ffffff;
+  --blko-color-input-text: #2a1520;
+  --blko-color-announcement-bg: #f6e1e9;
+  --blko-color-announcement-text: #2a1520;
+  --blko-color-footer-bg: #e8d0dd;
+  --blko-color-footer-text: #2a1520;
+  --blko-color-pop-1: #eec3d0;
+  --blko-color-on-pop-1: #3a2430;
+  --blko-color-on-pop-1-muted: color-mix(in oklab, var(--blko-color-on-pop-1) 84%, var(--blko-color-pop-1));
+  --blko-color-pop-2: #efe4dc;
+  --blko-color-on-pop-2: #3a2430;
+  --blko-color-on-pop-2-muted: color-mix(in oklab, var(--blko-color-on-pop-2) 84%, var(--blko-color-pop-2));
+  --blko-color-pop-3: #8e3b5a;
+  --blko-color-on-pop-3: #ffffff;
+  --blko-color-on-pop-3-muted: color-mix(in oklab, var(--blko-color-on-pop-3) 84%, var(--blko-color-pop-3));
+  --blko-color-pop-4: #e6e1e3;
+  --blko-color-on-pop-4: #3a2430;
+  --blko-color-on-pop-4-muted: color-mix(in oklab, var(--blko-color-on-pop-4) 84%, var(--blko-color-pop-4));
+  --blko-font-heading: 'Poppins', system-ui, sans-serif;
+  --blko-font-body: 'Poppins', system-ui, sans-serif;
+  --blko-font-display: 'Poppins', system-ui, sans-serif;
+  --blko-font-condensed: 'Poppins', system-ui, sans-serif;
+  --blko-font-mono: 'Poppins', system-ui, sans-serif;
+  --blko-font-weight-heading: 400;
+  --blko-radius-sm: 6px;
+  --blko-radius-base: 10px;
+  --blko-radius-button: 999px;
+  --blko-theme-radius-button: 999px;
+  --blko-radius-card: 18px;
+  --blko-radius-image: 18px;
+  --blko-radius-panel: calc(18px * 2);
+  --blko-shadow-sm: 0 1px 2px rgb(42 21 32 / .06);
+  --blko-shadow-md: 0 16px 40px rgb(194 48 111 / .14);
+  --blko-theme-border-width: 1px;
+  --blko-theme-heading-tracking: -0.01em;
+  --blko-theme-heading-case: none;
+  --blko-heading-style: normal;
+  --blko-heading-transform: none;
+  --blko-motion-duration: 650ms;
+  --blko-motion-ease: cubic-bezier(.22,1,.36,1);
+  --blko-motion-distance: 24px;
+  --blko-motion-stagger: 80ms;
+  --blko-motion-hover-scale: 1.04;
+  --blko-theme-button-case: none;
+  --blko-theme-button-tracking: 0em;
+  --blko-theme-button-weight: 500;
+  color-scheme: light;
+  }
+  body { background: var(--blko-color-bg); color: var(--blko-color-text); }
+  /* Page palette (accents [2]) */
+  :root {
+    --blko-color-pop-1: var(--blko-color-pop-2); --blko-color-on-pop-1: var(--blko-color-on-pop-2); --blko-color-on-pop-1-muted: var(--blko-color-on-pop-2-muted);
+    --blko-color-pop-3: var(--blko-color-pop-2); --blko-color-on-pop-3: var(--blko-color-on-pop-2); --blko-color-on-pop-3-muted: var(--blko-color-on-pop-2-muted);
+    --blko-color-pop-4: var(--blko-color-pop-2); --blko-color-on-pop-4: var(--blko-color-on-pop-2); --blko-color-on-pop-4-muted: var(--blko-color-on-pop-2-muted);
+  }
+{%- endstyle -%}
+
+{% schema %}
+{ "name": "Blush look", "tag": "div", "class": "blko-section-theme", "settings": [
+  { "type": "paragraph", "content": "Sets the Blush colours, fonts and shapes for the blko sections. Keep it first in the header group." },
+  { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 0, "step": 1, "default": 0, "info": "Not used." },
+  { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 0, "step": 1, "default": 0, "info": "Not used." }
+], "presets": [{ "name": "Blush look" }] }
+{% endschema %}

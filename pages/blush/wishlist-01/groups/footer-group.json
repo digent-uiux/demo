@@ -1,0 +1,41 @@
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "footer-02": {
+      "type": "blko-footer-02",
+      "settings": {},
+      "blocks": {
+        "menu-1": {
+          "type": "menu",
+          "settings": {
+            "title": "Shop",
+            "demo_links": "New in, Skincare, Makeup, Body & hair"
+          }
+        },
+        "menu-2": {
+          "type": "menu",
+          "settings": {
+            "title": "Help",
+            "demo_links": "Contact us, Shipping, Returns, Track order"
+          }
+        },
+        "menu-3": {
+          "type": "menu",
+          "settings": {
+            "title": "About",
+            "demo_links": "Our story, Ingredients, Journal"
+          }
+        }
+      },
+      "block_order": [
+        "menu-1",
+        "menu-2",
+        "menu-3"
+      ]
+    }
+  },
+  "order": [
+    "footer-02"
+  ]
+}

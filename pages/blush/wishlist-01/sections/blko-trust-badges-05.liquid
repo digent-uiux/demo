@@ -1,0 +1,217 @@
+{%- comment -%}
+  Trust badges 05, "Split, skincare claims" (registry/trust-badges/trust-badges-05.tsx).
+  A large product photo on the left; on the right a product picker, the picked product's claims as big tiles in one pop
+  colour, and an explanation that opens in flow under the tiles (Escape or the close button shuts it).
+  Claim blocks are the dictionary (key, icon, title, explanation). Product blocks pick a product: its claim keys come from
+  the product metafield set in the section (a list or a comma separated text, default custom.claims), else from the
+  block's own keys. Without a product the demo name, photo and keys show.
+  Theme-neutral: colours, fonts and radius come from the DS tokens, with the DS default look as fallback.
+{%- endcomment -%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-trust-badges-05.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-trust-badges-05.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-ui-fonts' -%}
+
+{%- liquid
+  assign s = section.settings
+  assign uid = 'blko-tb05-' | append: section.id
+  assign pad_style = '--pt: ' | append: s.padding_top | append: 'px; --pb: ' | append: s.padding_bottom | append: 'px;'
+  assign claims = section.blocks | where: 'type', 'claim'
+  assign products = section.blocks | where: 'type', 'product'
+  assign mf = s.metafield | split: '.'
+  assign ns = mf[0] | strip
+  assign mk = mf[1] | strip
+  assign pop = 'blko-ui-surface--' | append: s.pop
+-%}
+<blko-trust-badges-05 class="blko-tb05">
+{%- capture body -%}
+  <div class="blko-tb05__media-col">
+    {%- for block in products -%}
+      {%- liquid
+        assign b = block.settings
+        if b.product != blank
+          assign media = b.product.featured_media
+          assign alt = media.alt | default: b.product.title
+        else
+          assign media = b.image
+          assign alt = b.alt
+        endif
+      -%}
+      <div class="blko-tb05__mwrap" data-media="{{ forloop.index0 }}"{% unless forloop.first %} hidden{% endunless %}>
+        {%- render 'blko-ui-media', image: media, alt: alt, ratio: 'portrait', placeholder: 'product-1', className: 'blko-tb05__media' -%}
+      </div>
+    {%- endfor -%}
+  </div>
+
+  <div class="blko-tb05__side">
+    {%- render 'blko-ui-section-heading', font: 'display', size: 'lg', title: s.heading, lead: s.lead -%}
+
+    {%- if products.size > 1 -%}
+      <div role="group" aria-label="{{ s.picker_label | escape }}" class="blko-tb05__picker">
+        {%- for block in products -%}
+          {%- assign name = block.settings.product.title | default: block.settings.title -%}
+          <button type="button" class="blko-tb05__pick" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}" data-pick="{{ forloop.index0 }}" {{ block.shopify_attributes }}>{{ name | escape }}</button>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    <div class="blko-tb05__claims">
+      {%- for block in products -%}
+        {%- liquid
+          assign b = block.settings
+          assign p = b.product
+          assign keys = b.claims | split: ','
+          if p != blank
+            assign name = p.title
+            assign field = p.metafields[ns][mk]
+            if field != blank
+              assign t = field.type | append: ''
+              if t contains 'list'
+                assign keys = field.value
+              else
+                assign keys = field.value | split: ','
+              endif
+            endif
+          else
+            assign name = b.title
+          endif
+          assign list_label = s.list_label | replace: '[name]', name
+        -%}
+        <div class="blko-tb05__panel" data-panel="{{ forloop.index0 }}" data-url="{{ p.url | default: b.link | default: s.link }}"{% unless forloop.first %} hidden{% endunless %}>
+          <h3 class="blko-tb05__name">{{ name | escape }}</h3>
+          <ul aria-label="{{ list_label | escape }}" class="blko-tb05__tiles" role="list">
+            {%- for k in keys -%}
+              {%- assign key = k | strip | downcase -%}
+              {%- for c in claims -%}
+                {%- assign ck = c.settings.key | strip | downcase -%}
+                {%- if ck == key -%}
+                  <li class="blko-tb05__li">
+                    <button type="button" class="blko-tb05__tile {{ pop }}" aria-expanded="false" aria-controls="{{ uid }}-pop"
+                      data-claim="{{ key | escape }}" data-title="{{ c.settings.title | escape }}" data-body="{{ c.settings.body | escape }}">
+                      <span class="blko-tb05__icon">{%- render 'blko-ui-icon', name: c.settings.icon, size: 36, stroke: 1.5 -%}</span>
+                      <span class="blko-tb05__ttl">{{ c.settings.title | escape }}</span>
+                    </button>
+                  </li>
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endfor -%}
+
+      <div id="{{ uid }}-pop" role="region" aria-label="{{ s.details_label | escape }}" aria-live="polite" class="blko-tb05__pop" data-pop data-label="{{ s.details_label | escape }}" hidden>
+        <div class="blko-tb05__popin">
+          <div class="blko-tb05__poptext">
+            <p class="blko-tb05__ptitle" data-pop-title></p>
+            <p class="blko-tb05__pbody" data-pop-body></p>
+          </div>
+          {%- capture icon_x -%}{% render 'blko-ui-icon', name: 'x', size: 16 %}{%- endcapture -%}
+          {%- render 'blko-ui-button', variant: 'ghost', size: 'icon-sm', label: s.close_label, attrs: 'data-close', className: 'blko-tb05__close', children: icon_x -%}
+        </div>
+      </div>
+    </div>
+
+    {%- if s.link_label != blank -%}
+      {%- assign first = products.first.settings -%}
+      {%- assign href = first.product.url | default: first.link | default: s.link | default: routes.all_products_collection_url -%}
+      {%- render 'blko-ui-arrow-link', href: href, className: 'blko-tb05__link', children: s.link_label -%}
+    {%- endif -%}
+  </div>
+{%- endcapture -%}
+{%- render 'blko-ui-section', surface: s.surface, label: s.label, className: 'blko-tb05__band', inner: 'blko-tb05__inner', style: pad_style, children: body -%}
+</blko-trust-badges-05>
+
+{% schema %}
+{
+  "name": "Trust badges, claims",
+  "tag": "div",
+  "class": "blko-section-tb05",
+  "settings": [
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "label", "label": "Section label (screen readers)", "default": "Product claims" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading (italic part in <em>)", "default": "Honest labels, <em>every product</em>" },
+    { "type": "text", "id": "lead", "label": "Lead", "default": "Pick a product, then tap a claim to see what it means." },
+    { "type": "text", "id": "metafield", "label": "Claim keys metafield (namespace.key)", "default": "custom.claims" },
+    { "type": "text", "id": "picker_label", "label": "Product picker (screen readers)", "default": "Preview product" },
+    { "type": "text", "id": "list_label", "label": "Claim list ([name]; screen readers)", "default": "[name] claims" },
+    { "type": "text", "id": "details_label", "label": "Explanation (screen readers)", "default": "Claim details" },
+    { "type": "text", "id": "close_label", "label": "Close (screen readers)", "default": "Close" },
+    { "type": "text", "id": "link_label", "label": "Link label", "default": "Shop the product" },
+    { "type": "url", "id": "link", "label": "Link (demo products)" },
+    { "type": "header", "content": "Style" },
+    {
+      "type": "select", "id": "pop", "label": "Tile colour", "default": "pop-3",
+      "options": [
+        { "value": "pop-1", "label": "Pop 1" },
+        { "value": "pop-2", "label": "Pop 2" },
+        { "value": "pop-3", "label": "Pop 3" },
+        { "value": "pop-4", "label": "Pop 4" }
+      ]
+    },
+    {
+      "type": "select", "id": "surface", "label": "Surface", "default": "alt",
+      "options": [
+        { "value": "alt", "label": "Alternate" },
+        { "value": "bg", "label": "Background" }
+      ]
+    },
+    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80 }
+  ],
+  "blocks": [
+    {
+      "type": "claim",
+      "name": "Claim",
+      "settings": [
+        { "type": "text", "id": "key", "label": "Key (used in product claim lists)", "default": "vegan" },
+        {
+          "type": "select", "id": "icon", "label": "Icon", "default": "leaf",
+          "options": [
+            { "value": "leaf", "label": "Leaf" },
+            { "value": "rabbit", "label": "Rabbit" },
+            { "value": "flask-conical", "label": "Flask" },
+            { "value": "sprout", "label": "Sprout" },
+            { "value": "droplets", "label": "Droplets" },
+            { "value": "sun", "label": "Sun" },
+            { "value": "recycle", "label": "Recycle" },
+            { "value": "heart", "label": "Heart" },
+            { "value": "shield-check", "label": "Shield" }
+          ]
+        },
+        { "type": "text", "id": "title", "label": "Title", "default": "Vegan" },
+        { "type": "textarea", "id": "body", "label": "Explanation", "default": "No animal-derived ingredients, not even beeswax or lanolin." }
+      ]
+    },
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "text", "id": "claims", "label": "Claim keys (comma separated; used when the product has none)", "default": "vegan" },
+        { "type": "header", "content": "Demo (shown without a product)" },
+        { "type": "text", "id": "title", "label": "Name", "default": "Barrier Cleansing Foam" },
+        { "type": "image_picker", "id": "image", "label": "Photo" },
+        { "type": "text", "id": "alt", "label": "Photo description", "default": "Close-up of airy white cleansing foam" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust badges, claims",
+      "blocks": [
+        { "type": "claim", "settings": { "key": "vegan", "icon": "leaf", "title": "Vegan", "body": "No animal-derived ingredients, not even beeswax or lanolin." } },
+        { "type": "claim", "settings": { "key": "cruelty-free", "icon": "rabbit", "title": "Cruelty-free", "body": "Never tested on animals, product or ingredients, anywhere." } },
+        { "type": "claim", "settings": { "key": "derm-tested", "icon": "flask-conical", "title": "Dermatologist tested", "body": "Patch-tested on 50 people with sensitive skin. No reactions." } },
+        { "type": "claim", "settings": { "key": "fragrance-free", "icon": "sprout", "title": "Fragrance-free", "body": "No added fragrance or essential oils to irritate reactive skin." } },
+        { "type": "claim", "settings": { "key": "non-comedogenic", "icon": "droplets", "title": "Non-comedogenic", "body": "Tested on acne-prone skin: it does not clog pores." } },
+        { "type": "claim", "settings": { "key": "mineral-spf", "icon": "sun", "title": "Mineral SPF 30", "body": "Zinc oxide only, with no white cast on deeper skin." } },
+        { "type": "claim", "settings": { "key": "refillable", "icon": "recycle", "title": "Refillable glass", "body": "Buy the bottle once, then top up with a refill pouch." } },
+        { "type": "product", "settings": { "title": "Barrier Cleansing Foam", "alt": "Close-up of airy white cleansing foam", "claims": "vegan, cruelty-free, derm-tested, fragrance-free" } },
+        { "type": "product", "settings": { "title": "Clarity Serum 30 ml", "alt": "A white dropper bottle of serum on a mossy branch", "claims": "non-comedogenic, refillable, vegan" } },
+        { "type": "product", "settings": { "title": "Daily Mineral SPF 30", "alt": "A white tube of mineral sunscreen beside two small jars", "claims": "mineral-spf" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,54 @@
+/* Shoppable image 06: one big look beside two stacked looks, pill + caption card on each photo. Sizes in px (Dawn sets
+   html to 62.5%); tokens with DS defaults. Container step (on the band): 768px = @3xl. */
+.blko-si06, .blko-si06 * { box-sizing: border-box; }
+.blko-si06 { display: block; letter-spacing: normal; }
+.blko-si06 :where(h2:not([class*="blko-ui-"]), figure:not([class*="blko-ui-"])) { margin: 0; }
+.blko-si06__band {
+  container-type: inline-size; width: 100%; background: var(--blko-color-bg, #fff); color: var(--blko-color-text, #09090b);
+  font-family: var(--blko-font-body, "Plus Jakarta Sans", system-ui, sans-serif); font-size: var(--blko-text-body, 16px); line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.blko-si06__inner {
+  display: grid; max-width: var(--blko-container-page, 1280px); margin: 0 auto; gap: 32px;
+  padding: calc(var(--pt, 96px) * 7 / 12) 16px calc(var(--pb, 96px) * 7 / 12);
+}
+@container (min-width: 768px) { .blko-si06__inner { padding: var(--pt, 96px) 32px var(--pb, 96px); } }
+.blko-si06__head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; }
+.blko-si06 .blko-si06__title {
+  font-family: var(--blko-font-heading, "Plus Jakarta Sans", system-ui, sans-serif); font-weight: var(--blko-font-weight-heading, 600);
+  font-size: var(--blko-text-h1, 32px); line-height: 1.1; letter-spacing: -.025em; text-transform: var(--blko-heading-transform, none); color: inherit;
+}
+@media (min-width: 1024px) { .blko-si06 .blko-si06__title { font-size: var(--blko-text-h1, 48px); } }
+.blko-si06 .blko-si06__title em { font-style: var(--blko-heading-style, italic); }
+.blko-si06 .blko-si06__all { font-size: var(--blko-text-small, 14px); line-height: 1.5; font-weight: 500; color: inherit; text-decoration: underline; text-underline-offset: 4px; }
+
+.blko-si06__grid { display: grid; gap: 12px; }
+@container (min-width: 768px) { .blko-si06__grid { grid-template-columns: 3fr 2fr; gap: 16px; } }
+.blko-si06__stack { display: grid; gap: 12px; }
+@container (min-width: 768px) { .blko-si06__stack { grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 16px; } }
+.blko-si06__tile { position: relative; display: grid; height: 100%; overflow: hidden; border-radius: var(--blko-radius-image, 8px); }
+.blko-si06 .blko-si06__img { display: block; width: 100%; height: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: transform .5s; }
+/* From @3xl the small looks keep their photo's own ratio (the DS photos are 2:3; the placeholder stands in at 2:3) and
+   the big look fills the row they set. */
+@container (min-width: 768px) {
+  .blko-si06 .blko-si06__img { aspect-ratio: auto; }
+  .blko-si06 .blko-si06__ph { aspect-ratio: 2 / 3; }
+}
+.blko-si06 .blko-si06__tile--big .blko-si06__img { aspect-ratio: 4 / 5; }
+@container (min-width: 768px) { .blko-si06 .blko-si06__grid:has(.blko-si06__stack) .blko-si06__tile--big .blko-si06__img { position: absolute; inset: 0; } }
+.blko-si06 .blko-si06__ph { background: var(--blko-color-bg-alt, #f4f4f5); }
+.blko-si06__tile:hover .blko-si06__img { transform: scale(1.05); }
+.blko-si06 .blko-si06__shop {
+  position: absolute; top: 12px; left: 12px; display: inline-flex; height: 32px; align-items: center; gap: 6px; padding: 0 12px;
+  border-radius: 9999px; background: var(--blko-color-bg, #fff); color: var(--blko-color-text, #09090b); text-decoration: none;
+  font-size: var(--blko-text-label, 12px); line-height: 1.4; letter-spacing: .06em; font-weight: 500; box-shadow: 0 1px 2px rgb(0 0 0 / .06);
+}
+.blko-si06 .blko-si06__shop:hover { background: var(--blko-color-bg-alt, #f4f4f5); }
+.blko-si06 .blko-si06__shop svg { width: 14px; height: 14px; }
+.blko-si06__cap {
+  position: absolute; left: 12px; right: 12px; bottom: 12px; display: grid; gap: 2px; padding: 12px;
+  border-radius: var(--blko-radius-base, 8px); background: color-mix(in oklab, var(--blko-color-bg, #fff) 90%, transparent); color: var(--blko-color-text, #09090b);
+}
+.blko-si06__ctitle { font-size: var(--blko-text-small, 14px); line-height: 1.5; font-weight: 600; }
+.blko-si06__ctext { font-size: var(--blko-text-small, 14px); line-height: 1.5; color: var(--blko-color-text-muted, #65656e); }
+@media (prefers-reduced-motion: reduce) { .blko-si06 .blko-si06__img { transition: none; } }

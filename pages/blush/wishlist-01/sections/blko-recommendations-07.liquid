@@ -1,0 +1,110 @@
+{%- comment -%}
+  Recommendations 07, "Vivid, marquee tapes, beauty" (registry/recommendations/recommendations-07.tsx).
+  A saturated band: two crossing condensed word tapes run over the top, then a heading with previous / next arrows, a
+  snap rail of product cards (quick add) and a progress bar that follows the scroll.
+  Products: the collection picked in the section (up to the limit), else the Item blocks (a product, or the demo name,
+  photo, price and rating). Quick add posts the card's variant to /cart/add.js. Ratings read the standard
+  reviews.rating metafield. The tapes stop when motion is reduced or the URL carries ?static.
+  Theme-neutral: colours, fonts and radius come from the DS tokens, with the DS default look as fallback.
+{%- endcomment -%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+{{ 'blko-recommendations-07.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-recommendations-07.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-ui-fonts' -%}
+
+{%- liquid
+  assign s = section.settings
+  assign words = s.words | split: ','
+-%}
+{%- capture tape -%}
+  {%- for n in (1..4) -%}
+    {%- for w in words -%}<span class="blko-rc07__word">{{ w | strip | escape }}<span>✦</span></span>{%- endfor -%}
+  {%- endfor -%}
+{%- endcapture -%}
+<blko-recommendations-07 class="blko-rc07" style="--pt: {{ s.padding_top }}px; --pb: {{ s.padding_bottom }}px;">
+  <section aria-label="{{ s.label | escape }}" class="blko-rc07__band">
+    <div class="blko-rc07__tapes" aria-hidden="true">
+      <div class="blko-rc07__tape blko-rc07__tape--a"><div class="blko-rc07__run" data-run>{{ tape }}</div></div>
+      <div class="blko-rc07__tape blko-rc07__tape--b"><div class="blko-rc07__run blko-rc07__run--rev" data-run>{{ tape }}</div></div>
+    </div>
+    <div class="blko-rc07__inner">
+      {%- capture arrows -%}
+        <div class="blko-rc07__arrows">
+          <button type="button" class="blko-rc07__arrow" aria-label="{{ s.prev_label | escape }}" data-step="-1">{% render 'blko-recommendations-07-icon', name: 'arrow-left', size: 16 %}</button>
+          <button type="button" class="blko-rc07__arrow" aria-label="{{ s.next_label | escape }}" data-step="1">{% render 'blko-recommendations-07-icon', name: 'arrow-right', size: 16 %}</button>
+        </div>
+      {%- endcapture -%}
+      {%- render 'blko-ui-section-heading', size: 'lg', tone: 'inherit', title: s.heading, action: arrows -%}
+      <ul class="blko-rc07__track" role="list" data-track>
+        {%- if s.collection != blank -%}
+          {%- for product in s.collection.products limit: s.limit -%}
+            {%- assign r = product.metafields.reviews.rating.value.rating | default: 0 -%}
+            <li class="blko-rc07__item">{%- render 'blko-recommendations-07-card', product: product, rating: r, add_label: s.add_label -%}</li>
+          {%- endfor -%}
+        {%- else -%}
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign b = block.settings
+              assign r = b.rating
+              if b.product != blank
+                assign r = b.product.metafields.reviews.rating.value.rating | default: b.rating
+              endif
+            -%}
+            <li class="blko-rc07__item" {{ block.shopify_attributes }}>{%- render 'blko-recommendations-07-card', product: b.product, title: b.title, image: b.image, price: b.price, rating: r, add_label: s.add_label -%}</li>
+          {%- endfor -%}
+        {%- endif -%}
+      </ul>
+      <div class="blko-rc07__bar" aria-hidden="true"><div class="blko-rc07__thumb" data-thumb></div></div>
+      <p class="blko-ui-sr-only" aria-live="polite" data-say data-added="{{ s.added_text | escape }}"></p>
+    </div>
+  </section>
+</blko-recommendations-07>
+
+{% schema %}
+{
+  "name": "Recs, marquee tapes",
+  "tag": "div",
+  "class": "blko-section-rc07",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Section label (screen readers)", "default": "Picked for you" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading (italic part in <em>)", "default": "Picked <em>for you</em>" },
+    { "type": "text", "id": "words", "label": "Tape words (comma separated)", "default": "Picked for you, Because you viewed, Back in stock, Loved by 2k faces" },
+    { "type": "collection", "id": "collection", "label": "Collection (blank = the Item blocks)" },
+    { "type": "range", "id": "limit", "label": "Products from the collection", "min": 3, "max": 12, "step": 1, "default": 8 },
+    { "type": "text", "id": "prev_label", "label": "Previous (screen readers)", "default": "Previous products" },
+    { "type": "text", "id": "next_label", "label": "Next (screen readers)", "default": "Next products" },
+    { "type": "text", "id": "add_label", "label": "Quick add ([title]; screen readers)", "default": "Add [title] to bag" },
+    { "type": "text", "id": "added_text", "label": "Added message ([title]; screen readers)", "default": "[title] added to your bag." },
+    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80 }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "header", "content": "Demo (shown without a product)" },
+        { "type": "text", "id": "title", "label": "Name", "default": "Jelly lip tint" },
+        { "type": "image_picker", "id": "image", "label": "Photo" },
+        { "type": "number", "id": "price", "label": "Price", "default": 18 },
+        { "type": "number", "id": "rating", "label": "Rating (0–5)", "default": 4.9 }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Recs, marquee tapes",
+      "blocks": [
+        { "type": "item", "settings": { "title": "Jelly lip tint", "price": 18, "rating": 4.9 } },
+        { "type": "item", "settings": { "title": "Glow drops", "price": 34, "rating": 4.7 } },
+        { "type": "item", "settings": { "title": "Avocado night mask", "price": 29, "rating": 4.8 } },
+        { "type": "item", "settings": { "title": "Blur setting powder", "price": 28, "rating": 4.6 } },
+        { "type": "item", "settings": { "title": "Bouncy gel cream", "price": 32, "rating": 4.8 } }
+      ]
+    }
+  ]
+}
+{% endschema %}

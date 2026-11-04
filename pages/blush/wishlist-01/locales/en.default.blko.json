@@ -1,0 +1,19 @@
+{
+  "blko_h01": {
+    "home": "{{ name }}, home",
+    "cart": {
+      "one": "Cart, 1 item",
+      "other": "Cart, {{ count }} items"
+    }
+  },
+  "blko_ui": {
+    "payment": {
+      "label": "Payment methods we accept",
+      "card": "Card",
+      "wallet": "Wallet",
+      "pay_later": "Pay later",
+      "bank": "Bank",
+      "gift_card": "Gift card"
+    }
+  }
+}

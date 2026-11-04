@@ -1,0 +1,113 @@
+{%- comment -%}
+  Header 01, "Logo left, nav center" (registry/header/header-01.tsx).
+  One row: the wordmark on the left, the main menu centred (a thin underline grows under the hovered and current
+  link), search, account, wishlist and cart on the right, with a count dot on the cart. Below the breakpoint the
+  wordmark centres, the menu folds behind the menu button and account / wishlist step out.
+  Reads the real menu, cart count and routes; with no menu picked it shows the demo links.
+  Theme-neutral: colours, fonts and radius come from the DS tokens, with the DS default look as fallback.
+{%- endcomment -%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-header-01.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-header-01.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-ui-fonts' -%}
+
+{%- liquid
+  assign s = section.settings
+  assign menu = linklists[s.menu]
+  assign has_menu = false
+  if menu != blank and menu.links.size > 0
+    assign has_menu = true
+  endif
+  assign demo = s.demo_links | split: ','
+  assign logo_text = s.logo_text | default: shop.name
+  assign menu_id = 'blko-h01-menu-' | append: section.id
+  assign count = cart.item_count
+-%}
+{%- capture icon_menu -%}<span data-icon-open>{% render 'blko-header-01-icon', name: 'menu', size: 20 %}</span><span data-icon-close hidden>{% render 'blko-header-01-icon', name: 'x', size: 20 %}</span>{%- endcapture -%}
+{%- capture icon_search -%}{% render 'blko-header-01-icon', name: 'search', size: 20 %}{%- endcapture -%}
+{%- capture icon_user -%}{% render 'blko-header-01-icon', name: 'user', size: 20 %}{%- endcapture -%}
+{%- capture icon_heart -%}{% render 'blko-header-01-icon', name: 'heart', size: 20 %}{%- endcapture -%}
+{%- capture icon_bag -%}{% render 'blko-header-01-icon', name: 'shopping-bag', size: 20 %}{%- if count > 0 -%}<span aria-hidden="true" class="blko-h01__count">{{ count }}</span>{%- endif -%}{%- endcapture -%}
+{%- capture cart_label -%}{{ 'blko_h01.cart' | t: count: count }}{%- endcapture -%}
+{%- capture menu_attrs -%}aria-expanded="false" aria-controls="{{ menu_id }}" data-toggle data-open-label="{{ s.open_label | escape }}" data-close-label="{{ s.close_label | escape }}"{%- endcapture -%}
+
+<blko-header-01 class="blko-h01" style="--blko-h01-pt: {{ s.padding_top }}px; --blko-h01-pb: {{ s.padding_bottom }}px;">
+  <header class="blko-h01__bar">
+    <div class="blko-h01__inner">
+      {%- render 'blko-ui-button', variant: 'ghost', size: 'icon', label: s.open_label, attrs: menu_attrs, className: 'blko-h01__ico blko-h01__burger', children: icon_menu -%}
+      <a href="{{ routes.root_url }}" aria-label="{{ 'blko_h01.home' | t: name: logo_text | escape }}" class="blko-h01__logo">{{ logo_text | escape }}</a>
+
+      <nav aria-label="{{ s.nav_label | escape }}" class="blko-h01__nav">
+        <ul class="blko-h01__list" role="list">
+          {%- if has_menu -%}
+            {%- for link in menu.links -%}
+              {%- assign t = link.title | downcase -%}
+              <li><a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %} class="blko-h01__link{% if t == s.sale_title %} blko-h01__link--sale{% endif %}">{{ link.title | escape }}</a></li>
+            {%- endfor -%}
+          {%- else -%}
+            {%- for d in demo -%}
+              {%- assign t = d | strip | downcase -%}
+              <li><a href="{{ routes.all_products_collection_url }}"{% if forloop.index == 2 %} aria-current="page"{% endif %} class="blko-h01__link{% if t == s.sale_title %} blko-h01__link--sale{% endif %}">{{ d | strip | escape }}</a></li>
+            {%- endfor -%}
+          {%- endif -%}
+        </ul>
+      </nav>
+
+      <div class="blko-h01__icons">
+        {%- render 'blko-ui-button', variant: 'ghost', size: 'icon', href: routes.search_url, label: s.search_label, className: 'blko-h01__ico', children: icon_search -%}
+        {%- render 'blko-ui-button', variant: 'ghost', size: 'icon', href: routes.account_url, label: s.account_label, className: 'blko-h01__ico blko-h01__desk', children: icon_user -%}
+        {%- if s.wishlist_link != blank -%}
+          {%- render 'blko-ui-button', variant: 'ghost', size: 'icon', href: s.wishlist_link, label: s.wishlist_label, className: 'blko-h01__ico blko-h01__desk', children: icon_heart -%}
+        {%- endif -%}
+        {%- render 'blko-ui-button', variant: 'ghost', size: 'icon', href: routes.cart_url, label: cart_label, className: 'blko-h01__ico', children: icon_bag -%}
+      </div>
+    </div>
+
+    <nav id="{{ menu_id }}" aria-label="{{ s.menu_label | escape }}" class="blko-h01__panel" hidden data-panel>
+      <ul class="blko-h01__plist" role="list">
+        {%- if has_menu -%}
+          {%- for link in menu.links -%}
+            {%- assign t = link.title | downcase -%}
+            <li class="blko-h01__pitem"><a href="{{ link.url }}" class="blko-h01__plink{% if t == s.sale_title %} blko-h01__link--sale{% endif %}">{{ link.title | escape }}</a></li>
+          {%- endfor -%}
+        {%- else -%}
+          {%- for d in demo -%}
+            {%- assign t = d | strip | downcase -%}
+            <li class="blko-h01__pitem"><a href="{{ routes.all_products_collection_url }}" class="blko-h01__plink{% if t == s.sale_title %} blko-h01__link--sale{% endif %}">{{ d | strip | escape }}</a></li>
+          {%- endfor -%}
+        {%- endif -%}
+        <li class="blko-h01__pitem"><a href="{{ routes.account_url }}" class="blko-h01__pacc">{{ s.account_label | escape }}</a></li>
+        {%- if s.wishlist_link != blank -%}
+          <li class="blko-h01__pitem"><a href="{{ s.wishlist_link }}" class="blko-h01__pacc">{{ s.wishlist_label | escape }}</a></li>
+        {%- endif -%}
+      </ul>
+    </nav>
+  </header>
+</blko-header-01>
+
+{% schema %}
+{
+  "name": "Header, nav centred",
+  "tag": "div",
+  "class": "blko-section-h01",
+  "settings": [
+    { "type": "text", "id": "logo_text", "label": "Wordmark (blank = store name)", "default": "Lumen" },
+    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu" },
+    { "type": "text", "id": "demo_links", "label": "Demo links (shown while the menu is empty, comma separated)", "default": "New in, Skincare, Makeup, Body, Gifts, Sale" },
+    { "type": "text", "id": "sale_title", "label": "Link drawn in the sale colour (lowercase title)", "default": "sale" },
+    { "type": "url", "id": "wishlist_link", "label": "Wishlist link (blank hides the heart)", "default": "/pages/wishlist" },
+    { "type": "header", "content": "Labels (screen readers)" },
+    { "type": "text", "id": "nav_label", "label": "Main menu", "default": "Main" },
+    { "type": "text", "id": "menu_label", "label": "Folded menu", "default": "Menu" },
+    { "type": "text", "id": "open_label", "label": "Open menu", "default": "Open menu" },
+    { "type": "text", "id": "close_label", "label": "Close menu", "default": "Close menu" },
+    { "type": "text", "id": "search_label", "label": "Search", "default": "Search" },
+    { "type": "text", "id": "account_label", "label": "Account", "default": "Account" },
+    { "type": "text", "id": "wishlist_label", "label": "Wishlist", "default": "Wishlist" },
+    { "type": "header", "content": "Spacing" },
+    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 0 }
+  ],
+  "presets": [{ "name": "Header, nav centred" }]
+}
+{% endschema %}

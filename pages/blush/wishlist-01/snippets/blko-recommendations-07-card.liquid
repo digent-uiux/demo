@@ -1,0 +1,39 @@
+{%- comment -%}
+  One rail card: the DS ProductCard (square photo, quick add, rating, price) with the rating passed as a number.
+  Params: product (optional), title, image, price (major units, demo), rating (number, optional), add_label.
+{%- endcomment -%}
+{%- liquid
+  if product != blank
+    assign t = product.title
+    assign img = product.featured_media
+    assign href = product.url
+    assign amount = product.price
+    assign compare = product.compare_at_price
+    assign cents = true
+    assign vid = product.selected_or_first_available_variant.id
+  else
+    assign t = title
+    assign img = image
+    assign href = routes.all_products_collection_url
+    assign amount = price
+    assign compare = nil
+    assign cents = false
+    assign vid = ''
+  endif
+  assign add = add_label | replace: '[title]', t
+-%}
+<article class="blko-ui-product-card"{% if vid != blank %} data-variant-id="{{ vid }}"{% endif %}>
+  <div class="blko-ui-product-card__media blko-ui-product-card__media--square">
+    {%- if img != blank -%}
+      {{ img | image_url: width: 500 | image_tag: loading: 'lazy', widths: '250, 375, 500', sizes: '(min-width: 768px) 22vw, 64vw', alt: t, class: 'blko-ui-product-card__image' }}
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'blko-ui-product-card__image placeholder-svg' }}
+    {%- endif -%}
+    <button type="button" data-blko-ui-quick-add aria-label="{{ add | escape }}" class="blko-ui-product-card__add">{% render 'blko-ui-icon', name: 'plus', size: 16 %}</button>
+  </div>
+  <div class="blko-ui-product-card__copy">
+    <h3><a href="{{ href }}">{{ t | escape }}</a></h3>
+    {%- if rating != blank and rating > 0 -%}{%- render 'blko-ui-rating', value: rating, size: 'xs' -%}{%- endif -%}
+    {%- render 'blko-ui-price', amount: amount, compareAt: compare, cents: cents -%}
+  </div>
+</article>

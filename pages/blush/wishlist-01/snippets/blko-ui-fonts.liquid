@@ -1,0 +1,10 @@
+{%- comment -%}
+  DS default fonts (Plus Jakarta Sans, Instrument Serif, Anton), latin subset, bundled as assets. Each blko section
+  renders it once; repeats are harmless (same faces). Themes with their own fonts set --font-* instead.
+{%- endcomment -%}
+  {%- style -%}
+    @font-face { font-family: "Plus Jakarta Sans"; font-style: normal; font-weight: 200 800; font-display: swap; src: url({{ 'blko-ui-plus-jakarta-sans.woff2' | asset_url }}) format("woff2"); }
+    @font-face { font-family: "Instrument Serif"; font-style: normal; font-weight: 400; font-display: swap; src: url({{ 'blko-ui-instrument-serif.woff2' | asset_url }}) format("woff2"); }
+    @font-face { font-family: "Instrument Serif"; font-style: italic; font-weight: 400; font-display: swap; src: url({{ 'blko-ui-instrument-serif-italic.woff2' | asset_url }}) format("woff2"); }
+    @font-face { font-family: "Anton"; font-style: normal; font-weight: 400; font-display: swap; src: url({{ 'blko-ui-anton.woff2' | asset_url }}) format("woff2"); }
+  {%- endstyle -%}

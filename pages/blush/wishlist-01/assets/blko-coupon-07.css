@@ -1,0 +1,48 @@
+/* Coupon 07: dark band, serif copy, notched ticket with a vertical code stub, tall photo. Sizes in px (Dawn sets html to
+   62.5%); tokens with DS defaults. Container step (on the section): 768px = @3xl. */
+.blko-cp07 { display: block; letter-spacing: normal; }
+.blko-cp07 :where(p:not([class*="blko-ui-"])) { margin: 0; }
+.blko-cp07 [hidden] { display: none !important; }
+.blko-cp07 .blko-cp07__band { overflow-x: clip; }
+.blko-cp07 .blko-cp07__inner { display: grid; grid-template-columns: minmax(0, 1fr); gap: 40px; }
+@container (min-width: 768px) { .blko-cp07 .blko-cp07__inner { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: center; gap: 64px; } }
+.blko-cp07__copy { display: grid; min-width: 0; gap: 40px; }
+.blko-cp07 .blko-cp07__media { display: none; }
+@container (min-width: 768px) { .blko-cp07 .blko-cp07__media { display: block; } }
+
+.blko-cp07__ticket { display: flex; width: 100%; max-width: 544px; }
+.blko-cp07__offer, .blko-cp07__stub {
+  background: var(--blko-color-text, #09090b); color: var(--blko-color-bg, #fff);
+  -webkit-mask-size: 100% 51%; mask-size: 100% 51%; -webkit-mask-position: top, bottom; mask-position: top, bottom;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+}
+.blko-cp07__offer {
+  display: grid; flex: 1; min-width: 0; gap: 8px; padding: 28px 16px 28px 28px;
+  border-radius: calc(var(--blko-radius-card, 12px) * 2) 0 0 calc(var(--blko-radius-card, 12px) * 2);
+  -webkit-mask-image: radial-gradient(circle at 100% 0, transparent 14px, #000 14.5px), radial-gradient(circle at 100% 100%, transparent 14px, #000 14.5px);
+  mask-image: radial-gradient(circle at 100% 0, transparent 14px, #000 14.5px), radial-gradient(circle at 100% 100%, transparent 14px, #000 14.5px);
+}
+.blko-cp07__stub {
+  display: grid; width: 112px; flex-shrink: 0; place-content: center; justify-items: center; gap: 12px;
+  border-left: 2px dashed color-mix(in oklab, var(--blko-color-bg, #fff) 30%, transparent);
+  border-radius: 0 calc(var(--blko-radius-card, 12px) * 2) calc(var(--blko-radius-card, 12px) * 2) 0;
+  -webkit-mask-image: radial-gradient(circle at 0 0, transparent 14px, #000 14.5px), radial-gradient(circle at 0 100%, transparent 14px, #000 14.5px);
+  mask-image: radial-gradient(circle at 0 0, transparent 14px, #000 14.5px), radial-gradient(circle at 0 100%, transparent 14px, #000 14.5px);
+}
+.blko-cp07__until { font-size: var(--blko-text-small, 14px); line-height: 1.5; opacity: .7; }
+.blko-cp07 .blko-cp07__value {
+  font-family: var(--blko-font-display, "Instrument Serif", Georgia, serif); font-size: var(--blko-text-display, 40px); line-height: 1;
+  letter-spacing: -.025em; font-variant-numeric: tabular-nums;
+}
+@media (min-width: 1024px) { .blko-cp07 .blko-cp07__value { font-size: var(--blko-text-display, 64px); } }
+.blko-cp07 .blko-cp07__value em { font-style: italic; }
+.blko-cp07__code { transform: rotate(180deg); writing-mode: vertical-rl; font-size: var(--blko-text-small, 14px); line-height: 1.5; font-weight: 500; }
+.blko-cp07 .blko-cp07__btn {
+  display: grid; width: 36px; height: 36px; margin: 0; padding: 0; place-items: center; cursor: pointer;
+  border: 1px solid color-mix(in oklab, var(--blko-color-bg, #fff) 30%, transparent); border-radius: var(--blko-theme-radius-button, 9999px);
+  background: none; color: inherit; transition: background-color .15s;
+}
+.blko-cp07 .blko-cp07__btn:hover { background: color-mix(in oklab, var(--blko-color-bg, #fff) 10%, transparent); }
+.blko-cp07__btn span { display: flex; }
+.blko-cp07 .blko-cp07__btn svg { width: 16px; height: 16px; }
+.blko-cp07 .blko-cp07__link { justify-self: start; }

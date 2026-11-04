@@ -1,0 +1,63 @@
+/* Header 01: logo left, nav centre, icons right. Sizes in px (Dawn sets html to 62.5%); tokens with DS defaults.
+   Container step (on the bar): 768px = @3xl. */
+.blko-h01, .blko-h01 * { box-sizing: border-box; }
+.blko-h01 { display: block; }
+.blko-h01__bar {
+  container-type: inline-size; width: 100%; padding: var(--blko-h01-pt, 0) 0 var(--blko-h01-pb, 0);
+  border-bottom: 1px solid var(--blko-color-border, #e4e4e7); background: var(--blko-color-bg, #fff); color: var(--blko-color-text, #09090b);
+  font-family: var(--blko-font-body, "Plus Jakarta Sans", system-ui, sans-serif); font-size: var(--blko-text-body, 16px); line-height: 1.6; letter-spacing: normal; -webkit-font-smoothing: antialiased;
+}
+.blko-h01__inner {
+  display: grid; min-height: 56px; max-width: var(--blko-container-page, 1280px); margin: 0 auto; grid-template-columns: 1fr auto 1fr;
+  align-items: center; gap: 8px; padding: 4px 8px;
+}
+@container (min-width: 768px) { .blko-h01__inner { min-height: 64px; gap: 32px; padding: 4px 24px; } }
+.blko-h01 .blko-h01__ico { position: relative; }
+.blko-h01 .blko-h01__ico svg { width: 20px; height: 20px; }
+.blko-h01__ico [hidden] { display: none; }
+.blko-h01 .blko-h01__burger > span:not([hidden]) { display: flex; }
+.blko-h01 .blko-h01__burger { justify-self: start; }
+@container (min-width: 768px) { .blko-h01 .blko-h01__burger { display: none; } }
+.blko-h01__logo {
+  justify-self: center; white-space: nowrap; color: inherit; text-decoration: none;
+  font-family: var(--blko-font-heading, "Plus Jakarta Sans", system-ui, sans-serif); font-weight: 600; line-height: 1;
+  font-size: var(--blko-text-h4, 20px);
+}
+@media (min-width: 1024px) { .blko-h01__logo { font-size: var(--blko-text-h4, 22px); } }
+@container (min-width: 768px) { .blko-h01__logo { justify-self: start; padding-left: 8px; } }
+.blko-h01__nav { display: none; }
+@container (min-width: 768px) { .blko-h01__nav { display: block; } }
+.blko-h01__list { display: flex; gap: 28px; margin: 0; padding: 0; list-style: none; }
+.blko-h01__link {
+  position: relative; display: inline-block; padding: 8px 0; white-space: nowrap; color: inherit; text-decoration: none;
+  font-size: var(--blko-text-nav, 14px); line-height: 1.4; font-weight: 500;
+}
+@media (min-width: 1024px) { .blko-h01__link { font-size: var(--blko-text-nav, 15px); } }
+.blko-h01__link::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 4px; height: 1px; background: currentColor;
+  transform: scaleX(0); transform-origin: left; transition: transform .2s var(--blko-ease-brand, cubic-bezier(.2, .8, .2, 1));
+}
+.blko-h01__link:hover::after, .blko-h01__link[aria-current="page"]::after { transform: scaleX(1); }
+.blko-h01__link--sale { color: var(--blko-color-sale, #dc2626); }
+.blko-h01__icons { display: flex; align-items: center; justify-self: end; }
+@container (max-width: 767px) { .blko-h01 .blko-h01__desk { display: none; } }
+.blko-h01__count {
+  position: absolute; top: 4px; right: 2px; display: grid; height: 18px; min-width: 18px; place-items: center; padding: 0 4px;
+  border-radius: 9999px; background: var(--blko-color-text, #09090b); color: var(--blko-color-bg, #fff);
+  box-shadow: 0 0 0 2px var(--blko-color-bg, #fff);
+  font-size: var(--blko-text-badge, 12px); line-height: 1; letter-spacing: .02em; font-weight: 600; font-variant-numeric: tabular-nums;
+}
+.blko-h01__panel { padding: 12px 16px; border-top: 1px solid var(--blko-color-border, #e4e4e7); }
+.blko-h01__panel[hidden] { display: none; }
+@container (min-width: 768px) { .blko-h01__panel { display: none; } }
+.blko-h01__plist { display: grid; margin: 0; padding: 0; list-style: none; }
+.blko-h01__pitem { border-bottom: 1px solid var(--blko-color-border, #e4e4e7); }
+.blko-h01__pitem:last-child { border-bottom: 0; }
+.blko-h01__plink, .blko-h01__pacc { display: flex; height: 48px; align-items: center; color: inherit; text-decoration: none; }
+.blko-h01__plink {
+  font-family: var(--blko-font-heading, "Plus Jakarta Sans", system-ui, sans-serif); font-weight: 600;
+  font-size: var(--blko-text-h4, 20px); line-height: 1.25;
+}
+.blko-h01__plink.blko-h01__link--sale { color: var(--blko-color-sale, #dc2626); }
+.blko-h01__pacc { font-size: var(--blko-text-small, 14px); line-height: 1.5; color: var(--blko-color-text-muted, #65656e); }
+@media (prefers-reduced-motion: reduce) { .blko-h01__link::after { transition: none; } }

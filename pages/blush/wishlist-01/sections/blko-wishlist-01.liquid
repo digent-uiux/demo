@@ -1,0 +1,428 @@
+{%- comment -%}
+  Wishlist 01, "Vanity grid, sticky list card" (registry/wishlist/wishlist-01.tsx).
+  A sticky list card on the left (count, value, what dropped since saving, copy-link and email share) beside a filterable
+  grid of vanity tiles. Each tile keeps its own shade and size, shows a price drop as a compare price, swaps "Move to
+  bag" for "Notify me" when the picked shade is out, and can be removed with undo.
+  Item blocks: with a product the tile is real. Shades are the option named shade / colour / color / tone (dot colour from
+  the option's swatch), sizes the option named size / volume / weight; price, compare price and stock come from the
+  picked variant, and "Move to bag" posts it to /cart/add.js. Without a product the demo fields show and the buttons only
+  update the list. Removed tiles and "Notify me" picks are kept in this browser (localStorage "blko-wishlist-hidden",
+  "blko-notify").
+  Theme-neutral: colours, fonts and radius come from the DS tokens, with the DS default look as fallback.
+{%- endcomment -%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+{{ 'blko-wishlist-01.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-wishlist-01.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-ui-fonts' -%}
+
+{%- liquid
+  assign s = section.settings
+  assign uid = 'blko-wl01-' | append: section.id
+  assign pad_style = '--pt: ' | append: s.padding_top | append: 'px; --pb: ' | append: s.padding_bottom | append: 'px;'
+  assign filters = s.filters | strip | replace: ' ,', ',' | replace: ', ', ',' | split: ','
+  assign low_at = s.low | default: 3
+  assign n_items = 0
+  assign value = 0
+  assign dropped = 0
+  assign page_url = shop.url | append: request.path
+  assign share_url = s.share_url | default: page_url
+  assign subj = s.mail_subject | url_param_escape
+  assign mail_body = share_url | url_param_escape
+  assign mail = 'mailto:?subject=' | append: subj | append: '&body=' | append: mail_body
+-%}
+{%- capture icon_x -%}{% render 'blko-wishlist-01-icon', name: 'x', size: 16 %}{%- endcapture -%}
+{%- capture icon_bag -%}{% render 'blko-wishlist-01-icon', name: 'shopping-bag', size: 16 %}{%- endcapture -%}
+
+{%- comment -%} The tiles first: they sum up the list card's figures. {%- endcomment -%}
+{%- capture tiles -%}
+  {%- for block in section.blocks -%}
+    {%- liquid
+      assign b = block.settings
+      assign p = b.product
+      assign key = block.id
+      assign si = -1
+      assign zi = -1
+      assign shades = ''
+      assign sizes = ''
+      assign combos = ''
+      assign drop = false
+      assign back_any = false
+      assign low = false
+      if p != blank
+        assign key = p.handle
+        assign name = p.title
+        assign url = p.url
+        assign media = p.featured_media
+        assign alt = media.alt | default: p.title
+        assign back_list = b.back | downcase | split: ','
+        for o in p.options_with_values
+          assign on = o.name | downcase
+          if on contains 'shade' or on contains 'colour' or on contains 'color' or on contains 'tone'
+            assign si = forloop.index0
+          elsif on contains 'size' or on contains 'volume' or on contains 'weight'
+            assign zi = forloop.index0
+          endif
+        endfor
+        comment
+          shades: name|hex|out|back;  sizes: label;  combos: shade-size|variant id|price|compare|out;
+        endcomment
+        if si >= 0
+          capture shades
+            for v in p.options_with_values[si].values
+              assign hex = v.swatch.color | default: '#d4d4d8'
+              assign avail = false
+              for x in p.variants
+                if x.options[si] == v and x.available
+                  assign avail = true
+                  break
+                endif
+              endfor
+              assign vn = v | downcase | strip
+              assign is_back = false
+              for bl in back_list
+                assign bs = bl | strip
+                if bs == vn
+                  assign is_back = true
+                endif
+              endfor
+              echo v | escape | append: '|' | append: hex | append: '|'
+              if avail
+                echo '0|'
+              else
+                echo '1|'
+              endif
+              if is_back
+                echo '1;'
+                assign back_any = true
+              else
+                echo '0;'
+              endif
+            endfor
+          endcapture
+        endif
+        if zi >= 0
+          capture sizes
+            for v in p.options_with_values[zi].values
+              echo v | escape | append: ';'
+            endfor
+          endcapture
+        endif
+        capture combos
+          for x in p.variants
+            assign k = 0
+            assign j = 0
+            if si >= 0
+              assign sv = x.options[si]
+              for v in p.options_with_values[si].values
+                if v == sv
+                  assign k = forloop.index0
+                endif
+              endfor
+            endif
+            if zi >= 0
+              assign zv = x.options[zi]
+              for v in p.options_with_values[zi].values
+                if v == zv
+                  assign j = forloop.index0
+                endif
+              endfor
+            endif
+            assign c = x.compare_at_price | default: 0
+            if c > x.price
+              assign drop = true
+            else
+              assign c = 0
+            endif
+            if x.inventory_management == 'shopify' and x.available and x.inventory_quantity <= low_at
+              assign low = true
+            endif
+            echo k | append: '-' | append: j | append: '|' | append: x.id | append: '|' | append: x.price | append: '|' | append: c | append: '|'
+            if x.available
+              echo '0;'
+            else
+              echo '1;'
+            endif
+          endfor
+        endcapture
+      else
+        assign name = b.title
+        assign url = ''
+        assign media = b.image
+        assign alt = b.image.alt | default: b.title
+        if b.low > 0
+          assign low = true
+        endif
+        assign shade_lines = b.shades | newline_to_br | split: '<br />'
+        capture shades
+          for l in shade_lines
+            assign f = l | strip | split: ':'
+            if f.size > 1
+              assign fl = f[2] | strip
+              echo f[0] | strip | escape | append: '|' | append: f[1] | strip
+              if fl == 'out'
+                echo '|1|0;'
+              elsif fl == 'back'
+                echo '|0|1;'
+                assign back_any = true
+              else
+                echo '|0|0;'
+              endif
+            endif
+          endfor
+        endcapture
+        assign size_list = b.sizes | split: ','
+        assign was = b.was | default: 0 | times: 100
+        capture sizes
+          for z in size_list
+            assign f = z | split: ':'
+            echo f[0] | strip | escape | append: ';'
+          endfor
+        endcapture
+        assign shade_rows = shades | split: ';'
+        assign n_sh = shade_rows.size
+        if n_sh == 0
+          assign n_sh = 1
+        endif
+        capture combos
+          for k in (1..n_sh)
+            assign k0 = k | minus: 1
+            assign sh = shade_rows[k0] | split: '|'
+            for z in size_list
+              assign f = z | split: ':'
+              assign pr = f[1] | strip | times: 100
+              assign c = 0
+              if forloop.first and was > pr
+                assign c = was
+                assign drop = true
+              endif
+              echo k0 | append: '-' | append: forloop.index0 | append: '||' | append: pr | append: '|' | append: c | append: '|'
+              if sh[2] == '1'
+                echo '1;'
+              else
+                echo '0;'
+              endif
+            endfor
+          endfor
+        endcapture
+      endif
+
+      assign shade_rows = shades | split: ';'
+      assign size_rows = sizes | split: ';'
+      assign combo_rows = combos | split: ';'
+      assign k = 0
+      for r in shade_rows
+        assign f = r | split: '|'
+        if f[3] == '1'
+          assign k = forloop.index0
+          break
+        endif
+      endfor
+      assign pick = k | append: '-0'
+      assign cur = combo_rows.first | split: '|'
+      for r in combo_rows
+        assign f = r | split: '|'
+        if f[0] == pick
+          assign cur = f
+          break
+        endif
+      endfor
+      assign price = cur[2] | plus: 0
+      assign compare = cur[3] | plus: 0
+      assign out = false
+      if cur[4] == '1'
+        assign out = true
+      endif
+      assign n_items = n_items | plus: 1
+      assign value = value | plus: price
+      if compare > price
+        assign dropped = dropped | plus: compare | minus: price
+      endif
+      assign shade = shade_rows[k] | split: '|'
+    -%}
+    {%- capture prices -%}
+      {%- for r in combo_rows -%}
+        {%- assign f = r | split: '|' -%}
+        {%- assign fp = f[2] | plus: 0 -%}
+        {%- assign fc = f[3] | plus: 0 -%}
+        <template data-price="{{ f[0] }}" data-id="{{ f[1] }}" data-p="{{ fp }}" data-c="{{ fc }}" data-out="{{ f[4] }}">{%- render 'blko-ui-price', amount: fp, compareAt: fc, cents: true -%}</template>
+      {%- endfor -%}
+    {%- endcapture -%}
+    <li class="blko-wl01__tile" data-tile="{{ key | escape }}" data-name="{{ name | escape }}" data-shade="{{ k }}" data-size="0"
+      data-drop="{{ drop }}" data-back="{{ back_any }}" data-low="{{ low }}" {{ block.shopify_attributes }}>
+      {{ prices }}
+      <div class="blko-wl01__media">
+        {%- if media != blank -%}
+          {{ media | image_url: width: 600 | image_tag: loading: 'lazy', widths: '300, 450, 600', sizes: '(min-width: 1152px) 22vw, (min-width: 576px) 40vw, 90vw', alt: alt, class: 'blko-wl01__img' }}
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag: 'blko-wl01__img blko-wl01__ph' }}
+        {%- endif -%}
+        <span class="blko-wl01__back" data-back-badge{% unless shade[3] == '1' %} hidden{% endunless %}>{%- render 'blko-ui-badge', tone: 'surface', children: s.back_badge -%}</span>
+        {%- capture rm_label -%}{{ s.remove_label | replace: '[name]', name }}{%- endcapture -%}
+        {%- render 'blko-ui-button', variant: 'inverse', size: 'icon-sm', label: rm_label, attrs: 'data-remove', className: 'blko-wl01__rm', children: icon_x -%}
+      </div>
+      <div class="blko-wl01__info">
+        <h2 class="blko-wl01__name">{% if url != blank %}<a href="{{ url }}">{{ name | escape }}</a>{% else %}{{ name | escape }}{% endif %}</h2>
+        <span class="blko-wl01__slot" data-price-slot>{%- render 'blko-ui-price', amount: price, compareAt: compare, cents: true -%}</span>
+      </div>
+      {%- if shades != blank -%}
+        <fieldset class="blko-wl01__shades">
+          <legend class="blko-wl01__legend">{{ s.shade_label | escape }} <span class="blko-wl01__sname" data-shade-name>{{ shade[0] }}</span><span class="blko-wl01__out" data-out{% unless out %} hidden{% endunless %}> · {{ s.sold_out | escape }}</span></legend>
+          <div class="blko-wl01__dots" data-blko-ui-options>
+            {%- for r in shade_rows -%}
+              {%- assign f = r | split: '|' -%}
+              {%- assign so = false -%}{%- if f[2] == '1' -%}{%- assign so = true -%}{%- endif -%}
+              {%- assign sel = false -%}{%- if forloop.index0 == k -%}{%- assign sel = true -%}{%- endif -%}
+              <span class="blko-wl01__dot" data-pick-shade="{{ forloop.index0 }}" data-label="{{ f[0] }}" data-back="{{ f[3] }}">{%- render 'blko-ui-swatch', color: f[1], label: f[0], soldOut: so, selected: sel -%}</span>
+            {%- endfor -%}
+          </div>
+        </fieldset>
+      {%- endif -%}
+      {%- if size_rows.size > 1 -%}
+        <div role="group" aria-label="{{ s.size_group | replace: '[name]', name | escape }}" class="blko-wl01__sizes" data-blko-ui-options>
+          {%- for z in size_rows -%}
+            <span class="blko-wl01__chip" data-pick-size="{{ forloop.index0 }}">{%- render 'blko-ui-option', selected: forloop.first, children: z -%}</span>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+      <div class="blko-wl01__cta">
+        {%- capture move -%}{{ icon_bag }} {{ s.move_label | escape }}{%- endcapture -%}
+        <span data-move{% if out %} hidden{% endif %}>{%- render 'blko-ui-button', full: true, attrs: 'data-to-bag', children: move -%}</span>
+        {%- capture bell -%}<span data-i-off>{% render 'blko-wishlist-01-icon', name: 'bell', size: 16 %}</span><span data-i-on hidden>{% render 'blko-wishlist-01-icon', name: 'bell-ring', size: 16 %}</span> <span data-t-off>{{ s.notify_label | escape }}</span><span data-t-on hidden>{{ s.notified_label | escape }}</span>{%- endcapture -%}
+        <span data-notify-wrap{% unless out %} hidden{% endunless %}>{%- render 'blko-ui-button', variant: 'outline', full: true, attrs: 'aria-pressed="false" data-notify', children: bell -%}</span>
+      </div>
+    </li>
+  {%- endfor -%}
+{%- endcapture -%}
+
+<blko-wishlist-01 class="blko-wl01" data-money-format="{{ shop.money_format | escape }}" data-share="{{ share_url | escape }}"
+  data-moved="{{ s.moved_text | escape }}" data-removed="{{ s.removed_text | escape }}" data-restored="{{ s.restored_text | escape }}"
+  data-shown="{{ s.shown_text | escape }}" data-none="{{ s.empty_text | escape }}">
+{%- capture body -%}
+  <aside aria-labelledby="{{ uid }}-h" class="blko-wl01__card">
+    <div class="blko-wl01__intro">
+      <h1 id="{{ uid }}-h" class="blko-wl01__title">{{ s.heading }}</h1>
+      {%- if s.note != blank -%}<p class="blko-wl01__note">{{ s.note | escape }}</p>{%- endif -%}
+    </div>
+    <dl class="blko-wl01__stats">
+      <div class="blko-wl01__stat"><dt>{{ s.items_label | escape }}</dt><dd data-n>{{ n_items }}</dd></div>
+      <div class="blko-wl01__stat"><dt>{{ s.value_label | escape }}</dt><dd data-value>{%- render 'blko-ui-money', amount: value, cents: true -%}</dd></div>
+      <div class="blko-wl01__stat"><dt>{{ s.dropped_label | escape }}</dt><dd class="blko-wl01__drop" data-dropped>{%- render 'blko-ui-money', amount: dropped, cents: true -%}</dd></div>
+    </dl>
+    <div class="blko-wl01__share">
+      {%- capture copy -%}<span data-i-copy>{% render 'blko-wishlist-01-icon', name: 'link-2', size: 16 %}</span><span data-i-done hidden>{% render 'blko-wishlist-01-icon', name: 'check', size: 16 %}</span> <span data-t-copy>{{ s.copy_label | escape }}</span><span data-t-done hidden>{{ s.copied_label | escape }}</span>{%- endcapture -%}
+      {%- render 'blko-ui-button', variant: 'outline', attrs: 'data-copy', children: copy -%}
+      {%- capture icon_mail -%}{% render 'blko-wishlist-01-icon', name: 'mail', size: 16 %}{%- endcapture -%}
+      {%- render 'blko-ui-button', variant: 'outline', size: 'icon', href: mail, label: s.mail_label, children: icon_mail -%}
+    </div>
+  </aside>
+
+  <div class="blko-wl01__main">
+    <div class="blko-wl01__bar">
+      {%- render 'blko-ui-tabs', id: uid, items: filters, value: filters.first, label: s.filters_label -%}
+      <p class="blko-wl01__count" aria-live="polite" data-count>{{ s.shown_text | replace: '[n]', n_items | replace: '[total]', n_items }}</p>
+    </div>
+
+    <div role="status" class="blko-wl01__undo" data-undo hidden>
+      <span class="blko-wl01__undotext">{{ s.removed_label | escape }} <span class="blko-wl01__strong" data-undo-name></span>.</span>
+      {%- capture undo -%}{% render 'blko-wishlist-01-icon', name: 'undo-2', size: 16 %} {{ s.undo_label | escape }}{%- endcapture -%}
+      {%- render 'blko-ui-button', variant: 'link', attrs: 'data-undo-btn', children: undo -%}
+    </div>
+    <p class="blko-ui-sr-only" aria-live="polite" data-say></p>
+
+    <div class="blko-wl01__empty" data-empty hidden>
+      <p class="blko-wl01__etitle">{{ s.empty_title | escape }}</p>
+      <p class="blko-wl01__etext" data-empty-text></p>
+      {%- render 'blko-ui-button', variant: 'outline', size: 'sm', attrs: 'data-all', children: s.empty_button -%}
+    </div>
+
+    <ul class="blko-wl01__grid" role="list" data-grid>{{ tiles }}</ul>
+  </div>
+{%- endcapture -%}
+{%- render 'blko-ui-section', surface: s.surface, label: s.label, className: 'blko-wl01__band', inner: 'blko-wl01__inner', style: pad_style, children: body -%}
+</blko-wishlist-01>
+
+{% schema %}
+{
+  "name": "Wishlist, vanity grid",
+  "tag": "div",
+  "class": "blko-section-wl01",
+  "settings": [
+    { "type": "header", "content": "List card" },
+    { "type": "text", "id": "label", "label": "Section label (screen readers)", "default": "Wishlist" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading (italic part in <em>)", "default": "Your saved <em>beauty picks</em>" },
+    { "type": "text", "id": "note", "label": "Note", "default": "We flag price drops and returning shades." },
+    { "type": "text", "id": "items_label", "label": "Items label", "default": "Items" },
+    { "type": "text", "id": "value_label", "label": "Value label", "default": "Value" },
+    { "type": "text", "id": "dropped_label", "label": "Dropped label", "default": "Dropped" },
+    { "type": "url", "id": "share_url", "label": "Shared link (blank = this page)" },
+    { "type": "text", "id": "copy_label", "label": "Copy button", "default": "Copy link" },
+    { "type": "text", "id": "copied_label", "label": "Copied state", "default": "Copied" },
+    { "type": "text", "id": "mail_label", "label": "Email button (screen readers)", "default": "Email this list" },
+    { "type": "text", "id": "mail_subject", "label": "Email subject", "default": "My saved beauty picks" },
+    { "type": "header", "content": "Grid" },
+    { "type": "text", "id": "filters", "label": "Filters (All, price drops, back in stock, running low; comma separated)", "default": "All, Price drops, Back in stock, Running low" },
+    { "type": "text", "id": "filters_label", "label": "Filter label (screen readers)", "default": "Filter saved items" },
+    { "type": "text", "id": "shown_text", "label": "Count line ([n] shown, [total] saved)", "default": "[n] of [total] shown" },
+    { "type": "range", "id": "low", "label": "Running low at (units in stock)", "min": 1, "max": 10, "step": 1, "default": 3 },
+    { "type": "text", "id": "back_badge", "label": "Back in stock badge", "default": "Back in stock" },
+    { "type": "text", "id": "remove_label", "label": "Remove button ([name]; screen readers)", "default": "Remove [name]" },
+    { "type": "text", "id": "shade_label", "label": "Shade label", "default": "Shade:" },
+    { "type": "text", "id": "sold_out", "label": "Sold out note", "default": "sold out" },
+    { "type": "text", "id": "size_group", "label": "Size group ([name]; screen readers)", "default": "Size of [name]" },
+    { "type": "text", "id": "move_label", "label": "Move to bag", "default": "Move to bag" },
+    { "type": "text", "id": "notify_label", "label": "Notify me", "default": "Notify me" },
+    { "type": "text", "id": "notified_label", "label": "Notify me, on", "default": "We’ll email you" },
+    { "type": "text", "id": "removed_label", "label": "Undo line", "default": "Removed" },
+    { "type": "text", "id": "undo_label", "label": "Undo button", "default": "Undo" },
+    { "type": "text", "id": "moved_text", "label": "Moved message ([name]; screen readers)", "default": "[name] moved to your bag." },
+    { "type": "text", "id": "removed_text", "label": "Removed message ([name]; screen readers)", "default": "[name] removed from your list." },
+    { "type": "text", "id": "restored_text", "label": "Undo message ([name]; screen readers)", "default": "[name] is back on your list." },
+    { "type": "text", "id": "empty_title", "label": "Empty title", "default": "Nothing here yet" },
+    { "type": "text", "id": "empty_text", "label": "Empty text ([filter])", "default": "No saved items match “[filter]”." },
+    { "type": "text", "id": "empty_button", "label": "Empty button", "default": "Show everything" },
+    { "type": "header", "content": "Style" },
+    {
+      "type": "select", "id": "surface", "label": "Surface", "default": "bg",
+      "options": [
+        { "value": "bg", "label": "Background" },
+        { "value": "alt", "label": "Alternate" },
+        { "value": "soft-3", "label": "Soft tint" }
+      ]
+    },
+    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80 }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "text", "id": "back", "label": "Shades back in stock (comma separated, real products)" },
+        { "type": "header", "content": "Demo (shown without a product)" },
+        { "type": "text", "id": "title", "label": "Name", "default": "Peptide Glow Serum" },
+        { "type": "image_picker", "id": "image", "label": "Photo" },
+        { "type": "text", "id": "sizes", "label": "Sizes, label:price (comma separated)", "default": "30 ml:48, 50 ml:68" },
+        { "type": "number", "id": "was", "label": "Price before the drop (first size)" },
+        { "type": "textarea", "id": "shades", "label": "Shades, one per line: name:#hex (add :out or :back)" },
+        { "type": "number", "id": "low", "label": "Units left (running low)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Wishlist, vanity grid",
+      "blocks": [
+        { "type": "item", "settings": { "title": "Peptide Glow Serum", "sizes": "30 ml:48, 50 ml:68", "was": 56 } },
+        { "type": "item", "settings": { "title": "Sheer Skin Tint SPF 30", "sizes": "32 ml:38", "shades": "Porcelain 01:#f1d9c4\nSand 03:#e2bc98\nHoney 05:#c99466:back\nMocha 08:#7f5236" } },
+        { "type": "item", "settings": { "title": "Cream Blush Balm", "sizes": "6 g:24", "shades": "Petal:#e9a4a6\nTerracotta:#c8694c\nBerry:#8e2f4a:out" } },
+        { "type": "item", "settings": { "title": "Barrier Night Cream", "sizes": "15 ml:16, 50 ml:42", "low": 3 } },
+        { "type": "item", "settings": { "title": "Squalane Face Oil", "sizes": "30 ml:34", "was": 40 } },
+        { "type": "item", "settings": { "title": "Blurring Loose Powder", "sizes": "9 g:30", "shades": "Translucent:#efe4d8\nWarm:#d9b48f" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

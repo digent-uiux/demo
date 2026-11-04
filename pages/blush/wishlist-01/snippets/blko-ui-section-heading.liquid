@@ -1,0 +1,19 @@
+{%- comment -%}
+  SectionHeading(eyebrow, title, lead, action, align='start', as='h2', size='md', tone='default', font='sans', className):
+  components/ui/section.tsx. Eyebrow + title + lead, optional action HTML on the right. Wrap one word of the title in
+  <em> for the italic accent. size: sm (h3) | md (h2) | lg (h1) | xl (display). font: sans | display | condensed.
+  Headings read --blko-heading-style / --blko-heading-transform, so a theme can turn the italic accent or the case off.
+{%- endcomment -%}
+{%- liquid
+  assign h = as | default: 'h2'
+  assign sz = size | default: 'md'
+  assign fn = font | default: 'sans'
+-%}
+<header class="blko-ui-heading{% if align == 'center' %} blko-ui-heading--center{% endif %}{% if className != blank %} {{ className }}{% endif %}">
+  <div class="blko-ui-heading__text">
+    {%- if eyebrow != blank -%}{% render 'blko-ui-eyebrow', children: eyebrow, tone: tone %}{%- endif -%}
+    <{{ h }} class="blko-ui-heading__title blko-ui-title--{{ sz }} blko-ui-font--{{ fn }}">{{ title }}</{{ h }}>
+    {%- if lead != blank -%}<p class="blko-ui-heading__lead{% if tone == 'inherit' %} blko-ui-heading__lead--inherit{% endif %}">{{ lead }}</p>{%- endif -%}
+  </div>
+  {{- action -}}
+</header>
