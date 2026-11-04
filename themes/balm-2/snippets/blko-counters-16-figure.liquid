@@ -1,0 +1,32 @@
+{%- comment -%}
+  One counting figure: value (number), d (decimals), unit (text), big (gauge figure). Formats with thousands commas,
+  locks the width to the final text (a hidden ghost under the live value), a screen-reader copy, data-* for the script.
+{%- endcomment -%}
+{%- liquid
+  assign d = d | default: 0
+  assign v = value | default: 0
+  assign raw = v | round: d | append: ''
+  assign parts = raw | split: '.'
+  assign chars = parts[0] | remove: '-' | split: '' | reverse
+  assign ip = ''
+  for c in chars
+    assign m = forloop.index0 | modulo: 3
+    if m == 0 and forloop.index0 > 0
+      assign ip = ',' | append: ip
+    endif
+    assign ip = c | append: ip
+  endfor
+  if raw contains '-'
+    assign ip = '-' | append: ip
+  endif
+  assign vf = ip
+  if d > 0
+    assign fr = parts[1] | default: '' | append: '000' | slice: 0, d
+    assign vf = ip | append: '.' | append: fr
+  endif
+-%}
+<span class="bcounters16__num{% if big %} bcounters16__num--big{% endif %}" data-stat data-v="{{ v }}" data-d="{{ d }}">
+  <span class="bcounters16__sr">{{ vf }}{{ unit | escape }}</span>
+  <span aria-hidden="true" class="bcounters16__lock"><span class="bcounters16__ghost">{{ vf }}</span><span class="bcounters16__val" data-val>{{ vf }}</span></span>
+  {%- if unit != blank -%}<span aria-hidden="true" class="bcounters16__unit">{{ unit | escape }}</span>{%- endif -%}
+</span>

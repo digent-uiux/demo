@@ -1,0 +1,311 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-login-01.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-login-01.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Balm sign-in: the bottle tag. A tall 4:5 still life (image setting) holds the left six columns; the customer_login form
+  is a paper tag hung on it: a double-hairline label with a punched hole and a hairline string running up into the
+  photo, set over the plate's right edge. The copy (label on a hairline, h1 combo: Karla 300 word + Bodoni italic, one line) sits
+  above the tag on the right; a member note with three amber numerals and a link to the register page sits below it.
+  "Forgot it?" turns the tag to the recover_customer_password form (also on /account/login#recover, and after it posts).
+  Errors: Shopify's form.errors, plus client checks (empty or malformed email, empty password) that focus the first
+  invalid field. Motion: the balm kit (photo focus pull, heading focus rise) plus the tag settling on its string (CSS,
+  html.blko-kit-balm only; static = hanging straight). Phones: copy, photo, then the tag over the photo's foot.
+{%- endcomment -%}
+{{ 'blko-balm-motion.css' | asset_url | stylesheet_tag -}}
+<script src="{{ 'blko-balm-motion.js' | asset_url }}" defer="defer"></script
+>{%- liquid
+  assign fid = 'login01-' | append: section.id
+  assign recover_open = false
+-%}
+{%- capture recover_form -%}
+  {%- form 'recover_customer_password', id: 'login01-rec-form', class: 'blogin01__form', novalidate: 'novalidate' -%}
+    {%- if form.posted_successfully? -%}{%- assign recover_open = true -%}
+      <p role="status" class="blogin01__ok">{{ 'blko.login_01.recover_sent' | t }}</p
+    >{%- endif -%}
+    {%- if form.errors -%}{%- assign recover_open = true -%}
+      <div id="login01-rec-error" role="alert" class="blogin01__alert">{{ form.errors | default_errors }}</div
+    >{%- endif -%}
+    <div class="blogin01__field" data-field
+      ><label for="login01-rec-email" class="blogin01__cap blogin01__muted">{{ 'blko.login_01.email' | t }}</label
+      ><input id="login01-rec-email" class="blko-ui-input" type="email" name="email" inputmode="email" autocomplete="email" spellcheck="false" placeholder="{{ s.placeholder | escape }}" data-email{% if form.errors %} aria-invalid="true" aria-describedby="login01-rec-error"{% endif %}
+      ><p id="login01-rec-email-error" class="blogin01__err" data-err hidden></p
+    ></div
+    ><div class="blogin01__acts"
+      >{%- capture lbl -%}<span class="blogin01__spin" aria-hidden="true"></span><span data-label data-busy="{{ 'blko.login_01.sending' | t }}">{{ 'blko.login_01.recover_send' | t }}</span>{%- endcapture -%}
+      {%- render 'blko-ui-button', type: 'submit', size: 'lg', full: true, children: lbl, className: 'blogin01__submit' -%}
+      <a href="#login" class="blogin01__small blogin01__back" data-show-login>{%- render 'blko-ui-icon', name: 'arrow-left', size: 16, stroke: 1.5 -%}{{ 'blko.login_01.recover_back' | t }}</a
+    ></div
+  >{%- endform -%}
+{%- endcapture -%}
+{%- capture body -%}
+  <div class="blogin01__copy"
+    ><p class="blogin01__cap blogin01__muted blogin01__eyebrow"><span aria-hidden="true"></span>{{ s.eyebrow | escape }}</p
+    ><h1 class="blogin01__h1"><span class="blogin01__h1a">{{ s.heading | escape }}</span>{% if s.heading_em != blank %} <em>{{ s.heading_em | escape }}</em>{% endif %}</h1
+    >{%- if s.text != blank -%}<p class="blogin01__lead">{{ s.text | escape }}</p>{%- endif -%}
+  </div
+
+  ><figure class="blogin01__fig"
+    ><div class="blogin01__ph"
+      >{%- if s.image != blank -%}
+        {%- capture fp -%}object-position: {{ s.image.presentation.focal_point | default: '50% 50%' }}{%- endcapture -%}
+        {{ s.image | image_url: width: 1600 | image_tag: widths: '700, 1200, 1600', sizes: '(min-width: 768px) 46vw, 100vw', loading: 'eager', fetchpriority: 'high', class: 'blogin01__img', style: fp, alt: s.image.alt -}}
+      {%- else -%}
+        {{ 'lifestyle-2' | placeholder_svg_tag: 'blogin01__img blogin01__phsvg' -}}
+      {%- endif -%}
+    </div
+    >{%- if s.caption != blank or s.caption_right != blank -%}
+    <figcaption class="blogin01__cap blogin01__muted blogin01__figcap"><span>{{ s.caption | escape }}</span><span>{{ s.caption_right | escape }}</span></figcaption
+    >{%- endif -%}
+  </figure
+
+  ><div class="blogin01__hang"
+    ><div class="blogin01__tag"
+      ><span class="blogin01__string" aria-hidden="true"></span
+      ><div class="blogin01__taghead"
+        ><span class="blogin01__tagl"><span class="blogin01__hole" aria-hidden="true"></span><span class="blogin01__cap blogin01__muted">{{ s.tag_label | escape }}</span></span
+        ><span class="blogin01__cap blogin01__acc"><span data-side="login"{% if recover_open %} hidden{% endif %}>{{ 'blko.login_01.side_login' | t }}</span><span data-side="recover"{% unless recover_open %} hidden{% endunless %}>{{ 'blko.login_01.side_recover' | t }}</span></span
+      ></div
+      ><div class="blogin01__panes" data-panes
+        ><div class="blogin01__pane" id="login" data-pane="login"{% if recover_open %} hidden{% endif %}
+          >{%- form 'customer_login', id: fid, class: 'blogin01__form', novalidate: 'novalidate' -%}
+            {%- if form.errors -%}
+              <div id="{{ fid }}-error" role="alert" class="blogin01__alert">{{ form.errors | default_errors }}</div
+            >{%- endif -%}
+            <div class="blogin01__field" data-field
+              ><label for="{{ fid }}-email" class="blogin01__cap blogin01__muted">{{ 'blko.login_01.email' | t }}</label
+              >{%- comment -%}.blko-ui-input fields: styled by blko-ui-commerce.css (block-gen loads it with the section).{%- endcomment -%}
+              <input id="{{ fid }}-email" class="blko-ui-input" type="email" name="customer[email]" value="{{ form.email | escape }}" inputmode="email" autocomplete="email" spellcheck="false" placeholder="{{ s.placeholder | escape }}" data-email{% if form.errors %} aria-describedby="{{ fid }}-error"{% endif %}
+              ><p id="{{ fid }}-email-error" class="blogin01__err" data-err hidden></p
+            ></div
+            ><div class="blogin01__field" data-field
+              ><div class="blogin01__pwhead"
+                ><label for="{{ fid }}-password" class="blogin01__cap blogin01__muted">{{ 'blko.login_01.password' | t }}</label
+                ><a href="#recover" class="blogin01__small blogin01__forgot" data-show-recover>{{ 'blko.login_01.forgot' | t }}</a
+              ></div
+              ><div class="blogin01__pw"
+                ><input id="{{ fid }}-password" class="blko-ui-input blogin01__pwin" type="password" name="customer[password]" autocomplete="current-password" data-password
+                ><button type="button" class="blogin01__cap blogin01__eye" aria-controls="{{ fid }}-password" aria-pressed="false" aria-label="{{ 'blko.login_01.show_aria' | t }}" data-eye data-t-show="{{ 'blko.login_01.show' | t }}" data-t-hide="{{ 'blko.login_01.hide' | t }}" data-a-show="{{ 'blko.login_01.show_aria' | t }}" data-a-hide="{{ 'blko.login_01.hide_aria' | t }}">{{ 'blko.login_01.show' | t }}</button
+              ></div
+              ><p id="{{ fid }}-password-error" class="blogin01__err" data-err hidden></p
+            ></div
+            ><div class="blogin01__acts"
+              >{%- capture lbl -%}<span class="blogin01__spin" aria-hidden="true"></span><span data-label data-busy="{{ 'blko.login_01.signing' | t }}">{{ 'blko.login_01.sign_in' | t }}</span><span class="blogin01__arrow">{%- render 'blko-ui-icon', name: 'arrow-right', size: 16, stroke: 2 -%}</span>{%- endcapture -%}
+              {%- render 'blko-ui-button', type: 'submit', size: 'lg', full: true, children: lbl, className: 'blogin01__submit' -%}
+            </div
+            ><p role="status" aria-live="polite" class="blogin01__small blogin01__muted blogin01__live" data-live></p
+          >{%- endform -%}
+        </div
+        ><div class="blogin01__pane" id="recover" data-pane="recover"{% unless recover_open %} hidden{% endunless %}
+          ><div class="blogin01__rhead"
+            ><h2 class="blogin01__rh" tabindex="-1" data-rec-h>{{ 'blko.login_01.recover_h' | t }}</h2
+            ><p class="blogin01__small blogin01__muted">{{ 'blko.login_01.recover_text' | t }}</p
+          ></div
+          >{{ recover_form -}}
+        </div
+      ></div
+    ></div
+  ></div
+
+  ><aside aria-labelledby="login01-new-{{ section.id }}" class="blogin01__member"
+    ><h2 id="login01-new-{{ section.id }}" class="blogin01__mh">{{ s.member_heading | escape }}</h2
+    ><ol class="blogin01__reasons"
+      >{%- assign n = 0 -%}
+      {%- for i in (1..3) -%}
+        {%- assign rk = 'reason_' | append: i -%}{%- assign r = s[rk] -%}
+        {%- if r == blank -%}{%- continue -%}{%- endif -%}
+        {%- assign n = n | plus: 1 -%}
+        <li><span class="blogin01__rnum" aria-hidden="true">0{{ n }}</span><span>{{ r | escape }}</span></li
+      >{%- endfor -%}
+    </ol
+    >{%- capture lbl -%}{{ s.register_label | escape }}{%- endcapture -%}
+    {%- render 'blko-ui-button', href: routes.account_register_url, variant: 'link', children: lbl, className: 'blogin01__reg' -%}
+  </aside
+>{%- endcapture -%}
+<div class="blogin01{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-t-email="{{ 'blko.login_01.e_email' | t }}" data-t-email-bad="{{ 'blko.login_01.e_email_bad' | t }}" data-t-password="{{ 'blko.login_01.e_password' | t }}"
+  >{%- render 'blko-ui-section', surface: 'bg', bleed: true, label: s.label, inner: 'blogin01__inner', className: 'blogin01__sec', children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Apothecary sign-in",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "For the customer login template (classic customer accounts). Signs in with customer_login; Forgot it? turns the tag to recover_customer_password; the member note links to the register page."
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Region label",
+      "default": "Sign in"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Label",
+      "default": "Members · Sign in"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Welcome"
+    },
+    {
+      "type": "text",
+      "id": "heading_em",
+      "label": "Heading, italic word",
+      "default": "back"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Your orders, saved formulas and refill dates, kept on one shelf."
+    },
+    {
+      "type": "text",
+      "id": "tag_label",
+      "label": "Tag label",
+      "default": "Members' register"
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Email placeholder",
+      "default": "you@example.com"
+    },
+    {
+      "type": "header",
+      "content": "Member note"
+    },
+    {
+      "type": "text",
+      "id": "member_heading",
+      "label": "Heading",
+      "default": "New to the apothecary?"
+    },
+    {
+      "type": "text",
+      "id": "reason_1",
+      "label": "Reason 1",
+      "default": "Refill reminders, timed to your bottle"
+    },
+    {
+      "type": "text",
+      "id": "reason_2",
+      "label": "Reason 2",
+      "default": "First pour of every new batch"
+    },
+    {
+      "type": "text",
+      "id": "reason_3",
+      "label": "Reason 3",
+      "default": "A sample of your choice each season"
+    },
+    {
+      "type": "text",
+      "id": "register_label",
+      "label": "Link",
+      "default": "Create an account"
+    },
+    {
+      "type": "header",
+      "content": "Photo"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "A tall still life; the tag hangs over its right edge. Set a focal point to steer the 4:5 crop."
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "Caption",
+      "default": "Plate · Amber and linen"
+    },
+    {
+      "type": "text",
+      "id": "caption_right",
+      "label": "Caption, right",
+      "default": "Batch 0426"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 112,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 112
+    }
+  ],
+  "presets": [
+    {
+      "name": "Apothecary sign-in"
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

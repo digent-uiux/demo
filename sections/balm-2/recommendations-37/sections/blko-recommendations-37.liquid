@@ -1,0 +1,321 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-recommendations-37.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-recommendations-37.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Balm "The plate and its key": the pairing products set as a botanical book plate. Right: a caption row (plate label,
+  scale) over a plate holding up to three mounted 4:5 photos at three scales (one large, two small, overlapping, each with
+  its "Fig. N" tag; 1- and 2-mount layouts when fewer come back). Left: eyebrow, the Bodoni h2, a lead, then the key: a
+  numbered list on hairlines (amber numeral, name, routine note, price, outline Add), closed by "Together" with the
+  bundle total and Add all (one /cart/add with items[]). Pointing at a row or a figure lifts that pair.
+  Source, in order: the picked products; Shopify recommendations (this section is re-rendered through
+  routes.product_recommendations_url on product pages and swaps itself in, hidden when nothing comes back); the
+  preview items (only where there is no product, e.g. the editor).
+  Add posts /cart/add (works without JS); with JS /cart/add.js, then blko:cart:add.
+  Motion (balm kit on only; static = all mounted): when shown, the mounts unveil from the bottom edge one after another.
+{%- endcomment -%}
+{%- liquid
+  assign mode = 'preview'
+  if s.products != blank and s.products.size > 0
+    assign mode = 'list'
+  elsif recommendations.performed
+    if recommendations.products_count > 0
+      assign mode = 'rec'
+    else
+      assign mode = 'none'
+    endif
+  elsif product != blank and product.id != blank
+    assign mode = 'fetch'
+  endif
+  assign t_add = 'blko.recommendations_37.add' | t
+  assign t_added = 'blko.recommendations_37.added' | t
+  assign t_sold = 'blko.recommendations_37.sold_out' | t
+  assign mf = s.note_field | split: '.'
+  case mode
+    when 'list'
+      assign src = s.products
+    when 'rec'
+      assign src = recommendations.products
+    else
+      assign src = section.blocks
+  endcase
+  assign n = src.size
+  if n > 3
+    assign n = 3
+  endif
+  assign mounts = ''
+  assign rows = ''
+  assign total = 0
+  assign bundle = ''
+  assign all_ok = true
+-%}
+{%- if mode != 'none' and mode != 'fetch' -%}
+  {%- for x in src limit: 3 -%}
+    {%- assign i = forloop.index0 -%}
+    {%- assign ph = forloop.index -%}
+    {%- if mode == 'preview' -%}
+      {%- capture m -%}{%- render 'blko-recommendations-37-item', part: 'mount', b: x, i: i, n: n, ph: ph -%}{%- endcapture -%}
+      {%- capture r -%}{%- render 'blko-recommendations-37-item', part: 'row', b: x, i: i, n: n, t_add: t_add, t_added: t_added -%}{%- endcapture -%}
+      {%- assign pc = x.settings.price | times: 100 | round -%}
+      {%- assign total = total | plus: pc -%}
+    {%- else -%}
+      {%- capture m -%}{%- render 'blko-recommendations-37-item', part: 'mount', product: x, mf: mf, i: i, n: n, ph: ph -%}{%- endcapture -%}
+      {%- capture r -%}{%- render 'blko-recommendations-37-item', part: 'row', product: x, mf: mf, i: i, n: n, t_add: t_add, t_added: t_added, t_sold: t_sold -%}{%- endcapture -%}
+      {%- assign total = total | plus: x.price -%}
+      {%- assign xv = x.selected_or_first_available_variant -%}
+      {%- if xv.available -%}
+        {%- capture bundle -%}{{ bundle }}<input type="hidden" name="items[][id]" value="{{ xv.id }}"><input type="hidden" name="items[][quantity]" value="1">{%- endcapture -%}
+      {%- else -%}
+        {%- assign all_ok = false -%}
+      {%- endif -%}
+    {%- endif -%}
+    {%- assign mounts = mounts | append: m -%}
+    {%- assign rows = rows | append: r -%}
+  {%- endfor -%}
+{%- endif -%}
+<div class="brecommendations37{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-brecommendations37 data-root="{{ routes.root_url }}"{% if mode == 'fetch' %} data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit=3&intent={{ s.intent }}" hidden{% endif %}
+  >{%- if mode != 'none' and mode != 'fetch' and n > 0 -%}
+    {%- capture body -%}
+      <div class="brecommendations37__grid"
+        ><div class="brecommendations37__head"
+          >{%- if s.eyebrow != blank -%}<p class="brecommendations37__lbl brecommendations37__muted">{{ s.eyebrow | escape }}</p>{%- endif -%}
+          {%- if s.heading != blank -%}<h2 class="brecommendations37__h">{{ s.heading }}</h2>{%- endif -%}
+          {%- if s.line != blank -%}<p class="brecommendations37__line">{{ s.line | escape }}</p>{%- endif -%}
+        </div
+        ><figure class="brecommendations37__plate"
+          >{%- if s.plate_label != blank or s.plate_scale != blank -%}
+          <figcaption class="brecommendations37__lbl brecommendations37__muted brecommendations37__pcap"><span>{{ s.plate_label | escape }}</span><span>{{ s.plate_scale | escape }}</span></figcaption
+          >{%- endif -%}
+          <div class="brecommendations37__board" data-items>{{ mounts }}</div
+        ></figure
+        ><div class="brecommendations37__key"
+          ><ol class="brecommendations37__list">{{ rows }}</ol
+          >{%- if s.show_bundle and n > 1 -%}
+          <div class="brecommendations37__tot"
+            ><p class="brecommendations37__sum"><span class="brecommendations37__lbl brecommendations37__muted">{{ 'blko.recommendations_37.together' | t }}</span><span class="brecommendations37__totn">{%- render 'blko-ui-money', amount: total, cents: true -%}</span></p
+            >{%- capture lb -%}{%- if n == 3 -%}{{ 'blko.recommendations_37.add_all3' | t }}{%- else -%}{{ 'blko.recommendations_37.add_all' | t }}{%- endif -%}{%- endcapture -%}
+            {%- if mode == 'preview' -%}
+              {%- capture at -%}data-toggle aria-pressed="false" data-add-label="{{ lb | escape }}" data-added="{{ 'blko.recommendations_37.all_added' | t | escape }}"{%- endcapture -%}
+              {%- render 'blko-ui-button', size: 'sm', type: 'button', children: lb, attrs: at -%}
+            {%- elsif all_ok -%}
+              <form method="post" action="{{ routes.cart_add_url }}" class="brecommendations37__form" data-add data-bundle
+                >{{ bundle -}}
+                {%- capture at -%}data-btn data-added="{{ 'blko.recommendations_37.all_added' | t | escape }}"{%- endcapture -%}
+                {%- render 'blko-ui-button', size: 'sm', type: 'submit', children: lb, attrs: at -%}
+              </form
+            >{%- endif -%}
+          </div
+          >{%- endif -%}
+          <p class="brecommendations37__err" role="status" aria-live="polite" data-err hidden>{{ 'blko.recommendations_37.error' | t }}</p
+        ></div
+      ></div
+    >{%- endcapture -%}
+    {%- assign lbl = 'blko.recommendations_37.label' | t -%}
+    {%- render 'blko-ui-section', surface: 'bg', bleed: true, label: lbl, inner: 'brecommendations37__in', children: body -%}
+  {%- endif -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Recommendations 37",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Pairs with this oil"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Italic one word for the accent.",
+      "default": "Three to keep <em>beside</em> it"
+    },
+    {
+      "type": "text",
+      "id": "line",
+      "label": "Line",
+      "default": "One for before, one for during, one for after. Each made in the same workshop."
+    },
+    {
+      "type": "text",
+      "id": "plate_label",
+      "label": "Plate label",
+      "default": "Plate III · Kept beside the oil"
+    },
+    {
+      "type": "text",
+      "id": "plate_scale",
+      "label": "Plate scale",
+      "default": "1 : 4"
+    },
+    {
+      "type": "header",
+      "content": "Products"
+    },
+    {
+      "type": "product_list",
+      "id": "products",
+      "label": "Products",
+      "limit": 3,
+      "info": "Leave empty to use Shopify recommendations for the product on the page. Up to three are shown."
+    },
+    {
+      "type": "select",
+      "id": "intent",
+      "label": "Recommendations",
+      "default": "complementary",
+      "options": [
+        {
+          "value": "complementary",
+          "label": "Complementary (Search & Discovery)"
+        },
+        {
+          "value": "related",
+          "label": "Related"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "note_field",
+      "label": "Line under the name (product metafield)",
+      "default": "custom.routine_note",
+      "info": "namespace.key; falls back to the start of the description."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bundle",
+      "label": "Show the total and Add all",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 112,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 112
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Preview item",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Name",
+          "default": "Cream Cleansing Bar"
+        },
+        {
+          "type": "text",
+          "id": "note",
+          "label": "Line",
+          "default": "Before the oil: cleans without stripping."
+        },
+        {
+          "type": "number",
+          "id": "price",
+          "label": "Price",
+          "default": 18
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Recommendations 37",
+      "blocks": [
+        {
+          "type": "item",
+          "settings": {
+            "title": "Cream Cleansing Bar",
+            "note": "Before the oil: cleans without stripping.",
+            "price": 18
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "title": "Hydrating Mist",
+            "note": "Mist first, then press the oil into damp skin.",
+            "price": 26
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "title": "Lip and Cheek Tin",
+            "note": "Last: a tinted balm for the same evening.",
+            "price": 22
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

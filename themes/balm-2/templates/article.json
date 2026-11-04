@@ -1,18 +1,164 @@
 {
   "sections": {
-    "main": {
-      "type": "blko-main-article",
+    "article-31": {
+      "type": "blko-article-31",
       "settings": {
-        "color_scheme": "scheme-1",
-        "padding_top": 80,
-        "padding_bottom": 80,
-        "show_date": true,
-        "show_author": true,
-        "show_tags": true,
-        "show_share": false,
-        "show_comments": true
-      }
+        "tokens": "theme"
+      },
+      "blocks": {
+        "paragraph-1": {
+          "type": "paragraph",
+          "settings": {
+            "lead": true,
+            "text": "<p>Calendula is the plainest flower in our garden, and the hardest working. Steeped slowly in oil, its petals give up the compounds that make a hot, blotchy cheek settle down. Nothing about it is new: it has been an apothecary staple for centuries. What matters is how patiently it is made.</p>"
+          }
+        },
+        "heading-2": {
+          "type": "heading",
+          "settings": {
+            "text": "Why it calms"
+          }
+        },
+        "paragraph-3": {
+          "type": "paragraph",
+          "settings": {
+            "text": "<p>The petals carry triterpenoids and flavonoids that quiet the skin's response to wind, heat and over-scrubbing. In an oil infusion they stay gentle: there is no alcohol to sting, and no fragrance to set off a reaction of its own.</p>"
+          }
+        },
+        "paragraph-4": {
+          "type": "paragraph",
+          "settings": {
+            "text": "<p>It won't erase rosacea or replace a dermatologist. It is a soft, daily kindness for skin that flushes easily, and it works best sealed in, at night, under a balm.</p>"
+          }
+        },
+        "quote-5": {
+          "type": "quote",
+          "settings": {
+            "text": "“We don't hurry the oil. Six weeks on a warm shelf is the whole recipe.”",
+            "cite": "Mara Quint · founder, at the bench"
+          }
+        },
+        "heading-6": {
+          "type": "heading",
+          "settings": {
+            "text": "How we make it"
+          }
+        },
+        "step-7": {
+          "type": "step",
+          "settings": {
+            "title": "Dry the petals",
+            "text": "Calendula heads are picked in the morning and dried flat on linen for a week, until they rustle."
+          }
+        },
+        "step-8": {
+          "type": "step",
+          "settings": {
+            "title": "Cover them in oil",
+            "text": "The petals go into amber jars, topped with cold-pressed sunflower oil, a finger's width over the flowers."
+          }
+        },
+        "step-9": {
+          "type": "step",
+          "settings": {
+            "title": "Wait six weeks",
+            "text": "The jars sit on a warm shelf, out of the sun, and get a slow turn each morning. The oil goes from straw to gold."
+          }
+        },
+        "step-10": {
+          "type": "step",
+          "settings": {
+            "title": "Strain and fold in",
+            "text": "We strain through muslin, rest the oil for two days, then fold it into the balm and the serum by hand."
+          }
+        },
+        "paragraph-11": {
+          "type": "paragraph",
+          "settings": {
+            "text": "<p>At home, press two drops of the serum into damp skin, then warm a pea of balm between your palms and hold it over the flushed areas for a few breaths. Patch test first if your skin reacts to daisies.</p>"
+          }
+        },
+        "item-12": {
+          "type": "item",
+          "settings": {
+            "title": "Calendula Serum",
+            "size": "30 ml",
+            "price": 48,
+            "note": "The infusion at 12%, for redness"
+          }
+        },
+        "item-13": {
+          "type": "item",
+          "settings": {
+            "title": "Barrier Balm",
+            "size": "50 ml",
+            "price": 38,
+            "note": "Calendula in shea, to seal at night"
+          }
+        }
+      },
+      "block_order": [
+        "paragraph-1",
+        "heading-2",
+        "paragraph-3",
+        "paragraph-4",
+        "quote-5",
+        "heading-6",
+        "step-7",
+        "step-8",
+        "step-9",
+        "step-10",
+        "paragraph-11",
+        "item-12",
+        "item-13"
+      ]
+    },
+    "blog-64": {
+      "type": "blko-blog-64",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "story-1": {
+          "type": "story",
+          "settings": {
+            "topic": "Rituals",
+            "number": 14,
+            "date": "Oct 12, 2026",
+            "title": "A slow evening balm cleanse",
+            "dek": "Melt, massage, lift with warm muslin: the five-minute end to a long day."
+          }
+        },
+        "story-2": {
+          "type": "story",
+          "settings": {
+            "topic": "Ingredients",
+            "number": 9,
+            "date": "Sep 28, 2026",
+            "title": "Oats for a winter skin barrier",
+            "dek": "Why a spoonful of milled oat does more than most serums in January."
+          }
+        },
+        "story-3": {
+          "type": "story",
+          "settings": {
+            "topic": "Workshop",
+            "number": 21,
+            "date": "Sep 9, 2026",
+            "title": "Why we pour in small batches",
+            "dek": "Forty jars at a time, dated by hand, so nothing sits on a shelf for a year."
+          }
+        }
+      },
+      "block_order": [
+        "story-1",
+        "story-2",
+        "story-3"
+      ]
     }
   },
-  "order": ["main"]
+  "order": [
+    "article-31",
+    "blog-64"
+  ]
 }

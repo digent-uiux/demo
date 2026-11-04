@@ -1,0 +1,437 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-2'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-footer-16.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-footer-16.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Balm footer, "The back label": one wide label in a double hairline frame, read like the back of an amber jar.
+  - Spine (desktop): small caps up the left edge (spine text + lot code in the accent).
+  - Directions (5/12): the one Bodoni line + the newsletter (form 'customer', tagged newsletter). The newsletter is off on
+    the home page unless "Also show it on the home page" is on; where it is off, the statement shows in its place.
+  - Contents (7/12): menu blocks set like an INCI list: numbered title, links run in with commas, closed by a full stop.
+  - Regulatory band: open-jar period-after-opening mark (months setting) + line, printed barcode with lot and pour date,
+    social links (theme settings) + a mail link (shop.email), country / language (form 'localization').
+  - Under the frame: ©, policy links (policy menu, else shop.policies), payment marks.
+  Motion (only with the balm kit on, html.blko-kit-balm; static = the complete label): when the footer is shown the inner
+  hairlines draw from the left and the barcode bars rise one after another.
+{%- endcomment -%}
+{%- liquid
+  assign uid = 'f16-' | append: section.id
+  assign menus = section.blocks | where: 'type', 'menu'
+  assign social_names = 'instagram,youtube,tiktok,facebook,pinterest,x' | split: ','
+  assign show_nl = s.newsletter
+  if template.name == 'index' and s.newsletter_home != true
+    assign show_nl = false
+  endif
+  assign policies = linklists[s.policy_menu]
+-%}
+<div class="bfooter16{%- if blko_sid != 'scheme-2' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-bfooter16
+><footer class="bfooter16__band" aria-label="{{ 'blko.footer_16.footer' | t | escape }}"
+  ><div data-reveal-group class="bfooter16__in"
+    ><div class="bfooter16__frame"
+      ><div class="bfooter16__label-box"
+        >{%- if s.spine_text != blank or s.lot_code != blank -%}
+        <p aria-hidden="true" class="bfooter16__lbl bfooter16__muted bfooter16__spine">{{ s.spine_text | escape }}{% if s.lot_code != blank %} · {{ 'blko.footer_16.lot' | t }} <span class="bfooter16__acc">&nbsp;{{ s.lot_code | escape }}</span>{% endif %}</p
+        >{%- endif -%}
+        <div class="bfooter16__body"
+          ><div class="bfooter16__main"
+            ><div class="bfooter16__dir"
+              >{%- if s.directions_label != blank -%}<p class="bfooter16__lbl bfooter16__muted">{{ s.directions_label | escape }}</p>{%- endif -%}
+              {%- if s.heading != blank -%}<h2 class="bfooter16__h">{{ s.heading }}</h2>{%- endif -%}
+              {%- if show_nl -%}
+                {%- if s.text != blank -%}<p class="bfooter16__lead">{{ s.text | escape }}</p>{%- endif -%}
+                {%- form 'customer', id: uid, class: 'bfooter16__form' -%}
+                  <input type="hidden" name="contact[tags]" value="newsletter"
+                  >{%- if form.posted_successfully? -%}
+                    <p role="status" class="bfooter16__done">{% if s.thanks != blank %}{{ s.thanks | escape }}{% else %}{{ 'blko.footer_16.done' | t }}{% endif %}</p
+                  >{%- else -%}
+                    {%- assign eid = uid | append: '-email' -%}
+                    <div class="bfooter16__field"
+                      ><label for="{{ eid }}" class="blko-ui-sr-only">{{ 'blko.footer_16.email' | t }}</label
+                      ><input id="{{ eid }}" type="email" name="contact[email]" required autocomplete="email" placeholder="{{ 'blko.footer_16.email' | t | escape }}" class="bfooter16__input"{% if form.errors %} aria-invalid="true" aria-describedby="{{ uid }}-msg"{% endif %}
+                      >{%- assign lb = 'blko.footer_16.subscribe' | t -%}
+                      {%- render 'blko-ui-button', type: 'submit', size: 'sm', children: lb, className: 'bfooter16__go' -%}
+                    </div
+                    >{%- if form.errors -%}<p id="{{ uid }}-msg" class="bfooter16__msg" role="status">{{ 'blko.footer_16.error' | t }}</p>{%- endif -%}
+                  {%- endif -%}
+                {%- endform -%}
+              {%- elsif s.statement != blank -%}
+                <p class="bfooter16__lead">{{ s.statement | escape }}</p
+              >{%- endif -%}
+            </div
+
+            >{%- if menus.size > 0 -%}
+            <div class="bfooter16__contents"
+              ><p class="bfooter16__lbl bfooter16__muted bfooter16__ch"><span>{{ s.contents_label | escape }}</span><span>{{ 'blko.footer_16.lists' | t: n: menus.size }}</span></p
+              ><div
+                >{%- for b in menus -%}
+                  {%- assign menu = linklists[b.settings.menu] -%}
+                  <nav aria-label="{{ b.settings.title | escape }}" class="bfooter16__menu" {{ b.shopify_attributes }}
+                    >{%- unless forloop.first -%}<span aria-hidden="true" class="bfooter16__rule bfooter16__mrule"></span>{%- endunless -%}
+                    <p class="bfooter16__lbl bfooter16__mt"><span class="bfooter16__acc">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span> {{ b.settings.title | escape }}</p
+                    ><ul class="bfooter16__inci"
+                      >{%- if menu != blank and menu.links.size > 0 -%}
+                        {%- for l in menu.links -%}<li><a href="{{ l.url }}" class="bfooter16__link">{{ l.title | escape }}</a><span aria-hidden="true" class="bfooter16__sep">{% if forloop.last %}.{% else %}, {% endif %}</span></li>{%- endfor -%}
+                      {%- else -%}
+                        {%- assign names = b.settings.links | newline_to_br | split: '<br />' -%}
+                        {%- assign nlast = names.size | minus: 1 -%}
+                        {%- for nm in names -%}{%- assign t = nm | strip -%}{%- if t != blank -%}<li><a href="{{ routes.all_products_collection_url }}" class="bfooter16__link">{{ t | escape }}</a><span aria-hidden="true" class="bfooter16__sep">{% if forloop.index0 == nlast %}.{% else %}, {% endif %}</span></li>{%- endif -%}{%- endfor -%}
+                      {%- endif -%}
+                    </ul
+                  ></nav
+                >{%- endfor -%}
+              </div
+            ></div
+            >{%- endif -%}
+          </div
+
+          ><span aria-hidden="true" class="bfooter16__rule"></span
+          ><div class="bfooter16__reg"
+            >{%- if s.pao_text != blank -%}
+            <div class="bfooter16__pao"
+              ><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false" class="bfooter16__jar" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6.5 13.5h19l-1.5 14.6a1.6 1.6 0 0 1-1.5 1.4H9.6A1.6 1.6 0 0 1 8 28.1Z"/><path d="M5.2 11.2 22.8 4.3l1.1 2.9L6.3 14.1Z" stroke-linejoin="round"/><text x="16" y="24.6" text-anchor="middle" font-size="7.4" font-weight="500" stroke="none" fill="currentColor">{{ 'blko.footer_16.pao' | t: n: s.pao_months }}</text></svg
+              ><p class="bfooter16__muted bfooter16__paot">{{ s.pao_text | escape }}</p
+            ></div
+            >{%- endif -%}
+            {%- if s.show_barcode -%}
+            <div class="bfooter16__code"
+              ><svg viewBox="0 0 71 20" preserveAspectRatio="none" aria-hidden="true" focusable="false" class="bfooter16__bars" fill="currentColor"><rect class="bfooter16__bar" style="--i:0" x="0" y="0" width="2" height="20"/><rect class="bfooter16__bar" style="--i:1" x="3" y="0" width="1" height="20"/><rect class="bfooter16__bar" style="--i:2" x="6" y="0" width="3" height="20"/><rect class="bfooter16__bar" style="--i:3" x="10" y="0" width="1" height="20"/><rect class="bfooter16__bar" style="--i:4" x="12" y="0" width="2" height="20"/><rect class="bfooter16__bar" style="--i:5" x="16" y="0" width="1" height="20"/><rect class="bfooter16__bar" style="--i:6" x="20" y="0" width="1" height="20"/><rect class="bfooter16__bar" style="--i:7" x="22" y="0" width="2" height="20"/><rect class="bfooter16__bar" style="--i:8" x="25" y="0" width="3" height="20"/><rect class="bfooter16__bar" style="--i:9" x="30" y="0" width="1" height="20"/><rect class="bfooter16__bar" style="--i:10" x="32" y="0" width="1" height="20"/><rect class="bfooter16__bar" style="--i:11" x="35" y="0" width="2" height="20"/><rect class="bfooter16__bar" style="--i:12" x="38" y="0" width="1" height="20"/><rect class="bfooter16__bar" style="--i:13" x="42" y="0" width="2" height="20"/><rect class="bfooter16__bar" style="--i:14" x="45" y="0" width="1" height="20"/><rect class="bfooter16__bar" style="--i:15" x="48" y="0" width="1" height="20"/><rect class="bfooter16__bar" style="--i:16" x="50" y="0" width="3" height="20"/><rect class="bfooter16__bar" style="--i:17" x="54" y="0" width="2" height="20"/><rect class="bfooter16__bar" style="--i:18" x="58" y="0" width="1" height="20"/><rect class="bfooter16__bar" style="--i:19" x="60" y="0" width="2" height="20"/><rect class="bfooter16__bar" style="--i:20" x="63" y="0" width="1" height="20"/><rect class="bfooter16__bar" style="--i:21" x="66" y="0" width="3" height="20"/><rect class="bfooter16__bar" style="--i:22" x="70" y="0" width="1" height="20"/></svg
+              ><p class="bfooter16__lbl bfooter16__muted">{% if s.lot_code != blank %}{{ 'blko.footer_16.lot' | t }} <span class="bfooter16__acc">{{ s.lot_code | escape }}</span>{% endif %}{% if s.lot_code != blank and s.pour_date != blank %} · {% endif %}{% if s.pour_date != blank %}{{ 'blko.footer_16.poured' | t }} {{ s.pour_date | escape }}{% endif %}</p
+            ></div
+            >{%- endif -%}
+            {%- if s.social -%}
+            <ul class="bfooter16__social" aria-label="{{ 'blko.footer_16.follow' | t | escape }}"
+              >{%- for n in social_names -%}
+                {%- assign key = 'social_' | append: n | append: '_link' -%}
+                {%- if settings[key] != blank -%}
+                  {%- case n -%}
+                    {%- when 'instagram' -%}{%- assign lk = 'blko.footer_16.instagram' | t -%}
+                    {%- when 'youtube' -%}{%- assign lk = 'blko.footer_16.youtube' | t -%}
+                    {%- when 'tiktok' -%}{%- assign lk = 'blko.footer_16.tiktok' | t -%}
+                    {%- when 'facebook' -%}{%- assign lk = 'blko.footer_16.facebook' | t -%}
+                    {%- when 'pinterest' -%}{%- assign lk = 'blko.footer_16.pinterest' | t -%}
+                    {%- else -%}{%- assign lk = 'blko.footer_16.x' | t -%}
+                  {%- endcase -%}
+                  <li><a href="{{ settings[key] }}" class="bfooter16__ico" aria-label="{{ lk | escape }}" title="{{ lk | escape }}" target="_blank" rel="noopener"
+                    >{%- case n -%}
+                      {%- when 'instagram' -%}{%- render 'blko-ui-icon', name: 'camera', size: 18, stroke: 1.5 -%}
+                      {%- when 'youtube', 'tiktok' -%}{%- render 'blko-ui-icon', name: 'play', size: 18, stroke: 1.5 -%}
+                      {%- else -%}{%- render 'blko-ui-icon', name: 'at-sign', size: 18, stroke: 1.5 -%}
+                    {%- endcase -%}
+                  </a></li
+                >{%- endif -%}
+              {%- endfor -%}
+              {%- if shop.email != blank -%}
+                {%- assign lk = 'blko.footer_16.write' | t -%}
+                <li><a href="mailto:{{ shop.email }}" class="bfooter16__ico" aria-label="{{ lk | escape }}" title="{{ lk | escape }}">{%- render 'blko-ui-icon', name: 'mail', size: 18, stroke: 1.5 -%}</a></li
+              >{%- endif -%}
+            </ul
+            >{%- endif -%}
+            {%- liquid
+              assign show_loc = s.localization
+              assign loc_id = uid | append: '-loc'
+            -%}
+            {%- if show_loc -%}
+            {%- form 'localization', id: loc_id, class: 'bfooter16__loc' -%}
+              <label class="bfooter16__locf"><span class="bfooter16__lbl bfooter16__muted">{{ 'blko.footer_16.country' | t }}</span
+                ><select name="country_code" class="bfooter16__select" data-autosubmit
+                  >{%- for c in localization.available_countries -%}<option value="{{ c.iso_code }}"{% if c.iso_code == localization.country.iso_code %} selected{% endif %}>{{ c.name }} ({{ c.currency.iso_code }} {{ c.currency.symbol }})</option>{%- endfor -%}
+                </select
+              ></label
+              ><label class="bfooter16__locf"><span class="bfooter16__lbl bfooter16__muted">{{ 'blko.footer_16.language' | t }}</span
+                ><select name="language_code" class="bfooter16__select" data-autosubmit
+                  >{%- for l in localization.available_languages -%}<option value="{{ l.iso_code }}"{% if l.iso_code == localization.language.iso_code %} selected{% endif %}>{{ l.endonym_name | capitalize }}</option>{%- endfor -%}
+                </select
+              ></label
+              ><button type="submit" class="bfooter16__link bfooter16__locgo">{{ 'blko.footer_16.update' | t }}</button
+            >{%- endform -%}
+            {%- endif -%}
+          </div
+        ></div
+      ></div
+    ></div
+
+    ><div class="bfooter16__base"
+      ><div class="bfooter16__legal"
+        ><span>© {{ 'now' | date: '%Y' }} {{ s.copyright | default: shop.name | escape }}</span
+        >{%- if policies != blank and policies.links.size > 0 -%}
+          {%- for l in policies.links -%}<a href="{{ l.url }}" class="bfooter16__link">{{ l.title | escape }}</a>{%- endfor -%}
+        {%- elsif shop.policies.size > 0 -%}
+          {%- for p in shop.policies -%}<a href="{{ p.url }}" class="bfooter16__link">{{ p.title | escape }}</a>{%- endfor -%}
+        {%- else -%}
+          {%- assign names = s.policy_demo | split: ',' -%}
+          {%- for nm in names -%}<a href="{{ routes.root_url }}" class="bfooter16__link">{{ nm | strip | escape }}</a>{%- endfor -%}
+        {%- endif -%}
+      </div
+      >{%- if s.payment -%}{%- render 'blko-ui-payment-marks' -%}{%- endif -%}
+    </div
+  ></div
+></footer
+></div
+
+>
+
+{% schema %}
+{
+  "name": "Footer 16 - Back label",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "text",
+      "id": "spine_text",
+      "label": "Spine text (desktop)",
+      "default": "Balm & Co · Back label"
+    },
+    {
+      "type": "header",
+      "content": "Directions"
+    },
+    {
+      "type": "text",
+      "id": "directions_label",
+      "label": "Label",
+      "default": "Directions"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Italic one word for the accent.",
+      "default": "Letters from the <em>bench</em>, twice a month."
+    },
+    {
+      "type": "checkbox",
+      "id": "newsletter",
+      "label": "Show the newsletter",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "newsletter_home",
+      "label": "Also show it on the home page",
+      "info": "Off when the home page has its own newsletter section.",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Newsletter line",
+      "default": "What is steeping, what is back in stock, and one slow ritual. Nothing more."
+    },
+    {
+      "type": "text",
+      "id": "thanks",
+      "label": "Thank-you line",
+      "default": "Thank you. The next letter goes out on Sunday."
+    },
+    {
+      "type": "text",
+      "id": "statement",
+      "label": "Statement (where the newsletter is off)",
+      "default": "Organic skincare, pressed and poured in small batches at our workshop."
+    },
+    {
+      "type": "header",
+      "content": "Contents"
+    },
+    {
+      "type": "text",
+      "id": "contents_label",
+      "label": "Label",
+      "default": "Contents"
+    },
+    {
+      "type": "header",
+      "content": "Label band"
+    },
+    {
+      "type": "range",
+      "id": "pao_months",
+      "label": "Months after opening",
+      "min": 3,
+      "max": 36,
+      "step": 3,
+      "default": 12
+    },
+    {
+      "type": "text",
+      "id": "pao_text",
+      "label": "Line beside the open-jar mark",
+      "default": "Use within 12 months of opening. Keep cool and out of the sun."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_barcode",
+      "label": "Show the barcode",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "lot_code",
+      "label": "Lot code",
+      "default": "L-1102"
+    },
+    {
+      "type": "text",
+      "id": "pour_date",
+      "label": "Pour date",
+      "default": "02.11.26"
+    },
+    {
+      "type": "checkbox",
+      "id": "social",
+      "label": "Show social links",
+      "default": true,
+      "info": "Links come from Theme settings → Social media, plus a mail link to the store email."
+    },
+    {
+      "type": "checkbox",
+      "id": "localization",
+      "label": "Show the country/language selector",
+      "default": true,
+      "info": "Shows the market country and language; switchable when more than one is on."
+    },
+    {
+      "type": "header",
+      "content": "Base row"
+    },
+    {
+      "type": "text",
+      "id": "copyright",
+      "label": "Copyright (blank = store name)",
+      "default": "Balm & Co"
+    },
+    {
+      "type": "link_list",
+      "id": "policy_menu",
+      "label": "Policies menu",
+      "info": "Blank = the store's policies."
+    },
+    {
+      "type": "text",
+      "id": "policy_demo",
+      "label": "Demo policies (while there are none)",
+      "default": "Privacy, Terms, Shipping, Refunds"
+    },
+    {
+      "type": "checkbox",
+      "id": "payment",
+      "label": "Show payment marks",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Menu",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Shop"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu"
+        },
+        {
+          "type": "textarea",
+          "id": "links",
+          "label": "Demo links (one per line, while the menu is empty)",
+          "default": "Face\nBody\nBalms\nSets\nRefills"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer 16 - Back label",
+      "blocks": [
+        {
+          "type": "menu",
+          "settings": {
+            "title": "Shop",
+            "links": "Face\nBody\nBalms\nSets\nRefills"
+          }
+        },
+        {
+          "type": "menu",
+          "settings": {
+            "title": "Care",
+            "links": "Delivery\nReturns\nSkin quiz\nContact"
+          }
+        },
+        {
+          "type": "menu",
+          "settings": {
+            "title": "Studio",
+            "links": "About\nIngredients\nThe workshop\nJournal"
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

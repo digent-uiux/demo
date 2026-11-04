@@ -5,12 +5,15 @@
   assign body_medium = body_font | font_modify: 'weight', '500'
   assign body_bold = body_font | font_modify: 'weight', 'bold'
   assign heading_italic = heading_font | font_modify: 'style', 'italic'
+  # Regular face too: display / condensed copy and font-heading text at normal weight must not render bold.
+  assign heading_regular = heading_font | font_modify: 'weight', '400'
   assign scale = settings.type_scale | default: 100 | divided_by: 100.0
 -%}
 <style>
   {%- if settings.font_source == 'shopify' -%}
   {{ heading_font | font_face: font_display: 'swap' }}
   {{ heading_italic | font_face: font_display: 'swap' }}
+  {%- if heading_regular -%}{{ heading_regular | font_face: font_display: 'swap' }}{%- endif %}
   {{ body_font | font_face: font_display: 'swap' }}
   {{ body_medium | font_face: font_display: 'swap' }}
   {{ body_bold | font_face: font_display: 'swap' }}

@@ -1,0 +1,318 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-8'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-counters-16.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-counters-16.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Counters, balm: "the batch book and the pour line". The page's one dark band (pop-3, every token flipped). The focal:
+  a graduated cylinder in hairlines (0–100, a tick every 5, a label every 20) filled with amber to the gauge value, the
+  figure beside it in Bodoni, its unit in Karla 300. Beside it, the didone h2 over a ledger (blocks): small-caps entry, dotted leader, the
+  figure in Bodoni (unit in Karla 300), one note line. A "How we count" footnote. Scene (balm kit motion only): everything counts up
+  once at 80% of the screen (1400ms, easeOutExpo, 120ms apart, the gauge first); the amber column rises with the gauge
+  figure (scaleY) and each leader draws as its row counts (scaleX). Widths locked to the final value. Static: final.
+  Phones: the heading, then the gauge beside the figure, then the ledger.
+{%- endcomment -%}
+{{ 'blko-balm-motion.css' | asset_url | stylesheet_tag -}}
+<script src="{{ 'blko-balm-motion.js' | asset_url }}" defer="defer"></script
+>{%- liquid
+  assign gv = s.gauge_value | default: 0
+  if gv > 100
+    assign gv = 100
+  endif
+  if gv < 0
+    assign gv = 0
+  endif
+  assign numerals = 'I,II,III,IV,V,VI,VII' | split: ','
+-%}
+{%- capture body -%}
+  <div class="bcounters16__band" data-band
+    ><figure class="bcounters16__gauge"
+      ><div class="bcounters16__meter"
+        ><div class="bcounters16__tube"><div aria-hidden="true" class="bcounters16__fill" style="height: {{ gv }}%;" data-fill></div></div
+        ><div aria-hidden="true" class="bcounters16__scale"
+          >{%- for i in (0..20) -%}
+            {%- assign t = i | times: 5 -%}
+            {%- assign m10 = t | modulo: 10 -%}
+            {%- assign m20 = t | modulo: 20 -%}
+            <span class="bcounters16__tick" style="bottom: {{ t }}%;"><span class="bcounters16__mark{% if m10 == 0 %} bcounters16__mark--major{% endif %}"></span>{% if m20 == 0 %}<span class="bcounters16__ticklabel">{{ t }}</span>{% endif %}</span
+          >{%- endfor -%}
+        </div
+      ></div
+      ><figcaption class="bcounters16__cap-col"
+        >{%- if s.gauge_label != blank -%}<span class="bcounters16__cap bcounters16__acc">{{ 'blko.counters_16.no' | t }} I · {{ s.gauge_label | escape }}</span>{%- endif -%}
+        {%- render 'blko-counters-16-figure', value: s.gauge_value, d: s.gauge_decimals, unit: s.gauge_unit, big: true -%}
+        {%- if s.gauge_note != blank -%}<span class="bcounters16__note">{{ s.gauge_note | escape }}</span>{%- endif -%}
+      </figcaption
+    ></figure
+
+    ><header class="bcounters16__head"
+      >{%- if s.eyebrow != blank -%}<p class="bcounters16__cap bcounters16__eyebrow"><span aria-hidden="true"></span>{{ s.eyebrow | escape }}</p>{%- endif -%}
+      {%- if s.heading != blank -%}<h2 class="bcounters16__h2">{{ s.heading }}</h2>{%- endif -%}
+    </header
+
+    ><div class="bcounters16__ledger"
+      >{%- if section.blocks.size > 0 -%}
+      <dl class="bcounters16__rows"
+        >{%- for b in section.blocks -%}
+          {%- assign st = b.settings -%}
+          <div class="bcounters16__row" {{ b.shopify_attributes }}
+            ><dt class="bcounters16__cap bcounters16__dt"
+              ><span class="bcounters16__entry"><span aria-hidden="true" class="bcounters16__muted">{{ numerals[forloop.index] }}</span> {{ st.label | escape }}</span
+              ><span aria-hidden="true" class="bcounters16__leader" data-leader></span
+            ></dt
+            ><dd class="bcounters16__fig">{{ st.prefix | escape }}{%- render 'blko-counters-16-figure', value: st.value, d: st.decimals, unit: st.suffix, big: false -%}</dd
+            >{%- if st.note != blank -%}<dd class="bcounters16__note bcounters16__rownote">{{ st.note | escape }}</dd>{%- endif -%}
+          </div
+        >{%- endfor -%}
+      </dl
+      >{%- endif -%}
+      {%- if s.method_text != blank -%}
+      <details class="bcounters16__how"
+        ><summary class="bcounters16__cap">{{ s.method_label | escape }} <span aria-hidden="true" class="bcounters16__plus">+</span></summary
+        ><div class="bcounters16__method">{{ s.method_text }}</div
+      ></details
+      >{%- endif -%}
+    </div
+  ></div
+>{%- endcapture -%}
+<div class="bcounters16{%- if blko_sid != 'scheme-8' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px"
+  >{%- render 'blko-ui-section', surface: 'pop-3', bleed: true, label: s.label, className: 'bcounters16__section', inner: 'bcounters16__inner', children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Counters, pour line",
+  "tag": "div",
+  "max_blocks": 5,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Region label",
+      "default": "Balm in numbers"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Label",
+      "default": "The batch book"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Small batches, <em>honest</em> sums",
+      "info": "Italicise one word at most."
+    },
+    {
+      "type": "header",
+      "content": "Gauge"
+    },
+    {
+      "type": "number",
+      "id": "gauge_value",
+      "label": "Value (0–100)",
+      "default": 98.6,
+      "info": "The cylinder fills to this value."
+    },
+    {
+      "type": "range",
+      "id": "gauge_decimals",
+      "label": "Decimals",
+      "min": 0,
+      "max": 2,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "type": "text",
+      "id": "gauge_unit",
+      "label": "Unit",
+      "default": "%"
+    },
+    {
+      "type": "text",
+      "id": "gauge_label",
+      "label": "Label",
+      "default": "Natural origin"
+    },
+    {
+      "type": "text",
+      "id": "gauge_note",
+      "label": "Note",
+      "default": "Average across every formula we make, by weight"
+    },
+    {
+      "type": "header",
+      "content": "Footnote"
+    },
+    {
+      "type": "text",
+      "id": "method_label",
+      "label": "Toggle",
+      "default": "How we count"
+    },
+    {
+      "type": "richtext",
+      "id": "method_text",
+      "label": "Method",
+      "default": "<p>Natural origin follows ISO 16128 and is weighed per batch, then averaged across formulas. Customers are unique delivery addresses, not accounts. Refills are counted at the wash bench. Every figure is checked each January against the batch book.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-8"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 112,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 112
+    }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Ledger row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Formulas in the range"
+        },
+        {
+          "type": "number",
+          "id": "value",
+          "label": "Value",
+          "default": 23
+        },
+        {
+          "type": "text",
+          "id": "prefix",
+          "label": "Prefix",
+          "info": "For example $."
+        },
+        {
+          "type": "text",
+          "id": "suffix",
+          "label": "Suffix",
+          "info": "For example % or k."
+        },
+        {
+          "type": "range",
+          "id": "decimals",
+          "label": "Decimals",
+          "min": 0,
+          "max": 2,
+          "step": 1,
+          "default": 0
+        },
+        {
+          "type": "text",
+          "id": "note",
+          "label": "Note",
+          "default": "All still made in-house, none outsourced"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Counters, pour line",
+      "blocks": [
+        {
+          "type": "row",
+          "settings": {
+            "label": "Formulas in the range",
+            "value": 23,
+            "decimals": 0,
+            "note": "All still made in-house, none outsourced"
+          }
+        },
+        {
+          "type": "row",
+          "settings": {
+            "label": "People on a ritual",
+            "value": 96000,
+            "decimals": 0,
+            "note": "Customers since the first jar of oat balm"
+          }
+        },
+        {
+          "type": "row",
+          "settings": {
+            "label": "Jars back for a refill",
+            "value": 41200,
+            "decimals": 0,
+            "note": "Washed, dried and filled again since 2019"
+          }
+        },
+        {
+          "type": "row",
+          "settings": {
+            "label": "Farms, all by name",
+            "value": 3,
+            "decimals": 0,
+            "note": "Oat, olive and calendula, visited each harvest"
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

@@ -1,0 +1,19 @@
+{
+  "blko": {
+    "routine_builder_01": {
+      "add": "Add ritual to bag",
+      "added": "Added to bag",
+      "aside": "Your ritual",
+      "concern": "Your concern",
+      "empty": "Include at least one step to begin your ritual.",
+      "error": "Could not add the ritual. Please try again.",
+      "for": "For",
+      "include": "Include",
+      "label": "Build your ritual",
+      "match": "for",
+      "ritual_no": "Ritual No.",
+      "step": "Step",
+      "step_suffix": "step"
+    }
+  }
+}

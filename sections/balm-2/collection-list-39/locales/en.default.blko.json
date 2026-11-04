@@ -1,0 +1,10 @@
+{
+  "blko": {
+    "collection_list_39": {
+      "collection": "Collection",
+      "formulas": "{{ count }} formulas",
+      "label": "The shelves",
+      "shelf": "Shelf"
+    }
+  }
+}

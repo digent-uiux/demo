@@ -1,0 +1,248 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-header-19.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-header-19.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Balm header: paper band on the page ground, closed by a hairline. Menu left (current page in the accent, child links in
+  a small panel), centred serif wordmark over a small-caps line, square ghost icon buttons right (search, account, cart
+  with a square count chip). Below 768px: burger, wordmark, search + cart; the burger opens a drawer (focus trap, Escape).
+  Theme hooks: [data-blko-predictive-open] on search (a plain link to the search page without JS), [data-bag] on the cart
+  link, [data-cart-count] on the count chip (updated from the blko:cart:updated event, detail.item_count).
+{%- endcomment -%}
+{%- liquid
+  assign menu = linklists[s.menu]
+  assign has_menu = false
+  if menu != blank and menu.links.size > 0
+    assign has_menu = true
+  endif
+  assign demo = s.demo_links | newline_to_br | split: '<br />'
+  assign count = cart.item_count
+  assign uid = 'h19-' | append: section.id
+-%}
+<div class="bheader19{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-bheader19 data-sticky="{{ s.sticky }}"
+><header class="bheader19__h"
+  ><div class="bheader19__row"
+    ><button type="button" class="bheader19__ico bheader19__burger" aria-label="{{ 'blko.header_19.open' | t | escape }}" aria-expanded="false" aria-controls="{{ uid }}-drawer" data-open
+      >{%- render 'blko-ui-icon', name: 'menu', size: 20 -%}
+    </button
+    ><nav aria-label="{{ 'blko.header_19.main' | t | escape }}" class="bheader19__nav"
+      ><ul class="bheader19__list"
+        >{%- if has_menu -%}
+          {%- for l in menu.links -%}
+          <li class="bheader19__li{% if forloop.index > 4 %} bheader19__li--wide{% endif %}"><a
+             href="{{ l.url }}" class="bheader19__link"{% if l.current or l.child_active %} aria-current="page"{% endif %}>{{ l.title | escape }}</a
+            >{%- if l.links.size > 0 -%}
+            <ul class="bheader19__sub" aria-label="{{ 'blko.header_19.more' | t: title: l.title | escape }}"
+              >{%- for c in l.links -%}<li><a href="{{ c.url }}" class="bheader19__slink"{% if c.current %} aria-current="page"{% endif %}>{{ c.title | escape }}</a></li>{%- endfor -%}
+            </ul
+            >{%- endif -%}
+          </li
+          >{%- endfor -%}
+        {%- else -%}
+          {%- for d in demo -%}{%- assign nm = d | strip -%}{%- if nm != blank -%}
+          <li class="bheader19__li{% if forloop.index > 4 %} bheader19__li--wide{% endif %}"><a href="{{ routes.all_products_collection_url }}" class="bheader19__link"{% if forloop.first %} aria-current="page"{% endif %}>{{ nm | escape }}</a></li
+          >{%- endif -%}{%- endfor -%}
+        {%- endif -%}
+      </ul
+    ></nav
+    ><a href="{{ routes.root_url }}" class="bheader19__brand"
+      >{%- if s.logo != blank -%}
+        {%- assign lw = s.logo_width | times: 2 -%}
+        {{ s.logo | image_url: width: lw | image_tag: alt: shop.name, class: 'bheader19__logo', width: s.logo_width, height: s.logo_width -}}
+      {%- else -%}
+        <span class="bheader19__word">{%- if s.brand != blank -%}{{ s.brand }}{%- else -%}{{ shop.name | escape }}{%- endif -%}</span
+      >{%- endif -%}
+      {%- if s.tagline != blank -%}<span class="bheader19__tag">{{ s.tagline | escape }}</span>{%- endif -%}
+    </a
+    ><div class="bheader19__icons"
+      ><a href="{{ routes.search_url }}" aria-label="{{ 'blko.header_19.search' | t | escape }}" class="bheader19__ico" data-blko-predictive-open
+        >{%- render 'blko-ui-icon', name: 'search', size: 20 -%}
+      </a
+      ><a href="{{ routes.account_url }}" aria-label="{{ 'blko.header_19.account' | t | escape }}" class="bheader19__ico bheader19__ico--wide"
+        >{%- render 'blko-ui-icon', name: 'user', size: 20 -%}
+      </a
+      ><a href="{{ routes.cart_url }}" aria-label="{{ 'blko.header_19.bag' | t: count: count | escape }}" class="bheader19__ico" data-bag data-label="{{ 'blko.header_19.bag' | t: count: '#' | escape }}"
+        >{%- render 'blko-ui-icon', name: 'shopping-bag', size: 20 -%}
+        <span aria-hidden="true" class="bheader19__count" data-cart-count{% if count == 0 %} hidden{% endif %}>{{ count }}</span
+      ></a
+    ></div
+  ></div
+
+  ><div id="{{ uid }}-drawer" class="bheader19__drawer" role="dialog" aria-modal="true" aria-label="{{ 'blko.header_19.menu' | t | escape }}" data-drawer hidden
+    ><div class="bheader19__scrim" data-close></div
+    ><div class="bheader19__panel" data-panel
+      ><div class="bheader19__ptop"
+        ><span class="bheader19__tag bheader19__ptag">{{ 'blko.header_19.menu' | t }}</span
+        ><button type="button" class="bheader19__ico" aria-label="{{ 'blko.header_19.close' | t | escape }}" data-close>{%- render 'blko-ui-icon', name: 'x', size: 20 -%}</button
+      ></div
+      ><nav aria-label="{{ 'blko.header_19.menu' | t | escape }}"
+        ><ul class="bheader19__dlist"
+          >{%- if has_menu -%}
+            {%- for l in menu.links -%}
+            <li><a href="{{ l.url }}" class="bheader19__dlink"{% if l.current %} aria-current="page"{% endif %}>{{ l.title | escape }}</a
+              >{%- if l.links.size > 0 -%}<ul class="bheader19__dsub">{%- for c in l.links -%}<li><a href="{{ c.url }}" class="bheader19__dslink">{{ c.title | escape }}</a></li>{%- endfor -%}</ul>{%- endif -%}
+            </li
+            >{%- endfor -%}
+          {%- else -%}
+            {%- for d in demo -%}{%- assign nm = d | strip -%}{%- if nm != blank -%}
+            <li><a href="{{ routes.all_products_collection_url }}" class="bheader19__dlink">{{ nm | escape }}</a></li
+            >{%- endif -%}{%- endfor -%}
+          {%- endif -%}
+        </ul
+      ></nav
+      ><div class="bheader19__dfoot"
+        ><a href="{{ routes.account_url }}" class="bheader19__dacc">{%- render 'blko-ui-icon', name: 'user', size: 16 -%}{%- if customer -%}{{ 'blko.header_19.account' | t }}{%- else -%}{{ 'blko.header_19.sign_in' | t }}{%- endif -%}</a
+        >{%- if s.show_localization and localization.available_countries.size > 1 -%}
+        {%- form 'localization', class: 'bheader19__loc' -%}
+          <label for="{{ uid }}-country" class="bheader19__tag">{{ 'blko.header_19.region' | t }}</label
+          ><select id="{{ uid }}-country" name="country_code" class="bheader19__lsel" onchange="this.form.submit()"
+            >{%- for c in localization.available_countries -%}
+            <option value="{{ c.iso_code }}"{% if c.iso_code == localization.country.iso_code %} selected{% endif %}>{{ c.name | escape }} ({{ c.currency.iso_code }} {{ c.currency.symbol }})</option
+            >{%- endfor -%}
+          </select
+          ><noscript><button type="submit" class="bheader19__tag">{{ 'blko.header_19.update' | t }}</button></noscript
+        >{%- endform -%}
+        {%- endif -%}
+        {%- if s.tagline != blank -%}<p class="bheader19__tag">{{ s.tagline | escape }}</p>{%- endif -%}
+      </div
+    ></div
+  ></div
+></header
+></div
+
+>
+
+{% schema %}
+{
+  "name": "Header 19 - Serif",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Wordmark"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo (replaces the wordmark)"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo width",
+      "min": 60,
+      "max": 240,
+      "step": 10,
+      "unit": "px",
+      "default": 140
+    },
+    {
+      "type": "inline_richtext",
+      "id": "brand",
+      "label": "Wordmark (blank = store name)",
+      "default": "Balm <em>&</em> Co"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Small-caps line",
+      "default": "Apothecary, small batch"
+    },
+    {
+      "type": "header",
+      "content": "Menu"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_localization",
+      "label": "Show country / currency in the phone menu",
+      "info": "Needs more than one market in Settings > Markets.",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "demo_links",
+      "label": "Demo links (one per line)",
+      "info": "Shown while the menu is empty.",
+      "default": "Face\nBody\nBalms\nSets\nJournal"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky",
+      "label": "Stick to the top on scroll",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 0,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header 19 - Serif"
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

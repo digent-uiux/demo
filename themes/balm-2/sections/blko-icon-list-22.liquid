@@ -1,0 +1,306 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-icon-list-22.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Icon list, balm: "inside the lid". The rules are printed inside every jar lid: one big lid seen from below, bled off
+  the left edge (knurled rim, double thread line, the principle titles running round the rim, an amber dot between
+  them, and a paper insert with the count in Bodoni and one small-caps line). On the right, the principles hug the lid's
+  curve (middle rows further out, each led in by a hairline): amber Bodoni numeral, thin icon, combo title (Bodoni +
+  the <em> phrase in Karla 300), two lines. Principles are blocks (max 6); numerals and the ring are built from them.
+  Motion (balm kit on only): the rim turns back into place out of soft focus once on entry; hovering a principle
+  (fine pointers) turns the rim until its title sits at the top, lit amber. Static: title I at the top. Phones: the
+  heading, the lid at 19rem centred in the 20px gutters, then the rows stacked.
+{%- endcomment -%}
+{{ 'blko-balm-motion.css' | asset_url | stylesheet_tag -}}
+<script src="{{ 'blko-balm-motion.js' | asset_url }}" defer="defer"></script
+>{%- liquid
+  assign n = section.blocks.size
+  assign roman = 'I,II,III,IV,V,VI' | split: ','
+  assign pid = 'il22-' | append: section.id
+  assign last = n | minus: 1
+-%}
+{%- capture body -%}
+  <header class="biconlist22__head"
+    >{%- if s.eyebrow != blank -%}<p class="biconlist22__cap biconlist22__eyebrow"><span aria-hidden="true"></span>{{ s.eyebrow | escape }}</p>{%- endif -%}
+    <h2 class="biconlist22__h2">{{ s.heading }}</h2
+    >{%- if s.text != blank -%}<p class="biconlist22__lead">{{ s.text | escape }}</p>{%- endif -%}
+  </header
+  >{%- if n > 0 -%}
+  <div class="biconlist22__lidbox"
+    ><div aria-hidden="true" class="biconlist22__lid"
+      ><div class="biconlist22__turn"
+        ><svg viewBox="0 0 400 400" class="biconlist22__rim" style="--n: {{ n }};"
+          ><defs
+            ><path id="{{ pid }}" d="M200,34 a166,166 0 1,1 0,332 a166,166 0 1,1 0,-332"
+            /><radialGradient id="{{ pid }}g" cx="50%" cy="42%" r="60%"><stop offset="0" class="biconlist22__s0"/><stop offset="1" class="biconlist22__s1"/></radialGradient
+          ></defs
+          ><circle cx="200" cy="200" r="199" fill="url(#{{ pid }}g)" class="biconlist22__edge"
+          /><circle cx="200" cy="200" r="193" class="biconlist22__knurl"
+          /><circle cx="200" cy="200" r="188" class="biconlist22__line"
+          /><g class="biconlist22__ring"
+            >{%- for b in section.blocks -%}
+              {%- assign off = forloop.index0 | times: 100 | plus: 50 | times: 1.0 | divided_by: n -%}
+              <text dy="4"><textPath href="#{{ pid }}" startOffset="{{ off }}%" text-anchor="middle">{{ roman[forloop.index0] }} · {{ b.settings.title | strip_html | remove: ',' | escape }}</textPath></text
+            >{%- endfor -%}
+          </g
+          >{%- for b in section.blocks -%}
+            {%- assign deg = forloop.index0 | times: 360.0 | divided_by: n -%}
+            <circle cx="200" cy="34" r="2.2" class="biconlist22__dot" transform="rotate({{ deg }} 200 200)"
+          />{%- endfor -%}
+          <circle cx="200" cy="200" r="148" class="biconlist22__line"
+          /><circle cx="200" cy="200" r="143" class="biconlist22__line biconlist22__line--dash"
+        /></svg
+      ></div
+      ><div class="biconlist22__insert"
+        ><span class="biconlist22__count">{{ roman[last] }}</span
+        >{%- if s.seal != blank -%}<span class="biconlist22__cap biconlist22__seal">{{ s.seal | escape }}</span>{%- endif -%}
+      </div
+    ></div
+  ></div
+  ><ol class="biconlist22__list"
+    >{%- for b in section.blocks -%}
+    <li class="biconlist22__row" {{ b.shopify_attributes }}
+      ><span class="biconlist22__mark"
+        ><span class="biconlist22__num">{{ roman[forloop.index0] }}</span
+        ><span class="biconlist22__icon"
+          >{%- case b.settings.icon -%}
+            {%- when 'sprout' -%}{%- render 'blko-ui-icon', name: 'sprout', size: 20, stroke: 1 -%}
+            {%- when 'flask-conical' -%}{%- render 'blko-ui-icon', name: 'flask-conical', size: 20, stroke: 1 -%}
+            {%- when 'recycle' -%}{%- render 'blko-ui-icon', name: 'recycle', size: 20, stroke: 1 -%}
+            {%- when 'droplet' -%}{%- render 'blko-ui-icon', name: 'droplet', size: 20, stroke: 1 -%}
+            {%- when 'hand-heart' -%}{%- render 'blko-ui-icon', name: 'hand-heart', size: 20, stroke: 1 -%}
+            {%- else -%}{%- render 'blko-ui-icon', name: 'leaf', size: 20, stroke: 1 -%}
+          {%- endcase -%}
+        </span
+      ></span
+      ><span class="biconlist22__body"
+        ><h3 class="biconlist22__h3">{{ b.settings.title }}</h3
+        >{%- if b.settings.text != blank -%}<p class="biconlist22__text">{{ b.settings.text | escape }}</p>{%- endif -%}
+      </span
+    ></li
+    >{%- endfor -%}
+  </ol
+  >{%- endif -%}
+{%- endcapture -%}
+<div class="biconlist22{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px"
+  >{%- render 'blko-ui-section', surface: s.surface, bleed: true, label: s.label, className: 'biconlist22__section', inner: 'biconlist22__inner', children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Principles inside the lid",
+  "tag": "div",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Region label",
+      "default": "What we hold to"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Label",
+      "default": "The apothecary"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Italic words are set in the light body font.",
+      "default": "Four things we <em>hold to</em>"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "The rules the workshop was built on. They are printed inside every lid, so you read them each time you open a jar."
+    },
+    {
+      "type": "text",
+      "id": "seal",
+      "label": "Lid insert line",
+      "default": "Printed inside every lid"
+    },
+    {
+      "type": "select",
+      "id": "surface",
+      "label": "Colour",
+      "options": [
+        {
+          "value": "bg",
+          "label": "Background"
+        },
+        {
+          "value": "alt",
+          "label": "Alternate"
+        },
+        {
+          "value": "pop-1",
+          "label": "Pop 1"
+        }
+      ],
+      "default": "bg"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128
+    }
+  ],
+  "blocks": [
+    {
+      "type": "value",
+      "name": "Principle",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            {
+              "value": "sprout",
+              "label": "Sprout"
+            },
+            {
+              "value": "flask-conical",
+              "label": "Flask"
+            },
+            {
+              "value": "leaf",
+              "label": "Leaf"
+            },
+            {
+              "value": "recycle",
+              "label": "Recycle"
+            },
+            {
+              "value": "droplet",
+              "label": "Drop"
+            },
+            {
+              "value": "hand-heart",
+              "label": "Hand"
+            }
+          ],
+          "default": "leaf"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "Title",
+          "info": "Italic words are set in the light body font. Keep it short: it also runs round the lid.",
+          "default": "Nothing <em>to hide</em>"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Full formulas, with percentages, on the label and online. No fragrance blends, no fillers."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Principles inside the lid",
+      "blocks": [
+        {
+          "type": "value",
+          "settings": {
+            "icon": "sprout",
+            "title": "Three farms, <em>by name</em>",
+            "text": "Oat, olive and calendula from growers we visit each harvest. The farm is printed under every lot number."
+          }
+        },
+        {
+          "type": "value",
+          "settings": {
+            "icon": "flask-conical",
+            "title": "Small <em>batches</em>",
+            "text": "Forty jars at a time, poured and dated by hand, so nothing sits in a warehouse for a year."
+          }
+        },
+        {
+          "type": "value",
+          "settings": {
+            "icon": "leaf",
+            "title": "Nothing <em>to hide</em>",
+            "text": "Full formulas, with percentages, on the label and online. No fragrance blends, no fillers."
+          }
+        },
+        {
+          "type": "value",
+          "settings": {
+            "icon": "recycle",
+            "title": "Glass, <em>refilled</em>",
+            "text": "Every jar comes back for a refill or is washed and reused. Return five, the sixth is on us."
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

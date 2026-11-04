@@ -1,0 +1,635 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-account-35.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-account-35.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Dispensary card, balm. A greeting with member details in small caps, then underline tabs with an amber rule
+  (Orders / Refills / Addresses / Details; arrows, Home, End):
+  - Orders: the customer's orders, paginated, as ruled rows (No., order number, date, fulfilment label, total) that open
+    to show their lines, with View order, Track parcel (when there is a tracking link) and Order again (/cart/add.js).
+  - Refills: only when a subscriptions app block is added here, or "Show refills" is on (then a link to the app's portal).
+  - Addresses: the saved addresses (default first); edit / set default on the addresses page, remove posts the delete.
+  - Details: name, email, phone and the journal letter (form 'customer' subscribes).
+  Signed out on a live store: a short sign-in line (Shopify sends /account to the login page anyway). In the theme
+  editor, or with no Shopify template at all (the DS preview), the order and address blocks fill a preview.
+{%- endcomment -%}
+{{ 'blko-balm-motion.css' | asset_url | stylesheet_tag -}}
+<script src="{{ 'blko-balm-motion.js' | asset_url }}" defer="defer"></script
+>{%- liquid
+  assign live = false
+  assign preview = false
+  if customer
+    assign live = true
+  elsif request.design_mode or template == blank
+    assign preview = true
+  endif
+  assign has_app = false
+  for b in section.blocks
+    if b.type == '@app'
+      assign has_app = true
+    endif
+  endfor
+  assign show_refills = false
+  if has_app or s.show_refills or preview
+    assign show_refills = true
+  endif
+  assign tid = 'acc35-' | append: section.id
+  if live
+    assign first = customer.first_name | default: customer.name
+    assign since = customer.created_at | date: '%Y'
+    assign n_orders = customer.orders_count
+    assign email = customer.email
+  else
+    assign first = s.preview_first
+    assign since = s.preview_since
+    assign n_orders = s.preview_orders
+    assign email = s.preview_email
+  endif
+-%}
+{%- capture body -%}
+{%- if live or preview -%}
+  <header class="baccount35__head"
+    ><div class="baccount35__hl"
+      ><p class="baccount35__cap">{{ 'blko.account_35.since' | t | replace: '[y]', since | replace: '[n]', n_orders }}</p
+      ><h1 class="baccount35__h1 blko-ui-text--h1">{{ 'blko.account_35.welcome' | t }} <em>{{ first | escape }}</em></h1
+    ></div
+    ><p class="baccount35__small baccount35__muted">{{ email | escape }} · <a href="{{ routes.account_logout_url | default: '#' }}" class="baccount35__ul">{{ 'blko.account_35.sign_out' | t }}</a></p
+  ></header
+
+  ><div class="baccount35__main"
+    ><div role="tablist" aria-label="{{ 'blko.account_35.sections' | t }}" class="baccount35__tabs" data-tabs
+      >{%- assign keys = 'orders,refills,addresses,details' | split: ',' -%}
+      {%- assign k = 0 -%}
+      {%- for key in keys -%}
+        {%- if key == 'refills' and show_refills == false -%}{%- continue -%}{%- endif -%}
+        {%- assign k = k | plus: 1 -%}
+        {%- assign lk = 'blko.account_35.' | append: key -%}
+        <button type="button" role="tab" id="{{ tid }}-t-{{ key }}" aria-selected="{% if k == 1 %}true{% else %}false{% endif %}" aria-controls="{{ tid }}-p-{{ key }}" tabindex="{% if k == 1 %}0{% else %}-1{% endif %}" class="baccount35__tab"><span>{{ k | prepend: '0' | slice: -2, 2 }}</span>{{ lk | t }}</button
+      >{%- endfor -%}
+    </div
+
+    >{%- comment -%} Orders {%- endcomment -%}
+    <div role="tabpanel" id="{{ tid }}-p-orders" aria-labelledby="{{ tid }}-t-orders" tabindex="0" class="baccount35__panel"
+      ><ol class="baccount35__orders"
+      >{%- if live -%}
+        {%- paginate customer.orders by s.per_page -%}
+          {%- for order in customer.orders -%}
+            {%- liquid
+              assign tone = 'accent'
+              if order.cancelled
+                assign tone = 'muted'
+              elsif order.fulfillment_status == 'fulfilled'
+                assign tone = 'muted'
+              elsif order.fulfillment_status == 'partial'
+                assign tone = 'text'
+              endif
+              assign track = ''
+              for li in order.line_items
+                if li.fulfillment.tracking_url != blank
+                  assign track = li.fulfillment.tracking_url
+                  break
+                endif
+              endfor
+              capture ids
+                for li in order.line_items
+                  if li.variant_id
+                    echo li.variant_id | append: ':' | append: li.quantity
+                    unless forloop.last
+                      echo ','
+                    endunless
+                  endif
+                endfor
+              endcapture
+              assign status = order.fulfillment_status_label
+              if order.cancelled
+                assign status = order.financial_status_label
+              endif
+            -%}
+            {%- capture lines -%}
+              {%- for li in order.line_items -%}
+                {%- assign sz = '' -%}{%- unless li.product.has_only_default_variant -%}{%- assign sz = li.variant.title -%}{%- endunless -%}
+                {%- assign lt = li.product.title | default: li.title -%}
+                {%- render 'blko-account-35-line', image: li.image, title: lt, size: sz, qty: li.quantity, total: li.final_line_price -%}
+              {%- endfor -%}
+            {%- endcapture -%}
+            {%- capture links -%}
+              <a href="{{ order.customer_url }}" class="baccount35__ul">{{ 'blko.account_35.view' | t }}</a
+              >{%- if track != blank -%}<a href="{{ track }}" class="baccount35__ul" target="_blank" rel="noopener">{{ 'blko.account_35.track' | t }}</a>{%- endif -%}
+              {%- if ids != blank -%}<button type="button" class="baccount35__ul baccount35__mut" data-reorder="{{ ids }}" data-busy="{{ 'blko.account_35.adding' | t }}" data-done="{{ 'blko.account_35.added' | t }}">{{ 'blko.account_35.again' | t }}</button>{%- endif -%}
+            {%- endcapture -%}
+            {%- capture dt -%}{{ order.created_at | time_tag: '%b %-d, %Y' }}{%- endcapture -%}
+            {%- assign n = paginate.current_offset | plus: forloop.index -%}
+            {%- render 'blko-account-35-order', n: n, name: order.name, date: dt, status: status, tone: tone, total: order.total_price, open: forloop.first, lines: lines, links: links -%}
+          {%- else -%}
+            <li class="baccount35__empty"><p class="baccount35__muted">{{ 'blko.account_35.no_orders' | t }}</p><a href="{{ routes.all_products_collection_url }}" class="baccount35__ul">{{ 'blko.account_35.shop' | t }}</a></li
+          >{%- endfor -%}
+          {%- capture opager -%}
+            {%- if paginate.pages > 1 -%}
+            <nav aria-label="{{ 'blko.account_35.orders_pages' | t }}" class="baccount35__pager"
+              >{%- if paginate.previous -%}<a href="{{ paginate.previous.url }}" class="baccount35__ul">{{ 'blko.account_35.prev' | t }}</a>{%- endif -%}
+              <span class="baccount35__cap">{{ paginate.current_page }} / {{ paginate.pages }}</span
+              >{%- if paginate.next -%}<a href="{{ paginate.next.url }}" class="baccount35__ul">{{ 'blko.account_35.next' | t }}</a>{%- endif -%}
+            </nav
+            >{%- endif -%}
+          {%- endcapture -%}
+        {%- endpaginate -%}
+      {%- else -%}
+        {%- assign n = 0 -%}
+        {%- for b in section.blocks -%}
+          {%- if b.type != 'order' -%}{%- continue -%}{%- endif -%}
+          {%- assign bs = b.settings -%}
+          {%- assign n = n | plus: 1 -%}
+          {%- assign tot = 0 -%}
+          {%- capture lines -%}
+            {%- assign rows = bs.lines | newline_to_br | split: '<br />' -%}
+            {%- for r in rows -%}
+              {%- assign f = r | strip | split: '|' -%}
+              {%- if f.size < 4 -%}{%- continue -%}{%- endif -%}
+              {%- assign q = f[2] | strip | plus: 0 -%}
+              {%- assign lt = f[3] | strip | times: 100 | times: q -%}
+              {%- assign tot = tot | plus: lt -%}
+              {%- render 'blko-account-35-line', title: f[0], size: f[1], qty: q, total: lt -%}
+            {%- endfor -%}
+          {%- endcapture -%}
+          {%- liquid
+            case bs.status
+              when 'poured'
+                assign tone = 'accent'
+                assign st = 'Being poured'
+              when 'shipped'
+                assign tone = 'text'
+                assign st = 'On its way'
+              else
+                assign tone = 'muted'
+                assign st = 'Delivered'
+            endcase
+          -%}
+          {%- capture links -%}<a href="#" class="baccount35__ul">{% if bs.status == 'delivered' %}{{ 'blko.account_35.again' | t }}{% else %}{{ 'blko.account_35.track' | t }}{% endif %}</a><a href="#" class="baccount35__ul baccount35__mut">{{ s.preview_invoice }}</a>{%- endcapture -%}
+          {%- render 'blko-account-35-order', n: n, name: bs.number, date: bs.date, status: st, tone: tone, total: tot, open: forloop.first, lines: lines, links: links -%}
+        {%- endfor -%}
+      {%- endif -%}
+      </ol
+      >{{ opager -}}
+    </div
+
+    >{%- if show_refills -%}
+    {%- comment -%} Refills {%- endcomment -%}
+    <div role="tabpanel" id="{{ tid }}-p-refills" aria-labelledby="{{ tid }}-t-refills" tabindex="0" class="baccount35__panel" hidden
+      >{%- if has_app -%}
+        <div class="baccount35__apps"
+          >{%- for block in section.blocks -%}{%- if block.type == '@app' -%}{% render block %}{%- endif -%}{%- endfor -%}
+        </div
+      >{%- elsif live -%}
+        <div class="baccount35__refnote"
+          >{%- if s.refills_text != blank -%}<p class="baccount35__muted">{{ s.refills_text | escape }}</p>{%- endif -%}
+          {%- capture lbl -%}{{ 'blko.account_35.refills_manage' | t }}{%- endcapture -%}
+          {%- assign rurl = s.refills_url | default: routes.account_url -%}
+          {%- render 'blko-ui-button', href: rurl, variant: 'outline', children: lbl -%}
+        </div
+      >{%- else -%}
+        <div class="baccount35__refills" data-refill
+          ><div class="baccount35__label"><div class="baccount35__labelin"
+            ><div class="baccount35__rtop"
+              ><div class="baccount35__rph">{{ 'product-1' | placeholder_svg_tag: 'baccount35__img baccount35__phsvg' }}</div
+              ><div class="baccount35__rcopy"><p class="baccount35__cap baccount35__acc">{{ 'blko.account_35.next_refill' | t }}</p><p class="baccount35__rname blko-ui-text--h4">{{ s.preview_refill | escape }}</p><p class="baccount35__small baccount35__muted">{{ s.preview_refill_line | escape }}</p></div
+            ></div
+            ><dl class="baccount35__rdate"><dt class="baccount35__cap">{{ 'blko.account_35.ships' | t }}</dt><dd class="baccount35__rd blko-ui-text--h2" aria-live="polite">{%- assign rd_parts = s.preview_refill_date | split: ', ' -%}{{ rd_parts.first | escape }}{%- if rd_parts.size > 1 -%}<span class="baccount35__rdy">, {{ rd_parts.last | escape }}</span>{%- endif -%}</dd><dd class="baccount35__small baccount35__muted">{{ s.preview_refill_note | escape }}</dd></dl
+            ><div class="baccount35__redit" data-edit hidden
+              ><div class="baccount35__rsel"
+                >{%- capture opts -%}{%- for w in (4..12) -%}{%- assign m = w | modulo: 2 -%}{%- if m == 0 and w != 10 -%}<option value="{{ w }}"{% if w == 8 %} selected{% endif %}>{{ 'blko.account_35.weeks' | t | replace: '[n]', w }}</option>{%- endif -%}{%- endfor -%}{%- endcapture -%}
+                {%- capture c -%}{%- render 'blko-ui-select', id: 'acc35-every', children: opts -%}{%- endcapture -%}
+                {%- assign fl = 'blko.account_35.every' | t -%}
+                {%- render 'blko-ui-field', id: 'acc35-every', label: fl, children: c -%}
+                {%- capture opts -%}<option selected>1</option><option>2</option><option>3</option>{%- endcapture -%}
+                {%- capture c -%}{%- render 'blko-ui-select', id: 'acc35-jars', children: opts -%}{%- endcapture -%}
+                {%- assign fl = 'blko.account_35.jars' | t -%}
+                {%- render 'blko-ui-field', id: 'acc35-jars', label: fl, children: c -%}
+              </div
+              >{%- capture lbl -%}{{ 'blko.account_35.save' | t }}{%- endcapture -%}{%- render 'blko-ui-button', children: lbl, attrs: 'data-save' -%}
+            </div
+            ><div class="baccount35__racts" data-acts
+              >{%- capture lbl -%}{{ 'blko.account_35.skip' | t }}{%- endcapture -%}{%- render 'blko-ui-button', variant: 'outline', children: lbl, attrs: 'data-skip' -%}
+              {%- capture lbl -%}{{ 'blko.account_35.change' | t }}{%- endcapture -%}{%- render 'blko-ui-button', variant: 'ghost', children: lbl, attrs: 'data-change' -%}
+            </div
+            ><p role="status" class="baccount35__small baccount35__muted baccount35__rstat" data-rstat><span data-skipped hidden>{{ 'blko.account_35.skipped' | t }} <button type="button" class="baccount35__ul" data-undo>{{ 'blko.account_35.undo' | t }}</button></span></p
+          ></div></div
+          ><div class="baccount35__other"
+            ><p class="baccount35__cap">{{ 'blko.account_35.other' | t }}</p
+            ><div class="baccount35__orow2"><div class="baccount35__rph2">{{ 'product-1' | placeholder_svg_tag: 'baccount35__img baccount35__phsvg' }}</div><div><p class="baccount35__rname2 blko-ui-text--h4">{{ s.preview_refill_2 | escape }}</p><p class="baccount35__small baccount35__muted">{{ s.preview_refill_2_line | escape }}</p></div>{%- capture lbl -%}{{ 'blko.account_35.resume' | t }}{%- endcapture -%}{%- render 'blko-ui-button', variant: 'link', size: 'sm', children: lbl -%}</div
+            ><p class="baccount35__small baccount35__muted baccount35__rnote">{{ s.refills_text | escape }}</p
+          ></div
+        ></div
+      >{%- endif -%}
+    </div
+    >{%- endif -%}
+
+    {%- comment -%} Addresses {%- endcomment -%}
+    <div role="tabpanel" id="{{ tid }}-p-addresses" aria-labelledby="{{ tid }}-t-addresses" tabindex="0" class="baccount35__panel" hidden
+      ><ul class="baccount35__addrs"
+        >{%- if live -%}
+          {%- assign def_id = customer.default_address.id -%}
+          {%- for a in customer.addresses -%}
+            {%- assign is_def = false -%}{%- if a.id == def_id -%}{%- assign is_def = true -%}{%- endif -%}
+            <li class="baccount35__addr"
+              ><div class="baccount35__ah"
+                ><p class="baccount35__cap{% if is_def %} baccount35__acc{% endif %}">{{ a.city | default: a.country | escape }}{% if is_def %} · {{ 'blko.account_35.default' | t }}{% endif %}</p
+                ><address class="baccount35__small baccount35__adr"><span class="baccount35__med">{{ a.name | escape }}</span>{%- if a.company != blank -%}<span class="baccount35__muted">{{ a.company | escape }}</span>{%- endif -%}<span class="baccount35__muted">{{ a.address1 | escape }}{% if a.address2 != blank %}, {{ a.address2 | escape }}{% endif %}</span><span class="baccount35__muted">{{ a.city | escape }} {{ a.zip | escape }}</span><span class="baccount35__muted">{{ a.country | escape }}</span></address
+              ></div
+              ><div class="baccount35__aacts"
+                ><a href="{{ routes.account_addresses_url }}" class="baccount35__ul">{% if is_def %}{{ 'blko.account_35.edit' | t }}{% else %}{{ 'blko.account_35.set_default' | t }}{% endif %}</a
+                >{%- if is_def -%}<span class="baccount35__muted">{{ 'blko.account_35.used' | t }}</span
+                >{%- else -%}
+                <form method="post" action="{{ a.url }}" class="baccount35__del" data-confirm="{{ 'blko.account_35.remove_confirm' | t }}"><input type="hidden" name="_method" value="delete"><button type="submit" class="baccount35__ul baccount35__mut">{{ 'blko.account_35.remove' | t }}</button></form
+                >{%- endif -%}
+              </div
+            ></li
+          >{%- else -%}
+            <li class="baccount35__addr"><p class="baccount35__small baccount35__muted">{{ 'blko.account_35.no_addresses' | t }}</p></li
+          >{%- endfor -%}
+        {%- else -%}
+          {%- assign d = 0 -%}
+          {%- for b in section.blocks -%}
+            {%- if b.type != 'address' -%}{%- continue -%}{%- endif -%}
+            {%- assign d = d | plus: 1 -%}
+            {%- assign bs = b.settings -%}
+            <li class="baccount35__addr"
+              ><div class="baccount35__ah"
+                ><p class="baccount35__cap{% if d == 1 %} baccount35__acc{% endif %}">{{ bs.label | escape }}{% if d == 1 %} · {{ 'blko.account_35.default' | t }}{% endif %}</p
+                ><address class="baccount35__small baccount35__adr"><span class="baccount35__med">{{ bs.name | escape }}</span>{%- assign al = bs.lines | newline_to_br | split: '<br />' -%}{%- for l in al -%}<span class="baccount35__muted">{{ l | strip | escape }}</span>{%- endfor -%}</address
+              ></div
+              ><div class="baccount35__aacts">{%- if d == 1 -%}<span class="baccount35__muted">{{ 'blko.account_35.used' | t }}</span>{%- else -%}<a href="#" class="baccount35__ul">{{ 'blko.account_35.set_default' | t }}</a><a href="#" class="baccount35__ul baccount35__mut">{{ 'blko.account_35.remove' | t }}</a>{%- endif -%}</div
+            ></li
+          >{%- endfor -%}
+        {%- endif -%}
+        <li class="baccount35__addr baccount35__new"
+          ><a href="{{ routes.account_addresses_url | default: '#' }}" class="baccount35__plus">{%- render 'blko-ui-icon', name: 'plus', size: 16, stroke: 1.5 -%}{{ 'blko.account_35.add_address' | t }}</a
+        ></li
+      ></ul
+    ></div
+
+    >{%- comment -%} Details {%- endcomment -%}
+    <div role="tabpanel" id="{{ tid }}-p-details" aria-labelledby="{{ tid }}-t-details" tabindex="0" class="baccount35__panel" hidden
+      ><div class="baccount35__details"
+        ><dl class="baccount35__dl"
+          ><div><dt class="baccount35__cap">{{ 'blko.account_35.name' | t }}</dt><dd>{% if live %}{{ customer.name | escape }}{% else %}{{ s.preview_first | escape }} {{ s.preview_last | escape }}{% endif %}</dd></div
+          ><div><dt class="baccount35__cap">{{ 'blko.account_35.email' | t }}</dt><dd>{{ email | escape }}</dd></div
+          >{%- if live and customer.phone != blank -%}<div><dt class="baccount35__cap">{{ 'blko.account_35.phone' | t }}</dt><dd>{{ customer.phone | escape }}</dd></div>{%- endif -%}
+        </dl
+        ><div class="baccount35__letter"
+          ><p class="baccount35__cap">{{ 'blko.account_35.letter' | t }}</p
+          >{%- if live -%}
+            {%- if customer.accepts_marketing -%}
+              <p class="baccount35__small">{{ 'blko.account_35.letter_on' | t }}</p
+            >{%- else -%}
+              {%- form 'customer', id: 'acc35-letter', class: 'baccount35__lform' -%}
+                {%- if form.posted_successfully? -%}<p role="status" class="baccount35__small">{{ 'blko.account_35.subscribed' | t }}</p
+                >{%- else -%}
+                  <p class="baccount35__small baccount35__muted">{{ 'blko.account_35.letter_off' | t }}</p
+                  ><input type="hidden" name="contact[email]" value="{{ customer.email | escape }}"
+                  ><input type="hidden" name="contact[tags]" value="newsletter"
+                  >{%- capture lbl -%}{{ 'blko.account_35.subscribe' | t }}{%- endcapture -%}
+                  {%- render 'blko-ui-button', type: 'submit', variant: 'outline', size: 'sm', children: lbl -%}
+                {%- endif -%}
+              {%- endform -%}
+            {%- endif -%}
+          {%- else -%}
+            <p class="baccount35__small">{{ 'blko.account_35.letter_on' | t }}</p
+          >{%- endif -%}
+        </div
+      ></div
+    ></div
+  ></div
+>{%- else -%}
+  <div class="baccount35__out"
+    ><p class="baccount35__muted">{{ 'blko.account_35.signed_out' | t }}</p
+    >{%- capture lbl -%}{{ 'blko.account_35.sign_in' | t }}{%- endcapture -%}
+    {%- render 'blko-ui-button', href: routes.account_login_url, children: lbl -%}
+  </div
+>{%- endif -%}
+{%- endcapture -%}
+<div class="baccount35{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px"
+  >{%- render 'blko-ui-section', surface: 'bg', label: s.label, inner: 'baccount35__inner', children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Dispensary account",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "For the customer account template: the signed-in customer's orders, addresses and details. Refills show when you add a subscriptions app block here, or turn on Show refills to link to the app's portal. The order and address blocks only fill the theme-editor preview."
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Region label",
+      "default": "Your account"
+    },
+    {
+      "type": "range",
+      "id": "per_page",
+      "label": "Orders per page",
+      "min": 2,
+      "max": 20,
+      "step": 1,
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Refills"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_refills",
+      "label": "Show refills",
+      "default": false
+    },
+    {
+      "type": "url",
+      "id": "refills_url",
+      "label": "Refills portal link",
+      "info": "The subscription app's customer portal."
+    },
+    {
+      "type": "textarea",
+      "id": "refills_text",
+      "label": "Refills note",
+      "default": "Refills are poured the week before they ship. Skip, change or pause up to two days before the date."
+    },
+    {
+      "type": "header",
+      "content": "Theme-editor preview"
+    },
+    {
+      "type": "text",
+      "id": "preview_first",
+      "label": "First name",
+      "default": "Clara"
+    },
+    {
+      "type": "text",
+      "id": "preview_last",
+      "label": "Last name",
+      "default": "Weiss"
+    },
+    {
+      "type": "text",
+      "id": "preview_email",
+      "label": "Email",
+      "default": "clara.weiss@example.com"
+    },
+    {
+      "type": "text",
+      "id": "preview_since",
+      "label": "Member since",
+      "default": "2023"
+    },
+    {
+      "type": "number",
+      "id": "preview_orders",
+      "label": "Order count",
+      "default": 14
+    },
+    {
+      "type": "text",
+      "id": "preview_invoice",
+      "label": "Second order link",
+      "default": "Invoice"
+    },
+    {
+      "type": "text",
+      "id": "preview_refill",
+      "label": "Refill",
+      "default": "Barrier Balm"
+    },
+    {
+      "type": "text",
+      "id": "preview_refill_line",
+      "label": "Refill line",
+      "default": "50 ml · ×1 · every 8 weeks · $34.20"
+    },
+    {
+      "type": "text",
+      "id": "preview_refill_date",
+      "label": "Refill date",
+      "default": "Nov 18, 2026"
+    },
+    {
+      "type": "text",
+      "id": "preview_refill_note",
+      "label": "Refill note",
+      "default": "Wednesday, in recycled card. Members save 10%."
+    },
+    {
+      "type": "text",
+      "id": "preview_refill_2",
+      "label": "Second refill",
+      "default": "Rosehip Face Oil"
+    },
+    {
+      "type": "text",
+      "id": "preview_refill_2_line",
+      "label": "Second refill line",
+      "default": "30 ml · every 12 weeks · paused"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 112,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 112
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "order",
+      "name": "Order (preview)",
+      "settings": [
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Number",
+          "default": "BLM-2207"
+        },
+        {
+          "type": "text",
+          "id": "date",
+          "label": "Date",
+          "default": "Oct 28, 2026"
+        },
+        {
+          "type": "select",
+          "id": "status",
+          "label": "Status",
+          "default": "poured",
+          "options": [
+            {
+              "value": "poured",
+              "label": "Being poured"
+            },
+            {
+              "value": "shipped",
+              "label": "On its way"
+            },
+            {
+              "value": "delivered",
+              "label": "Delivered"
+            }
+          ]
+        },
+        {
+          "type": "textarea",
+          "id": "lines",
+          "label": "Lines",
+          "info": "One per line: name|size|qty|price",
+          "default": "Barrier Balm|50 ml|1|38"
+        }
+      ]
+    },
+    {
+      "type": "address",
+      "name": "Address (preview)",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Home"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Clara Weiss"
+        },
+        {
+          "type": "textarea",
+          "id": "lines",
+          "label": "Lines",
+          "default": "14 Orchard Row\nBristol BS1 5QT\nUnited Kingdom"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Dispensary account",
+      "blocks": [
+        {
+          "type": "order",
+          "settings": {
+            "number": "BLM-2207",
+            "date": "Oct 28, 2026",
+            "status": "poured",
+            "lines": "Barrier Balm|50 ml|1|38\nHydrating Mist|100 ml|1|26"
+          }
+        },
+        {
+          "type": "order",
+          "settings": {
+            "number": "BLM-2154",
+            "date": "Oct 9, 2026",
+            "status": "shipped",
+            "lines": "Rosehip Face Oil|30 ml|1|54"
+          }
+        },
+        {
+          "type": "order",
+          "settings": {
+            "number": "BLM-1988",
+            "date": "Aug 22, 2026",
+            "status": "delivered",
+            "lines": "Oat Milk Cleanser|150 ml|1|32\nCream Cleansing Bar|110 g|2|18"
+          }
+        },
+        {
+          "type": "order",
+          "settings": {
+            "number": "BLM-1801",
+            "date": "Jun 30, 2026",
+            "status": "delivered",
+            "lines": "Night Repair Cream|50 ml|1|62"
+          }
+        },
+        {
+          "type": "address",
+          "settings": {
+            "label": "Home",
+            "name": "Clara Weiss",
+            "lines": "14 Orchard Row, Flat 2\nBristol BS1 5QT\nUnited Kingdom"
+          }
+        },
+        {
+          "type": "address",
+          "settings": {
+            "label": "Studio",
+            "name": "Clara Weiss",
+            "lines": "The Print Works, Unit 9\nBath BA1 1NG\nUnited Kingdom"
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

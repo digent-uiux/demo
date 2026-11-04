@@ -1,0 +1,1008 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-product-detail-37.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-product-detail-37.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Balm product page, "The focus scale". Left (7/12, sticky): one tall 4:5 plate with a lens focus scale under it instead
+  of thumbnails: a hairline ruler with fine ticks, one stop per photo (distance from the "Distances" setting, last "∞",
+  caption from the photo block), an amber needle on the stop in focus. Choosing a stop racks focus: the photo in front
+  softens and fades as the next pulls sharp (CSS, only with the balm kit on; arrow keys step; static = photo 1 sharp).
+  Right (5/12; 4/12 from 1024px, sticky): crumb, title (the one Bodoni line), short line, rating, price as a light
+  numeral with the unit price, a stock line (status dot + Karla: in stock / amber "Only N left in this batch" at or
+  under the low_stock setting when inventory is tracked / muted sold out), option 1 as glass vials filled to their
+  volume (variant metafield, else equal steps), other options as chips, purchase options (one-time + selling plans) as
+  ruled radios with their prices, quantity + Add to bag, dynamic checkout, note, @app blocks, the double-framed label
+  of facts, icon disclosures (icon select per block, muted, +/− on the right), and "Pairs with": one hairline card
+  (60px thumb, name, price, "+ Add" text button) from Shopify's complementary recommendations (fetched by section id),
+  else the pair_product picker.
+  Sticky ATC bar (outside the section's container, so position: fixed holds): once the main Add to bag scrolls above
+  the viewport it fades in at the bottom (thumb, name, variant + plan, price, Add to bag; phones: name, price, button),
+  mirrors the main form (its button submits the main form) and hides when the main button or the footer is in view.
+  Fades only, never slides; inert + invisible while hidden; never shown with ?static or webdriver.
+  On a product page everything is live: form 'product', the variant JSON + a stock map (options update price, plan
+  prices, unit price, stock line, photo, availability, ?variant=, the hidden id select), selling plans, /cart/add.js
+  then blko:cart:add (normal submit if that fails). Elsewhere the settings and blocks drive a preview. No-JS: the
+  variant select shows instead.
+{%- endcomment -%}
+{%- liquid
+  assign live = false
+  if product != blank and product.id != blank
+    assign live = true
+  endif
+  assign photos = section.blocks | where: 'type', 'photo'
+  assign facts = section.blocks | where: 'type', 'fact'
+  assign infos = section.blocks | where: 'type', 'info'
+  assign uid = 'pd37-' | append: section.id
+  assign dists = s.distances | split: ','
+  assign vf = s.volume_field | split: '.'
+  if live
+    assign variant = product.selected_or_first_available_variant
+    assign price = variant.price
+    assign compare = variant.compare_at_price
+    assign media = product.media | where: 'media_type', 'image'
+    assign shots_n = media.size
+    assign r_value = product.metafields.reviews.rating.value.rating | default: 0
+    assign r_count = product.metafields.reviews.rating_count.value | default: 0
+    assign crumb_c = collection | default: product.collections.first
+    assign available = variant.available
+    assign bar_name = product.title
+    assign bar_img = product.featured_media.preview_image
+    assign p_on = false
+    assign recs_url = routes.product_recommendations_url | append: '?section_id=' | append: section.id | append: '&product_id=' | append: product.id | append: '&limit=1&intent=complementary'
+    assign st = 'in'
+    assign st_txt = 'blko.product_detail_37.in_stock' | t
+    assign bar_lbl = 'blko.product_detail_37.add' | t
+    assign bar_off = ''
+    assign q = variant.inventory_quantity | plus: 0
+    assign q_low = q | at_least: 1 | at_most: s.low_stock
+    if available == false
+      assign st = 'out'
+      assign st_txt = 'blko.product_detail_37.sold_out' | t
+      assign bar_lbl = st_txt
+      assign bar_off = ' disabled'
+    elsif variant.inventory_management != blank and q_low == q
+      assign st = 'low'
+      assign st_txt = 'blko.product_detail_37.low_stock' | t: n: q
+    endif
+    assign size_label = ''
+    unless product.has_only_default_variant
+      assign size_label = variant.option1
+    endunless
+  else
+    assign sizes = s.sizes | newline_to_br | split: '<br />'
+    assign pick = s.size_index | minus: 1
+    assign zp = sizes[pick] | split: '|'
+    assign price = zp[2] | strip | times: 100 | round
+    assign compare = nil
+    assign shots_n = photos.size
+    assign r_value = s.rating | plus: 0
+    assign r_count = s.rating_count | plus: 0
+    assign available = true
+    assign bar_name = s.title | strip_html
+    assign bar_img = photos[0].settings.image
+    assign p_on = true
+    assign recs_url = ''
+    assign st = 'in'
+    assign st_txt = 'blko.product_detail_37.in_stock' | t
+    assign bar_lbl = 'blko.product_detail_37.add' | t
+    assign bar_off = ''
+    assign z3 = zp[3] | strip
+    assign zn = z3 | plus: 0
+    assign z_low = zn | at_least: 1 | at_most: s.low_stock
+    if z_low == zn
+      assign st = 'low'
+      assign st_txt = 'blko.product_detail_37.low_stock' | t: n: zn
+    elsif zn < 1 and z3 != blank
+      assign available = false
+      assign st = 'out'
+      assign st_txt = 'blko.product_detail_37.sold_out' | t
+      assign bar_lbl = st_txt
+      assign bar_off = ' disabled'
+    endif
+    assign size_label = zp[0] | strip
+  endif
+  if shots_n > 8
+    assign shots_n = 8
+  endif
+  if shots_n < 1
+    assign shots_n = 1
+  endif
+  assign last = shots_n | minus: 1
+  assign money0 = 0 | money_without_trailing_zeros
+-%}
+{%- capture total -%}{%- render 'blko-ui-money', amount: price, cents: true -%}{%- endcapture -%}
+{%- capture unit_line -%}
+  {%- if live -%}
+    {%- if variant.unit_price_measurement -%}
+      {%- capture up -%}{%- render 'blko-ui-money', amount: variant.unit_price, cents: true -%}{%- endcapture -%}
+      {%- assign ref = variant.unit_price_measurement.reference_unit -%}
+      {%- if variant.unit_price_measurement.reference_value != 1 -%}{%- assign ref = variant.unit_price_measurement.reference_value | append: ref -%}{%- endif -%}
+      {{ up }} {{ 'blko.product_detail_37.per' | t: unit: ref -}}
+    {%- endif -%}
+  {%- else -%}
+    {%- assign ml = zp[1] | strip | plus: 0 -%}
+    {%- if ml > 0 and s.unit != blank -%}
+      {%- assign per = price | divided_by: ml -%}
+      {%- capture up -%}{%- render 'blko-ui-money', amount: per, cents: true -%}{%- endcapture -%}
+      {{ up }} {{ 'blko.product_detail_37.per' | t: unit: s.unit -}}
+    {%- endif -%}
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- comment -%} ── Gallery: the plate and its focus scale ── {%- endcomment -%}
+{%- capture gallery -%}
+<div class="bproductdetail37__gal"
+  ><figure class="bproductdetail37__main" data-main
+    >{%- for i in (0..last) -%}
+      {%- assign pb = photos[i] -%}
+      <div class="bproductdetail37__shot" data-shot{% if forloop.first %} data-on{% else %} aria-hidden="true"{% endif %}{% if live %} data-media-id="{{ media[i].id }}"{% endif %}
+        >{%- if live and media[i] != blank -%}
+          {%- assign al = media[i].alt | default: product.title -%}
+          {%- if forloop.first -%}
+            {{ media[i].preview_image | image_url: width: 1400 | image_tag: alt: al, loading: 'eager', fetchpriority: 'high', widths: '600, 900, 1200, 1400', sizes: '(min-width: 768px) 56vw, 100vw', class: 'bproductdetail37__img' -}}
+          {%- else -%}
+            {{ media[i].preview_image | image_url: width: 1400 | image_tag: alt: al, loading: 'lazy', widths: '600, 900, 1200, 1400', sizes: '(min-width: 768px) 56vw, 100vw', class: 'bproductdetail37__img' -}}
+          {%- endif -%}
+        {%- elsif pb.settings.image != blank -%}
+          {%- if forloop.first -%}{%- assign ld = 'eager' -%}{%- else -%}{%- assign ld = 'lazy' -%}{%- endif -%}
+          {{ pb.settings.image | image_url: width: 1400 | image_tag: alt: pb.settings.image.alt, loading: ld, widths: '600, 900, 1200, 1400', sizes: '(min-width: 768px) 56vw, 100vw', class: 'bproductdetail37__img' -}}
+        {%- else -%}
+          {%- assign ph = 'product-' | append: forloop.index -%}
+          {{ ph | placeholder_svg_tag: 'bproductdetail37__img placeholder-svg' -}}
+        {%- endif -%}
+      </div
+    >{%- endfor -%}
+  </figure
+  >{%- if shots_n > 1 -%}
+  <div class="bproductdetail37__scale" role="group" aria-label="{{ 'blko.product_detail_37.photos' | t | escape }}" data-scale style="--n:{{ shots_n }}"
+    ><div class="bproductdetail37__ruler" aria-hidden="true"
+      ><span class="bproductdetail37__ticks"></span
+      >{%- for i in (0..last) -%}<span class="bproductdetail37__major" style="--k:{{ i }}"></span>{%- endfor -%}
+      <span class="bproductdetail37__needle" data-needle style="--k:0"><span></span></span
+    ></div
+    ><div class="bproductdetail37__stops"
+      >{%- for i in (0..last) -%}
+        {%- assign pb = photos[i] -%}
+        {%- assign cap = pb.settings.caption -%}
+        {%- if live -%}{%- assign al = media[i].alt | default: product.title -%}{%- else -%}{%- assign al = pb.settings.image.alt | default: cap -%}{%- endif -%}
+        {%- if forloop.last -%}{%- assign at = '∞' -%}{%- else -%}{%- assign at = dists[i] | strip -%}{%- endif -%}
+        {%- assign lab = 'blko.product_detail_37.view' | t: n: forloop.index, total: shots_n, alt: al -%}
+        <button type="button" class="bproductdetail37__stop" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}" tabindex="{% if forloop.first %}0{% else %}-1{% endif %}" aria-label="{{ lab | escape }}" data-go="{{ i }}"
+          ><span class="bproductdetail37__at">{% if at != blank %}{{ at | escape }}{% if at != '∞' and s.distance_unit != blank %}<span class="bproductdetail37__unit">{{ s.distance_unit | escape }}</span>{% endif %}{% else %}{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}{% endif %}</span
+          >{%- if cap != blank -%}<span class="bproductdetail37__lbl">{{ cap | escape }}</span>{%- endif -%}
+        </button
+      >{%- endfor -%}
+    </div
+    ><p class="bproductdetail37__lbl bproductdetail37__muted bproductdetail37__infocus" aria-live="polite"><span>{{ 'blko.product_detail_37.in_focus' | t }} <span data-n>01</span></span><span>{{ 'blko.product_detail_37.near_far' | t }}</span></p
+  ></div
+  >{%- endif -%}
+</div
+>{%- endcapture -%}
+
+
+{%- capture buyform -%}
+  {%- if live -%}
+    <script type="application/json" data-variants>{{ product.variants | json }}</script
+    ><script type="application/json" data-stock>{ {%- for v in product.variants -%}"{{ v.id }}":[{{ v.inventory_quantity | default: 0 }},{{ v.inventory_management | default: '' | size | at_most: 1 }}]{% unless forloop.last %},{% endunless %}{%- endfor -%} }</script
+    >{%- unless product.has_only_default_variant -%}
+    {%- for opt in product.options_with_values -%}
+      {%- assign vials = false -%}
+      {%- if forloop.first and s.vials -%}{%- assign vials = true -%}{%- endif -%}
+      <fieldset class="bproductdetail37__fs" data-group="{{ forloop.index0 }}"
+        ><legend class="bproductdetail37__lbl bproductdetail37__lg"><span class="bproductdetail37__muted">{{ opt.name | escape }}</span> · <span data-sel>{{ opt.selected_value | escape }}</span></legend
+        >{%- if vials -%}
+          {%- liquid
+            assign vmax = 0
+            for val in opt.values
+              for vv in product.variants
+                if vv.option1 == val.value
+                  assign vol = 0
+                  if vf.size == 2
+                    assign vol = vv.metafields[vf[0]][vf[1]].value | plus: 0
+                  endif
+                  if vol > vmax
+                    assign vmax = vol
+                  endif
+                  break
+                endif
+              endfor
+            endfor
+          -%}
+          <div class="bproductdetail37__vials" data-blko-ui-options
+            >{%- for val in opt.values -%}
+              {%- liquid
+                assign vol = 0
+                assign vprice = nil
+                assign vback = nil
+                for vv in product.variants
+                  if vv.option1 == val.value
+                    assign vprice = vv.price
+                    if vf.size == 2
+                      assign vol = vv.metafields[vf[0]][vf[1]].value | plus: 0
+                    endif
+                    assign vback = vv.metafields.custom.back_note.value
+                    break
+                  endif
+                endfor
+                if vmax > 0
+                  assign fill = vol | times: 1.0 | divided_by: vmax
+                else
+                  assign fill = forloop.index | times: 1.0 | divided_by: forloop.length
+                endif
+                assign hh = fill | times: 33 | round: 1
+                assign yy = 46 | minus: hh
+                assign oc = 'bproductdetail37__vbtn'
+                if val.available == false
+                  assign oc = 'bproductdetail37__vbtn bproductdetail37__opt--out'
+                endif
+              -%}
+              {%- capture ch -%}<svg viewBox="0 0 24 48" aria-hidden="true" focusable="false" class="bproductdetail37__vial"><rect x="4" y="{{ yy }}" width="16" height="{{ hh }}" class="bproductdetail37__vfill"/><path d="M9 2.5h6M9.5 2.5v6.5L4 13v31.5a1.5 1.5 0 0 0 1.5 1.5h13a1.5 1.5 0 0 0 1.5-1.5V13l-5.5-4V2.5" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/></svg><span class="bproductdetail37__vl" data-vl>{{ val.value | escape }}</span><span class="bproductdetail37__lbl bproductdetail37__muted">{% if val.available == false and vback != blank %}{{ vback | escape }}{% elsif vprice != nil %}{%- render 'blko-ui-money', amount: vprice, cents: true -%}{% endif %}</span>{%- endcapture -%}
+              {%- render 'blko-ui-option', selected: val.selected, value: val.value, children: ch, className: oc -%}
+            {%- endfor -%}
+          </div
+        >{%- else -%}
+          <div class="bproductdetail37__chips" data-blko-ui-options
+            >{%- for v in opt.values -%}
+              {%- assign oc = 'bproductdetail37__opt' -%}
+              {%- if v.available == false -%}{%- assign oc = 'bproductdetail37__opt bproductdetail37__opt--out' -%}{%- endif -%}
+              {%- render 'blko-ui-option', selected: v.selected, value: v.value, children: v.value, className: oc -%}
+            {%- endfor -%}
+          </div
+        >{%- endif -%}
+      </fieldset
+    >{%- endfor -%}
+    {%- endunless -%}
+    <label class="bproductdetail37__nojs"><span class="bproductdetail37__lbl bproductdetail37__muted">{{ 'blko.product_detail_37.variant' | t }}</span
+      ><select name="id" class="bproductdetail37__select" data-id
+        >{%- for v in product.variants -%}<option value="{{ v.id }}"{% if v.id == variant.id %} selected{% endif %}{% unless v.available %} disabled{% endunless %}>{{ v.title | escape }}{% unless v.available %} · {{ 'blko.product_detail_37.sold_out' | t }}{% endunless %}</option>{%- endfor -%}
+      </select
+    ></label
+    >{%- if product.selling_plan_groups.size > 0 -%}
+      <fieldset class="bproductdetail37__fs bproductdetail37__plans" data-plans
+        ><legend class="bproductdetail37__lbl bproductdetail37__lg bproductdetail37__muted">{{ 'blko.product_detail_37.purchase' | t }}</legend
+        >{%- unless product.requires_selling_plan -%}
+        <label class="bproductdetail37__plan"><input type="radio" name="selling_plan" value="" checked
+          ><span class="bproductdetail37__pt"><span class="bproductdetail37__pn">{{ 'blko.product_detail_37.one_time' | t }}</span>{% if s.once_note != blank %}<span class="bproductdetail37__pd">{{ s.once_note | escape }}</span>{% endif %}</span
+          ><span class="bproductdetail37__pp" data-plan-price="">{{ total }}</span
+        ></label
+        >{%- endunless -%}
+        {%- for g in product.selling_plan_groups -%}
+          {%- for sp in g.selling_plans -%}
+            {%- assign ap = variant.price -%}
+            {%- for a in variant.selling_plan_allocations -%}{%- if a.selling_plan.id == sp.id -%}{%- assign ap = a.price -%}{%- endif -%}{%- endfor -%}
+            <label class="bproductdetail37__plan"><input type="radio" name="selling_plan" value="{{ sp.id }}"{% if product.requires_selling_plan and forloop.parentloop.first and forloop.first %} checked{% endif %}
+              ><span class="bproductdetail37__pt"><span class="bproductdetail37__pn">{{ sp.name | escape }}</span><span class="bproductdetail37__pd">{% if sp.description != blank %}{{ sp.description | escape }}{% else %}{{ g.name | escape }}{% endif %}</span></span
+              ><span class="bproductdetail37__pp" data-plan-price="{{ sp.id }}">{%- render 'blko-ui-money', amount: ap, cents: true -%}</span
+            ></label
+          >{%- endfor -%}
+        {%- endfor -%}
+      </fieldset
+    >{%- endif -%}
+  {%- else -%}
+    <fieldset class="bproductdetail37__fs" data-group="0" data-demo
+      ><legend class="bproductdetail37__lbl bproductdetail37__lg"><span class="bproductdetail37__muted">{{ s.option_name | escape }}</span> · <span data-sel>{{ size_label | escape }}</span></legend
+      >{%- liquid
+        assign vmax = 0
+        for z in sizes
+          assign zz = z | split: '|'
+          assign zm = zz[1] | strip | plus: 0
+          if zm > vmax
+            assign vmax = zm
+          endif
+        endfor
+      -%}
+      <div class="bproductdetail37__vials" data-blko-ui-options
+        >{%- for z in sizes -%}
+          {%- assign zz = z | split: '|' -%}{%- assign zl = zz[0] | strip -%}
+          {%- if zl != blank -%}
+            {%- liquid
+              assign zc = zz[2] | strip | times: 100 | round
+              assign zm = zz[1] | strip | plus: 0
+              assign zb = zz[3] | strip
+              assign zs = zb | plus: 0
+              if zs > 0
+                assign zb = ''
+              endif
+              assign on = false
+              if forloop.index0 == pick
+                assign on = true
+              endif
+              if vmax > 0
+                assign hh = zm | times: 33.0 | divided_by: vmax | round: 1
+              else
+                assign hh = 33
+              endif
+              assign yy = 46 | minus: hh
+              assign oc = 'bproductdetail37__vbtn'
+              if zb != blank
+                assign oc = 'bproductdetail37__vbtn bproductdetail37__opt--out'
+              endif
+            -%}
+            {%- capture zv -%}{{ zc }}|{{ zm }}|{% if zb != blank %}0{% else %}1{% endif %}|{{ zs }}{%- endcapture -%}
+            {%- capture ch -%}<svg viewBox="0 0 24 48" aria-hidden="true" focusable="false" class="bproductdetail37__vial"><rect x="4" y="{{ yy }}" width="16" height="{{ hh }}" class="bproductdetail37__vfill"/><path d="M9 2.5h6M9.5 2.5v6.5L4 13v31.5a1.5 1.5 0 0 0 1.5 1.5h13a1.5 1.5 0 0 0 1.5-1.5V13l-5.5-4V2.5" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/></svg><span class="bproductdetail37__vl" data-vl>{{ zl | escape }}</span><span class="bproductdetail37__lbl bproductdetail37__muted">{% if zb != blank %}{{ zb | escape }}{% else %}{%- render 'blko-ui-money', amount: zc, cents: true -%}{% endif %}</span>{%- endcapture -%}
+            {%- render 'blko-ui-option', selected: on, value: zv, children: ch, className: oc -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div
+    ></fieldset
+    >{%- if s.plan_title != blank -%}
+    {%- assign pz = 100 | minus: s.plan_off | times: price | divided_by: 100 -%}
+    <fieldset class="bproductdetail37__fs bproductdetail37__plans" data-plans data-demo-plans
+      ><legend class="bproductdetail37__lbl bproductdetail37__lg bproductdetail37__muted">{{ 'blko.product_detail_37.purchase' | t }}</legend
+      ><label class="bproductdetail37__plan"><input type="radio" name="selling_plan" value="" data-off="0" checked
+        ><span class="bproductdetail37__pt"><span class="bproductdetail37__pn">{{ 'blko.product_detail_37.one_time' | t }}</span>{% if s.once_note != blank %}<span class="bproductdetail37__pd">{{ s.once_note | escape }}</span>{% endif %}</span
+        ><span class="bproductdetail37__pp" data-plan-price="">{{ total }}</span
+      ></label
+      ><label class="bproductdetail37__plan"><input type="radio" name="selling_plan" value="demo" data-off="{{ s.plan_off }}"
+        ><span class="bproductdetail37__pt"><span class="bproductdetail37__pn">{{ s.plan_title | escape }}</span>{% if s.plan_note != blank %}<span class="bproductdetail37__pd">{{ s.plan_note | escape }}</span>{% endif %}</span
+        ><span class="bproductdetail37__pp" data-plan-price="demo">{%- render 'blko-ui-money', amount: pz, cents: true -%}</span
+      ></label
+    ></fieldset
+    >{%- endif -%}
+  {%- endif -%}
+
+  <div class="bproductdetail37__act"
+    ><div class="bproductdetail37__addrow" data-addrow
+      >{%- render 'blko-ui-quantity', name: 'quantity', max: 99, className: 'bproductdetail37__qty' -%}
+      {%- capture lbl -%}<span data-l>{%- if available -%}{{ 'blko.product_detail_37.add' | t }} · <span data-sum>{{ total }}</span>{%- else -%}{{ 'blko.product_detail_37.sold_out' | t }}{%- endif -%}</span>{%- endcapture -%}
+      {%- capture at -%}name="add" aria-live="polite" data-add data-add-label="{{ 'blko.product_detail_37.add' | t | escape }}" data-added="{{ 'blko.product_detail_37.added' | t | escape }}" data-sold="{{ 'blko.product_detail_37.sold_out' | t | escape }}" data-unavail="{{ 'blko.product_detail_37.unavailable' | t | escape }}"{% unless available %} disabled{% endunless %}{%- endcapture -%}
+      {%- render 'blko-ui-button', type: 'submit', children: lbl, attrs: at, className: 'bproductdetail37__add' -%}
+    </div
+  ></div
+>{%- endcapture -%}
+{%- capture after -%}
+  <div class="bproductdetail37__more"
+    ><p class="bproductdetail37__err" role="alert" data-err data-error="{{ 'blko.product_detail_37.error' | t | escape }}" hidden></p
+    >{%- if s.note != blank -%}<p class="bproductdetail37__note">{{ s.note | escape }}</p>{%- endif -%}
+  </div
+>{%- endcapture -%}
+
+{%- capture buy -%}
+<div class="bproductdetail37__buy"
+  ><nav aria-label="{{ 'blko.product_detail_37.breadcrumb' | t | escape }}" class="bproductdetail37__lbl bproductdetail37__crumb"
+    >{%- if live -%}
+      {%- if product.type != blank -%}<a href="{{ product.type | url_for_type }}">{{ product.type | escape }}</a>{%- endif -%}
+      {%- if product.type != blank and crumb_c != blank -%}<span aria-hidden="true">/</span>{%- endif -%}
+      {%- if crumb_c != blank -%}<a href="{{ crumb_c.url }}">{{ crumb_c.title | escape }}</a>{%- endif -%}
+    {%- else -%}
+      {%- assign cr = s.crumbs | split: ',' -%}
+      {%- for c in cr -%}{%- unless forloop.first -%}<span aria-hidden="true">/</span>{%- endunless -%}<a href="{{ routes.all_products_collection_url }}">{{ c | strip | escape }}</a>{%- endfor -%}
+    {%- endif -%}
+  </nav
+  ><div class="bproductdetail37__head"
+    ><h1 class="bproductdetail37__title">{% if live %}{{ product.title | escape }}{% else %}{{ s.title }}{% endif %}</h1
+    >{%- if s.blurb != blank -%}<p class="bproductdetail37__blurb">{{ s.blurb | escape }}</p>{%- endif -%}
+    {%- if r_value > 0 -%}<a href="#reviews" class="bproductdetail37__rlink">{%- render 'blko-ui-rating', value: r_value, count: r_count -%}<span class="blko-ui-sr-only"> {{ 'blko.product_detail_37.reviews' | t }}</span></a>{%- endif -%}
+  </div
+  ><div class="bproductdetail37__pricebox"
+  ><p class="bproductdetail37__pricerow"
+    ><span data-price>{%- render 'blko-ui-price', amount: price, compareAt: compare, size: 'lg', cents: true -%}</span
+    ><span class="bproductdetail37__lbl bproductdetail37__muted"><span data-size>{{ size_label | escape }}</span><span class="bproductdetail37__dot" data-unit>{{ unit_line | strip }}</span></span
+  ></p
+  ><p class="bproductdetail37__stock" data-show="{{ s.show_stock }}" data-stock-line data-state="{{ st }}" data-low-at="{{ s.low_stock }}" data-in="{{ 'blko.product_detail_37.in_stock' | t | escape }}" data-low="{{ 'blko.product_detail_37.low_stock' | t: n: '#' | escape }}" data-out="{{ 'blko.product_detail_37.sold_out' | t | escape }}" aria-live="polite"
+    ><span class="bproductdetail37__sdot" aria-hidden="true"></span><span data-stock-text>{{ st_txt }}</span
+  ></p
+  ></div
+
+  >{%- if live -%}
+    {%- form 'product', product, id: uid, class: 'bproductdetail37__form', novalidate: 'novalidate' -%}
+      {{ buyform -}}
+      {%- if s.payment_button -%}<div class="bproductdetail37__dyn bproductdetail37__more">{{ form | payment_button }}</div>{%- endif -%}
+      {{ after -}}
+    {%- endform -%}
+  {%- else -%}
+    <form action="{{ routes.cart_add_url }}" method="post" class="bproductdetail37__form" id="{{ uid }}">{{ buyform }}{{ after }}</form
+  >{%- endif -%}
+
+  {%- for b in section.blocks -%}
+    {%- if b.type == '@app' -%}<div class="bproductdetail37__app">{% render b %}</div>{%- endif -%}
+  {%- endfor -%}
+
+  {%- if facts.size > 0 -%}
+  <div class="bproductdetail37__frame"
+    ><dl class="bproductdetail37__facts"
+      >{%- for b in facts -%}
+        <div class="bproductdetail37__fact" {{ b.shopify_attributes }}><dt class="bproductdetail37__lbl bproductdetail37__muted">{{ b.settings.label | escape }}</dt><dd{% if b.settings.accent %} class="bproductdetail37__acc"{% endif %}>{{ b.settings.value | escape }}</dd></div
+      >{%- endfor -%}
+    </dl
+  ></div
+  >{%- endif -%}
+
+  {%- if infos.size > 0 -%}
+  <div class="bproductdetail37__accs"
+    >{%- for block in infos -%}
+      <details class="bproductdetail37__dis"{% if forloop.index == s.open_index %} open{% endif %} {{ block.shopify_attributes }}
+        ><summary class="bproductdetail37__sum"
+          ><span class="bproductdetail37__st">{%- render 'blko-ui-icon', name: block.settings.icon, size: 16, stroke: 1.5, className: 'bproductdetail37__aic' -%}{{ block.settings.title | escape }}</span
+          >{%- render 'blko-ui-icon', name: 'plus', size: 16, className: 'bproductdetail37__pm' -%}
+        </summary
+        ><div class="bproductdetail37__abody"
+          >{%- if live and block.settings.description -%}{{ product.description }}{%- else -%}{{ block.settings.body }}{%- endif -%}
+        </div
+      ></details
+    >{%- endfor -%}
+  </div
+  >{%- endif -%}
+
+  {%- liquid
+    assign pair = recommendations.products.first | default: s.pair_product
+    assign pv = pair.selected_or_first_available_variant
+    assign p_cents = s.pair_price | times: 100 | round
+    assign p_url = pair.url | default: routes.all_products_collection_url
+    assign p_name = pair.title | default: s.pair_name
+    assign p_price = pv.price | default: p_cents
+    assign p_id = pv.id
+    assign p_ok = pv.available | default: true, allow_false: true
+    assign p_img = pair.featured_media
+    assign p_on = pair.id | default: p_on
+  -%}
+  <div class="bproductdetail37__pair" data-pair data-show="{{ s.show_pair }}" data-recs="{{ recs_url }}" data-auto="{{ s.pair_auto }}" data-on="{{ p_on }}"
+    ><p class="bproductdetail37__lbl bproductdetail37__muted">{{ s.pair_heading | escape }}</p
+    ><div class="bproductdetail37__pcard" data-pair-id="{{ p_id }}"
+      ><a href="{{ p_url }}" class="bproductdetail37__pimg" tabindex="-1" aria-hidden="true"
+        >{%- if p_img != blank -%}
+          {{ p_img.preview_image | image_url: width: 128 | image_tag: alt: '', loading: 'lazy', widths: '64, 128', sizes: '60px' -}}
+        {%- else -%}
+          {{ 'product-2' | placeholder_svg_tag: 'placeholder-svg' -}}
+        {%- endif -%}
+      </a
+      ><span class="bproductdetail37__pmeta"><a href="{{ p_url }}" class="bproductdetail37__pname">{{ p_name | escape }}</a><span class="bproductdetail37__pprice">{%- render 'blko-ui-money', amount: p_price, cents: true -%}</span></span
+      >{%- if p_ok -%}
+        <button type="button" class="bproductdetail37__padd" data-pair-add="{{ p_id }}" data-label="{{ 'blko.product_detail_37.pair_add' | t | escape }}" data-added="{{ 'blko.product_detail_37.pair_added' | t | escape }}" aria-label="{{ 'blko.product_detail_37.pair_label' | t: name: p_name | escape }}" aria-live="polite">{{ 'blko.product_detail_37.pair_add' | t }}</button
+      >{%- else -%}
+        <span class="bproductdetail37__padd bproductdetail37__muted">{{ 'blko.product_detail_37.sold_out' | t }}</span
+      >{%- endif -%}
+    </div
+  ></div
+></div
+>{%- endcapture -%}
+
+{%- capture body -%}
+<div class="bproductdetail37__grid" data-root data-live="{{ live }}" data-money="{{ money0 | escape }}" data-unit-word="{{ s.unit | escape }}" data-per="{{ 'blko.product_detail_37.per' | t: unit: '#' | escape }}"{% if live %} data-url="{{ product.url }}"{% endif %}
+  >{{ gallery -}}
+  {{ buy -}}
+</div
+><noscript><style>.bproductdetail37 .bproductdetail37__chips,.bproductdetail37 .bproductdetail37__vials{display:none}.bproductdetail37 .bproductdetail37__nojs{display:grid}</style></noscript
+>{%- endcapture -%}
+<div class="bproductdetail37{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-bproductdetail37
+  >{%- assign lbl = 'blko.product_detail_37.label' | t -%}
+  {%- render 'blko-ui-section', surface: 'bg', bleed: true, label: lbl, inner: 'bproductdetail37__in', children: body -%}
+  {%- comment -%} Sticky ATC bar: outside the section (its container query would trap position: fixed). {%- endcomment -%}
+  <div class="bproductdetail37__bar" role="region" aria-label="{{ 'blko.product_detail_37.bar' | t | escape }}" data-bar data-show="{{ s.sticky_bar }}" inert
+    ><div class="bproductdetail37__barin"
+      ><span class="bproductdetail37__bthumb" aria-hidden="true"
+        >{%- if bar_img != blank -%}
+          {{ bar_img | image_url: width: 88 | image_tag: alt: '', loading: 'lazy', widths: '44, 88', sizes: '44px' -}}
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' -}}
+        {%- endif -%}
+      </span
+      ><span class="bproductdetail37__bmeta"
+        ><span class="bproductdetail37__bname">{{ bar_name | escape }}</span
+        ><span class="bproductdetail37__lbl bproductdetail37__muted bproductdetail37__bvar" data-bar-var>{{ size_label | escape }}</span
+      ></span
+      ><span class="bproductdetail37__bprice" data-bar-price>{{ total }}</span
+      >{%- capture bl -%}<span data-bar-l>{{ bar_lbl }}</span>{%- endcapture -%}
+      {%- assign ba = 'data-bar-add' | append: bar_off -%}
+      {%- render 'blko-ui-button', type: 'button', children: bl, attrs: ba, className: 'bproductdetail37__badd' -%}
+    </div
+  ></div
+></div
+
+>
+
+{% schema %}
+{
+  "name": "Product detail 37",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "On a product page the title, photos, price, options, selling plans and cart are live. Elsewhere (and in the editor preview) the fields below fill in."
+    },
+    {
+      "type": "text",
+      "id": "blurb",
+      "label": "Short line",
+      "default": "Cold-pressed rosehip for skin that feels tight by evening.",
+      "info": "Connect it to a product metafield to vary it per product."
+    },
+    {
+      "type": "text",
+      "id": "note",
+      "label": "Note under the button",
+      "default": "Free shipping from $75. Returns within 30 days."
+    },
+    {
+      "type": "checkbox",
+      "id": "payment_button",
+      "label": "Show dynamic checkout buttons",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "open_index",
+      "label": "Disclosure open at first (0 = none)",
+      "min": 0,
+      "max": 6,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "type": "header",
+      "content": "Stock"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stock",
+      "label": "Show the stock line",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "low_stock",
+      "label": "Low stock at or under",
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "default": 5,
+      "info": "Only for variants whose inventory Shopify tracks."
+    },
+    {
+      "type": "header",
+      "content": "Pairs with"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pair",
+      "label": "Show the pairs-with card",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "pair_heading",
+      "label": "Label",
+      "default": "Pairs with"
+    },
+    {
+      "type": "checkbox",
+      "id": "pair_auto",
+      "label": "Use complementary product recommendations",
+      "default": true,
+      "info": "Set them in the Search & Discovery app. The product below shows when there are none."
+    },
+    {
+      "type": "product",
+      "id": "pair_product",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Sticky bar"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_bar",
+      "label": "Show a sticky add-to-bag bar after scroll",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Focus scale"
+    },
+    {
+      "type": "text",
+      "id": "distances",
+      "label": "Distances (comma separated)",
+      "default": "0.3, 0.5, 1.2",
+      "info": "One per photo; the last stop always reads ∞. Blank = numbers."
+    },
+    {
+      "type": "text",
+      "id": "distance_unit",
+      "label": "Distance unit",
+      "default": "m"
+    },
+    {
+      "type": "header",
+      "content": "Vials"
+    },
+    {
+      "type": "checkbox",
+      "id": "vials",
+      "label": "Draw the first option as vials",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "volume_field",
+      "label": "Volume (variant metafield)",
+      "default": "custom.volume_ml",
+      "info": "namespace.key, a number. Blank or missing = equal steps. A variant metafield custom.back_note shows under a sold-out vial."
+    },
+    {
+      "type": "header",
+      "content": "Purchase options"
+    },
+    {
+      "type": "text",
+      "id": "once_note",
+      "label": "One-time line",
+      "default": "Pay once, no account needed."
+    },
+    {
+      "type": "header",
+      "content": "Preview"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "Title",
+      "default": "Rosehip <em>face</em> oil"
+    },
+    {
+      "type": "text",
+      "id": "crumbs",
+      "label": "Breadcrumb (comma separated)",
+      "default": "Face, Oils"
+    },
+    {
+      "type": "number",
+      "id": "rating",
+      "label": "Rating",
+      "default": 4.8
+    },
+    {
+      "type": "number",
+      "id": "rating_count",
+      "label": "Review count",
+      "default": 214
+    },
+    {
+      "type": "text",
+      "id": "option_name",
+      "label": "Option name",
+      "default": "Size"
+    },
+    {
+      "type": "textarea",
+      "id": "sizes",
+      "label": "Preview options, one per line",
+      "info": "Name | amount | price | stock count or sold-out note",
+      "default": "15 ml | 15 | 32 | 3\n30 ml | 30 | 54\n50 ml | 50 | 78 | Back 14 Nov"
+    },
+    {
+      "type": "range",
+      "id": "size_index",
+      "label": "Selected option",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "text",
+      "id": "unit",
+      "label": "Unit for the unit price",
+      "default": "ml"
+    },
+    {
+      "type": "text",
+      "id": "plan_title",
+      "label": "Refill option (blank = none)",
+      "default": "Refill every 8 weeks"
+    },
+    {
+      "type": "text",
+      "id": "plan_note",
+      "label": "Refill line",
+      "default": "Save 10%. Skip or stop from your account."
+    },
+    {
+      "type": "range",
+      "id": "plan_off",
+      "label": "Refill saving",
+      "min": 0,
+      "max": 30,
+      "step": 5,
+      "unit": "%",
+      "default": 10
+    },
+    {
+      "type": "text",
+      "id": "pair_name",
+      "label": "Pairs-with name",
+      "default": "Squalane night serum"
+    },
+    {
+      "type": "number",
+      "id": "pair_price",
+      "label": "Pairs-with price",
+      "default": 38
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 48,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 112
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "photo",
+      "name": "Photo stop",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Names the focus stop of the product photo in the same position. In the preview the image fills in too."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Preview image"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Stop caption (one word)",
+          "default": "Bottle"
+        }
+      ]
+    },
+    {
+      "type": "fact",
+      "name": "Label fact",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Skin"
+        },
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Value",
+          "default": "Dry, tired"
+        },
+        {
+          "type": "checkbox",
+          "id": "accent",
+          "label": "Accent colour",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "info",
+      "name": "Disclosure",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "droplet",
+          "options": [
+            {
+              "value": "droplet",
+              "label": "Droplet"
+            },
+            {
+              "value": "droplets",
+              "label": "Droplets"
+            },
+            {
+              "value": "leaf",
+              "label": "Leaf"
+            },
+            {
+              "value": "sprout",
+              "label": "Sprout"
+            },
+            {
+              "value": "flower-2",
+              "label": "Flower"
+            },
+            {
+              "value": "flask-conical",
+              "label": "Flask"
+            },
+            {
+              "value": "hand-heart",
+              "label": "Hand"
+            },
+            {
+              "value": "sun",
+              "label": "Sun"
+            },
+            {
+              "value": "sparkles",
+              "label": "Sparkles"
+            },
+            {
+              "value": "shield-check",
+              "label": "Shield"
+            },
+            {
+              "value": "truck",
+              "label": "Truck"
+            },
+            {
+              "value": "package",
+              "label": "Package"
+            },
+            {
+              "value": "recycle",
+              "label": "Recycle"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "What it does"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Text",
+          "default": "<p>A light oil of cold-pressed rosehip and sea buckthorn that softens dry, tight skin by evening and sinks in within a minute.</p>"
+        },
+        {
+          "type": "checkbox",
+          "id": "description",
+          "label": "Use the product description (product pages)",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product detail 37",
+      "blocks": [
+        {
+          "type": "photo",
+          "settings": {
+            "caption": "Bottle"
+          }
+        },
+        {
+          "type": "photo",
+          "settings": {
+            "caption": "Drop"
+          }
+        },
+        {
+          "type": "photo",
+          "settings": {
+            "caption": "Fruit"
+          }
+        },
+        {
+          "type": "photo",
+          "settings": {
+            "caption": "Bench"
+          }
+        },
+        {
+          "type": "fact",
+          "settings": {
+            "label": "Skin",
+            "value": "Dry, tired"
+          }
+        },
+        {
+          "type": "fact",
+          "settings": {
+            "label": "Texture",
+            "value": "Light, sinks in a minute"
+          }
+        },
+        {
+          "type": "fact",
+          "settings": {
+            "label": "Scent",
+            "value": "None added"
+          }
+        },
+        {
+          "type": "fact",
+          "settings": {
+            "label": "Lot",
+            "value": "L-1102 · poured 02.11",
+            "accent": true
+          }
+        },
+        {
+          "type": "info",
+          "settings": {
+            "icon": "droplet",
+            "title": "What it does",
+            "body": "<p>A light oil of cold-pressed rosehip and sea buckthorn that softens dry, tight skin by evening and sinks in within a minute.</p>",
+            "description": true
+          }
+        },
+        {
+          "type": "info",
+          "settings": {
+            "icon": "hand-heart",
+            "title": "How to use",
+            "body": "<p>Warm three drops in your palms and press into clean skin, morning or night. Follow with cream if you like.</p>"
+          }
+        },
+        {
+          "type": "info",
+          "settings": {
+            "icon": "leaf",
+            "title": "Ingredients",
+            "body": "<p>Rosa canina seed oil, Hippophae rhamnoides fruit oil, tocopherol. 100% from plants, 92% organic.</p>"
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

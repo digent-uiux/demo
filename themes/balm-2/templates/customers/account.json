@@ -1,17 +1,75 @@
 {
   "sections": {
-    "main": {
-      "type": "blko-main-account",
+    "account-35": {
+      "type": "blko-account-35",
       "settings": {
-        "color_scheme": "scheme-1",
-        "padding_top": 80,
-        "padding_bottom": 80,
-        "heading": "Your account",
-        "layout": "center"
-      }
+        "tokens": "theme"
+      },
+      "blocks": {
+        "order-1": {
+          "type": "order",
+          "settings": {
+            "number": "BLM-2207",
+            "date": "Oct 28, 2026",
+            "status": "poured",
+            "lines": "Barrier Balm|50 ml|1|38\nHydrating Mist|100 ml|1|26"
+          }
+        },
+        "order-2": {
+          "type": "order",
+          "settings": {
+            "number": "BLM-2154",
+            "date": "Oct 9, 2026",
+            "status": "shipped",
+            "lines": "Rosehip Face Oil|30 ml|1|54"
+          }
+        },
+        "order-3": {
+          "type": "order",
+          "settings": {
+            "number": "BLM-1988",
+            "date": "Aug 22, 2026",
+            "status": "delivered",
+            "lines": "Oat Milk Cleanser|150 ml|1|32\nCream Cleansing Bar|110 g|2|18"
+          }
+        },
+        "order-4": {
+          "type": "order",
+          "settings": {
+            "number": "BLM-1801",
+            "date": "Jun 30, 2026",
+            "status": "delivered",
+            "lines": "Night Repair Cream|50 ml|1|62"
+          }
+        },
+        "address-5": {
+          "type": "address",
+          "settings": {
+            "label": "Home",
+            "name": "Clara Weiss",
+            "lines": "14 Orchard Row, Flat 2\nBristol BS1 5QT\nUnited Kingdom"
+          }
+        },
+        "address-6": {
+          "type": "address",
+          "settings": {
+            "label": "Studio",
+            "name": "Clara Weiss",
+            "lines": "The Print Works, Unit 9\nBath BA1 1NG\nUnited Kingdom"
+          }
+        }
+      },
+      "block_order": [
+        "order-1",
+        "order-2",
+        "order-3",
+        "order-4",
+        "address-5",
+        "address-6"
+      ]
     }
   },
   "order": [
-    "main"
+    "account-35"
   ]
 }

@@ -1,0 +1,323 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-2'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-image-with-text-36.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-image-with-text-36.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Image with text, balm: "the still-room cabinet, labelled". A tall photo plate bled off the left edge (8 of 12
+  columns), a paper jar label (double hairline frame) overlapping its right edge low down: small-caps eyebrow, the one
+  didone h2, text, and a ruled foot row (lot / filled / initials). Specimen tags (blocks) hang on the shelves at x/y %.
+  Scene (balm kit motion only): a three-depth scroll parallax. The script writes --p (0..1) on the band; CSS moves the
+  photo ±6% inside its plate, the tags ±20px and the label ±48px the other way. Static / reduced motion: --p unset = rest.
+  Phones (< 768px): the plate full width at 4:5, the label overlaps its foot, the tags become a numbered shelf key.
+{%- endcomment -%}
+{{ 'blko-balm-motion.css' | asset_url | stylesheet_tag -}}
+<script src="{{ 'blko-balm-motion.js' | asset_url }}" defer="defer"></script
+>{%- liquid
+  assign tag_count = 0
+  for b in section.blocks
+    if b.type == 'tag' and b.settings.title != blank
+      assign tag_count = tag_count | plus: 1
+    endif
+  endfor
+  assign has_foot = false
+  if s.lot != blank or s.filled != blank or s.initials != blank
+    assign has_foot = true
+  endif
+-%}
+{%- capture body -%}
+  <div class="bimagewithtext36__band" data-band data-parallax="{{ s.parallax }}"
+    ><div class="bimagewithtext36__plate"
+      ><div class="bimagewithtext36__move"
+        >{%- if s.image != blank -%}
+          {{ s.image | image_url: width: 1600 | image_tag: widths: '600, 800, 1200, 1600', sizes: '(min-width: 768px) 66vw, 100vw', loading: 'lazy', class: 'bimagewithtext36__img', alt: s.image.alt, style: s.focal -}}
+        {%- else -%}
+          {{ 'lifestyle-2' | placeholder_svg_tag: 'bimagewithtext36__img' -}}
+        {%- endif -%}
+      </div
+      ><div aria-hidden="true" class="bimagewithtext36__edge"></div
+    ></div
+    >{%- if tag_count > 0 -%}
+    <ol class="bimagewithtext36__tags" aria-label="{{ 'blko.image_with_text_36.tags' | t }}"
+      >{%- for b in section.blocks -%}
+        {%- if b.type == 'tag' and b.settings.title != blank -%}
+        <li class="bimagewithtext36__tag" style="--x: {{ b.settings.x }}%; --y: {{ b.settings.y }}%;" {{ b.shopify_attributes }}
+          ><span aria-hidden="true" class="bimagewithtext36__dot"></span
+          ><span aria-hidden="true" class="bimagewithtext36__leader"></span
+          ><span class="bimagewithtext36__cap bimagewithtext36__num">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span
+          ><span class="bimagewithtext36__chip"
+            ><span class="bimagewithtext36__cap">{{ b.settings.title | escape }}</span
+            >{%- if b.settings.line != blank -%}<span class="bimagewithtext36__small">{{ b.settings.line | escape }}</span>{%- endif -%}
+          </span
+        ></li
+        >{%- endif -%}
+      {%- endfor -%}
+    </ol
+    >{%- endif -%}
+    <div class="bimagewithtext36__label"
+      ><div class="bimagewithtext36__frame"
+        ><div class="bimagewithtext36__card"
+          >{%- if s.eyebrow != blank -%}<p class="bimagewithtext36__cap bimagewithtext36__eyebrow"><span aria-hidden="true"></span>{{ s.eyebrow | escape }}</p>{%- endif -%}
+          {%- if s.heading != blank -%}<h2 class="bimagewithtext36__h2">{{ s.heading }}</h2>{%- endif -%}
+          {%- if s.text != blank -%}<div class="bimagewithtext36__text">{{ s.text }}</div>{%- endif -%}
+          {%- if has_foot -%}
+          <dl class="bimagewithtext36__foot"
+            >{%- if s.lot != blank -%}<div><dt class="bimagewithtext36__cap">{{ s.lot_label | escape }}</dt><dd>{{ s.lot | escape }}</dd></div>{%- endif -%}
+            {%- if s.filled != blank -%}<div><dt class="bimagewithtext36__cap">{{ s.filled_label | escape }}</dt><dd>{{ s.filled | escape }}</dd></div>{%- endif -%}
+            {%- if s.initials != blank -%}<div><dt class="bimagewithtext36__cap">{{ s.initials_label | escape }}</dt><dd>{{ s.initials | escape }}</dd></div>{%- endif -%}
+          </dl
+          >{%- endif -%}
+        </div
+      ></div
+    ></div
+  ></div
+>{%- endcapture -%}
+<div class="bimagewithtext36{%- if blko_sid != 'scheme-2' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px"
+  >{%- render 'blko-ui-section', full: true, bleed: true, label: s.label, className: 'bimagewithtext36__section', inner: 'bimagewithtext36__inner', children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Labelled cabinet plate",
+  "tag": "div",
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Region label",
+      "default": "The still-room cabinet"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Photo"
+    },
+    {
+      "type": "select",
+      "id": "focal",
+      "label": "Photo focus",
+      "options": [
+        {
+          "value": "object-position:50% 35%",
+          "label": "Upper centre"
+        },
+        {
+          "value": "object-position:50% 62%",
+          "label": "Centre, a little low"
+        },
+        {
+          "value": "object-position:50% 80%",
+          "label": "Lower centre"
+        }
+      ],
+      "default": "object-position:50% 62%"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Label",
+      "default": "The still-room, shelf B"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Every jar, labelled <em>by hand</em>",
+      "info": "Italicise one word at most."
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>The season’s harvests wait here in amber and clear glass. Nothing goes on a shelf without a date, a farm and the initials of whoever filled it, and nothing leaves without being checked against that label.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Label foot"
+    },
+    {
+      "type": "text",
+      "id": "lot_label",
+      "label": "First label",
+      "default": "Lot"
+    },
+    {
+      "type": "text",
+      "id": "lot",
+      "label": "First value",
+      "default": "25-118",
+      "info": "Blank all three values to hide the foot row."
+    },
+    {
+      "type": "text",
+      "id": "filled_label",
+      "label": "Second label",
+      "default": "Filled"
+    },
+    {
+      "type": "text",
+      "id": "filled",
+      "label": "Second value",
+      "default": "14.10.25"
+    },
+    {
+      "type": "text",
+      "id": "initials_label",
+      "label": "Third label",
+      "default": "By"
+    },
+    {
+      "type": "text",
+      "id": "initials",
+      "label": "Third value",
+      "default": "I.W."
+    },
+    {
+      "type": "checkbox",
+      "id": "parallax",
+      "label": "Scroll parallax",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 112,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 112
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tag",
+      "name": "Specimen tag",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Calendula"
+        },
+        {
+          "type": "text",
+          "id": "line",
+          "label": "Line",
+          "default": "Hillside farm, 2025 harvest"
+        },
+        {
+          "type": "range",
+          "id": "x",
+          "label": "Across the photo (desktop)",
+          "min": 5,
+          "max": 95,
+          "step": 5,
+          "unit": "%",
+          "default": 30
+        },
+        {
+          "type": "range",
+          "id": "y",
+          "label": "Down the photo (desktop)",
+          "min": 5,
+          "max": 95,
+          "step": 5,
+          "unit": "%",
+          "default": 35
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Labelled cabinet plate",
+      "blocks": [
+        {
+          "type": "tag",
+          "settings": {
+            "title": "Calendula",
+            "line": "Hillside farm, 2025 harvest",
+            "x": 30,
+            "y": 35
+          }
+        },
+        {
+          "type": "tag",
+          "settings": {
+            "title": "Colloidal oat",
+            "line": "Milled every month, never stored",
+            "x": 60,
+            "y": 55
+          }
+        },
+        {
+          "type": "tag",
+          "settings": {
+            "title": "Returned jars",
+            "line": "Washed, dried, refilled",
+            "x": 35,
+            "y": 75
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

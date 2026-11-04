@@ -1,0 +1,346 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-9'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-contact-36.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-contact-36.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Contact, balm: left, a small-caps label, an h2 and three numbered notes (blocks) on hairlines; right, one sheet of
+  ruled writing paper with a framed stamp photo: today's date, "Dear Balm," then one sentence whose blanks are the
+  real contact fields (contact[name], contact[email], contact[topic]), the letter on ruled lines (contact[body]) with a
+  live word count, and an optional sign-off. {% form 'contact' %} posts to Shopify; the JS checks each blank first and
+  lists what is missing (links focus the blank), then shows "Sealing…" while it posts. After a successful post the
+  sheet shows the sealed note (wax seal, name / topic / email remembered for the session). Server errors list too.
+{%- endcomment -%}
+{{ 'blko-balm-motion.css' | asset_url | stylesheet_tag -}}
+<script src="{{ 'blko-balm-motion.js' | asset_url }}" defer="defer"></script
+>{%- liquid
+  assign fid = 'ct36-' | append: section.id
+  assign topics = s.topics | split: ','
+-%}
+{%- capture body -%}
+  <div class="bcontact36__side"
+    >{%- if s.eyebrow != blank -%}<p class="bcontact36__cap bcontact36__eyebrow"><span aria-hidden="true"></span>{{ s.eyebrow | escape }}</p>{%- endif -%}
+    <h2 class="bcontact36__h2">{{ s.heading | escape }}</h2
+    >{%- if section.blocks.size > 0 -%}
+    <ol class="bcontact36__notes"
+      >{%- for b in section.blocks -%}
+      <li class="bcontact36__note" {{ b.shopify_attributes }}
+        ><span class="bcontact36__cap bcontact36__acc">{{ 'blko.contact_36.no' | t }} {% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span
+        ><div class="bcontact36__notebody"
+          ><p class="bcontact36__nt">{{ b.settings.title | escape }}</p
+          >{%- if b.settings.text != blank -%}<p class="bcontact36__nd">{{ b.settings.text | escape }}</p>{%- endif -%}
+        </div
+      ></li
+      >{%- endfor -%}
+    </ol
+    >{%- endif -%}
+  </div
+  ><div class="bcontact36__sheet"
+    ><figure class="bcontact36__stamp"
+      ><div class="bcontact36__frame"><div class="bcontact36__frame2"
+        >{%- if s.stamp != blank -%}
+          {{ s.stamp | image_url: width: 200 | image_tag: widths: '100, 160, 200', sizes: '80px', loading: 'lazy', class: 'bcontact36__simg', alt: s.stamp.alt -}}
+        {%- else -%}
+          {{ 'image' | placeholder_svg_tag: 'bcontact36__simg' -}}
+        {%- endif -%}
+      </div></div
+      >{%- if s.stamp_caption != blank -%}<figcaption class="bcontact36__scap">{{ s.stamp_caption | escape }}</figcaption>{%- endif -%}
+    </figure
+    >{%- form 'contact', id: fid, class: 'bcontact36__form', novalidate: 'novalidate' -%}
+      {%- if form.posted_successfully? -%}
+        <div role="status" class="bcontact36__sealed" data-sealed data-named="{{ 'blko.contact_36.sealed_named' | t }}" data-full="{{ 'blko.contact_36.sealed_text_full' | t }}"
+          ><span aria-hidden="true" class="bcontact36__seal">{{ s.seal_letter | escape }}</span
+          ><p tabindex="-1" class="bcontact36__sealed-h" data-sealed-h>{{ 'blko.contact_36.sealed' | t }}</p
+          ><p class="bcontact36__sealed-p" data-sealed-p>{{ 'blko.contact_36.sealed_text' | t }}</p
+          ><a href="{{ request.path | default: routes.root_url }}" class="bcontact36__again">{{ 'blko.contact_36.again' | t }}</a
+        ></div
+      >{%- else -%}
+        <p class="bcontact36__cap bcontact36__muted bcontact36__date" data-date></p
+        ><p class="bcontact36__dear">{{ s.salutation | escape }}</p
+        ><p class="bcontact36__sentence"
+          ><label for="{{ fid }}-name">{{ s.name_words | escape }}</label
+          ><input id="{{ fid }}-name" name="contact[name]" autocomplete="name" placeholder="{{ 'blko.contact_36.name_ph' | t }}" aria-required="true" class="bcontact36__blank bcontact36__w-name" data-f="name" data-err="{{ 'blko.contact_36.err_name' | t }}"
+          ><label for="{{ fid }}-email">{{ s.email_words | escape }}</label
+          ><input id="{{ fid }}-email" type="email" inputmode="email" name="contact[email]" autocomplete="email" placeholder="{{ 'blko.contact_36.email_ph' | t }}" aria-required="true" class="bcontact36__blank bcontact36__w-email" data-f="email" data-err="{{ 'blko.contact_36.err_email' | t }}">.
+          {%- if topics.size > 0 %}<label for="{{ fid }}-topic">{{ s.topic_words | escape }}</label
+          ><select id="{{ fid }}-topic" name="contact[topic]" aria-required="true" class="bcontact36__blank bcontact36__w-topic is-empty" data-f="topic" data-err="{{ 'blko.contact_36.err_topic' | t }}"
+            ><option value="">{{ 'blko.contact_36.choose' | t }}</option
+            >{%- for t in topics -%}{%- assign t2 = t | strip -%}<option value="{{ t2 | escape }}">{{ t2 | escape }}</option>{%- endfor -%}
+          </select>.{% endif -%}
+        </p
+        ><div class="bcontact36__msg"
+          ><div class="bcontact36__msghead"
+            ><label for="{{ fid }}-message" class="bcontact36__cap bcontact36__muted">{{ 'blko.contact_36.letter' | t }}</label
+            ><span aria-hidden="true" class="bcontact36__cap bcontact36__muted" data-words data-one="{{ 'blko.contact_36.word' | t }}" data-many="{{ 'blko.contact_36.words' | t }}">0 {{ 'blko.contact_36.words' | t }}</span
+          ></div
+          ><textarea id="{{ fid }}-message" name="contact[body]" rows="6" placeholder="{{ s.letter_placeholder | escape }}" aria-required="true" class="bcontact36__ruled" data-f="message" data-min="{{ s.min_words }}" data-err="{{ 'blko.contact_36.err_message' | t: count: s.min_words }}"></textarea
+        ></div
+        >{%- if s.signoff != blank -%}
+        <p class="bcontact36__signoff"
+          ><label for="{{ fid }}-sign">{{ s.signoff | escape }}</label
+          ><input id="{{ fid }}-sign" name="contact[signed]" placeholder="{{ 'blko.contact_36.sign_ph' | t }}" class="bcontact36__blank bcontact36__w-sign"
+        ></p
+        >{%- endif -%}
+        <div aria-live="polite" class="bcontact36__live" data-live
+          >{%- if form.errors -%}
+          <div role="alert" class="bcontact36__errs"
+            ><p class="bcontact36__cap bcontact36__errtext">{{ 'blko.contact_36.server_error' | t }}</p
+            ><div class="bcontact36__errlist">{{ form.errors | default_errors }}</div
+          ></div
+          >{%- endif -%}
+        </div
+        ><template data-errtpl hidden><div role="alert" class="bcontact36__errs"><p class="bcontact36__cap bcontact36__errtext" data-errhead data-one="{{ 'blko.contact_36.one_blank' | t }}" data-many="{{ 'blko.contact_36.n_blanks' | t }}"></p><ul class="bcontact36__errlist" data-errlist></ul></div></template
+        ><div class="bcontact36__send"
+          >{%- capture lbl -%}<span data-label data-busy="{{ 'blko.contact_36.sealing' | t }}">{{ s.button | escape }}</span>{%- endcapture -%}
+          {%- render 'blko-ui-button', type: 'submit', size: 'lg', children: lbl -%}
+          {%- if s.reply_note != blank -%}<p class="bcontact36__reply">{{ s.reply_note | escape }}</p>{%- endif -%}
+        </div
+      >{%- endif -%}
+    {%- endform -%}
+  </div
+>{%- endcapture -%}
+<div class="bcontact36{%- if blko_sid != 'scheme-9' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px"
+  >{%- render 'blko-ui-section', surface: s.surface, bleed: true, label: s.label, className: 'bcontact36__section', inner: 'bcontact36__inner', children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Contact, written letter",
+  "tag": "div",
+  "max_blocks": 5,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Side"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Region label",
+      "default": "Write to us"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Label",
+      "default": "Correspondence"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Every letter is answered by hand"
+    },
+    {
+      "type": "header",
+      "content": "Letter"
+    },
+    {
+      "type": "image_picker",
+      "id": "stamp",
+      "label": "Stamp photo"
+    },
+    {
+      "type": "text",
+      "id": "stamp_caption",
+      "label": "Stamp caption",
+      "default": "Hudson · NY"
+    },
+    {
+      "type": "text",
+      "id": "salutation",
+      "label": "Salutation",
+      "default": "Dear Balm,"
+    },
+    {
+      "type": "text",
+      "id": "name_words",
+      "label": "Words before the name",
+      "default": "My name is"
+    },
+    {
+      "type": "text",
+      "id": "email_words",
+      "label": "Words before the email",
+      "default": "and you can write back to me at"
+    },
+    {
+      "type": "text",
+      "id": "topic_words",
+      "label": "Words before the topic",
+      "default": "I'm writing about"
+    },
+    {
+      "type": "text",
+      "id": "topics",
+      "label": "Topics",
+      "default": "my skin routine, an order, an ingredient, a gift, something else",
+      "info": "Comma separated. Blank hides the topic."
+    },
+    {
+      "type": "text",
+      "id": "letter_placeholder",
+      "label": "Letter placeholder",
+      "default": "Tell us about your skin, the product, or the order number…"
+    },
+    {
+      "type": "range",
+      "id": "min_words",
+      "label": "Fewest words",
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "text",
+      "id": "signoff",
+      "label": "Sign-off",
+      "default": "With thanks,"
+    },
+    {
+      "type": "text",
+      "id": "button",
+      "label": "Button",
+      "default": "Send the letter"
+    },
+    {
+      "type": "text",
+      "id": "reply_note",
+      "label": "Reply note",
+      "default": "Replies within one working day, Monday to Saturday."
+    },
+    {
+      "type": "text",
+      "id": "seal_letter",
+      "label": "Wax seal letter",
+      "default": "B"
+    },
+    {
+      "type": "select",
+      "id": "surface",
+      "label": "Colour",
+      "options": [
+        {
+          "value": "bg",
+          "label": "Background"
+        },
+        {
+          "value": "alt",
+          "label": "Alternate"
+        }
+      ],
+      "default": "bg"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-9"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128
+    }
+  ],
+  "blocks": [
+    {
+      "type": "note",
+      "name": "Note",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Read at the bench"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Margot or Iris opens every letter. No scripts, no ticket numbers."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact, written letter",
+      "blocks": [
+        {
+          "type": "note",
+          "settings": {
+            "title": "Read at the bench",
+            "text": "Margot or Iris opens every letter. No scripts, no ticket numbers."
+          }
+        },
+        {
+          "type": "note",
+          "settings": {
+            "title": "Answered within a working day",
+            "text": "Monday to Saturday, from a person who signs with a name."
+          }
+        },
+        {
+          "type": "note",
+          "settings": {
+            "title": "Kept between us",
+            "text": "We never add you to a mailing list from here."
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

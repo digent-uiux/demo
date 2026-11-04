@@ -1,0 +1,26 @@
+{
+  "blko": {
+    "article_31": {
+      "add": "Add",
+      "add_aria": "Add [name] to your bag",
+      "added": "[n] added.",
+      "by": "By {{ name }}",
+      "comment_body": "Your note",
+      "comment_email": "Email",
+      "comment_moderated": "Thank you. Your comment will show once it's approved.",
+      "comment_name": "Name",
+      "comment_posted": "Thank you. Your comment is posted.",
+      "comment_submit": "Post comment",
+      "comments": "Comments",
+      "crumb": "Breadcrumb",
+      "fig": "Fig. 1 ·",
+      "filed": "Filed under",
+      "in_bag": "In your bag",
+      "min_read": "[n] min read",
+      "no": "No.",
+      "remove_aria": "Remove [name] from your bag",
+      "sold_out": "Sold out",
+      "story": "In this story"
+    }
+  }
+}

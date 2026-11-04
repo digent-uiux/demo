@@ -1,0 +1,375 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-9'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-faq-37.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-faq-37.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  FAQ, balm: left four columns (sticky from 896px): a small-caps label, an h2 ("Four chapters, 11 answers": counts
+  from the blocks), the chapters as a ruled contents list (No., title, count; the chapter in view gets the amber rule
+  and an italic title), and a small square photo with a caption. Right seven columns: the chapters, each a number, a
+  didone h3 and a ruled accordion (one answer open per chapter). Blocks: Chapter, then its Questions (questions before the first chapter are not shown). Every question has
+  a stable anchor #balm-faq-<handle> (data-faq-q for page-header-09's search); a hash or hashchange opens that answer.
+{%- endcomment -%}
+{{ 'blko-balm-motion.css' | asset_url | stylesheet_tag -}}
+<script src="{{ 'blko-balm-motion.js' | asset_url }}" defer="defer"></script
+>{%- liquid
+  assign total = 0
+  assign nch = 0
+  for b in section.blocks
+    if b.type == 'question'
+      assign total = total | plus: 1
+    else
+      assign nch = nch | plus: 1
+    endif
+  endfor
+  assign words = 'blko.faq_37.numbers' | t | split: ','
+  assign nch_w = words[nch] | default: nch
+  assign hid = 'faq37-' | append: section.id
+-%}
+{%- capture body -%}
+  <aside class="bfaq37__aside"
+    >{%- if s.eyebrow != blank -%}<p class="bfaq37__cap bfaq37__eyebrow"><span aria-hidden="true"></span>{{ s.eyebrow | escape }}</p>{%- endif -%}
+    <h2 class="bfaq37__h2">{{ s.heading | replace: '[chapters]', nch_w | replace: '[answers]', total | escape }}</h2
+    ><nav aria-label="{{ 'blko.faq_37.chapters' | t }}" class="bfaq37__toc"
+      ><ol
+        >{%- assign ci = 0 -%}
+        {%- for b in section.blocks -%}
+          {%- if b.type == 'chapter' -%}
+            {%- assign ci = ci | plus: 1 -%}
+            {%- assign c = 0 -%}
+            {%- for x in section.blocks offset: forloop.index -%}{%- if x.type == 'chapter' -%}{%- break -%}{%- endif -%}{%- assign c = c | plus: 1 -%}{%- endfor -%}
+            <li><a href="#{{ hid }}-{{ ci }}" class="bfaq37__tocl{% if ci == 1 %} is-on{% endif %}"{% if ci == 1 %} aria-current="true"{% endif %} data-toc="{{ ci }}"><span aria-hidden="true" class="bfaq37__mark"></span><span class="bfaq37__cap bfaq37__tn">{% if ci < 10 %}0{% endif %}{{ ci }}</span><span class="bfaq37__tt">{{ b.settings.title | escape }}</span><span class="bfaq37__cap bfaq37__tc">{{ c }}</span></a></li
+          >{%- endif -%}
+        {%- endfor -%}
+      </ol
+    ></nav
+    >{%- if s.show_figure -%}
+    <figure class="bfaq37__fig"
+      ><div class="bfaq37__thumb"
+        >{%- if s.image != blank -%}
+          {{ s.image | image_url: width: 300 | image_tag: widths: '100, 200, 300', sizes: '88px', loading: 'lazy', class: 'bfaq37__img', alt: s.image.alt -}}
+        {%- else -%}
+          {{ 'image' | placeholder_svg_tag: 'bfaq37__img' -}}
+        {%- endif -%}
+      </div
+      ><figcaption
+        ><span class="bfaq37__cap bfaq37__muted">{{ s.fig_label | escape }}</span
+        ><span class="bfaq37__figtext">{{ s.fig_text | escape }}</span
+      ></figcaption
+    ></figure
+    >{%- endif -%}
+  </aside
+  ><div class="bfaq37__main"
+    >{%- assign ci = 0 -%}
+    {%- for b in section.blocks -%}
+      {%- if b.type == 'chapter' -%}
+        {%- assign ci = ci | plus: 1 -%}
+        <section id="{{ hid }}-{{ ci }}" data-chapter="{{ ci }}" aria-labelledby="{{ hid }}-{{ ci }}-h" class="bfaq37__chap" {{ b.shopify_attributes }}
+          ><div class="bfaq37__chead"
+            ><span class="bfaq37__cap bfaq37__acc">{{ 'blko.faq_37.no' | t }} {% if ci < 10 %}0{% endif %}{{ ci }}</span
+            ><h3 id="{{ hid }}-{{ ci }}-h" class="bfaq37__h3">{{ b.settings.title | escape }}</h3
+          ></div
+          ><ul class="bfaq37__list"
+            >{%- for x in section.blocks offset: forloop.index -%}
+              {%- if x.type == 'chapter' -%}{%- break -%}{%- endif -%}
+              {%- liquid
+                assign on = false
+                if ci == 1 and forloop.first and s.first_open
+                  assign on = true
+                endif
+                assign aid = x.settings.question | handleize | slice: 0, 48
+                assign pid = hid | append: '-a-' | append: x.id
+              -%}
+              <li id="balm-faq-{{ aid }}" data-faq-q="{{ x.settings.question | escape }}" data-faq-ch="{% if ci < 10 %}0{% endif %}{{ ci }}" class="bfaq37__item" {{ x.shopify_attributes }}><h4
+                 class="bfaq37__h4"><button type="button" aria-expanded="{{ on }}" aria-controls="{{ pid }}" class="bfaq37__qbtn" data-q><span>{{ x.settings.question | escape }}</span>{%- render 'blko-ui-icon', name: 'plus', size: 20, stroke: 1.25, className: 'bfaq37__plus' -%}</button></h4
+                ><div id="{{ pid }}" role="region" aria-label="{{ x.settings.question | escape }}" class="bfaq37__ans"{% unless on %} hidden{% endunless %}>{{ x.settings.answer }}</div
+              ></li
+            >{%- endfor -%}
+          </ul
+        ></section
+      >{%- endif -%}
+    {%- endfor -%}
+  </div
+>{%- endcapture -%}
+<div class="bfaq37{%- if blko_sid != 'scheme-9' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px"
+  >{%- render 'blko-ui-section', surface: s.surface, bleed: true, label: s.label, className: 'bfaq37__section', inner: 'bfaq37__inner', children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "FAQ, chapters",
+  "tag": "div",
+  "max_blocks": 50,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Region label",
+      "default": "Frequently asked questions"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Label",
+      "default": "Contents"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "[chapters] chapters, [answers] answers",
+      "info": "[chapters] and [answers] are counted from the blocks."
+    },
+    {
+      "type": "checkbox",
+      "id": "first_open",
+      "label": "First answer starts open",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_figure",
+      "label": "Show photo note",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Photo"
+    },
+    {
+      "type": "text",
+      "id": "fig_label",
+      "label": "Photo label",
+      "default": "Fig. I · An opened jar"
+    },
+    {
+      "type": "text",
+      "id": "fig_text",
+      "label": "Photo note",
+      "default": "Opened and not for you? Returns are free for 30 days, even half used."
+    },
+    {
+      "type": "select",
+      "id": "surface",
+      "label": "Colour",
+      "options": [
+        {
+          "value": "bg",
+          "label": "Background"
+        },
+        {
+          "value": "alt",
+          "label": "Alternate"
+        }
+      ],
+      "default": "bg"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-9"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 112,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 112
+    }
+  ],
+  "blocks": [
+    {
+      "type": "chapter",
+      "name": "Chapter",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Your skin type"
+        }
+      ]
+    },
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "How do I know which skin type I am?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Wash with a gentle cleanser, pat dry and wait an hour without applying anything.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ, chapters",
+      "blocks": [
+        {
+          "type": "chapter",
+          "settings": {
+            "title": "Your skin type"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "How do I know which skin type I am?",
+            "answer": "<p>Wash with a gentle cleanser, pat dry and wait an hour without applying anything. Tight all over means dry, shine on the nose and forehead only means combination, shine everywhere means oily. If it stings or reddens easily, read our sensitive range first, whatever your type.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Is the face oil too rich for oily skin?",
+            "answer": "<p>Not usually. Rosehip and squalane sit close to the skin's own sebum, so oily skin often makes less once it stops being stripped. Start with two drops at night only.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "My skin changes with the seasons. Do I need two routines?",
+            "answer": "<p>Keep the cleanser and serum all year and swap only the last step: the whipped cream from spring to autumn, the balm when the heating comes on.</p>"
+          }
+        },
+        {
+          "type": "chapter",
+          "settings": {
+            "title": "Actives, in plain words"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Can I use bakuchiol and vitamin C together?",
+            "answer": "<p>Yes. Bakuchiol is gentle enough to share a routine with vitamin C, though we still suggest vitamin C in the morning and bakuchiol at night so each has its own time to work.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Why don't you use synthetic retinol?",
+            "answer": "<p>We formulate with bakuchiol and rosehip oil, which smooth texture without the dryness many people get from retinol. If you already use a prescription retinoid, keep it and skip our bakuchiol serum.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Are your essential oils safe for sensitive skin?",
+            "answer": "<p>The face range is fragrance-free. Only the body balms carry essential oils, under 0.5%, and every one is named on the label.</p>"
+          }
+        },
+        {
+          "type": "chapter",
+          "settings": {
+            "title": "Opened jars & returns"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Can I return a jar I've already opened?",
+            "answer": "<p>Yes, within 30 days, even half used. If something doesn't agree with your skin, send it back and we refund in full or swap it for a different formula.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "How long does a jar keep once it's open?",
+            "answer": "<p>Look for the small open-jar symbol on the base: 6M means six months, 12M a year. Our balms hold no water, so they keep their full 12 months with clean, dry fingers or the spatula.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "What happens to the products you get back?",
+            "answer": "<p>Unopened returns go back to stock. Opened ones can't be resold, so they are emptied and the glass and tins are cleaned and recycled.</p>"
+          }
+        },
+        {
+          "type": "chapter",
+          "settings": {
+            "title": "Orders & delivery"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "When will my order arrive?",
+            "answer": "<p>Orders placed before 1 pm leave the same working day. Standard delivery takes 2–4 days and is free from $75; next-day delivery is $9.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Is the packaging plastic-free?",
+            "answer": "<p>The jars are glass or aluminium, the lids are aluminium and the box is recycled card held with paper tape. The only plastic is the pump on the cleanser, which you can send back to us.</p>"
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

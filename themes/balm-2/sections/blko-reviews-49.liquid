@@ -1,0 +1,454 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-reviews-49.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-reviews-49.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Balm "notes by skin": the product's reviews kept like batch notes. Head: eyebrow ([product] = the title), the h2 (its
+  <em> words in the light body face), a lead. A hairline, then square skin chips with their note counts (one chip per
+  skin type found in the review blocks, plus All). Left (sticky from 768px): the reading for the chosen skin, a big
+  display average beside "out of 5", stars, the count, a five-to-one breakdown on hairlines (the leading row in the
+  accent) and Write a review. Right: the notes, each with a stamp column (accent lot code, weeks of use, skin), stars,
+  title, text, an optional customer photo and name · verified · date; Show more + "N of M notes".
+  Live: All reads the product's reviews metafields (reviews.rating / reviews.rating_count, filled by review apps) and
+  then hides the preview bars. A review app block (@app) takes the list (the chips hide); the reading stays.
+  The chips filter the review blocks and recompute the reading from them (script.js). Motion (balm kit on only): a pick
+  racks focus: the average pulls sharp and the notes blur in one after another. Static = the final frame.
+{%- endcomment -%}
+{%- liquid
+  assign uid = 'rv49-' | append: section.id
+  assign apps = section.blocks | where: 'type', '@app'
+  assign revs = section.blocks | where: 'type', 'review'
+  assign live = false
+  assign avg = s.average
+  assign count = s.count
+  if product != blank and product.metafields.reviews.rating.value != blank
+    assign live = true
+    assign avg = product.metafields.reviews.rating.value.rating | times: 1.0
+    assign count = product.metafields.reviews.rating_count.value | default: 0
+  endif
+  assign pname = product.title | default: s.product_name
+  assign eyebrow = s.eyebrow | replace: '[product]', pname
+  assign avg_s = avg | round: 1 | append: ''
+  unless avg_s contains '.'
+    assign avg_s = avg_s | append: '.0'
+  endunless
+  assign bars = s.bars | split: ','
+  assign bar_total = 0
+  assign bar_top = 0
+  for b in bars
+    assign n = b | strip | plus: 0
+    assign bar_total = bar_total | plus: n
+    if n > bar_top
+      assign bar_top = n
+    endif
+  endfor
+  assign skins = '|'
+  for b in revs
+    assign k = b.settings.skin | strip
+    assign key = '|' | append: k | append: '|'
+    if k != blank
+      unless skins contains key
+        assign skins = skins | append: k | append: '|'
+      endunless
+    endif
+  endfor
+  assign skins = skins | remove_first: '|' | split: '|'
+  assign write = s.write_link
+  if write == blank and apps.size > 0
+    assign write = '#' | append: uid | append: '-app'
+  endif
+  if write == blank and live == false
+    assign write = '#' | append: uid | append: '-sum'
+  endif
+  assign t_reviews = 'blko.reviews_49.reviews' | t
+  assign t_all = 'blko.reviews_49.all_skin' | t
+  assign first = revs.size
+  if first > s.shown
+    assign first = s.shown
+  endif
+-%}
+{%- capture body -%}
+  <div class="breviews49__head"
+    >{%- if eyebrow != blank -%}<p class="breviews49__cap breviews49__muted breviews49__eyebrow"><span aria-hidden="true"></span>{{ eyebrow | escape }}</p>{%- endif -%}
+    {%- if s.heading != blank -%}<h2 class="breviews49__h">{{ s.heading }}</h2>{%- endif -%}
+  </div
+  >{%- if s.lead != blank -%}<p class="breviews49__lead">{{ s.lead | escape }}</p>{%- endif -%}
+  {%- if apps.size == 0 and skins.size > 0 -%}
+    <div class="breviews49__chips"
+      ><span class="breviews49__cap breviews49__muted breviews49__your">{{ 'blko.reviews_49.your_skin' | t }}</span
+      ><div class="breviews49__chiprow" role="radiogroup" aria-label="{{ 'blko.reviews_49.filter' | t | escape }}"
+        ><button type="button" role="radio" aria-checked="true" class="breviews49__chip" data-skin="" data-reading="{{ 'blko.reviews_49.all_reading' | t | escape }}">{{ t_all }}<span>{{ revs.size }}</span></button
+        >{%- for k in skins -%}
+          {%- assign n = 0 -%}
+          {%- for b in revs -%}{%- assign bk = b.settings.skin | strip -%}{%- if bk == k -%}{%- assign n = n | plus: 1 -%}{%- endif -%}{%- endfor -%}
+          <button type="button" role="radio" aria-checked="false" class="breviews49__chip" data-skin="{{ k | handleize }}" data-reading="{{ 'blko.reviews_49.skin_reading' | t: skin: k | downcase | escape }}">{{ k | escape }}<span>{{ n }}</span></button
+        >{%- endfor -%}
+      </div
+    ></div
+  >{%- endif -%}
+  <div class="breviews49__sum" id="{{ uid }}-sum" data-sum data-avg="{{ avg_s }}" data-count="{{ count }}" data-bars="{{ s.bars | escape }}" data-t-reviews="{{ t_reviews | escape }}" data-t-note="{{ 'blko.reviews_49.note' | t | escape }}" data-t-notes="{{ 'blko.reviews_49.notes' | t | escape }}" aria-live="polite"
+    ><span class="breviews49__cap breviews49__muted" data-label>{{ 'blko.reviews_49.all_reading' | t }}</span
+    ><p class="breviews49__score"><span class="breviews49__num" data-pull data-avg-out>{{ avg_s }}</span><span class="breviews49__of">{{ 'blko.reviews_49.out_of' | t }}</span></p
+    ><div class="breviews49__stars"
+      ><span data-stars>{%- render 'blko-ui-stars', value: avg, size: 'sm' -%}</span
+      ><span class="breviews49__cap breviews49__muted" data-count-out>{% render 'blko-ui-number', value: count %} {{ t_reviews }}</span
+    ></div
+    >{%- if live == false and bar_total > 0 -%}
+      <ul class="breviews49__bars" aria-label="{{ 'blko.reviews_49.breakdown' | t | escape }}"
+        >{%- for b in bars limit: 5 -%}
+          {%- assign n = b | strip | plus: 0 -%}
+          {%- assign w = n | times: 100.0 | divided_by: bar_total -%}
+          <li class="breviews49__cap breviews49__bar"><span>{{ 6 | minus: forloop.index }} ★<span class="blko-ui-sr-only"> {{ 'blko.reviews_49.stars' | t }}</span></span><span class="breviews49__track"><span data-bar{% if n == bar_top %} class="is-top"{% endif %} style="width: {{ w }}%"></span></span><span class="breviews49__n" data-bar-n>{{ n }}</span></li
+        >{%- endfor -%}
+      </ul
+    >{%- endif -%}
+    {%- if write != blank -%}
+      {%- assign wl = 'blko.reviews_49.write' | t -%}
+      {%- render 'blko-ui-button', variant: 'outline', href: write, children: wl -%}
+    {%- endif -%}
+  </div
+  ><div class="breviews49__list"
+    >{%- if apps.size > 0 -%}
+      <div id="{{ uid }}-app" class="breviews49__app">{%- for b in apps -%}{%- render b -%}{%- endfor -%}</div
+    >{%- else -%}
+      <ol class="breviews49__notes" data-shown="{{ s.shown }}"
+        >{%- for b in revs -%}
+          {%- assign hide = false -%}{%- if forloop.index > s.shown -%}{%- assign hide = true -%}{%- endif -%}
+          {%- render 'blko-reviews-49-note', b: b, i: forloop.index0, hide: hide -%}
+        {%- endfor -%}
+      </ol
+      ><div class="breviews49__more-row"
+        >{%- if revs.size > s.shown -%}
+          {%- assign ml = 'blko.reviews_49.more' | t -%}
+          {%- render 'blko-ui-button', variant: 'outline', children: ml, attrs: 'data-more', className: 'breviews49__more' -%}
+        {%- endif -%}
+        <span class="breviews49__cap breviews49__muted" data-of data-t="{{ 'blko.reviews_49.of' | t: x: '[x]', y: '[y]' | escape }}">{{ 'blko.reviews_49.of' | t: x: first, y: revs.size }}</span
+      ></div
+    >{%- endif -%}
+  </div
+>{%- endcapture -%}
+<div class="breviews49{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-breviews49
+  >{%- assign lbl = 'blko.reviews_49.label' | t -%}
+  {%- render 'blko-ui-section', surface: 'bg', label: lbl, inner: 'breviews49__in', children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Reviews 49",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Reviews · [product]",
+      "info": "[product] = the product title"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Notes, <em>by skin</em>",
+      "info": "Italic words are set light in the body face."
+    },
+    {
+      "type": "text",
+      "id": "lead",
+      "label": "Lead",
+      "default": "Every note is filed with the lot it came from and how long it has been used. Pick your skin to read the notes closest to yours."
+    },
+    {
+      "type": "url",
+      "id": "write_link",
+      "label": "Write a review link",
+      "info": "Empty: links to the review app block when there is one"
+    },
+    {
+      "type": "range",
+      "id": "shown",
+      "label": "Notes before Show more",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Preview (no live ratings)"
+    },
+    {
+      "type": "text",
+      "id": "product_name",
+      "label": "Product name",
+      "default": "Rosehip Face Oil"
+    },
+    {
+      "type": "number",
+      "id": "average",
+      "label": "Average",
+      "default": 4.8
+    },
+    {
+      "type": "number",
+      "id": "count",
+      "label": "Review count",
+      "default": 214
+    },
+    {
+      "type": "text",
+      "id": "bars",
+      "label": "Reviews per star, 5 to 1",
+      "default": "176, 28, 6, 3, 1"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "range",
+          "id": "stars",
+          "label": "Stars",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Finally no tight skin"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Text",
+          "default": "Three drops at night and my cheeks stay soft until morning. It sinks in fast and smells of nothing."
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Hannah L."
+        },
+        {
+          "type": "text",
+          "id": "skin",
+          "label": "Skin type",
+          "default": "Dry",
+          "info": "One word, e.g. Dry. Each skin type becomes a filter chip."
+        },
+        {
+          "type": "text",
+          "id": "lot",
+          "label": "Lot",
+          "default": "L-0921"
+        },
+        {
+          "type": "text",
+          "id": "used",
+          "label": "Time used",
+          "default": "Week 6"
+        },
+        {
+          "type": "text",
+          "id": "date",
+          "label": "Date",
+          "default": "Oct 18, 2026"
+        },
+        {
+          "type": "checkbox",
+          "id": "verified",
+          "label": "Verified buyer",
+          "default": true
+        },
+        {
+          "type": "image_picker",
+          "id": "photo",
+          "label": "Customer photo"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Reviews 49",
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "stars": 5,
+            "title": "Finally no tight skin",
+            "body": "Three drops at night and my cheeks stay soft until morning. It sinks in fast and smells of nothing.",
+            "name": "Hannah L.",
+            "skin": "Dry",
+            "lot": "L-0921",
+            "used": "Week 6",
+            "date": "Oct 18, 2026"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "stars": 5,
+            "title": "Calmed my redness",
+            "body": "I have reactive skin and this is the first oil that hasn’t made me break out.",
+            "name": "Priya S.",
+            "skin": "Reactive",
+            "lot": "L-0907",
+            "used": "Week 10",
+            "date": "Oct 2, 2026"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "stars": 4,
+            "title": "A little rich for summer",
+            "body": "Perfect in the evening. In the heat I use one drop mixed into my cream.",
+            "name": "Marta K.",
+            "skin": "Combination",
+            "lot": "L-0907",
+            "used": "Week 4",
+            "date": "Sep 21, 2026"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "stars": 5,
+            "title": "Worth the 30 ml",
+            "body": "Lasted me almost three months. The dropper gives exactly the amount you need.",
+            "name": "Joel A.",
+            "skin": "Normal",
+            "lot": "L-0814",
+            "used": "Week 12",
+            "date": "Sep 9, 2026"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "stars": 4,
+            "title": "Good under make-up",
+            "body": "Wait five minutes after pressing it in and foundation sits smoothly on top.",
+            "name": "Inès R.",
+            "skin": "Dry",
+            "lot": "L-0814",
+            "used": "Week 8",
+            "date": "Aug 30, 2026"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "stars": 5,
+            "title": "No shine on my T-zone",
+            "body": "I expected an oil to make me greasy. Two drops on the cheeks only, and the balance is right.",
+            "name": "Sofia M.",
+            "skin": "Combination",
+            "lot": "L-0802",
+            "used": "Week 5",
+            "date": "Aug 12, 2026"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "stars": 5,
+            "title": "My winter oil, now all year",
+            "body": "The flaky patches by my nose are gone. I press it in over a damp face.",
+            "name": "Ama O.",
+            "skin": "Dry",
+            "lot": "L-0719",
+            "used": "Week 14",
+            "date": "Jul 28, 2026"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "stars": 4,
+            "title": "Patch-tested, all calm",
+            "body": "Tried it on my jaw for a week first. No sting, no itch, just softer skin.",
+            "name": "Lea B.",
+            "skin": "Reactive",
+            "lot": "L-0702",
+            "used": "Week 3",
+            "date": "Jul 9, 2026"
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

@@ -1,0 +1,76 @@
+{%- comment -%}
+  One herbarium sheet (blog-37). The lead sheet (lead: true) is a 7-column 4:5 plate with the title in didone beside it;
+  the others hang on the wall at position w (1..5). The plate is the article image held by four photo corners, or a
+  glassine envelope (the ingredient word and its INCI line) when there is no image but an INCI line.
+  Params: url, title, dek, family, family_url, by, mins, date, iso, image, word, inci, n, lead, w, hide, page, tags.
+{%- endcomment -%}
+{%- liquid
+  assign no = n | prepend: '00' | slice: -3, 3
+  if lead
+    assign ratio = 'tall'
+    assign iw = 1100
+    assign sz = '(min-width: 896px) 55vw, 100vw'
+  elsif w == 5
+    assign ratio = 'wide'
+    assign iw = 900
+    assign sz = '(min-width: 896px) 40vw, 90vw'
+  else
+    assign ratio = 'tall'
+    assign iw = 700
+    assign sz = '(min-width: 896px) 30vw, 90vw'
+  endif
+-%}
+{%- capture plate -%}
+  {%- if image != blank -%}
+    <div class="bblog37__plate">
+      <div class="bblog37__photo bblog37__photo--{{ ratio }}">
+        {{ image | image_url: width: iw | image_tag: widths: '400, 700, 900, 1100', sizes: sz, loading: 'lazy', class: 'bblog37__img', alt: image.alt | default: title }}
+      </div>
+      <span aria-hidden="true" class="bblog37__corner bblog37__corner--tl"></span><span aria-hidden="true" class="bblog37__corner bblog37__corner--tr"></span><span aria-hidden="true" class="bblog37__corner bblog37__corner--br"></span><span aria-hidden="true" class="bblog37__corner bblog37__corner--bl"></span>
+    </div>
+  {%- elsif inci != blank -%}
+    <div class="bblog37__env bblog37__photo--{{ ratio }}">
+      <span aria-hidden="true" class="bblog37__flap"></span>
+      <p class="bblog37__cap bblog37__muted">{{ 'blko.blog_37.file' | t }}</p>
+      <div class="bblog37__fword">
+        <p aria-hidden="true" class="bblog37__word">{{ word | escape }}</p>
+        <p class="bblog37__inci">{{ inci | escape }}</p>
+      </div>
+    </div>
+  {%- else -%}
+    <div class="bblog37__plate"><div class="bblog37__photo bblog37__photo--{{ ratio }}">{{ 'image' | placeholder_svg_tag: 'bblog37__img bblog37__ph' }}</div></div>
+  {%- endif -%}
+{%- endcapture -%}
+{%- capture label -%}
+  <div class="bblog37__label{% if lead %} bblog37__label--lead{% endif %}">
+    <p class="bblog37__cap bblog37__lhead"><span>{{ 'blko.blog_37.herbarium' | t }}</span><span class="bblog37__accent">{{ 'blko.blog_37.no' | t }} {{ no }}</span></p>
+    <dl class="bblog37__fields">
+      {%- if family != blank -%}
+      <div><dt class="bblog37__cap bblog37__muted">{{ 'blko.blog_37.family' | t }}</dt><dd>{% if family_url != blank %}<a href="{{ family_url }}" class="bblog37__fam">{{ family | escape }}</a>{% else %}{{ family | escape }}{% endif %}</dd></div>
+      {%- endif -%}
+      <div><dt class="bblog37__cap bblog37__muted">{{ 'blko.blog_37.collected' | t }}</dt><dd>{% if iso != blank %}<time datetime="{{ iso }}">{{ date }}</time>{% else %}{{ date | escape }}{% endif %}</dd></div>
+      <div><dt class="bblog37__cap bblog37__muted">{{ 'blko.blog_37.by_label' | t }}</dt><dd>{{ by | escape }}{% if by != blank and mins != blank %} · {% endif %}{% if mins != blank %}{{ 'blko.blog_37.mins' | t: n: mins }}{% endif %}</dd></div>
+    </dl>
+  </div>
+{%- endcapture -%}
+<li class="bblog37__item{% if lead %} bblog37__item--lead{% else %} bblog37__w{{ w }}{% endif %}" data-page="{{ page }}" style="--i: {% if lead %}0{% else %}{{ w }}{% endif %}"{% if hide %} hidden{% endif %}>
+  {%- if lead -%}
+  <article class="bblog37__card bblog37__lead">
+    <div class="bblog37__mount bblog37__mount--lead">{{ plate }}{{ label }}</div>
+    <div class="bblog37__leadtext">
+      <p aria-hidden="true" class="bblog37__num">{{ no }}</p>
+      <p class="bblog37__cap bblog37__muted">{{ 'blko.blog_37.lead' | t }}{% if tags != blank %} · {{ tags | escape }}{% endif %}</p>
+      <h2 class="bblog37__h2"><a href="{{ url | default: '#' }}">{{ title | escape }}</a></h2>
+      {%- if dek != blank -%}<p class="bblog37__lede">{{ dek | escape }}</p>{%- endif -%}
+    </div>
+  </article>
+  {%- else -%}
+  <article class="bblog37__card">
+    <div class="bblog37__mount">{{ plate }}{{ label }}</div>
+    <div class="bblog37__body">
+      <h3 class="bblog37__h3 blko-ui-text--h4"><a href="{{ url | default: '#' }}">{{ title | escape }}</a></h3>
+      {%- if dek != blank -%}<p class="bblog37__dek">{{ dek | escape }}</p>{%- endif -%}
+    </div>
+  </article>
+  {%- endif -%}
+</li>

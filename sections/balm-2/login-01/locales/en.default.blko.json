@@ -1,0 +1,26 @@
+{
+  "blko": {
+    "login_01": {
+      "e_email": "Enter your email address.",
+      "e_email_bad": "That email doesn't look right. Check for a missing @ or dot.",
+      "e_password": "Enter your password.",
+      "email": "Email",
+      "forgot": "Forgot it?",
+      "hide": "Hide",
+      "hide_aria": "Hide password",
+      "password": "Password",
+      "recover_back": "Back to sign in",
+      "recover_h": "Reset your password",
+      "recover_send": "Send reset link",
+      "recover_sent": "A reset link is on its way. Check your inbox, and your spam folder if it's slow.",
+      "recover_text": "We'll email you a link to choose a new one. It works for 24 hours.",
+      "sending": "Sending…",
+      "show": "Show",
+      "show_aria": "Show password",
+      "side_login": "01 / Sign in",
+      "side_recover": "02 / Reset",
+      "sign_in": "Sign in",
+      "signing": "Signing in…"
+    }
+  }
+}

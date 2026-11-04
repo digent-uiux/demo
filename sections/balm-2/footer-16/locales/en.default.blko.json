@@ -1,0 +1,26 @@
+{
+  "blko": {
+    "footer_16": {
+      "country": "Country / currency",
+      "done": "Thank you. The next letter goes out on Sunday.",
+      "email": "Email address",
+      "error": "Check the email address and try again.",
+      "facebook": "Facebook",
+      "follow": "Follow us",
+      "footer": "Footer",
+      "instagram": "Photo journal",
+      "language": "Language",
+      "lists": "{{ n }} lists",
+      "lot": "Lot",
+      "pao": "{{ n }}M",
+      "pinterest": "Pinterest",
+      "poured": "Poured",
+      "subscribe": "Subscribe",
+      "tiktok": "Short films",
+      "update": "Update",
+      "write": "Write to us",
+      "x": "Notes",
+      "youtube": "Films from the workshop"
+    }
+  }
+}

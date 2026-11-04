@@ -1,0 +1,31 @@
+{%- comment -%}
+  One catalogue card (blog-64). Params: i (1..3), url, fallback, title, dek, tag, num, date (html or text), image, attrs.
+{%- endcomment -%}
+{%- liquid
+  assign call = tag | slice: 0, 3 | upcase
+  assign no = num | prepend: '00' | slice: -3, 3
+  if i == 1
+    assign w = 800
+  else
+    assign w = 600
+  endif
+-%}
+<li class="bblog64__item bblog64__item--{{ i }}" style="--i: {{ i | minus: 1 }}" {{ attrs }}>
+  <article class="bblog64__card">
+    <p class="bblog64__cap bblog64__headrule"><span class="bblog64__call">{% if call != blank %}{{ call | escape }} · {% endif %}{{ no }}</span><span class="bblog64__muted">{{ date }}</span></p>
+    {%- if i == 1 -%}<p class="bblog64__cap bblog64__nextread">{{ 'blko.blog_64.next' | t }}</p>{%- endif -%}
+    <div class="bblog64__photo">
+      {%- if image != blank -%}
+        {{ image | image_url: width: w | image_tag: widths: '400, 600, 800', sizes: '(min-width: 896px) 25vw, (min-width: 576px) 33vw, 100vw', loading: 'lazy', class: 'bblog64__img', alt: image.alt | default: title }}
+      {%- else -%}
+        {{ 'image' | placeholder_svg_tag: 'bblog64__img bblog64__ph' }}
+      {%- endif -%}
+    </div>
+    <div class="bblog64__meta">
+      <h3 class="bblog64__h3{% if i == 1 %} blko-ui-text--h4{% endif %}"><a href="{{ url | default: fallback | default: '#' }}">{{ title | escape }}</a></h3>
+      {%- if dek != blank -%}<p class="bblog64__dek">{{ dek | escape }}</p>{%- endif -%}
+    </div>
+    <span aria-hidden="true" class="bblog64__lines"></span>
+    <span aria-hidden="true" class="bblog64__hole"></span>
+  </article>
+</li>

@@ -1,0 +1,188 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-marquee-06.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-marquee-06.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Balm promises ticker: a hairline band (ruled top and bottom), a fixed small-caps label on the left from 768px, then a
+  slow row of promises in Karla medium, each after its amber "No. 0N", and a square pause button on the right. Each
+  promise links to the page that explains it.
+  Motion (plain JS, only with the balm kit, html.blko-kit-balm): a slow linear drift (speed setting, one loop). It stops
+  on hover, keyboard focus and with the pause button. ?static, automated browsers and no kit: the still row at rest
+  (the final frame), button hidden. Reduced motion: one still, wrapped row.
+{%- endcomment -%}
+{%- capture row -%}
+  {%- for b in section.blocks -%}
+    <li class="bmarquee06__item" {{ b.shopify_attributes }}
+      ><span aria-hidden="true" class="bmarquee06__label bmarquee06__no">No. {% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span
+      >{%- if b.settings.link != blank -%}<a href="{{ b.settings.link }}" class="bmarquee06__txt">{{ b.settings.text | escape }}</a>{%- else -%}<span class="bmarquee06__txt">{{ b.settings.text | escape }}</span>{%- endif -%}
+    </li
+  >{%- endfor -%}
+{%- endcapture -%}
+<div class="bmarquee06{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-bmarquee06
+  ><section aria-label="{{ 'blko.marquee_06.label' | t | escape }}" class="bmarquee06__sec" style="padding-top:var(--pt);padding-bottom:var(--pb);--m06-dur: {{ s.speed }}s"
+    ><div class="bmarquee06__in"
+      >{%- if s.label != blank -%}<p class="bmarquee06__label bmarquee06__lead"><span aria-hidden="true" class="bmarquee06__rule"></span>{{ s.label | escape }}</p>{%- endif -%}
+      <div class="bmarquee06__view"
+        ><div class="bmarquee06__track" data-track
+          ><ul class="bmarquee06__row">{{ row }}</ul
+          ><ul class="bmarquee06__row bmarquee06__dup" aria-hidden="true" data-dup hidden>{{ row }}</ul
+        ></div
+      ></div
+      >{%- if s.pause_button -%}
+        <button type="button" class="bmarquee06__pause" data-pause aria-pressed="false" data-pause-label="{{ 'blko.marquee_06.pause' | t | escape }}" data-play-label="{{ 'blko.marquee_06.play' | t | escape }}" aria-label="{{ 'blko.marquee_06.pause' | t | escape }}" hidden
+          ><span class="bmarquee06__ip">{%- render 'blko-ui-icon', name: 'pause', size: 14 -%}</span><span class="bmarquee06__iy">{%- render 'blko-ui-icon', name: 'play', size: 14 -%}</span
+        ></button
+      >{%- endif -%}
+    </div
+  ></section
+></div
+
+>
+
+{% schema %}
+{
+  "name": "Marquee 06",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label (768px and up)",
+      "default": "The apothecary’s promise"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Seconds per loop",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "unit": "s",
+      "default": 64
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_button",
+      "label": "Show pause button",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 0,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "promise",
+      "name": "Promise",
+      "limit": 10,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Cold-pressed in small batches"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Marquee 06",
+      "blocks": [
+        {
+          "type": "promise",
+          "settings": {
+            "text": "Cold-pressed in small batches"
+          }
+        },
+        {
+          "type": "promise",
+          "settings": {
+            "text": "Refillable amber glass"
+          }
+        },
+        {
+          "type": "promise",
+          "settings": {
+            "text": "Every bottle numbered by batch"
+          }
+        },
+        {
+          "type": "promise",
+          "settings": {
+            "text": "Free shipping from $75"
+          }
+        },
+        {
+          "type": "promise",
+          "settings": {
+            "text": "Returns within 30 days, opened or not"
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

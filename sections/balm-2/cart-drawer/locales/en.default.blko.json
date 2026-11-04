@@ -1,0 +1,27 @@
+{
+  "blko": {
+    "cart_drawer": {
+      "checkout": "Check out",
+      "close": "Close the bag",
+      "continue": "Back to the shelves",
+      "count": {
+        "one": "Your bag · {{ count }} item",
+        "other": "Your bag · {{ count }} items"
+      },
+      "decrease": "One fewer {{ title }}",
+      "free_done": "Free shipping is on us.",
+      "free_from": "Free from {{ amount }}",
+      "free_left": "Add {{ amount }} for free shipping.",
+      "increase": "One more {{ title }}",
+      "items": "Items in your bag",
+      "quantity_for": "Quantity for {{ title }}",
+      "remove": "Remove",
+      "shipping_progress": "Progress to free shipping",
+      "subtotal": "Subtotal",
+      "taxes_excluded": "Taxes and shipping at checkout",
+      "taxes_included": "Taxes included · shipping at checkout",
+      "total": "Total",
+      "view": "View the bag"
+    }
+  }
+}

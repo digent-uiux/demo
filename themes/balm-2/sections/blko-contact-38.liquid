@@ -1,0 +1,395 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-contact-38.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-contact-38.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  The dispensary counter, balm FAQ close: a label, the didone h2 and one line on the left; on the right, tear-off slips
+  from the still-room pad on a pop-2 linen blotter that bleeds off the right edge. Each "route" block is a slip: an
+  amber ℞, the route, the reply time as a big amber didone numeral beside its unit in Karla 300, hours, one line, one action. The first "write" route is the
+  large slip in front with {% form 'contact' %} (contact[email], contact[body], hidden contact[source]); a successful
+  post shows the amber "Received" stamp. "chat" opens its link, else Shopify Inbox if present, else the write slip;
+  "call" is a tel: link with an open/closed line in the studio's time zone. Phones: heading, the write slip, then the
+  small slips. Motion (balm kit flag): slips are laid down, then the numerals ink in (CSS on the kit's reveal).
+{%- endcomment -%}
+{{ 'blko-balm-motion.css' | asset_url | stylesheet_tag -}}
+<script src="{{ 'blko-balm-motion.js' | asset_url }}" defer="defer"></script
+>{%- liquid
+  assign fid = 'ct38-' | append: section.id
+  assign wrote = false
+  assign k = 0
+-%}
+{%- capture big -%}
+  {%- for b in section.blocks -%}
+    {%- if b.settings.kind != 'write' or wrote -%}{%- continue -%}{%- endif -%}
+    {%- assign wrote = true -%}
+    {%- assign bs = b.settings -%}
+    {%- capture act -%}
+      {%- form 'contact', id: fid, class: 'bcontact38__form', novalidate: 'novalidate' -%}
+        {%- if form.posted_successfully? -%}
+          <div role="status" tabindex="-1" class="bcontact38__done" data-done
+            ><p class="bcontact38__stamp">{{ 'blko.contact_38.received' | t }}</p
+            ><p class="bcontact38__donetext">{{ 'blko.contact_38.received_text' | t }}</p
+          ></div
+        >{%- else -%}
+          <input type="hidden" name="contact[source]" value="{{ bs.source | escape }}"
+          ><div class="bcontact38__field"
+            ><label for="{{ fid }}-email" class="bcontact38__cap bcontact38__muted">{{ bs.email_label | escape }}</label
+            ><input id="{{ fid }}-email" type="email" inputmode="email" name="contact[email]" autocomplete="email" placeholder="{{ 'blko.contact_38.email_ph' | t }}" aria-required="true" class="bcontact38__input" data-f="email" data-err="{{ 'blko.contact_38.err_email' | t }}"
+            ><p id="{{ fid }}-email-err" class="bcontact38__err" hidden></p
+          ></div
+          ><div class="bcontact38__field"
+            ><label for="{{ fid }}-body" class="bcontact38__cap bcontact38__muted">{{ bs.body_label | escape }}</label
+            ><textarea id="{{ fid }}-body" name="contact[body]" rows="3" placeholder="{{ bs.placeholder | escape }}" aria-required="true" class="bcontact38__input bcontact38__ruled" data-f="body" data-err="{{ 'blko.contact_38.err_body' | t }}"></textarea
+            ><p id="{{ fid }}-body-err" class="bcontact38__err" hidden></p
+          ></div
+          >{%- if form.errors -%}<div role="alert" class="bcontact38__err bcontact38__servererr">{{ form.errors | default_errors }}</div>{%- endif -%}
+          {%- capture lbl -%}{{ bs.button | escape }}{%- endcapture -%}
+          {%- render 'blko-ui-button', type: 'submit', size: 'lg', children: lbl, className: 'bcontact38__send' -%}
+        {%- endif -%}
+      {%- endform -%}
+    {%- endcapture -%}
+    {%- render 'blko-contact-38-slip', i: 1, pad: s.pad, title: bs.title, fig: bs.fig, unit: bs.unit, hours: bs.hours, note: bs.note, big: true, children: act, attrs: b.shopify_attributes -%}
+  {%- endfor -%}
+{%- endcapture -%}
+{%- capture small -%}
+  {%- assign wrote2 = false -%}
+  {%- assign k = 1 -%}
+  {%- for b in section.blocks -%}
+    {%- assign bs = b.settings -%}
+    {%- if bs.kind == 'write' and wrote2 == false -%}{%- assign wrote2 = true -%}{%- continue -%}{%- endif -%}
+    {%- assign k = k | plus: 1 -%}
+    {%- capture act -%}
+      {%- capture lbl -%}{{ bs.button | escape }}{%- endcapture -%}
+      {%- if bs.kind == 'call' -%}
+        {%- assign tel = bs.phone | remove: ' ' | remove: '(' | remove: ')' | remove: '-' -%}
+        {%- assign href = 'tel:' | append: tel -%}
+        {%- assign al = 'blko.contact_38.call_aria' | t: phone: bs.phone -%}
+        <div class="bcontact38__act"
+          >{%- capture plbl -%}{{ bs.phone | escape }}{%- endcapture -%}
+          {%- render 'blko-ui-button', href: href, variant: 'outline', children: plbl, label: al -%}
+          <p class="bcontact38__open" data-open data-tz="{{ bs.timezone | escape }}" data-days="{{ bs.days | escape }}" data-from="{{ bs.open_hour }}" data-to="{{ bs.close_hour }}" data-t-open="{{ 'blko.contact_38.open' | t: hour: bs.close_hour }}" data-t-closed="{{ 'blko.contact_38.closed' | t: hour: bs.open_hour }}" data-t-closed-wd="{{ 'blko.contact_38.closed_weekdays' | t: hour: bs.open_hour }}"></p
+        ></div
+      >{%- elsif bs.link != blank -%}
+        <div class="bcontact38__act">{%- render 'blko-ui-button', href: bs.link, variant: 'outline', children: lbl -%}</div
+      >{%- elsif lbl != blank -%}
+        {%- capture at -%}data-chat data-fallback="#{{ fid }}-email"{%- endcapture -%}
+        <div class="bcontact38__act">{%- render 'blko-ui-button', variant: 'outline', children: lbl, attrs: at -%}</div
+      >{%- endif -%}
+    {%- endcapture -%}
+    {%- render 'blko-contact-38-slip', i: k, pad: s.pad, title: bs.title, fig: bs.fig, unit: bs.unit, hours: bs.hours, note: bs.note, children: act, attrs: b.shopify_attributes -%}
+  {%- endfor -%}
+{%- endcapture -%}
+{%- capture body -%}
+  <div class="bcontact38__copy"
+    >{%- if s.eyebrow != blank -%}<p class="bcontact38__cap bcontact38__eyebrow"><span aria-hidden="true"></span>{{ s.eyebrow | escape }}</p>{%- endif -%}
+    <h2 class="bcontact38__h2">{{ s.heading | escape }}{% if s.heading_em != blank %} <em>{{ s.heading_em | escape }}</em>{% endif %}</h2
+    >{%- if s.text != blank -%}<p class="bcontact38__lead">{{ s.text | escape }}</p>{%- endif -%}
+  </div
+  ><div class="bcontact38__desk"
+    ><span aria-hidden="true" class="bcontact38__blotter"></span
+    >{%- if big != blank -%}<div class="bcontact38__big">{{ big }}</div>{%- endif -%}
+    <div class="bcontact38__small">{{ small }}</div
+  ></div
+>{%- endcapture -%}
+<div class="bcontact38{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px"
+  >{%- render 'blko-ui-section', surface: 'bg', bleed: true, label: s.label, className: 'bcontact38__section', inner: 'bcontact38__inner', children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Dispensary slips",
+  "tag": "div",
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Region label",
+      "default": "Still have a question"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Label",
+      "default": "Still unsure"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Take a slip to the"
+    },
+    {
+      "type": "text",
+      "id": "heading_em",
+      "label": "Heading, italic word",
+      "default": "counter"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Three ways to ask the people who make the balms. Pick the slip that suits the question; none of them reaches a bot."
+    },
+    {
+      "type": "text",
+      "id": "pad",
+      "label": "Pad name",
+      "default": "The still-room · Dispensary"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 112,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 112
+    }
+  ],
+  "blocks": [
+    {
+      "type": "route",
+      "name": "Route",
+      "settings": [
+        {
+          "type": "select",
+          "id": "kind",
+          "label": "Kind",
+          "options": [
+            {
+              "value": "write",
+              "label": "Write (contact form)"
+            },
+            {
+              "value": "chat",
+              "label": "Chat"
+            },
+            {
+              "value": "call",
+              "label": "Call"
+            }
+          ],
+          "default": "chat",
+          "info": "The first Write route is the large slip with the contact form."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Chat with Nadia"
+        },
+        {
+          "type": "text",
+          "id": "fig",
+          "label": "Reply figure",
+          "default": "3"
+        },
+        {
+          "type": "text",
+          "id": "unit",
+          "label": "Reply unit",
+          "default": "minutes"
+        },
+        {
+          "type": "text",
+          "id": "hours",
+          "label": "Hours",
+          "default": "Mon–Sat · 9–17"
+        },
+        {
+          "type": "textarea",
+          "id": "note",
+          "label": "Note",
+          "default": "Our esthetician, for a quick which-one question."
+        },
+        {
+          "type": "text",
+          "id": "button",
+          "label": "Button",
+          "default": "Start a chat"
+        },
+        {
+          "type": "header",
+          "content": "Chat"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Chat link",
+          "info": "Blank opens Shopify Inbox if the store has it, else jumps to the write slip."
+        },
+        {
+          "type": "header",
+          "content": "Write"
+        },
+        {
+          "type": "text",
+          "id": "email_label",
+          "label": "Email label",
+          "default": "Answer me at"
+        },
+        {
+          "type": "text",
+          "id": "body_label",
+          "label": "Question label",
+          "default": "My question"
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "Question placeholder",
+          "default": "Which balm for skin that's tight by noon?"
+        },
+        {
+          "type": "text",
+          "id": "source",
+          "label": "Source tag (sent with the form)",
+          "default": "faq"
+        },
+        {
+          "type": "header",
+          "content": "Call"
+        },
+        {
+          "type": "text",
+          "id": "phone",
+          "label": "Phone",
+          "default": "+1 518 555 0142"
+        },
+        {
+          "type": "text",
+          "id": "timezone",
+          "label": "Time zone (IANA)",
+          "default": "America/New_York",
+          "info": "For the open / closed line. Blank hides it."
+        },
+        {
+          "type": "text",
+          "id": "days",
+          "label": "Call days",
+          "default": "Mon,Tue,Wed,Thu,Fri"
+        },
+        {
+          "type": "range",
+          "id": "open_hour",
+          "label": "Lines open (hour)",
+          "min": 0,
+          "max": 23,
+          "step": 1,
+          "default": 10
+        },
+        {
+          "type": "range",
+          "id": "close_hour",
+          "label": "Lines close (hour)",
+          "min": 1,
+          "max": 24,
+          "step": 1,
+          "default": 16
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Dispensary slips",
+      "blocks": [
+        {
+          "type": "route",
+          "settings": {
+            "kind": "write",
+            "title": "Write to the bench",
+            "fig": "4",
+            "unit": "hours, in bench hours",
+            "hours": "Mon–Sat · 9:00–17:00",
+            "note": "Best for a routine, a reaction or a batch question. Iris or Margot answers, and signs with a name.",
+            "button": "Hand in the slip"
+          }
+        },
+        {
+          "type": "route",
+          "settings": {
+            "kind": "chat",
+            "title": "Chat with Nadia",
+            "fig": "3",
+            "unit": "minutes",
+            "hours": "Mon–Sat · 9–17",
+            "note": "Our esthetician, for a quick which-one question.",
+            "button": "Start a chat"
+          }
+        },
+        {
+          "type": "route",
+          "settings": {
+            "kind": "call",
+            "title": "Call the studio",
+            "fig": "0",
+            "unit": "minutes on hold",
+            "hours": "Mon–Fri · 10–16",
+            "note": "Orders and deliveries. Have the order number ready.",
+            "button": "Call the studio"
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

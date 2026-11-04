@@ -1,17 +1,210 @@
 {
   "sections": {
-    "main": {
-      "type": "blko-main-blog",
+    "collection-banner-42": {
+      "type": "blko-collection-banner-42",
       "settings": {
-        "color_scheme": "scheme-1",
-        "padding_top": 80,
-        "padding_bottom": 80,
-        "layout": "grid",
-        "per_page": 9,
-        "columns_desktop": 3,
-        "show_excerpt": true
-      }
+        "tokens": "theme"
+      },
+      "blocks": {
+        "topic-1": {
+          "type": "topic",
+          "settings": {
+            "name": "Routine",
+            "count": 14
+          }
+        },
+        "topic-2": {
+          "type": "topic",
+          "settings": {
+            "name": "Actives",
+            "count": 11
+          }
+        },
+        "topic-3": {
+          "type": "topic",
+          "settings": {
+            "name": "Ingredients",
+            "count": 16
+          }
+        },
+        "topic-4": {
+          "type": "topic",
+          "settings": {
+            "name": "Evening rituals",
+            "count": 7
+          }
+        }
+      },
+      "block_order": [
+        "topic-1",
+        "topic-2",
+        "topic-3",
+        "topic-4"
+      ]
+    },
+    "blog-37": {
+      "type": "blko-blog-37",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "post-1": {
+          "type": "post",
+          "settings": {
+            "title": "The four-step evening routine, in the right order",
+            "dek": "Cleanse, tone, treat, seal: thinnest texture first, and why the oil always goes last.",
+            "topic": "Routines, Evening",
+            "by": "Mara",
+            "mins": 6,
+            "date": "Oct 20, 2026"
+          }
+        },
+        "post-2": {
+          "type": "post",
+          "settings": {
+            "title": "Colloidal oat: why it calms a tight, itchy face",
+            "dek": "Finely milled oat holds water on the skin and quiets the sting after a cold walk.",
+            "topic": "Ingredients",
+            "by": "Iris",
+            "mins": 5,
+            "date": "Oct 16, 2026"
+          }
+        },
+        "post-3": {
+          "type": "post",
+          "settings": {
+            "title": "Warming a balm between your palms",
+            "dek": "Thirty seconds of body heat turns a firm balm into something that glides.",
+            "topic": "Rituals",
+            "by": "Celine",
+            "mins": 4,
+            "date": "Oct 12, 2026"
+          }
+        },
+        "post-4": {
+          "type": "post",
+          "settings": {
+            "title": "Squalane, explained: the oil your skin already makes",
+            "dek": "Light, stable and non-greasy. Where ours comes from, and who should skip it.",
+            "topic": "Ingredients",
+            "by": "Iris",
+            "mins": 5,
+            "date": "Oct 9, 2026",
+            "word": "Squalane",
+            "inci": "Squalane (olive-derived)"
+          }
+        },
+        "post-5": {
+          "type": "post",
+          "settings": {
+            "title": "Beeswax, and why our balms set firm in the tin",
+            "dek": "A little wax holds the oils still until your skin warms them. How much, and why.",
+            "topic": "Ingredients",
+            "by": "Mara",
+            "mins": 4,
+            "date": "Oct 5, 2026"
+          }
+        },
+        "post-6": {
+          "type": "post",
+          "settings": {
+            "title": "Lavender oil: soothing note or irritant?",
+            "dek": "What linalool does on sensitive skin, and why we keep it under half a percent.",
+            "topic": "Ingredients",
+            "by": "Celine",
+            "mins": 7,
+            "date": "Oct 1, 2026"
+          }
+        },
+        "post-7": {
+          "type": "post",
+          "settings": {
+            "title": "Oil cleansing on a Sunday: a ten-minute ritual",
+            "dek": "Massage dry, emulsify with warm water, lift with a muslin. Your week's sunscreen goes with it.",
+            "topic": "Rituals",
+            "by": "Mara",
+            "mins": 6,
+            "date": "Sep 27, 2026"
+          }
+        },
+        "post-8": {
+          "type": "post",
+          "settings": {
+            "title": "Ceramides vs. fatty acids: what rebuilds the barrier",
+            "dek": "Both, in the right ratio. A plain guide to the lipids between your skin cells.",
+            "topic": "Ingredients",
+            "by": "Iris",
+            "mins": 8,
+            "date": "Sep 22, 2026",
+            "word": "Ceramides",
+            "inci": "Ceramide NP, AP, EOP"
+          }
+        },
+        "post-9": {
+          "type": "post",
+          "settings": {
+            "title": "Winter swaps: trade the serum for a richer cream",
+            "dek": "If your skin feels tight by noon, the serum isn't the problem. The seal is.",
+            "topic": "Routines",
+            "by": "Celine",
+            "mins": 5,
+            "date": "Sep 18, 2026"
+          }
+        },
+        "post-10": {
+          "type": "post",
+          "settings": {
+            "title": "Bath bars and the case for a slower cleanse",
+            "dek": "Cold-process soap, superfat and why a bar can be kinder than a foaming gel.",
+            "topic": "Rituals",
+            "by": "Mara",
+            "mins": 4,
+            "date": "Sep 13, 2026"
+          }
+        },
+        "post-11": {
+          "type": "post",
+          "settings": {
+            "title": "Calendula: what a petal infusion does for redness",
+            "dek": "Steeped in sunflower oil for six weeks, strained, then folded into our balm.",
+            "topic": "Ingredients",
+            "by": "Iris",
+            "mins": 5,
+            "date": "Sep 9, 2026",
+            "word": "Calendula",
+            "inci": "Calendula officinalis flower extract"
+          }
+        },
+        "post-12": {
+          "type": "post",
+          "settings": {
+            "title": "One tin for lips, cuticles and dry brows",
+            "dek": "A pocket balm that does five jobs, and the order to use it in on a long flight.",
+            "topic": "Rituals",
+            "by": "Celine",
+            "mins": 3,
+            "date": "Sep 4, 2026"
+          }
+        }
+      },
+      "block_order": [
+        "post-1",
+        "post-2",
+        "post-3",
+        "post-4",
+        "post-5",
+        "post-6",
+        "post-7",
+        "post-8",
+        "post-9",
+        "post-10",
+        "post-11",
+        "post-12"
+      ]
     }
   },
-  "order": ["main"]
+  "order": [
+    "collection-banner-42",
+    "blog-37"
+  ]
 }

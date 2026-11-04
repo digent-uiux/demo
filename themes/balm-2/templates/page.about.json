@@ -1,59 +1,247 @@
 {
   "sections": {
-    "main": { "type": "blko-main-page", "settings": {} },
-    "story": {
-      "type": "blko-image-with-text",
-      "blocks": {
-        "caption": { "type": "caption", "settings": { "text": "Our story" } },
-        "heading": { "type": "heading", "settings": { "heading": "Made slowly, <em>in small batches</em>", "size": "blko-h2" } },
-        "text": { "type": "text", "settings": { "text": "<p>We started with one face oil, pressed in a kitchen and given to friends. Today the range is still small, and every bottle is filled within a week of pressing, so what reaches your skin is as fresh as the day it was made.</p>", "size": "blko-body-lg", "muted": true } },
-        "buttons": { "type": "button", "settings": { "label": "Shop the range", "link": "shopify://collections/all", "style": "primary" } }
-      },
-      "block_order": ["caption", "heading", "text", "buttons"],
+    "page-header-07": {
+      "type": "blko-page-header-07",
       "settings": {
-        "color_scheme": "scheme-3",
-        "padding_top": 80,
-        "padding_bottom": 80,
-        "fallback_image": "product-1",
-        "image_ratio": "square",
-        "image_position": "left",
-        "image_width": "50",
-        "vertical_alignment": "center"
+        "tokens": "theme"
       }
     },
-    "values": {
-      "type": "blko-multicolumn",
-      "blocks": {
-        "plant": { "type": "column", "settings": { "icon": "leaf", "title": "Plant-first formulas", "text": "<p>Botanical oils and extracts do the work. Nothing added for scent or colour.</p>" } },
-        "fresh": { "type": "column", "settings": { "icon": "droplet", "title": "Small, fresh batches", "text": "<p>Pressed and bottled within the week, with the batch date on every label.</p>" } },
-        "gentle": { "type": "column", "settings": { "icon": "shield", "title": "Gentle by default", "text": "<p>Patch-tested on sensitive skin and free from alcohol and essential oils.</p>" } }
-      },
-      "block_order": ["plant", "fresh", "gentle"],
+    "product-story-43": {
+      "type": "blko-product-story-43",
       "settings": {
-        "color_scheme": "scheme-1",
-        "padding_top": 80,
-        "padding_bottom": 80,
-        "heading": "What goes into <em>every</em> bottle",
-        "columns_desktop": 3,
-        "column_style": "plain"
-      }
+        "tokens": "theme"
+      },
+      "blocks": {
+        "enclosure-1": {
+          "type": "enclosure",
+          "settings": {
+            "caption": "The kitchen table, 2014. Every early batch was weighed here."
+          }
+        },
+        "enclosure-2": {
+          "type": "enclosure",
+          "settings": {
+            "caption": "Colloidal oat, milled for us from spring oats grown two farms over."
+          }
+        },
+        "enclosure-3": {
+          "type": "enclosure",
+          "settings": {
+            "caption": "The first balm tins. We still pour each one by hand."
+          }
+        }
+      },
+      "block_order": [
+        "enclosure-1",
+        "enclosure-2",
+        "enclosure-3"
+      ]
     },
-    "promise": {
-      "type": "blko-rich-text",
-      "blocks": {
-        "heading": { "type": "heading", "settings": { "heading": "Fewer steps, <em>better</em> skin", "size": "blko-h2" } },
-        "text": { "type": "text", "settings": { "text": "<p>We would rather make five formulas that work than fifty that sit on a shelf. If something does not suit your skin, send it back within 30 days, opened or not.</p>", "size": "blko-body-lg", "muted": true } },
-        "buttons": { "type": "button", "settings": { "label": "Read the journal", "link": "shopify://blogs/news", "style": "outline" } }
-      },
-      "block_order": ["heading", "text", "buttons"],
+    "image-with-text-36": {
+      "type": "blko-image-with-text-36",
       "settings": {
-        "color_scheme": "scheme-2",
-        "padding_top": 80,
-        "padding_bottom": 80,
-        "alignment": "center",
-        "content_width": "medium"
-      }
+        "tokens": "theme"
+      },
+      "blocks": {
+        "tag-1": {
+          "type": "tag",
+          "settings": {
+            "title": "Calendula",
+            "line": "Hillside farm, 2025 harvest",
+            "x": 30,
+            "y": 35
+          }
+        },
+        "tag-2": {
+          "type": "tag",
+          "settings": {
+            "title": "Colloidal oat",
+            "line": "Milled every month, never stored",
+            "x": 60,
+            "y": 55
+          }
+        },
+        "tag-3": {
+          "type": "tag",
+          "settings": {
+            "title": "Returned jars",
+            "line": "Washed, dried, refilled",
+            "x": 35,
+            "y": 75
+          }
+        }
+      },
+      "block_order": [
+        "tag-1",
+        "tag-2",
+        "tag-3"
+      ]
+    },
+    "icon-list-22": {
+      "type": "blko-icon-list-22",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "value-1": {
+          "type": "value",
+          "settings": {
+            "icon": "sprout",
+            "title": "Three farms, <em>by name</em>",
+            "text": "Oat, olive and calendula from growers we visit each harvest. The farm is printed under every lot number."
+          }
+        },
+        "value-2": {
+          "type": "value",
+          "settings": {
+            "icon": "flask-conical",
+            "title": "Small <em>batches</em>",
+            "text": "Forty jars at a time, poured and dated by hand, so nothing sits in a warehouse for a year."
+          }
+        },
+        "value-3": {
+          "type": "value",
+          "settings": {
+            "icon": "leaf",
+            "title": "Nothing <em>to hide</em>",
+            "text": "Full formulas, with percentages, on the label and online. No fragrance blends, no fillers."
+          }
+        },
+        "value-4": {
+          "type": "value",
+          "settings": {
+            "icon": "recycle",
+            "title": "Glass, <em>refilled</em>",
+            "text": "Every jar comes back for a refill or is washed and reused. Return five, the sixth is on us."
+          }
+        }
+      },
+      "block_order": [
+        "value-1",
+        "value-2",
+        "value-3",
+        "value-4"
+      ]
+    },
+    "counters-16": {
+      "type": "blko-counters-16",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "row-1": {
+          "type": "row",
+          "settings": {
+            "label": "Formulas in the range",
+            "value": 23,
+            "decimals": 0,
+            "note": "All still made in-house, none outsourced"
+          }
+        },
+        "row-2": {
+          "type": "row",
+          "settings": {
+            "label": "People on a ritual",
+            "value": 96000,
+            "decimals": 0,
+            "note": "Customers since the first jar of oat balm"
+          }
+        },
+        "row-3": {
+          "type": "row",
+          "settings": {
+            "label": "Jars back for a refill",
+            "value": 41200,
+            "decimals": 0,
+            "note": "Washed, dried and filled again since 2019"
+          }
+        },
+        "row-4": {
+          "type": "row",
+          "settings": {
+            "label": "Farms, all by name",
+            "value": 3,
+            "decimals": 0,
+            "note": "Oat, olive and calendula, visited each harvest"
+          }
+        }
+      },
+      "block_order": [
+        "row-1",
+        "row-2",
+        "row-3",
+        "row-4"
+      ]
+    },
+    "team-06": {
+      "type": "blko-team-06",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "station-1": {
+          "type": "station",
+          "settings": {
+            "verb": "Sort",
+            "name": "Efua",
+            "role": "Botanist",
+            "line": "Picks over every sack of petals by hand before a gram is weighed.",
+            "pick": "Calendula Calm Drops",
+            "width": 3,
+            "hang": 56
+          }
+        },
+        "station-2": {
+          "type": "station",
+          "settings": {
+            "verb": "Dose",
+            "name": "Iris",
+            "role": "Head chemist",
+            "line": "Counts the actives in drops, not pumps, and writes each one in the batch book.",
+            "pick": "Oat Milk Cleansing Balm",
+            "width": 4,
+            "hang": 40
+          }
+        },
+        "station-3": {
+          "type": "station",
+          "settings": {
+            "verb": "Test",
+            "name": "Nadia",
+            "role": "Clinical esthetician",
+            "line": "Patch-tests each batch on the back of her own hand before her clients try it.",
+            "pick": "Olive Leaf Night Cream",
+            "width": 2,
+            "hang": 112
+          }
+        },
+        "station-4": {
+          "type": "station",
+          "settings": {
+            "verb": "Wrap",
+            "name": "Walter",
+            "role": "Quality & dispatch",
+            "line": "Checks the lot label against the book, then wraps every order in plain paper.",
+            "pick": "Rosehip Facial Oil",
+            "width": 3,
+            "hang": 80
+          }
+        }
+      },
+      "block_order": [
+        "station-1",
+        "station-2",
+        "station-3",
+        "station-4"
+      ]
     }
   },
-  "order": ["main", "story", "values", "promise"]
+  "order": [
+    "page-header-07",
+    "product-story-43",
+    "image-with-text-36",
+    "icon-list-22",
+    "counters-16",
+    "team-06"
+  ]
 }

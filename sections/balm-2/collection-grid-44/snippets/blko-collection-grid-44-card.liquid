@@ -1,0 +1,120 @@
+{%- comment -%}
+  The balm card (local to collection-grid-44): one packshot per product on a hairline 4:5 frame (set low so every
+  bottle stands on one line), the product's second image crossfades in on hover, an in-image "Add to bag" pill fades in
+  from 1024px (a round "+" on phones), "Choose <option>" links to the product when it has variants, sold out = dimmed
+  image + small-caps flag + disabled pill. Two attribute chips under the name from tags "skin:…" / "size:…" (prefix
+  stripped), else metafields custom.skin_type / custom.volume_ml. Sale price in the accent, compare-at struck through.
+  p: product (live) · b: preview block settings when there is no product · n: 1-based index · sale_lbl / sold_lbl: flags.
+{%- endcomment -%}
+{%- liquid
+  assign skin = ''
+  assign vol = ''
+  assign vid = ''
+  assign img2 = nil
+  if p != blank
+    assign title = p.title
+    assign url = p.url
+    assign img1 = p.featured_media.preview_image
+    if p.media.size > 1
+      assign img2 = p.media[1].preview_image
+    endif
+    assign price = p.price
+    assign compare = p.compare_at_price | default: 0
+    assign sold = true
+    if p.available
+      assign sold = false
+    endif
+    assign multi = true
+    if p.has_only_default_variant
+      assign multi = false
+    endif
+    assign opt = p.options.first | downcase
+    assign vid = p.selected_or_first_available_variant.id
+    for t in p.tags
+      assign pre = t | slice: 0, 5 | downcase
+      if pre == 'skin:' and skin == blank
+        assign skin = t | slice: 5, 80 | strip
+      elsif pre == 'size:' and vol == blank
+        assign vol = t | slice: 5, 80 | strip
+      endif
+    endfor
+    if skin == blank and p.metafields.custom.skin_type != blank
+      assign skin = p.metafields.custom.skin_type.value
+    endif
+    if vol == blank and p.metafields.custom.volume_ml != blank
+      assign vol = p.metafields.custom.volume_ml.value | append: ' ml'
+    endif
+  else
+    assign title = b.title
+    assign url = routes.all_products_collection_url
+    assign img1 = b.image
+    assign img2 = b.hover
+    assign price = b.price | times: 100
+    assign compare = b.compare | times: 100
+    assign sold = b.sold_out
+    assign multi = b.sizes
+    assign opt = 'blko.collection_grid_44.size' | t
+    assign cs = b.chips | split: ','
+    assign skin = cs[0] | strip
+    assign vol = cs[1] | strip
+  endif
+  if sold
+    assign img2 = nil
+  endif
+  assign ph = n | modulo: 6 | plus: 1
+  assign ph = 'product-' | append: ph
+  assign alt1 = img1.alt | default: title
+-%}
+<article class="bcollectiongrid44__card{% if sold %} is-sold{% endif %}">
+  <div class="bcollectiongrid44__media">
+    <a href="{{ url }}" class="bcollectiongrid44__mlink" tabindex="-1" aria-hidden="true">
+      {%- if img1 != blank -%}
+        {{ img1 | image_url: width: 900 | image_tag: alt: alt1, loading: 'lazy', widths: '360, 540, 720, 900', sizes: '(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw', class: 'bcollectiongrid44__img' }}
+      {%- else -%}
+        {{ ph | placeholder_svg_tag: 'bcollectiongrid44__img placeholder-svg' }}
+      {%- endif -%}
+      {%- if img2 != blank -%}
+        {{ img2 | image_url: width: 900 | image_tag: alt: '', loading: 'lazy', widths: '360, 540, 720, 900', sizes: '(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw', class: 'bcollectiongrid44__img bcollectiongrid44__hov' }}
+      {%- endif -%}
+    </a>
+    {%- if sold and sold_lbl != blank -%}
+      <span class="bcollectiongrid44__label bcollectiongrid44__flag">{{ sold_lbl | escape }}</span>
+    {%- elsif sold == false and compare > price and sale_lbl != blank -%}
+      <span class="bcollectiongrid44__label bcollectiongrid44__flag">{{ sale_lbl | escape }}</span>
+    {%- endif -%}
+    <div class="bcollectiongrid44__pill">
+      {%- if sold -%}
+        <button type="button" class="bcollectiongrid44__pbtn" disabled>{{ 'blko.collection_grid_44.sold_out' | t }}</button>
+      {%- elsif multi -%}
+        <a href="{{ url }}" class="bcollectiongrid44__pbtn">{{ 'blko.collection_grid_44.choose' | t: option: opt }}</a>
+      {%- else -%}
+        <button type="button" class="bcollectiongrid44__pbtn" data-add="{{ vid }}" aria-live="polite">{{ 'blko.collection_grid_44.add' | t }}</button>
+      {%- endif -%}
+    </div>
+    {%- unless sold -%}
+      {%- if multi -%}
+        <a href="{{ url }}" class="bcollectiongrid44__plus" aria-label="{{ 'blko.collection_grid_44.choose_for' | t: option: opt, name: title | escape }}">{%- render 'blko-ui-icon', name: 'plus', size: 16 -%}</a>
+      {%- else -%}
+        <button type="button" class="bcollectiongrid44__plus" data-add="{{ vid }}" aria-label="{{ 'blko.collection_grid_44.add_for' | t: name: title | escape }}">{%- render 'blko-ui-icon', name: 'plus', size: 16 -%}</button>
+      {%- endif -%}
+    {%- endunless -%}
+  </div>
+  <div class="bcollectiongrid44__copy">
+    <div class="bcollectiongrid44__nrow">
+      <h3 class="bcollectiongrid44__name"><a href="{{ url }}">{{ title | escape }}</a></h3>
+      <p class="bcollectiongrid44__price">
+        {%- if compare > price -%}
+          <span class="bcollectiongrid44__now is-sale">{{ price | money }}</span><s class="bcollectiongrid44__was"><span class="blko-ui-sr-only">{{ 'blko.collection_grid_44.was' | t }} </span>{{ compare | money }}</s>
+        {%- else -%}
+          <span class="bcollectiongrid44__now">{{ price | money }}</span>
+        {%- endif -%}
+      </p>
+    </div>
+    {%- if skin != blank or vol != blank -%}
+      <ul class="bcollectiongrid44__chips" aria-label="{{ 'blko.collection_grid_44.attrs' | t | escape }}">
+        {%- if skin != blank -%}<li>{{ skin | escape }}</li>{%- endif -%}
+        {%- if vol != blank -%}<li>{{ vol | escape }}</li>{%- endif -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</article>

@@ -1,0 +1,78 @@
+{%- comment -%}recommendations-50 shelf card: product (live; mf_size / mf_lasts = [namespace, key]) or b (preview block); n = position.{%- endcomment -%}
+{%- liquid
+  assign key = ''
+  if product != blank
+    assign name = product.title
+    assign url = product.url
+    assign img = product.featured_media
+    assign v = product.selected_or_first_available_variant
+    assign size = nil
+    assign lasts = nil
+    if mf_size.size == 2
+      assign size = product.metafields[mf_size[0]][mf_size[1]].value
+    endif
+    if size == blank and product.has_only_default_variant == false
+      assign size = v.title
+    endif
+    if mf_lasts.size == 2
+      assign lasts = product.metafields[mf_lasts[0]][mf_lasts[1]].value
+    endif
+    assign cents = v.price
+    for line in cart.items
+      if line.variant_id == v.id
+        assign key = line.key
+        break
+      endif
+    endfor
+  else
+    assign name = b.settings.title
+    assign url = '#'
+    assign img = b.settings.image
+    assign size = b.settings.size
+    assign lasts = b.settings.lasts
+    assign cents = b.settings.price | times: 100
+  endif
+  assign step = n | minus: 1 | modulo: 4 | plus: 1
+  assign num = n
+  if n < 10
+    assign num = '0' | append: n
+  endif
+  if key != ''
+    assign pressed = 'true'
+  else
+    assign pressed = 'false'
+  endif
+-%}
+<li class="brecommendations50__card"{% if b %} {{ b.shopify_attributes }}{% endif %} data-card data-name="{{ name | escape }}">
+  <div class="brecommendations50__bottle brecommendations50__bottle--{{ step }}">
+    <div class="brecommendations50__media">
+      {%- if img != blank -%}
+        {{- img | image_url: width: 600 | image_tag: loading: 'lazy', widths: '300, 400, 600', sizes: '(min-width: 768px) 14vw, 45vw', class: 'brecommendations50__img', alt: name -}}
+      {%- else -%}
+        {%- capture ph_name -%}product-{{ ph | default: 1 }}{%- endcapture -%}
+        {{- ph_name | placeholder_svg_tag: 'brecommendations50__img brecommendations50__ph' -}}
+      {%- endif -%}
+    </div>
+  </div>
+  <div class="brecommendations50__ruled">
+    <div class="brecommendations50__shelfline" aria-hidden="true"></div>
+    <p class="brecommendations50__label brecommendations50__muted brecommendations50__no">No. {{ num }}{% if size != blank %} · {{ size | escape }}{% endif %}</p>
+    <h3 class="brecommendations50__name"><a href="{{ url }}">{{ name | escape }}</a></h3>
+    <p class="brecommendations50__row"><span class="brecommendations50__muted">{{ lasts | escape }}</span><span class="brecommendations50__price">{%- render 'blko-ui-money', amount: cents, cents: true -%}</span></p>
+    {%- capture kids -%}<span class="brecommendations50__off">{%- render 'blko-ui-icon', name: 'plus', size: 16 -%}{{ t_add }}</span><span class="brecommendations50__on">{%- render 'blko-ui-icon', name: 'check', size: 16 -%}{{ t_added }}</span><span class="brecommendations50__full">{{ t_full }}</span><span class="brecommendations50__busy"><span class="brecommendations50__spin" aria-hidden="true"></span><span data-busy-label></span></span>{%- endcapture -%}
+    {%- if product != blank -%}
+      <form method="post" action="{{ routes.cart_add_url }}" class="brecommendations50__form" data-add>
+        <input type="hidden" name="id" value="{{ v.id }}"><input type="hidden" name="quantity" value="1">
+        {%- if v.available -%}
+          {%- capture at -%}data-btn aria-pressed="{{ pressed }}" data-variant="{{ v.id }}" data-key="{{ key }}" data-cents="{{ cents }}"{%- endcapture -%}
+          {%- render 'blko-ui-button', variant: 'outline', full: true, type: 'submit', children: kids, attrs: at, className: 'brecommendations50__add' -%}
+        {%- else -%}
+          {%- render 'blko-ui-button', variant: 'outline', full: true, type: 'button', children: t_sold, attrs: 'disabled', className: 'brecommendations50__add' -%}
+        {%- endif -%}
+      </form>
+    {%- else -%}
+      {%- capture at -%}data-btn data-toggle aria-pressed="false" data-cents="{{ cents }}"{%- endcapture -%}
+      {%- render 'blko-ui-button', variant: 'outline', full: true, type: 'button', children: kids, attrs: at, className: 'brecommendations50__add' -%}
+    {%- endif -%}
+  </div>
+</li>

@@ -1,0 +1,296 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-2'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-team-06.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Team, balm: "the bench, station by station". No headshots: each person is a station (block) shown by their hands at
+  work. A hairline bench rule under the heading; on desktop the 4:5 plates hang from it on hangers of different lengths
+  and at different widths (width + hanger are block settings). Each station: a small-caps tag on the rule ("02 · Dose"),
+  the name (Karla 500), the role in small caps, one line, and "Reaches for" a picked product (product.title, product.url).
+  Motion: the theme kit blurs the plates in; on pointer-fine devices under the kit's motion flag, hovering or focusing
+  a station softens the others (rack focus, CSS only). Nothing moves. Phones/tablets (< 1024px): one station per row,
+  the plate on the left (136px), the text beside it.
+{%- endcomment -%}
+{{ 'blko-balm-motion.css' | asset_url | stylesheet_tag -}}
+<script src="{{ 'blko-balm-motion.js' | asset_url }}" defer="defer"></script
+>{%- capture body -%}
+  <header class="bteam06__head"
+    >{%- if s.eyebrow != blank -%}<p class="bteam06__cap bteam06__eyebrow"><span aria-hidden="true"></span>{{ s.eyebrow | escape }}</p>{%- endif -%}
+    {%- if s.heading != blank -%}<h2 class="bteam06__h2">{{ s.heading }}</h2>{%- endif -%}
+    {%- if s.text != blank -%}<div class="bteam06__lead">{{ s.text }}</div>{%- endif -%}
+  </header
+  >{%- if section.blocks.size > 0 -%}
+  <ul class="bteam06__bench"
+    >{%- for b in section.blocks -%}
+      {%- assign p = b.settings -%}
+      <li class="bteam06__station" style="--span: {{ p.width }}; --hang: {{ p.hang }}px;" {{ b.shopify_attributes }}
+        ><span aria-hidden="true" class="bteam06__hanger"></span
+        ><p class="bteam06__cap bteam06__tag"><span class="bteam06__acc">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><span aria-hidden="true" class="bteam06__dash"></span><span>{{ p.verb | escape }}</span></p
+        ><div class="bteam06__plate"
+          >{%- if p.image != blank -%}
+            {{ p.image | image_url: width: 900 | image_tag: widths: '300, 450, 600, 900', sizes: '(min-width: 1024px) 33vw, 136px', loading: 'lazy', class: 'bteam06__img', alt: p.image.alt | default: p.name -}}
+          {%- else -%}
+            {{ 'image' | placeholder_svg_tag: 'bteam06__img' -}}
+          {%- endif -%}
+        </div
+        ><div class="bteam06__about"
+          >{%- if p.name != blank -%}<h3 class="bteam06__h3">{{ p.name | escape }}</h3>{%- endif -%}
+          {%- if p.role != blank -%}<p class="bteam06__cap bteam06__muted">{{ p.role | escape }}</p>{%- endif -%}
+          {%- if p.line != blank -%}<p class="bteam06__line">{{ p.line | escape }}</p>{%- endif -%}
+          {%- if p.product != blank -%}
+            <p class="bteam06__reach"><span class="bteam06__muted">{{ 'blko.team_06.reaches_for' | t }} </span><a href="{{ p.product.url }}">{{ p.product.title | escape }}</a></p
+          >{%- elsif p.pick != blank -%}
+            <p class="bteam06__reach"><span class="bteam06__muted">{{ 'blko.team_06.reaches_for' | t }} </span>{{ p.pick | escape }}</p
+          >{%- endif -%}
+        </div
+      ></li
+    >{%- endfor -%}
+  </ul
+  >{%- endif -%}
+{%- endcapture -%}
+<div class="bteam06{%- if blko_sid != 'scheme-2' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px"
+  >{%- render 'blko-ui-section', surface: s.surface, bleed: true, label: s.label, className: 'bteam06__section', inner: 'bteam06__inner', children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Team, bench stations",
+  "tag": "div",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Region label",
+      "default": "The people of the still-room"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Label",
+      "default": "The still-room bench"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Four pairs of hands, one bench"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>No headshots. This is where each of us stands, in the order a batch moves down the bench, and what our hands are doing most days.</p>"
+    },
+    {
+      "type": "select",
+      "id": "surface",
+      "label": "Colour",
+      "options": [
+        {
+          "value": "bg",
+          "label": "Background"
+        },
+        {
+          "value": "alt",
+          "label": "Alternate"
+        }
+      ],
+      "default": "bg"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128
+    }
+  ],
+  "blocks": [
+    {
+      "type": "station",
+      "name": "Station",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Hands at work",
+          "info": "Shown at 4:5. Hands and tools read better than faces here."
+        },
+        {
+          "type": "text",
+          "id": "verb",
+          "label": "Station",
+          "default": "Dose"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Iris"
+        },
+        {
+          "type": "text",
+          "id": "role",
+          "label": "Role",
+          "default": "Head chemist"
+        },
+        {
+          "type": "textarea",
+          "id": "line",
+          "label": "Line",
+          "default": "Counts the actives in drops, not pumps, and writes each one in the batch book."
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Reaches for (product)"
+        },
+        {
+          "type": "text",
+          "id": "pick",
+          "label": "Reaches for (text, no product)",
+          "default": "Oat Milk Cleansing Balm"
+        },
+        {
+          "type": "header",
+          "content": "Desktop layout"
+        },
+        {
+          "type": "range",
+          "id": "width",
+          "label": "Width (of 12 columns)",
+          "min": 2,
+          "max": 5,
+          "step": 1,
+          "default": 3,
+          "info": "Keep the row total at 12."
+        },
+        {
+          "type": "range",
+          "id": "hang",
+          "label": "Hanger length",
+          "min": 24,
+          "max": 120,
+          "step": 8,
+          "unit": "px",
+          "default": 56
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Team, bench stations",
+      "blocks": [
+        {
+          "type": "station",
+          "settings": {
+            "verb": "Sort",
+            "name": "Efua",
+            "role": "Botanist",
+            "line": "Picks over every sack of petals by hand before a gram is weighed.",
+            "pick": "Calendula Calm Drops",
+            "width": 3,
+            "hang": 56
+          }
+        },
+        {
+          "type": "station",
+          "settings": {
+            "verb": "Dose",
+            "name": "Iris",
+            "role": "Head chemist",
+            "line": "Counts the actives in drops, not pumps, and writes each one in the batch book.",
+            "pick": "Oat Milk Cleansing Balm",
+            "width": 4,
+            "hang": 40
+          }
+        },
+        {
+          "type": "station",
+          "settings": {
+            "verb": "Test",
+            "name": "Nadia",
+            "role": "Clinical esthetician",
+            "line": "Patch-tests each batch on the back of her own hand before her clients try it.",
+            "pick": "Olive Leaf Night Cream",
+            "width": 2,
+            "hang": 112
+          }
+        },
+        {
+          "type": "station",
+          "settings": {
+            "verb": "Wrap",
+            "name": "Walter",
+            "role": "Quality & dispatch",
+            "line": "Checks the lot label against the book, then wraps every order in plain paper.",
+            "pick": "Rosehip Facial Oil",
+            "width": 3,
+            "hang": 80
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

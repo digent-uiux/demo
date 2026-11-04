@@ -1,0 +1,556 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-article-31.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-article-31.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Journal long-read, balm. A crumb and a label, the didone title, a small-caps byline over a hairline, a 3:2 lead photo
+  with a caption, then one shared left edge (≤66ch): the article body (lead paragraph, sections, a pull quote between
+  hairlines, numbered lists set as a No. 01–04 how-to), tags and comments. Beside it (under it on phones) "In this
+  story": products from a product list in a double-hairline label frame, each with Add (/cart/add.js → blko:cart:add).
+  Scene: an amber reading hairline at the top of the body, scroll-linked under the balm kit; static = full length.
+  Live: the article object. Elsewhere (theme editor, page previews): the settings and the body blocks.
+{%- endcomment -%}
+{{ 'blko-balm-motion.css' | asset_url | stylesheet_tag -}}
+<script src="{{ 'blko-balm-motion.js' | asset_url }}" defer="defer"></script
+>{%- liquid
+  assign live = false
+  if article != blank
+    assign live = true
+  endif
+  if live
+    assign words = article.content | strip_html | split: ' ' | size
+    assign mins = words | divided_by: 200 | at_least: 1
+  else
+    assign mins = s.mins
+  endif
+  assign status_idle = s.status_idle
+  assign status_added = 'blko.article_31.added' | t | append: ' ' | append: s.status_added
+-%}
+{%- capture card_m -%}{%- render 'blko-article-31-card', k: 'm', heading: s.story_heading, products: s.products, blocks: section.blocks, idle: status_idle, added: status_added -%}{%- endcapture -%}
+{%- capture card_d -%}{%- render 'blko-article-31-card', k: 'd', heading: s.story_heading, products: s.products, blocks: section.blocks, idle: status_idle, added: status_added -%}{%- endcapture -%}
+{%- capture has_card -%}{%- if s.products != blank -%}1{%- else -%}{%- for b in section.blocks -%}{%- if b.type == 'item' -%}1{%- break -%}{%- endif -%}{%- endfor -%}{%- endif -%}{%- endcapture -%}
+{%- capture body -%}
+  <header class="barticle31__head"
+    ><nav aria-label="{{ 'blko.article_31.crumb' | t }}" class="barticle31__cap"
+      ><ol class="barticle31__crumb"
+        >{%- if live -%}
+          <li><a href="{{ blog.url }}">{{ blog.title | escape }}</a></li
+          >{%- if article.tags.size > 0 -%}<li aria-hidden="true">/</li><li><a href="{{ blog.url }}/tagged/{{ article.tags.first | handleize }}">{{ article.tags.first | escape }}</a></li>{%- endif -%}
+        {%- else -%}
+          <li><a href="{{ s.crumb_1_url | default: '#' }}">{{ s.crumb_1 | escape }}</a></li
+          >{%- if s.crumb_2 != blank -%}<li aria-hidden="true">/</li><li><a href="{{ s.crumb_2_url | default: '#' }}">{{ s.crumb_2 | escape }}</a></li>{%- endif -%}
+        {%- endif -%}
+      </ol
+    ></nav
+    >{%- if live -%}{%- assign eb = article.metafields.custom.eyebrow -%}{%- else -%}{%- assign eb = s.eyebrow -%}{%- endif -%}
+    {%- if eb != blank -%}<p class="barticle31__cap barticle31__acc">{{ eb | escape }}</p>{%- endif -%}
+    <h1 class="barticle31__h1 blko-ui-text--h1">{%- if live -%}{{ article.title | escape }}{%- else -%}{{ s.title | escape }}{% if s.title_em != blank %} <em>{{ s.title_em | escape }}</em>{% endif %}{%- endif -%}</h1
+    ><p class="barticle31__cap barticle31__byline"
+      >{%- if live -%}
+        <span>{{ 'blko.article_31.by' | t: name: article.author }}</span><span aria-hidden="true">·</span>{{ article.published_at | time_tag: '%b %-d, %Y' -}}
+      {%- else -%}
+        <span>{{ 'blko.article_31.by' | t: name: s.author }}</span><span aria-hidden="true">·</span><span>{{ s.date | escape }}</span
+      >{%- endif -%}
+      <span aria-hidden="true">·</span><span>{{ 'blko.article_31.min_read' | t | replace: '[n]', mins }}</span
+    ></p
+  ></header
+
+  >{%- if live -%}{%- assign lead = article.image -%}{%- assign cap = article.image.alt -%}{%- else -%}{%- assign lead = s.image -%}{%- assign cap = s.caption -%}{%- endif -%}
+  {%- if live == false or lead != blank -%}
+  <figure class="barticle31__fig"
+    ><div class="barticle31__lead"
+      >{%- if lead != blank -%}
+        {{ lead | image_url: width: 2400 | image_tag: widths: '600, 900, 1200, 1600, 2000, 2400', sizes: '(min-width: 1344px) 1280px, 100vw', loading: 'eager', fetchpriority: 'high', class: 'barticle31__img', alt: lead.alt | default: cap -}}
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'barticle31__img barticle31__phsvg' -}}
+      {%- endif -%}
+    </div
+    >{%- if cap != blank -%}<figcaption class="barticle31__cap">{{ 'blko.article_31.fig' | t }} {{ cap | escape }}</figcaption>{%- endif -%}
+  </figure
+  >{%- endif -%}
+
+  <div class="barticle31__read" data-read
+    ><div aria-hidden="true" class="barticle31__line"><span data-bar></span></div
+    ><div class="barticle31__cols{% if has_card == blank %} is-solo{% endif %}"
+      ><article class="barticle31__body" data-body
+        ><div class="barticle31__rte"
+          >{%- if live -%}
+            {{ article.content -}}
+          {%- else -%}
+            {%- assign prev = '' -%}
+            {%- for b in section.blocks -%}
+              {%- assign bs = b.settings -%}
+              {%- case b.type -%}
+                {%- when 'paragraph' -%}
+                  <div class="barticle31__para{% if bs.lead %} is-lead{% endif %}" {{ b.shopify_attributes }}>{{ bs.text }}</div
+                >{%- when 'heading' -%}
+                  <h2 {{ b.shopify_attributes }}>{{ bs.text | escape }}</h2
+                >{%- when 'quote' -%}
+                  <blockquote {{ b.shopify_attributes }}><p>{{ bs.text | escape }}</p>{% if bs.cite != blank %}<footer class="barticle31__cap">{{ bs.cite | escape }}</footer>{% endif %}</blockquote
+                >{%- when 'step' -%}
+                  {%- unless prev == 'step' -%}
+                    <ol
+                      >{%- for x in section.blocks offset: forloop.index0 -%}
+                        {%- if x.type != 'step' -%}{%- break -%}{%- endif -%}
+                        <li {{ x.shopify_attributes }}><div><p><strong>{{ x.settings.title | escape }}</strong></p><p>{{ x.settings.text | escape }}</p></div></li
+                      >{%- endfor -%}
+                    </ol
+                  >{%- endunless -%}
+              {%- endcase -%}
+              {%- assign prev = b.type -%}
+            {%- endfor -%}
+          {%- endif -%}
+        </div
+
+        >{%- if has_card != blank -%}<div class="barticle31__mcard">{{ card_m }}</div>{%- endif -%}
+
+        {%- if live -%}{%- assign tags = article.tags -%}{%- else -%}{%- assign tags = s.tags | split: ',' -%}{%- endif -%}
+        {%- if tags.size > 0 -%}
+        <div class="barticle31__tags"
+          ><p class="barticle31__cap">{{ 'blko.article_31.filed' | t }}</p
+          ><ul class="barticle31__tlist"
+            >{%- for t in tags -%}{%- assign tt = t | strip -%}{%- if tt == blank -%}{%- continue -%}{%- endif -%}
+              <li><a href="{% if live %}{{ blog.url }}/tagged/{{ tt | handleize }}{% else %}#{% endif %}">{{ tt | escape }}</a></li
+            >{%- endfor -%}
+          </ul
+        ></div
+        >{%- endif -%}
+
+        {%- if live and blog.comments_enabled? -%}
+        <section class="barticle31__comments" aria-labelledby="a31-c-{{ section.id }}"
+          ><h2 id="a31-c-{{ section.id }}" class="barticle31__ch blko-ui-text--h3">{{ 'blko.article_31.comments' | t }}</h2
+          >{%- if article.comments_count > 0 -%}
+          {%- paginate article.comments by 20 -%}
+          <ol class="barticle31__clist"
+            >{%- for c in article.comments -%}
+            <li class="barticle31__comment"
+              ><p class="barticle31__cap">{{ c.author | escape }} · {{ c.created_at | time_tag: '%b %-d, %Y' }}</p
+              ><div class="barticle31__ctext">{{ c.content }}</div
+            ></li
+            >{%- endfor -%}
+          </ol
+          >{%- if paginate.pages > 1 -%}<div class="barticle31__cpager">{{ paginate | default_pagination }}</div>{%- endif -%}
+          {%- endpaginate -%}
+          {%- endif -%}
+          {%- assign fid = 'a31-form-' | append: section.id -%}
+          {%- form 'new_comment', article, id: fid, class: 'barticle31__cform' -%}
+            {%- if form.posted_successfully? -%}
+              <p role="status" class="barticle31__cok">{%- if blog.moderated? -%}{{ 'blko.article_31.comment_moderated' | t }}{%- else -%}{{ 'blko.article_31.comment_posted' | t }}{%- endif -%}</p
+            >{%- endif -%}
+            {%- if form.errors -%}<div role="alert" class="barticle31__cerr">{{ form.errors | default_errors }}</div>{%- endif -%}
+            <div class="barticle31__crow"
+              >{%- capture fi -%}{%- render 'blko-ui-input', id: 'a31-cn', name: 'comment[author]', value: form.author, autocomplete: 'name', required: true -%}{%- endcapture -%}
+              {%- assign fl = 'blko.article_31.comment_name' | t -%}
+              {%- render 'blko-ui-field', id: 'a31-cn', label: fl, children: fi -%}
+              {%- capture fi -%}{%- render 'blko-ui-input', id: 'a31-ce', type: 'email', name: 'comment[email]', value: form.email, autocomplete: 'email', required: true -%}{%- endcapture -%}
+              {%- assign fl = 'blko.article_31.comment_email' | t -%}
+              {%- render 'blko-ui-field', id: 'a31-ce', label: fl, children: fi -%}
+            </div
+            >{%- capture fi -%}{%- render 'blko-ui-textarea', id: 'a31-cb', name: 'comment[body]', value: form.body, rows: 5, required: true -%}{%- endcapture -%}
+            {%- assign fl = 'blko.article_31.comment_body' | t -%}
+            {%- render 'blko-ui-field', id: 'a31-cb', label: fl, children: fi -%}
+            {%- capture lbl -%}{{ 'blko.article_31.comment_submit' | t }}{%- endcapture -%}
+            {%- render 'blko-ui-button', type: 'submit', variant: 'outline', children: lbl -%}
+          {%- endform -%}
+        </section
+        >{%- endif -%}
+      </article
+      >{%- if has_card != blank -%}<div class="barticle31__side"><div class="barticle31__stick">{{ card_d }}</div></div>{%- endif -%}
+    </div
+  ></div
+>{%- endcapture -%}
+<div class="barticle31{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px"
+  >{%- render 'blko-ui-section', surface: 'bg', label: s.label, inner: 'barticle31__inner', children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Journal long-read",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "On an article page this shows the article: title, author, date, read time, image, content, tags and comments (when the blog allows them). The body blocks and the preview settings only fill the section elsewhere."
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Region label",
+      "default": "Journal article"
+    },
+    {
+      "type": "header",
+      "content": "In this story"
+    },
+    {
+      "type": "product_list",
+      "id": "products",
+      "label": "Products",
+      "limit": 4
+    },
+    {
+      "type": "text",
+      "id": "story_heading",
+      "label": "Heading",
+      "default": "Where the infusion goes"
+    },
+    {
+      "type": "text",
+      "id": "status_idle",
+      "label": "Line under the products",
+      "default": "Made in batches of 200, from this year's petals."
+    },
+    {
+      "type": "text",
+      "id": "status_added",
+      "label": "Line once added",
+      "default": "Both ship in recycled card."
+    },
+    {
+      "type": "header",
+      "content": "Preview (outside an article page)"
+    },
+    {
+      "type": "text",
+      "id": "crumb_1",
+      "label": "Crumb 1",
+      "default": "Journal"
+    },
+    {
+      "type": "url",
+      "id": "crumb_1_url",
+      "label": "Crumb 1 link"
+    },
+    {
+      "type": "text",
+      "id": "crumb_2",
+      "label": "Crumb 2",
+      "default": "Ingredient files"
+    },
+    {
+      "type": "url",
+      "id": "crumb_2_url",
+      "label": "Crumb 2 link"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Label",
+      "default": "Ingredient file No. 07",
+      "info": "On an article page: the custom.eyebrow metafield."
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Calendula: what a petal infusion does for"
+    },
+    {
+      "type": "text",
+      "id": "title_em",
+      "label": "Title, italic word",
+      "default": "redness"
+    },
+    {
+      "type": "text",
+      "id": "author",
+      "label": "Author",
+      "default": "Iris Hale"
+    },
+    {
+      "type": "text",
+      "id": "date",
+      "label": "Date",
+      "default": "Sep 9, 2026"
+    },
+    {
+      "type": "number",
+      "id": "mins",
+      "label": "Minutes",
+      "default": 5
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Lead photo"
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "Photo caption",
+      "info": "On an article page the caption is the image's alt text.",
+      "default": "Calendula steeping in sunflower oil, week four, on the workshop shelf."
+    },
+    {
+      "type": "text",
+      "id": "tags",
+      "label": "Tags",
+      "default": "Calendula, Ingredients, Sensitive skin, How it's made"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 112,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 112
+    }
+  ],
+  "blocks": [
+    {
+      "type": "paragraph",
+      "name": "Paragraph (preview)",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "lead",
+          "label": "Lead paragraph",
+          "default": false
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Calendula is the plainest flower in our garden, and the hardest working.</p>"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "name": "Heading (preview)",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Why it calms"
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "name": "Pull quote (preview)",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Quote",
+          "default": "“We don't hurry the oil.”"
+        },
+        {
+          "type": "text",
+          "id": "cite",
+          "label": "Cite",
+          "default": "Mara Quint · founder"
+        }
+      ]
+    },
+    {
+      "type": "step",
+      "name": "How-to step (preview)",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Dry the petals"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Dried flat on linen for a week."
+        }
+      ]
+    },
+    {
+      "type": "item",
+      "name": "Story product (preview)",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Name",
+          "default": "Calendula Serum"
+        },
+        {
+          "type": "text",
+          "id": "size",
+          "label": "Size",
+          "default": "30 ml"
+        },
+        {
+          "type": "number",
+          "id": "price",
+          "label": "Price",
+          "default": 48
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "note",
+          "label": "Note",
+          "default": "The infusion at 12%, for redness"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Journal long-read",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "settings": {
+            "lead": true,
+            "text": "<p>Calendula is the plainest flower in our garden, and the hardest working. Steeped slowly in oil, its petals give up the compounds that make a hot, blotchy cheek settle down. Nothing about it is new: it has been an apothecary staple for centuries. What matters is how patiently it is made.</p>"
+          }
+        },
+        {
+          "type": "heading",
+          "settings": {
+            "text": "Why it calms"
+          }
+        },
+        {
+          "type": "paragraph",
+          "settings": {
+            "text": "<p>The petals carry triterpenoids and flavonoids that quiet the skin's response to wind, heat and over-scrubbing. In an oil infusion they stay gentle: there is no alcohol to sting, and no fragrance to set off a reaction of its own.</p>"
+          }
+        },
+        {
+          "type": "paragraph",
+          "settings": {
+            "text": "<p>It won't erase rosacea or replace a dermatologist. It is a soft, daily kindness for skin that flushes easily, and it works best sealed in, at night, under a balm.</p>"
+          }
+        },
+        {
+          "type": "quote",
+          "settings": {
+            "text": "“We don't hurry the oil. Six weeks on a warm shelf is the whole recipe.”",
+            "cite": "Mara Quint · founder, at the bench"
+          }
+        },
+        {
+          "type": "heading",
+          "settings": {
+            "text": "How we make it"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Dry the petals",
+            "text": "Calendula heads are picked in the morning and dried flat on linen for a week, until they rustle."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Cover them in oil",
+            "text": "The petals go into amber jars, topped with cold-pressed sunflower oil, a finger's width over the flowers."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Wait six weeks",
+            "text": "The jars sit on a warm shelf, out of the sun, and get a slow turn each morning. The oil goes from straw to gold."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Strain and fold in",
+            "text": "We strain through muslin, rest the oil for two days, then fold it into the balm and the serum by hand."
+          }
+        },
+        {
+          "type": "paragraph",
+          "settings": {
+            "text": "<p>At home, press two drops of the serum into damp skin, then warm a pea of balm between your palms and hold it over the flushed areas for a few breaths. Patch test first if your skin reacts to daisies.</p>"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "title": "Calendula Serum",
+            "size": "30 ml",
+            "price": 48,
+            "note": "The infusion at 12%, for redness"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "title": "Barrier Balm",
+            "size": "50 ml",
+            "price": 38,
+            "note": "Calendula in shea, to seal at night"
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

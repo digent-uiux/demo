@@ -1,0 +1,29 @@
+{%- comment -%}
+  blog-89 entry. part 'pic': one picture layer of the arched window (image or a placeholder), the first one on.
+  part 'row': one index entry (numeral, date · topic · read time, title link, excerpt). Params: i, title, url, image,
+  alt, iso, topic, read, dek, t_read, attrs.
+{%- endcomment -%}
+{%- if part == 'pic' -%}
+  <div class="bblog89__pic"{% if i == 1 %} data-on{% endif %} data-pic="{{ i }}" data-alt="{{ alt | default: title | escape }}">
+    {%- if image != blank -%}
+      {%- if i == 1 -%}{%- capture a -%}{{ alt | default: title | escape }}{%- endcapture -%}{%- else -%}{%- assign a = '' -%}{%- endif -%}
+      {{- image | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '480, 640, 800, 1000', sizes: '(min-width: 768px) 40vw, 80vw', alt: a, class: 'bblog89__img' -}}
+    {%- else -%}
+      {%- assign phn = i | modulo: 2 | plus: 1 -%}{%- capture ph -%}lifestyle-{{ phn }}{%- endcapture -%}{{- ph | placeholder_svg_tag: 'bblog89__img bblog89__ph' -}}
+    {%- endif -%}
+  </div>
+{%- else -%}
+  <li class="bblog89__row"{% if i == 1 %} data-on{% endif %} data-i="{{ i }}" data-topic="{{ topic | escape }}" {{ attrs }}>
+    <span class="bblog89__num" aria-hidden="true">{% if i < 10 %}0{% endif %}{{ i }}</span>
+    <article class="bblog89__entry">
+      <p class="bblog89__cap bblog89__meta">
+        {%- if iso != blank -%}<time datetime="{{ iso | date: '%Y-%m-%d' }}">{{ iso | date: '%b %-d, %Y' }}</time>{%- endif -%}
+        {%- if topic != blank -%}<span aria-hidden="true">·</span><span>{{ topic | escape }}</span>{%- endif -%}
+        {%- if read != blank -%}<span aria-hidden="true">·</span><span>{{ read }} {{ t_read }}</span>{%- endif -%}
+      </p>
+      <h3 class="bblog89__t"><a href="{{ url }}" class="bblog89__link">{{ title | escape }}</a></h3>
+      {%- if dek != blank -%}<p class="bblog89__dek">{{ dek | escape }}</p>{%- endif -%}
+    </article>
+    <span class="bblog89__mark" aria-hidden="true"></span>
+  </li>
+{%- endif -%}

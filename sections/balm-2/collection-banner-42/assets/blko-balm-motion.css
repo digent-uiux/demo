@@ -1,0 +1,58 @@
+/* Balm motion kit. GENERATED from components/ui/kits/balm.ts by kits/liquid.mjs; do not edit.
+   Runs only under html.blko-kit-balm (added by blko-balm-motion.js when motion is allowed). */
+/* Entry: blocks rise out of soft focus (never a plain fade). */
+html.blko-kit-balm:root [data-reveal-group][data-shown] > :not(h1, h2) { animation-name: balm-rise; }
+@keyframes balm-rise { from { opacity: 0; filter: blur(10px); transform: translateY(24px); } }
+
+/* Headings: focus rise. Split headings rise word by word on their line; unsplit ones rise as one. */
+html.blko-kit-balm:root [data-reveal-group][data-shown] :is(h1, h2):not([data-balm-split]) { animation: balm-focus 1s cubic-bezier(.16,1,.3,1) .12s backwards; }
+html.blko-kit-balm:root [data-balm-split] .balm-w { display: inline-block; }
+html.blko-kit-balm:root [data-reveal-group][data-shown] [data-balm-split] .balm-w { animation: balm-focus 1s cubic-bezier(.16,1,.3,1) calc(120ms + var(--balm-l, 0) * 110ms) backwards; }
+@keyframes balm-focus { from { opacity: 0; filter: blur(8px); transform: translateY(.4em); } }
+/* Eyebrow right above a heading: a wipe from the left out of a light blur. Lead right under it: one soft rise. */
+html.blko-kit-balm:root [data-reveal-group][data-shown] :is(p, span):has(+ :is(h1, h2)) { animation: balm-wipe .7s cubic-bezier(.16,1,.3,1) backwards; }
+@keyframes balm-wipe { from { clip-path: inset(-.3em 100% -.3em -.3em); filter: blur(4px); } to { clip-path: inset(-.3em); filter: none; } }
+html.blko-kit-balm:root [data-reveal-group][data-shown] :is(h1, h2) + p { animation: balm-lead .8s cubic-bezier(.16,1,.3,1) .42s backwards; }
+@keyframes balm-lead { from { opacity: 0; filter: blur(6px); transform: translateY(.6em); } }
+
+/* Tiles: blur in one after another. */
+html.blko-kit-balm:root [data-reveal-group][data-shown] :is(:is(ul, ol, [class*="grid"]) > :has(img, svg[data-placeholder]), .blko-ui-product-card:not(:is(ul, ol, [class*="grid"]) > * .blko-ui-product-card)) { animation: balm-rise 1s cubic-bezier(.16,1,.3,1) calc(150ms + var(--balm-i, 0) * 80ms) backwards; }
+
+/* Pictures: focus pull, once. */
+html.blko-kit-balm:root [data-reveal-group][data-shown] :is(img, svg[data-placeholder]) { animation: balm-pull 1.2s cubic-bezier(.16,1,.3,1) .1s backwards; }
+@keyframes balm-pull { from { filter: blur(8px); transform: scale(1.04); } }
+
+/* Load (first screen, from first paint): the picture racks into focus with a warm bloom, then heading, lead, buttons. */
+html.blko-kit-balm:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(img, svg[data-placeholder]) { animation: balm-l-img 1.4s cubic-bezier(.16,1,.3,1) backwards; }
+@keyframes balm-l-img { from { filter: blur(10px) brightness(1.06) sepia(.12); transform: scale(1.05); } }
+html.blko-kit-balm:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(h1, h2) { animation: balm-focus 1s cubic-bezier(.16,1,.3,1) .15s backwards; }
+html.blko-kit-balm:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(p, span):has(+ :is(h1, h2)) { animation: balm-wipe .7s cubic-bezier(.16,1,.3,1) backwards; }
+html.blko-kit-balm:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(h1, h2) ~ p { animation: balm-lead .8s cubic-bezier(.16,1,.3,1) .56s backwards; }
+html.blko-kit-balm:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(.blko-ui-button:not(.blko-ui-button--link), .blko-ui-arrow-link) { animation: balm-lead .8s cubic-bezier(.16,1,.3,1) .76s backwards; }
+
+/* Buttons: glow bloom. They never move: the glow rises inside, the arrow goes out and back, a press darkens. */
+@property --balm-g { syntax: "<percentage>"; inherits: false; initial-value: 0%; }
+html.blko-kit-balm:root :is(.blko-ui-button:not(.blko-ui-button--link), .blko-ui-arrow-link) {
+  background-image: radial-gradient(var(--balm-g) calc(var(--balm-g) * .9) at 50% 100%, color-mix(in oklab, var(--blko-color-accent) 34%, transparent), transparent);
+  transition: --balm-g .52s cubic-bezier(.16,1,.3,1), color .45s cubic-bezier(.16,1,.3,1), background-color .45s cubic-bezier(.16,1,.3,1), border-color .45s cubic-bezier(.16,1,.3,1), filter .18s cubic-bezier(.16,1,.3,1); }
+html.blko-kit-balm:root :is(.blko-ui-button:not(.blko-ui-button--link), .blko-ui-arrow-link):focus-visible { --balm-g: 170%; }
+html.blko-kit-balm:root :is(.blko-ui-button:not(.blko-ui-button--link), .blko-ui-arrow-link):focus-visible :is(:is(.blko-ui-button:not(.blko-ui-button--link), .blko-ui-arrow-link) > svg:last-child:not(:first-child), .blko-ui-arrow-link__icon > svg) { animation: balm-arrow .6s cubic-bezier(.16,1,.3,1); }
+html.blko-kit-balm:root :is(.blko-ui-button:not(.blko-ui-button--link), .blko-ui-arrow-link):active { filter: brightness(.92); }
+@media (hover: hover) {
+  html.blko-kit-balm:root :is(.blko-ui-button:not(.blko-ui-button--link), .blko-ui-arrow-link):hover { --balm-g: 170%; }
+  html.blko-kit-balm:root :is(.blko-ui-button:not(.blko-ui-button--link), .blko-ui-arrow-link):hover :is(:is(.blko-ui-button:not(.blko-ui-button--link), .blko-ui-arrow-link) > svg:last-child:not(:first-child), .blko-ui-arrow-link__icon > svg) { animation: balm-arrow .6s cubic-bezier(.16,1,.3,1); }
+}
+@keyframes balm-arrow { 0% { transform: none; } 42% { transform: translate(120%, -120%); opacity: 0; } 43% { transform: translate(-120%, 120%); opacity: 0; } 100% { transform: none; opacity: 1; } }
+
+/* Links: underline settle (fades in and drops from 8px to 3px). */
+html.blko-kit-balm:root :is(nav, footer, p) a:not(.blko-ui-button):not(.blko-ui-arrow-link):not(:has(img, svg)) { text-decoration-line: underline; text-decoration-thickness: 1px; text-decoration-color: transparent; text-underline-offset: 8px; transition: text-decoration-color .36s cubic-bezier(.16,1,.3,1), text-underline-offset .36s cubic-bezier(.16,1,.3,1); }
+html.blko-kit-balm:root :is(nav, footer, p) a:not(.blko-ui-button):not(.blko-ui-arrow-link):not(:has(img, svg)):is(:hover, :focus-visible) { text-decoration-color: currentColor; text-underline-offset: 3px; }
+
+/* Cards: the photo warms and settles a little closer on hover; the card stays put. */
+html.blko-kit-balm:root .blko-ui-product-card :is(img, svg[data-placeholder]) { transition: scale 1.1s cubic-bezier(.16,1,.3,1), filter 1.1s cubic-bezier(.16,1,.3,1); }
+@media (hover: hover) { html.blko-kit-balm:root .blko-ui-product-card:hover :is(img, svg[data-placeholder]) { scale: 1.03; filter: sepia(.08); } }
+
+/* Icons: a soft turn. */
+html.blko-kit-balm:root :is(.blko-ui-button:not(.blko-ui-button--link), .blko-ui-arrow-link, a):is(:hover, :focus-visible) svg.lucide { rotate: -8deg; transition: rotate .7s cubic-bezier(.16,1,.3,1); }
+
+@media (prefers-reduced-motion: reduce) { html.blko-kit-balm:root *, html.blko-kit-balm:root *::before, html.blko-kit-balm:root *::after { animation: none !important; transition: none !important; } }

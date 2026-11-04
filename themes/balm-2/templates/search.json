@@ -1,17 +1,215 @@
 {
   "sections": {
-    "main": {
-      "type": "blko-main-search",
+    "search-results-30": {
+      "type": "blko-search-results-30",
       "settings": {
-        "color_scheme": "scheme-1",
-        "padding_top": 80,
-        "padding_bottom": 80,
-        "heading": "Search",
-        "per_page": 24,
-        "columns_desktop": 4,
-        "columns_mobile": "2"
-      }
+        "tokens": "theme"
+      },
+      "blocks": {
+        "product-1": {
+          "type": "product",
+          "settings": {
+            "title": "Rosehip Face Oil",
+            "step": "Treat",
+            "size": "30 ml",
+            "price": 54,
+            "inci": "rosehip, sea buckthorn, vitamin E"
+          }
+        },
+        "product-2": {
+          "type": "product",
+          "settings": {
+            "title": "Oat Milk Cleanser",
+            "step": "Cleanse",
+            "size": "150 ml",
+            "price": 32,
+            "inci": "colloidal oat, rosehip, glycerin"
+          }
+        },
+        "product-3": {
+          "type": "product",
+          "settings": {
+            "title": "Barrier Balm",
+            "step": "Seal",
+            "size": "50 ml",
+            "price": 38,
+            "inci": "shea, rosehip, calendula"
+          }
+        },
+        "product-4": {
+          "type": "product",
+          "settings": {
+            "title": "Calendula Serum",
+            "step": "Treat",
+            "size": "30 ml",
+            "price": 48,
+            "inci": "calendula, rosehip, oat"
+          }
+        },
+        "product-5": {
+          "type": "product",
+          "settings": {
+            "title": "Night Repair Cream",
+            "step": "Seal",
+            "size": "50 ml",
+            "price": 62,
+            "inci": "rosehip, ceramides, squalane"
+          }
+        },
+        "product-6": {
+          "type": "product",
+          "settings": {
+            "title": "Hydrating Mist",
+            "step": "Treat",
+            "size": "100 ml",
+            "price": 26,
+            "inci": "rose water, aloe, glycerin"
+          }
+        },
+        "product-7": {
+          "type": "product",
+          "settings": {
+            "title": "Squalane Drops",
+            "step": "Treat",
+            "size": "30 ml",
+            "price": 44,
+            "inci": "squalane, rosehip"
+          }
+        },
+        "product-8": {
+          "type": "product",
+          "settings": {
+            "title": "Lip and Cheek Tin",
+            "step": "Seal",
+            "size": "12 g",
+            "price": 22,
+            "inci": "beeswax, rosehip, beetroot"
+          }
+        },
+        "product-9": {
+          "type": "product",
+          "settings": {
+            "title": "Clay Mask",
+            "step": "Cleanse",
+            "size": "75 ml",
+            "price": 36,
+            "inci": "kaolin, oat, lavender"
+          }
+        },
+        "product-10": {
+          "type": "product",
+          "settings": {
+            "title": "Amber Body Oil",
+            "step": "Body",
+            "size": "100 ml",
+            "price": 46,
+            "inci": "rosehip, sunflower, lavender"
+          }
+        },
+        "product-11": {
+          "type": "product",
+          "settings": {
+            "title": "Gentle Scrub",
+            "step": "Body",
+            "size": "200 g",
+            "price": 28,
+            "inci": "cane sugar, sweet almond, lemon peel"
+          }
+        },
+        "product-12": {
+          "type": "product",
+          "settings": {
+            "title": "Cream Cleansing Bar",
+            "step": "Cleanse",
+            "size": "110 g",
+            "price": 18,
+            "inci": "olive, oat, shea"
+          }
+        },
+        "story-13": {
+          "type": "story",
+          "settings": {
+            "title": "Oil cleansing on a Sunday: a ten-minute ritual",
+            "dek": "Massage dry, emulsify with warm water, lift with a muslin.",
+            "date": "Sep 27, 2026",
+            "mins": 6,
+            "keys": "rosehip, oil, cleanse"
+          }
+        },
+        "story-14": {
+          "type": "story",
+          "settings": {
+            "title": "The four-step evening routine, in the right order",
+            "dek": "Thinnest texture first, and why the oil always goes last.",
+            "date": "Oct 20, 2026",
+            "mins": 6,
+            "keys": "routine, rosehip, squalane, serum"
+          }
+        },
+        "story-15": {
+          "type": "story",
+          "settings": {
+            "title": "Winter swaps: when to trade your serum for a richer cream",
+            "dek": "If your skin feels tight by noon, the serum isn't the problem.",
+            "date": "Sep 18, 2026",
+            "mins": 5,
+            "keys": "cream, rosehip, ceramides"
+          }
+        },
+        "story-16": {
+          "type": "story",
+          "settings": {
+            "title": "Colloidal oat: why it calms a tight, itchy face",
+            "dek": "Finely milled oat holds water on the skin.",
+            "date": "Oct 16, 2026",
+            "mins": 5,
+            "keys": "oat, cleanser"
+          }
+        },
+        "story-17": {
+          "type": "story",
+          "settings": {
+            "title": "Calendula: what a petal infusion does for redness",
+            "dek": "Steeped in sunflower oil for six weeks, then strained.",
+            "date": "Sep 9, 2026",
+            "mins": 5,
+            "keys": "calendula, balm, redness"
+          }
+        },
+        "story-18": {
+          "type": "story",
+          "settings": {
+            "title": "Lavender oil: soothing note or irritant?",
+            "dek": "What linalool does on sensitive skin.",
+            "date": "Oct 1, 2026",
+            "mins": 7,
+            "keys": "lavender"
+          }
+        }
+      },
+      "block_order": [
+        "product-1",
+        "product-2",
+        "product-3",
+        "product-4",
+        "product-5",
+        "product-6",
+        "product-7",
+        "product-8",
+        "product-9",
+        "product-10",
+        "product-11",
+        "product-12",
+        "story-13",
+        "story-14",
+        "story-15",
+        "story-16",
+        "story-17",
+        "story-18"
+      ]
     }
   },
-  "order": ["main"]
+  "order": [
+    "search-results-30"
+  ]
 }

@@ -1,0 +1,299 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-product-story-43.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-product-story-43.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Founder's letter, balm: a hairline-framed paper sheet on the alt ground (date line, didone h2 subject, the letter at
+  reading width, "Read the whole letter" opening the rest, a drawn signature or a signature image, a P.S. and an arrow
+  link to the shop); beside it an "Enclosed" column of 4:3 photos with numbered slips (blocks). Phones: letter first.
+{%- endcomment -%}
+{{ 'blko-balm-motion.css' | asset_url | stylesheet_tag -}}
+<script src="{{ 'blko-balm-motion.js' | asset_url }}" defer="defer"></script
+>{%- capture body -%}
+  <article class="bproductstory43__sheet"
+    ><div class="bproductstory43__cap bproductstory43__dateline"><span>{{ s.from | escape }}</span><span>{{ s.date | escape }}</span></div
+    ><h2 class="bproductstory43__h2">{{ s.heading | escape }}</h2
+    ><div class="bproductstory43__letter"
+      >{%- if s.greeting != blank -%}<p>{{ s.greeting | escape }}</p>{%- endif -%}
+      {{ s.letter -}}
+      {%- if s.letter_more != blank -%}
+      <div class="bproductstory43__more" id="ps43-{{ section.id }}" data-more hidden>{{ s.letter_more }}</div
+      ><button type="button" class="bproductstory43__toggle" aria-expanded="false" aria-controls="ps43-{{ section.id }}" data-toggle data-open="{{ 'blko.product_story_43.read' | t }}" data-close="{{ 'blko.product_story_43.fold' | t }}">{{ 'blko.product_story_43.read' | t }}</button
+      >{%- endif -%}
+    </div
+    ><div class="bproductstory43__sign"
+      >{%- if s.closing != blank -%}<p class="bproductstory43__closing">{{ s.closing | escape }}</p>{%- endif -%}
+      {%- if s.signature != blank -%}
+        {{ s.signature | image_url: width: 400 | image_tag: class: 'bproductstory43__sigimg', alt: s.signer, loading: 'lazy' -}}
+      {%- else -%}
+        <svg viewBox="0 0 220 70" role="img" aria-label="{{ 'blko.product_story_43.signature' | t: name: s.signer }}" class="bproductstory43__sig"><path d="M8 52 C 18 14, 30 10, 32 46 C 34 20, 46 12, 50 48 C 56 30, 64 30, 66 44 C 70 34, 80 32, 82 44 C 86 36, 96 34, 96 46 C 100 30, 112 28, 110 46 C 116 22, 128 22, 124 50 C 132 34, 146 30, 150 42 C 158 36, 170 34, 176 40 L 212 30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg
+      >{%- endif -%}
+      <p class="bproductstory43__cap bproductstory43__muted">{{ s.signer | escape }}{% if s.signer_role != blank %} · {{ s.signer_role | escape }}{% endif %}</p
+    ></div
+    >{%- if s.ps != blank -%}<p class="bproductstory43__ps"><span class="bproductstory43__pslabel">{{ 'blko.product_story_43.ps' | t }}</span> {{ s.ps | escape }}</p>{%- endif -%}
+    {%- if s.link_label != blank -%}
+      {%- capture lbl -%}{{ s.link_label | escape }}{%- endcapture -%}
+      {%- assign href = s.link | default: routes.all_products_collection_url -%}
+      {%- render 'blko-ui-arrow-link', href: href, children: lbl, className: 'bproductstory43__cta' -%}
+    {%- endif -%}
+  </article
+  >{%- if section.blocks.size > 0 -%}
+  <aside aria-label="{{ s.enclosed | escape }}" class="bproductstory43__aside"
+    ><p class="bproductstory43__cap bproductstory43__eyebrow"><span aria-hidden="true"></span>{{ s.enclosed | escape }}</p
+    ><ol class="bproductstory43__encs"
+      >{%- for b in section.blocks -%}
+      <li {{ b.shopify_attributes }}
+        ><figure class="bproductstory43__enc"
+          ><div class="bproductstory43__photo"
+            >{%- if b.settings.image != blank -%}
+              {{ b.settings.image | image_url: width: 900 | image_tag: widths: '300, 450, 600, 900', sizes: '(min-width: 896px) 30vw, (min-width: 672px) 33vw, 100vw', loading: 'lazy', class: 'bproductstory43__img', alt: b.settings.image.alt -}}
+            {%- else -%}
+              {{ 'image' | placeholder_svg_tag: 'bproductstory43__img' -}}
+            {%- endif -%}
+          </div
+          ><span class="bproductstory43__cap bproductstory43__slip">{{ 'blko.product_story_43.enc' | t }} {% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span
+          >{%- if b.settings.caption != blank -%}<figcaption class="bproductstory43__figcap">{{ b.settings.caption | escape }}</figcaption>{%- endif -%}
+        </figure
+      ></li
+      >{%- endfor -%}
+    </ol
+  ></aside
+  >{%- endif -%}
+{%- endcapture -%}
+<div class="bproductstory43{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px"
+  >{%- render 'blko-ui-section', surface: s.surface, bleed: true, label: s.label, className: 'bproductstory43__section', inner: 'bproductstory43__inner', children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Founder's letter",
+  "tag": "div",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Letter"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Region label",
+      "default": "A letter from our founder"
+    },
+    {
+      "type": "text",
+      "id": "from",
+      "label": "Date line, left",
+      "default": "From the garden room"
+    },
+    {
+      "type": "text",
+      "id": "date",
+      "label": "Date line, right",
+      "default": "Spring, 2026"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Subject",
+      "default": "Why we still grow our own calendula."
+    },
+    {
+      "type": "text",
+      "id": "greeting",
+      "label": "Greeting",
+      "default": "Dear reader,"
+    },
+    {
+      "type": "richtext",
+      "id": "letter",
+      "label": "Letter",
+      "default": "<p>Twelve years ago I had eczema on both hands and a cupboard of creams that stung. I started infusing calendula petals in sunflower oil on my kitchen table, because it was the one thing my grandmother swore by. It worked well enough that friends began to ask for jars.</p><p>We are fourteen people now, with a small lab and a half-acre walled garden. From June to September we pick the calendula every third morning, when the heads are fully open, and steep them for six weeks before a single gram goes into a formula.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "letter_more",
+      "label": "Rest of the letter",
+      "info": "Opens with \"Read the whole letter\". Blank hides the toggle.",
+      "default": "<p>It would be cheaper to buy the extract. We tried it once, side by side, and the bought oil was paler and smelled of nothing. So the garden stays, and so does the rule that every batch, never more than 400 jars, is dated by hand and tested on our own skin first.</p><p>Thank you for reading this far, and for trusting a slow way of making things. If anything we make does not suit you, write to me. The letters still come to my desk.</p>"
+    },
+    {
+      "type": "text",
+      "id": "closing",
+      "label": "Closing",
+      "default": "With care,"
+    },
+    {
+      "type": "image_picker",
+      "id": "signature",
+      "label": "Signature image",
+      "info": "Blank draws a hand signature."
+    },
+    {
+      "type": "text",
+      "id": "signer",
+      "label": "Name",
+      "default": "Margot"
+    },
+    {
+      "type": "text",
+      "id": "signer_role",
+      "label": "Role",
+      "default": "Founder and head formulator"
+    },
+    {
+      "type": "textarea",
+      "id": "ps",
+      "label": "P.S.",
+      "default": "The calendula balm from this summer's harvest is batch 26-07. It's the one I keep by the sink."
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link",
+      "default": "Shop the garden balms"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link URL"
+    },
+    {
+      "type": "header",
+      "content": "Enclosures"
+    },
+    {
+      "type": "text",
+      "id": "enclosed",
+      "label": "Enclosures label",
+      "default": "Enclosed"
+    },
+    {
+      "type": "select",
+      "id": "surface",
+      "label": "Colour",
+      "options": [
+        {
+          "value": "alt",
+          "label": "Alternate"
+        },
+        {
+          "value": "pop-1",
+          "label": "Pop 1"
+        },
+        {
+          "value": "bg",
+          "label": "Background"
+        }
+      ],
+      "default": "alt"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128
+    }
+  ],
+  "blocks": [
+    {
+      "type": "enclosure",
+      "name": "Enclosure",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo"
+        },
+        {
+          "type": "textarea",
+          "id": "caption",
+          "label": "Caption",
+          "default": "The first balm tins. We still pour each one by hand."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Founder's letter",
+      "blocks": [
+        {
+          "type": "enclosure",
+          "settings": {
+            "caption": "The kitchen table, 2014. Every early batch was weighed here."
+          }
+        },
+        {
+          "type": "enclosure",
+          "settings": {
+            "caption": "Colloidal oat, milled for us from spring oats grown two farms over."
+          }
+        },
+        {
+          "type": "enclosure",
+          "settings": {
+            "caption": "The first balm tins. We still pour each one by hand."
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

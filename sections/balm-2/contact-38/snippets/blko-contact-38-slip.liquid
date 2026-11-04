@@ -1,0 +1,19 @@
+{%- comment -%}
+  One dispensary slip (contact-38): perforated head (pad name + amber No.), an amber ℞ beside the route title, the reply
+  numeral and unit, the hours, one line, then the action (children). Params: i, pad, title, fig, unit, hours, note, big,
+  children, attrs.
+{%- endcomment -%}
+{%- assign no = i | prepend: '0' | slice: -2, 2 -%}
+<article class="bcontact38__slip{% if big %} bcontact38__slip--big{% endif %}" style="--i: {{ i | minus: 1 }}" {{ attrs }}>
+  <span aria-hidden="true" class="bcontact38__perf"></span>
+  <p class="bcontact38__cap bcontact38__muted bcontact38__pad"><span class="bcontact38__padname">{{ pad | escape }}</span><span class="bcontact38__accent">{{ 'blko.contact_38.no' | t }} {{ no }}</span></p>
+  <h3 class="bcontact38__route"><span aria-hidden="true" class="bcontact38__rx">℞</span><span class="bcontact38__rtitle">{{ title | escape }}</span></h3>
+  {%- if fig != blank or hours != blank -%}
+  <div class="bcontact38__reply">
+    {%- if fig != blank -%}<p class="bcontact38__ink"><span class="bcontact38__fig">{{ fig | escape }}</span><span class="bcontact38__unit">{{ unit | escape }}</span></p>{%- endif -%}
+    {%- if hours != blank -%}<p class="bcontact38__cap bcontact38__muted bcontact38__hours">{{ hours | escape }}</p>{%- endif -%}
+  </div>
+  {%- endif -%}
+  {%- if note != blank -%}<p class="bcontact38__note">{{ note | escape }}</p>{%- endif -%}
+  {{ children }}
+</article>

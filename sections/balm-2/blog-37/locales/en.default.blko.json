@@ -1,0 +1,19 @@
+{
+  "blko": {
+    "blog_37": {
+      "by_label": "By",
+      "collected": "Collected",
+      "count": "Sheets [a]–[b] of [t]",
+      "family": "Family",
+      "file": "Ingredient file · seed envelope",
+      "herbarium": "Herbarium",
+      "lead": "Lead sheet",
+      "mins": "{{ n }} min",
+      "newer": "Newer",
+      "no": "No.",
+      "older": "Older",
+      "page": "Page [n]",
+      "pages": "Journal pages"
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{%- comment -%}
+  "In this story" (article-31): the double-hairline label frame with up to four products and an Add toggle each.
+  Params: k (id suffix), heading, products (product_list, may be blank), blocks (section.blocks: item previews), idle,
+  added (status strings).
+{%- endcomment -%}
+<aside aria-labelledby="a31-story-{{ k }}" class="barticle31__card" data-card>
+  <div class="barticle31__cardin">
+    <div class="barticle31__chead">
+      <p class="barticle31__cap">{{ 'blko.article_31.story' | t }}</p>
+      <h2 id="a31-story-{{ k }}" class="barticle31__ch blko-ui-text--h3">{{ heading | escape }}</h2>
+    </div>
+    <ul class="barticle31__plist">
+      {%- assign n = 0 -%}
+      {%- if products != blank -%}
+        {%- for p in products limit: 4 -%}
+          {%- assign n = n | plus: 1 -%}
+          {%- assign v = p.selected_or_first_available_variant -%}
+          {%- assign size = '' -%}{%- unless p.has_only_default_variant -%}{%- assign size = v.title -%}{%- endunless -%}
+          {%- assign note = p.metafields.custom.short_note | default: p.description | strip_html | truncatewords: 8 -%}
+          {%- render 'blko-article-31-item', n: n, url: p.url, title: p.title, image: p.featured_image, size: size, note: note, price: v.price, vid: v.id, available: v.available -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for b in blocks -%}
+          {%- if b.type != 'item' -%}{%- continue -%}{%- endif -%}
+          {%- if n >= 4 -%}{%- break -%}{%- endif -%}
+          {%- assign n = n | plus: 1 -%}
+          {%- assign bs = b.settings -%}
+          {%- assign cents = bs.price | times: 100 -%}
+          {%- render 'blko-article-31-item', n: n, title: bs.title, image: bs.image, size: bs.size, note: bs.note, price: cents, available: true -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </ul>
+    <p role="status" class="barticle31__status" data-status data-idle="{{ idle | escape }}" data-added="{{ added | escape }}">{{ idle | escape }}</p>
+  </div>
+</aside>

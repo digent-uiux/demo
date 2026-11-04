@@ -1,0 +1,121 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}{%- comment -%}
+  Balm search dialog: rendered once by layout/theme.liquid. Any [data-blko-predictive-open] link (header-19's search
+  button) opens it; without JS those links go to /search. A paper sheet drops from the top: a small-caps label, one
+  hairline field in italic Bodoni (amber rule on focus), suggested terms and four trending products (a collection setting, else all products) while idle, and live results from
+  /search/suggest rendered by sections/blko-predictive-search.liquid.
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+{%- assign uid = 'bps-' | append: section.id -%}
+{{ 'blko-predictive-search.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-predictive-search.js' | asset_url }}" defer="defer"></script>
+<blko-predictive-search class="bps" data-url="{{ routes.predictive_search_url }}">
+  <dialog class="bps__dialog{% if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" aria-labelledby="{{ uid }}-l" data-dialog>
+    <div class="bps__panel">
+      <div class="bps__wrap">
+        <p id="{{ uid }}-l" class="bps__label bps__muted">{{ s.label | escape }}</p>
+        <form action="{{ routes.search_url }}" method="get" role="search" class="bps__form" data-form>
+          {%- render 'blko-icon', name: 'search', size: 20 -%}
+          <label for="{{ uid }}-q" class="bps__sr">{{ 'blko.search_dialog.field' | t }}</label>
+          <input id="{{ uid }}-q" type="search" name="q" class="bps__input" placeholder="{{ s.placeholder | escape }}" autocomplete="off" autocapitalize="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="{{ uid }}-res" aria-autocomplete="list" data-input>
+          <input type="hidden" name="options[prefix]" value="last">
+          <button type="button" class="bps__close" data-close aria-label="{{ 'blko.search_dialog.close' | t | escape }}">{%- render 'blko-icon', name: 'x', size: 18 -%}</button>
+        </form>
+        <div id="{{ uid }}-res" class="bps__body" role="region" aria-live="polite" data-body>
+          {%- assign terms = s.terms | split: ',' -%}
+          {%- if s.terms != blank -%}
+          <div class="bps__res bps__res--idle">
+            <div class="bps__grp">
+              <h2 class="bps__label bps__muted">{{ 'blko.search_dialog.often' | t }}</h2>
+              <ul class="bps__chips" role="list">
+                {%- for t in terms -%}{%- assign tt = t | strip -%}{%- if tt != blank -%}
+                <li><a href="{{ routes.search_url }}?q={{ tt | url_encode }}" class="bps__chip" data-term="{{ tt | escape }}">{{ tt | escape }}</a></li>
+                {%- endif -%}{%- endfor -%}
+              </ul>
+            </div>
+          </div>
+          {%- endif -%}
+          {%- liquid
+            assign tc = s.trending
+            if tc == blank
+              assign tc = collections['all']
+            endif
+          -%}
+          {%- if s.show_trending and tc.products.size > 0 -%}
+          <div class="bps__res bps__res--idle bps__trend">
+            <div class="bps__grp bps__prods">
+              <h2 class="bps__label bps__muted">{{ 'blko.search_dialog.trending' | t }}</h2>
+              <ul role="list" class="bps__tlist">
+                {%- for p in tc.products limit: 4 -%}
+                <li>
+                  <a href="{{ p.url }}" class="bps__p" data-opt>
+                    <span class="bps__pimg">
+                      {%- if p.featured_image != blank -%}
+                        {{ p.featured_image | image_url: width: 160 | image_tag: alt: '', loading: 'lazy', widths: '80, 160', sizes: '56px' }}
+                      {%- else -%}
+                        {{ 'product-1' | placeholder_svg_tag: 'bps__ph' }}
+                      {%- endif -%}
+                    </span>
+                    <span class="bps__pt"><span class="bps__pn">{{ p.title | escape }}</span></span>
+                    <span class="bps__pp">{%- assign pm = p.price_min | money -%}{% if p.price_varies %}{{ 'blko.search_dialog.from' | t: price: pm }}{% else %}{{ p.price | money }}{% endif %}</span>
+                  </a>
+                </li>
+                {%- endfor -%}
+              </ul>
+            </div>
+          </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </dialog>
+</blko-predictive-search>
+
+{% schema %}
+{
+  "name": "t:blko.search_dialog.schema.name",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "t:blko.search_dialog.schema.label",
+      "default": "Search the apothecary"
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "t:blko.search_dialog.schema.placeholder",
+      "default": "Rosehip, oat, a balm…"
+    },
+    {
+      "type": "text",
+      "id": "terms",
+      "label": "t:blko.search_dialog.schema.terms",
+      "info": "t:blko.search_dialog.schema.terms_info",
+      "default": "rosehip, oily skin, calendula, refills"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trending",
+      "label": "t:blko.search_dialog.schema.show_trending",
+      "default": true
+    },
+    {
+      "type": "collection",
+      "id": "trending",
+      "label": "t:blko.search_dialog.schema.trending",
+      "info": "t:blko.search_dialog.schema.trending_info"
+    }
+  ]
+}
+{% endschema %}

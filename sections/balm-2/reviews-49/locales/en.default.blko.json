@@ -1,0 +1,24 @@
+{
+  "blko": {
+    "reviews_49": {
+      "all_reading": "Reading · all skin",
+      "all_skin": "All skin",
+      "breakdown": "Rating breakdown",
+      "filter": "Filter by skin type",
+      "label": "Customer reviews",
+      "lot": "Lot",
+      "more": "Show more reviews",
+      "note": "note",
+      "notes": "notes",
+      "of": "{{ x }} of {{ y }} notes",
+      "out_of": "out of 5",
+      "reviews": "reviews",
+      "skin_of": "{{ skin }} skin",
+      "skin_reading": "Reading · {{ skin }} skin",
+      "stars": "stars",
+      "verified": "Verified buyer",
+      "write": "Write a review",
+      "your_skin": "Your skin"
+    }
+  }
+}

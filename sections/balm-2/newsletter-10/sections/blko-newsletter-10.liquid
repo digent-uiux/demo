@@ -1,0 +1,238 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-8'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-newsletter-10.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-newsletter-10.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Balm newsletter, "the Sunday post": the page's one dark band (pop-3, every token flipped). A tall 4:5 plate bleeds off
+  the left edge; a paper envelope front (the band's colours flipped back) overlaps its lower right edge. On it: the
+  sender in small caps, a perforated amber stamp (issue number in Bodoni) struck by five wavy cancellation lines with a
+  postmark line, the combo h2 (<em> = Karla 300), one lead line and the address block: "To", the email on the address
+  rule with a square Subscribe, the consent as fine print. Shopify's customer form tagged "newsletter": success swaps the
+  address block for a status line and the postmark reads "Posted"; errors show under the rule (role=alert).
+  Motion (balm kit on only): the cancellation lines draw once when the band is shown. Static: the struck stamp.
+  Phones: the postmark sits left of the stamp (no collision) and the plate caption is hidden (the envelope covers it).
+{%- endcomment -%}
+{{ 'blko-balm-motion.css' | asset_url | stylesheet_tag -}}
+<script src="{{ 'blko-balm-motion.js' | asset_url }}" defer="defer"></script
+>{%- capture body -%}
+  {%- form 'customer', id: 'nl10-form', class: 'bnewsletter10__form' -%}
+  {%- assign sent = form.posted_successfully? -%}
+  <figure class="bnewsletter10__fig"
+    ><div class="bnewsletter10__media"
+      >{%- if s.image != blank -%}
+        {{- s.image | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '500, 700, 900, 1200, 1400', sizes: '(min-width: 768px) 50vw, 86vw', class: 'bnewsletter10__img' -}}
+      {%- else -%}
+        {{- 'lifestyle-2' | placeholder_svg_tag: 'bnewsletter10__img bnewsletter10__ph' -}}
+      {%- endif -%}
+    </div
+    >{%- if s.caption != blank or s.caption_right != blank -%}
+      <figcaption class="bnewsletter10__cap bnewsletter10__muted bnewsletter10__figcap"><span>{{ s.caption | escape }}</span><span>{{ s.caption_right | escape }}</span></figcaption
+    >{%- endif -%}
+  </figure
+  ><div class="bnewsletter10__env"
+    ><div aria-hidden="true" class="bnewsletter10__stamp"
+      ><div class="bnewsletter10__stamp-in"
+        >{%- render 'blko-ui-icon', name: 'leaf', size: 20, stroke: 1 -%}
+        <span class="bnewsletter10__issue">{{ s.issue | escape }}</span
+        ><span class="bnewsletter10__stamp-word">{{ 'blko.newsletter_10.letter' | t }}</span
+      ></div
+    ></div
+    ><div aria-hidden="true" class="bnewsletter10__mark"
+      ><svg viewBox="0 0 240 52" fill="none" class="bnewsletter10__waves"
+        >{%- for i in (0..4) -%}
+          <path d="M240,6 q-15,-8 -30,0 t-30,0 t-30,0 t-30,0 t-30,0 t-30,0 t-30,0 t-30,0" pathLength="1" transform="translate(0 {{ i | times: 10 }})" class="bnewsletter10__wave" style="--i: {{ i }};"
+        />{%- endfor -%}
+      </svg
+      ><span class="bnewsletter10__cap bnewsletter10__muted">{%- if sent -%}{{ 'blko.newsletter_10.posted' | t }}{%- else -%}{{ s.postmark | escape }}{%- endif -%}</span
+    ></div
+    >{%- if s.sender != blank or s.sender_line != blank -%}
+      <p class="bnewsletter10__cap bnewsletter10__muted bnewsletter10__from"><span class="bnewsletter10__ink">{{ s.sender | escape }}</span><span>{{ s.sender_line | escape }}</span></p
+    >{%- endif -%}
+    <div class="bnewsletter10__txt"
+      >{%- if s.heading != blank -%}<h2 class="bnewsletter10__h">{{ s.heading }}</h2>{%- endif -%}
+      {%- if s.text != blank -%}<p class="bnewsletter10__lead">{{ s.text | escape }}</p>{%- endif -%}
+    </div
+    ><div class="bnewsletter10__addr"
+      ><input type="hidden" name="contact[tags]" value="newsletter"
+      >{%- if sent -%}
+        <p role="status" class="bnewsletter10__done">{{ 'blko.newsletter_10.thanks' | t }}</p
+      >{%- else -%}
+        {%- assign ph = 'blko.newsletter_10.email' | t -%}
+        <label for="nl10-email-{{ section.id }}" class="bnewsletter10__cap bnewsletter10__muted">{{ 'blko.newsletter_10.to' | t }}</label
+        ><div class="bnewsletter10__row{% if form.errors %} bnewsletter10__row--error{% endif %}"
+          ><input id="nl10-email-{{ section.id }}" type="email" name="contact[email]" required autocomplete="email" placeholder="{{ s.placeholder | default: ph | escape }}"{% if form.errors %} aria-invalid="true" aria-describedby="nl10-err-{{ section.id }}"{% endif %} class="bnewsletter10__email"
+          >{%- render 'blko-ui-button', type: 'submit', size: 'sm', children: s.button, className: 'bnewsletter10__btn' -%}
+        </div
+        >{%- if form.errors -%}
+          <p id="nl10-err-{{ section.id }}" role="alert" class="bnewsletter10__err">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</p
+        >{%- endif -%}
+      {%- endif -%}
+      {%- if s.consent != blank -%}<div class="bnewsletter10__fine">{{ s.consent }}</div>{%- endif -%}
+    </div
+  ></div
+  >{%- endform -%}
+{%- endcapture -%}
+<div class="bnewsletter10{%- if blko_sid != 'scheme-8' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-bnewsletter10
+  >{%- assign lbl = 'blko.newsletter_10.label' | t -%}
+  {%- render 'blko-ui-section', surface: 'pop-3', bleed: true, label: lbl, className: 'bnewsletter10__section', inner: 'bnewsletter10__in', children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Newsletter, Sunday post",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Photo"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "Caption",
+      "default": "The Sunday bath"
+    },
+    {
+      "type": "text",
+      "id": "caption_right",
+      "label": "Caption (right)",
+      "default": "Amber glass, stone"
+    },
+    {
+      "type": "header",
+      "content": "Envelope"
+    },
+    {
+      "type": "text",
+      "id": "sender",
+      "label": "Sender",
+      "default": "From the still-room"
+    },
+    {
+      "type": "text",
+      "id": "sender_line",
+      "label": "Sender, second line",
+      "default": "Workshop 4, Mill Lane"
+    },
+    {
+      "type": "text",
+      "id": "issue",
+      "label": "Stamp number",
+      "default": "42"
+    },
+    {
+      "type": "text",
+      "id": "postmark",
+      "label": "Postmark line",
+      "default": "Every other Sunday"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Italic words are set in the light body font.",
+      "default": "Calm skin, <em>every other Sunday</em>"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "New formulas, small batches and the routines that work, in one short letter. No sales in between."
+    },
+    {
+      "type": "header",
+      "content": "Form"
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Placeholder",
+      "default": "Your email address"
+    },
+    {
+      "type": "text",
+      "id": "button",
+      "label": "Button",
+      "default": "Subscribe"
+    },
+    {
+      "type": "richtext",
+      "id": "consent",
+      "label": "Consent line",
+      "default": "<p>By subscribing you agree to receive the letter and to our <a href=\"/policies/privacy-policy\">privacy policy</a>. Unsubscribe any time.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-8"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter, Sunday post"
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

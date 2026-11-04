@@ -1,49 +1,91 @@
 {
   "sections": {
-    "main": {
-      "type": "blko-main-cart",
+    "cart-page-36": {
+      "type": "blko-cart-page-36",
+      "settings": {
+        "tokens": "theme"
+      },
       "blocks": {
-        "shipping_bar": {
-          "type": "shipping_bar",
-          "disabled": true,
+        "line-1": {
+          "type": "line",
+          "settings": {}
+        },
+        "line-2": {
+          "type": "line",
           "settings": {
-            "threshold": 60,
-            "message": "You’re [amount] away from free shipping.",
-            "success": "Your order ships free."
+            "title": "Cream Cleansing Bar",
+            "size": "110 g · unwrapped",
+            "price": 18
           }
         },
-        "note": {
-          "type": "note",
-          "settings": { "label": "Order note", "placeholder": "" }
-        },
-        "subtotal": {
-          "type": "subtotal",
+        "line-3": {
+          "type": "line",
           "settings": {
-            "show_tax_note": true,
-            "shipping_note": "Free shipping over $60. Returns within 30 days."
-          }
-        },
-        "buttons": {
-          "type": "buttons",
-          "settings": {
-            "checkout_label": "Check out",
-            "show_dynamic": true,
-            "continue_label": "Continue shopping"
+            "title": "Lip and Cheek Tin",
+            "size": "12 g · rose tint",
+            "price": 22
           }
         }
       },
-      "block_order": ["shipping_bar", "note", "subtotal", "buttons"],
+      "block_order": [
+        "line-1",
+        "line-2",
+        "line-3"
+      ]
+    },
+    "recommendations-50": {
+      "type": "blko-recommendations-50",
       "settings": {
-        "color_scheme": "scheme-1",
-        "padding_top": 80,
-        "padding_bottom": 80,
-        "heading": "Your bag",
-        "heading_size": "h2",
-        "show_upsell": true,
-        "upsell_heading": "Pairs well with",
-        "upsell_limit": 4
-      }
+        "tokens": "theme"
+      },
+      "blocks": {
+        "item-1": {
+          "type": "item",
+          "settings": {
+            "title": "Rich night cream",
+            "size": "Mini jar · 15 ml",
+            "lasts": "About 2 weeks",
+            "price": 16
+          }
+        },
+        "item-2": {
+          "type": "item",
+          "settings": {
+            "title": "Olive & lavender bar",
+            "size": "Guest size · 40 g",
+            "lasts": "3 weeks of showers",
+            "price": 8
+          }
+        },
+        "item-3": {
+          "type": "item",
+          "settings": {
+            "title": "Calendula hand cream",
+            "size": "Travel tube · 20 ml",
+            "lasts": "A month in a coat pocket",
+            "price": 11
+          }
+        },
+        "item-4": {
+          "type": "item",
+          "settings": {
+            "title": "Cucumber gel mask",
+            "size": "Mini jar · 20 ml",
+            "lasts": "About 6 masks",
+            "price": 13
+          }
+        }
+      },
+      "block_order": [
+        "item-1",
+        "item-2",
+        "item-3",
+        "item-4"
+      ]
     }
   },
-  "order": ["main"]
+  "order": [
+    "cart-page-36",
+    "recommendations-50"
+  ]
 }

@@ -1,0 +1,28 @@
+{
+  "blko": {
+    "product_detail_37": {
+      "add": "Add to bag",
+      "added": "Added to bag",
+      "bar": "Quick add",
+      "breadcrumb": "Breadcrumb",
+      "error": "Couldn't add to the bag. Try again.",
+      "in_focus": "In focus · No.",
+      "in_stock": "In stock, ready to pour",
+      "label": "Product",
+      "low_stock": "Only {{ n }} left in this batch",
+      "near_far": "Near → far",
+      "one_time": "One-time purchase",
+      "pair_add": "+ Add",
+      "pair_added": "Added",
+      "pair_label": "Add {{ name }} to bag",
+      "per": "/ {{ unit }}",
+      "photos": "Gallery: choose a photo",
+      "purchase": "Purchase",
+      "reviews": "reviews",
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable",
+      "variant": "Choose an option",
+      "view": "Photo {{ n }} of {{ total }}: {{ alt }}"
+    }
+  }
+}

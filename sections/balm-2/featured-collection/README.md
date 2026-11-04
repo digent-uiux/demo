@@ -5,13 +5,13 @@ Product row from one collection with quick add.
 - Category: featured-collection
 - Kind: section
 - Shopify target: ok
-- HTML target: ok
-- Live demo: https://demo.blocko.ai/html/balm-2/sections/featured-collection--featured-collection.html
+- HTML target: gap: no HTML demo for this Liquid section
+- Live demo: none
 
 ## Paste this into your coding agent
 
 ```text
-Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section "Featured collection" (id `featured-collection`, theme `balm-2`; live demo: https://demo.blocko.ai/html/balm-2/sections/featured-collection--featured-collection.html; Shopify bundle: sections/balm-2/featured-collection/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).
+Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section "Featured collection" (id `featured-collection`, theme `balm-2`; Shopify bundle: sections/balm-2/featured-collection/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).
 ```
 
 ## Install

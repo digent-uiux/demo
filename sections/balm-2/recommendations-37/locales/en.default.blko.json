@@ -1,0 +1,16 @@
+{
+  "blko": {
+    "recommendations_37": {
+      "add": "Add",
+      "add_all": "Add both",
+      "add_all3": "Add all three",
+      "added": "Added",
+      "all_added": "All in your bag",
+      "error": "Could not add this item. Please try again.",
+      "fig": "Fig.",
+      "label": "Pairs well with",
+      "sold_out": "Sold out",
+      "together": "Together"
+    }
+  }
+}

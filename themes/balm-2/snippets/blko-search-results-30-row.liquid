@@ -1,0 +1,8 @@
+{%- comment -%} One journal row (search-results-30). Params: n, url, title, dek, meta. {%- endcomment -%}
+<li class="bsearchresults30__jli">
+  <a href="{{ url | default: '#' }}" class="bsearchresults30__jrow">
+    <span class="bsearchresults30__cap bsearchresults30__jn">{{ n | prepend: '0' | slice: -2, 2 }}</span>
+    <span class="bsearchresults30__jcopy"><span class="bsearchresults30__jt blko-ui-text--h3">{{ title | escape }}</span>{% if dek != blank %}<span class="bsearchresults30__jd">{{ dek | escape }}</span>{% endif %}</span>
+    <span class="bsearchresults30__cap bsearchresults30__jm">{{ meta }}{%- render 'blko-ui-icon', name: 'arrow-up-right', size: 14, stroke: 2 -%}</span>
+  </a>
+</li>

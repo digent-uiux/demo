@@ -1,0 +1,4 @@
+{%- comment -%}
+  Bundled fonts of the Blocko Balm preset (OFL, latin subset). Printed only when the section uses the preset.
+{%- endcomment -%}
+{%- if tokens != 'theme' -%}<style>@font-face{font-family:'blko Bodoni Moda';src:url('{{ 'blko-f-bodoni-moda.woff2' | asset_url }}') format('woff2');font-weight:400 900;font-style:normal;font-display:swap}@font-face{font-family:'blko Bodoni Moda';src:url('{{ 'blko-f-bodoni-moda-italic.woff2' | asset_url }}') format('woff2');font-weight:400 900;font-style:italic;font-display:swap}@font-face{font-family:'blko Karla';src:url('{{ 'blko-f-karla.woff2' | asset_url }}') format('woff2');font-weight:300 800;font-style:normal;font-display:swap}</style>{%- endif -%}

@@ -1,0 +1,20 @@
+{%- comment -%} The pull-out note: a wide compartment (2 columns in 4-up, the full row in 3-up / 2-up / 1-up; large = 2 × 2 from 768px) with a photo and a paper slip whose index tab sticks up past its top edge, pulled out past the photo's right edge. t: the tile block. {%- endcomment -%}
+<li class="bcollectiongrid44__cell bcollectiongrid44__tile bcollectiongrid44__tile--{{ t.settings.shape | default: 'wide' }}" data-tile {{ t.shopify_attributes }}>
+  <a href="{{ t.settings.link | default: routes.root_url }}" class="bcollectiongrid44__tlink">
+    <span class="bcollectiongrid44__tpic">
+      {%- if t.settings.image != blank -%}
+        {{ t.settings.image | image_url: width: 1400 | image_tag: alt: t.settings.image.alt, loading: 'lazy', widths: '600, 900, 1200, 1400', sizes: '(min-width: 768px) 50vw, 100vw', class: 'bcollectiongrid44__timg' }}
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'bcollectiongrid44__timg placeholder-svg' }}
+      {%- endif -%}
+    </span>
+    <span class="bcollectiongrid44__note">
+      {%- if t.settings.label != blank -%}<span class="bcollectiongrid44__label bcollectiongrid44__muted bcollectiongrid44__tab">{{ t.settings.label | escape }}</span>{%- endif -%}
+      <span class="bcollectiongrid44__tcopy">
+        <span class="bcollectiongrid44__label bcollectiongrid44__muted bcollectiongrid44__tlab"><span>{{ t.settings.number | escape }}</span>{%- if t.settings.meta != blank -%}<span class="bcollectiongrid44__accent">{{ t.settings.meta | escape }}</span>{%- endif -%}</span>
+        <span class="bcollectiongrid44__ttitle">{{ t.settings.title | escape }}</span>
+        {%- if t.settings.cta != blank -%}<span class="bcollectiongrid44__tcta">{{ t.settings.cta | escape }}{%- render 'blko-ui-icon', name: 'arrow-right', size: 16 -%}</span>{%- endif -%}
+      </span>
+    </span>
+  </a>
+</li>

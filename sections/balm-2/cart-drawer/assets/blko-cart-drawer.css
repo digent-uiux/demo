@@ -1,0 +1,67 @@
+/* Balm cart drawer: paper panel from the right, a ledger of ruled lines, an amber shipping hairline, Bodoni figures,
+   square controls (radius from the theme), one dark Check out. Motion only under html.blko-kit-balm: the panel slides
+   in while its content comes out of a soft focus (the theme's rack-focus signature); buttons never move. */
+.bcd__dialog { position: fixed; inset: 0 0 0 auto; width: min(460px, 100vw); max-width: 100vw; height: 100dvh; max-height: 100dvh; margin: 0; padding: 0; border: 0; background: transparent; color: var(--blko-color-text, #24211c); overflow: visible; }
+.bcd__dialog::backdrop { background: rgb(36 33 28 / .42); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.bcd__dialog[open] { display: flex; }
+html.blko-kit-balm .bcd__dialog.is-opening .bcd__panel { animation: bcd-in .7s var(--blko-motion-ease, cubic-bezier(.16,1,.3,1)) both; }
+html.blko-kit-balm .bcd__dialog.is-opening .bcd__panel > * { animation: bcd-focus .8s var(--blko-motion-ease, cubic-bezier(.16,1,.3,1)) .12s both; }
+html.blko-kit-balm .bcd__dialog[open]::backdrop { animation: bcd-fade .45s ease both; }
+html.blko-kit-balm .bcd__dialog.is-closing .bcd__panel { animation: bcd-out .3s cubic-bezier(.4,0,1,1) both; }
+html.blko-kit-balm .bcd__dialog.is-closing::backdrop { animation: bcd-fade .3s ease reverse both; }
+@keyframes bcd-in { from { translate: 100% 0; } to { translate: 0 0; } }
+@keyframes bcd-out { from { translate: 0 0; } to { translate: 100% 0; } }
+@keyframes bcd-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes bcd-focus { from { opacity: 0; filter: blur(6px); } to { opacity: 1; filter: blur(0); } }
+@media (prefers-reduced-motion: reduce) { .bcd__dialog *, .bcd__dialog::backdrop { animation: none !important; transition: none !important; } }
+.bcd__panel { position: relative; display: flex; flex-direction: column; width: 100%; height: 100%; overflow-y: auto; overscroll-behavior: contain; background: var(--blko-color-bg, #f4efe6); border-left: 1px solid var(--blko-color-border, #dcd3c3); font-family: var(--blko-font-body, system-ui, sans-serif); font-size: 15px; line-height: 1.5; }
+.bcd__panel[aria-busy="true"] .bcd__lines, .bcd__panel[aria-busy="true"] .bcd__foot { opacity: .5; pointer-events: none; transition: opacity .2s; }
+.bcd__label { margin: 0; font-size: 11px; font-weight: 500; line-height: 1.4; letter-spacing: .14em; text-transform: uppercase; font-variant-numeric: tabular-nums; }
+.bcd__muted { color: var(--blko-color-text-muted, #6c655b); }
+.bcd__accent, .bcd__no { color: var(--blko-color-accent, #a8611c); }
+.bcd__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.bcd__head { display: grid; grid-template-columns: 1fr auto; gap: 6px 16px; padding: 28px 24px 22px; border-bottom: 1px solid var(--blko-color-border, #dcd3c3); }
+.bcd__head .bcd__label { grid-column: 1; }
+.bcd__title { grid-column: 1; margin: 0; font-family: var(--blko-font-heading, Georgia, serif); font-size: 32px; line-height: 1.05; font-weight: 400; letter-spacing: -.02em; color: inherit; }
+.bcd__close { grid-column: 2; grid-row: 1 / span 2; align-self: start; display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid var(--blko-color-border, #dcd3c3); border-radius: var(--blko-radius-button, 0); background: none; color: inherit; cursor: pointer; transition: background-color .2s, border-color .2s; }
+.bcd__close:hover { background: var(--blko-color-bg-alt, #ece5d8); border-color: currentColor; }
+.bcd__ship { padding: 16px 24px; border-bottom: 1px solid var(--blko-color-border, #dcd3c3); }
+.bcd__ship-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 0 0 10px; font-size: 14px; }
+.bcd__track { position: relative; height: 1px; background: var(--blko-color-border, #dcd3c3); }
+.bcd__track span { position: absolute; inset: 0; transform-origin: left; background: var(--blko-color-accent, #a8611c); transition: transform .7s var(--blko-motion-ease, cubic-bezier(.16,1,.3,1)); }
+.bcd__lines { list-style: none; margin: 0; padding: 0 24px; }
+.bcd__line { display: grid; grid-template-columns: 22px 72px minmax(0, 1fr); gap: 14px; padding: 20px 0; border-bottom: 1px solid var(--blko-color-border, #dcd3c3); }
+.bcd__no { padding-top: 2px; }
+.bcd__img { display: block; aspect-ratio: 1; overflow: hidden; background: var(--blko-color-bg-alt, #ece5d8); border-radius: var(--blko-radius-image, 0); }
+.bcd__img img, .bcd__img svg { width: 100%; height: 100%; object-fit: cover; display: block; }
+.bcd__ph { fill: var(--blko-color-text-muted, #6c655b); opacity: .35; }
+.bcd__info { display: grid; gap: 4px; min-width: 0; }
+.bcd__name { font-family: var(--blko-font-body, Karla, system-ui, sans-serif); font-size: 16px; font-weight: 500; line-height: 1.2; color: inherit; text-decoration: none; }
+.bcd__name:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+.bcd__meta { margin: 0; font-size: 13px; color: var(--blko-color-text-muted, #6c655b); }
+.bcd__off { color: var(--blko-color-sale, #9a3412); }
+.bcd__row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 8px; }
+.bcd__qty { display: inline-flex; align-items: center; height: 36px; border: 1px solid var(--blko-color-border, #dcd3c3); border-radius: var(--blko-radius-button, 0); }
+.bcd__qty button { display: grid; place-items: center; width: 34px; height: 100%; border: 0; background: none; color: inherit; cursor: pointer; transition: background-color .2s; }
+.bcd__qty button:hover { background: var(--blko-color-bg-alt, #ece5d8); }
+.bcd__qty span { min-width: 24px; text-align: center; font-variant-numeric: tabular-nums; font-size: 14px; }
+.bcd__price { margin: 0; font-family: var(--blko-font-body, Karla, system-ui, sans-serif); font-size: 16px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.bcd__price s { font-family: var(--blko-font-body, system-ui); font-size: 13px; }
+.bcd__rm { justify-self: start; margin-top: 2px; padding: 0; border: 0; background: none; color: var(--blko-color-text-muted, #6c655b); font: inherit; font-size: 13px; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; cursor: pointer; }
+.bcd__rm:hover { color: var(--blko-color-text, #24211c); }
+.bcd__foot { margin: auto 24px 24px; padding: 18px; border: 1px solid color-mix(in oklab, var(--blko-color-text, #24211c) 40%, transparent); outline: 1px solid color-mix(in oklab, var(--blko-color-text, #24211c) 25%, transparent); outline-offset: -5px; }
+.bcd__sum { display: grid; gap: 6px; margin: 0 0 16px; font-size: 14px; }
+.bcd__sum div { display: flex; justify-content: space-between; gap: 12px; }
+.bcd__sum dd { margin: 0; font-variant-numeric: tabular-nums; }
+.bcd__total { align-items: baseline; margin-top: 8px; padding-top: 12px; border-top: 1px solid var(--blko-color-border, #dcd3c3); }
+.bcd__total dd { font-family: var(--blko-font-body, Karla, system-ui, sans-serif); font-size: 28px; font-weight: 300; letter-spacing: -.03em; font-variant-numeric: tabular-nums; line-height: 1; }
+.bcd__actions { display: grid; gap: 12px; justify-items: center; margin: 0; }
+.bcd__btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 48px; padding: 0 20px; border: 1px solid var(--blko-color-button, #24211c); border-radius: var(--blko-radius-button, 0); background: var(--blko-color-button, #24211c); color: var(--blko-color-button-text, #f4efe6); font: inherit; font-size: 15px; letter-spacing: .02em; text-decoration: none; cursor: pointer; transition: background-color .2s, border-color .2s; }
+.bcd__btn:hover { background: var(--blko-color-button-hover, #3a352d); border-color: var(--blko-color-button-hover, #3a352d); }
+.bcd__btn:active { filter: brightness(.92); }
+.bcd__link { color: inherit; font-size: 14px; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+.bcd__tax { margin-top: 14px; text-align: center; }
+.bcd__empty { display: grid; gap: 12px; justify-items: start; margin: auto 24px; padding: 32px 0; }
+.bcd__eh { margin: 0; font-family: var(--blko-font-heading, Georgia, serif); font-size: 28px; font-weight: 400; line-height: 1.1; }
+.bcd__empty .bcd__btn { width: auto; margin-top: 8px; }
+.bcd :focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }

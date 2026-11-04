@@ -1,0 +1,43 @@
+{
+  "blko": {
+    "collection_grid_44": {
+      "add": "Add to bag",
+      "add_for": "Add {{ name }} to bag",
+      "added": "Added to bag",
+      "attrs": "Attributes",
+      "choose": "Choose {{ option }}",
+      "choose_for": "Choose a {{ option }} of {{ name }}",
+      "clear": "Clear all",
+      "clear_all": "Clear all",
+      "close": "Close",
+      "density": "Grid density",
+      "drawer": "Filter & sort",
+      "empty": "No products match these filters.",
+      "empty_all": "This collection is empty for now.",
+      "error": "Could not add",
+      "featured": "Featured",
+      "fewer": "Fewer columns",
+      "filter": "Filter",
+      "from": "From",
+      "high": "Price, high to low",
+      "in_case": "in the case",
+      "in_stock": "In stock only",
+      "label": "Products",
+      "low": "Price, low to high",
+      "more": "Load more",
+      "more_cols": "More columns",
+      "newest": "Newest",
+      "of": "of",
+      "pages": "Pages",
+      "remove": "Remove filter: {{ name }}",
+      "reset": "Clear filters",
+      "show": "Show",
+      "size": "size",
+      "sold_out": "Sold out",
+      "sort": "Sort",
+      "sorted": "Sorted",
+      "to": "To",
+      "was": "Was"
+    }
+  }
+}

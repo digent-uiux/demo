@@ -1,0 +1,256 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-2'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-collection-list-39.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-collection-list-39.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Balm specimen board, alt surface. Four collection plates pinned to the page like botanical plates, all 4:5 at three
+  scales on the 12-column edge: the copy top left (label on a hairline with the shelf count in the accent, a didone h2
+  with one italic word, one line, an "All formulas" link); block 1 is the large focal plate on the right with a vertical
+  caption up its right edge; block 2 is pinned over the focal plate's lower-left corner on a paper mat; blocks 3 and 4
+  sit staggered under the copy. Each plate's specimen label: "Shelf 0N" and the live product count on a hairline, a big
+  amber numeral, the name (the whole plate is the link), one line, a botanical line in italic.
+  Motion: the balm kit (tiles blur in, photos pull into focus) plus a small depth drift (script.js). Static = at rest.
+  A collection block reads its title, image (or first product's image), products_count and url; the preview count stands
+  in until a collection is picked.
+{%- endcomment -%}
+{%- liquid
+  assign n = section.blocks.size
+  assign focal = section.blocks[0]
+  assign front = section.blocks[1]
+  assign mid_a = section.blocks[2]
+  assign mid_b = section.blocks[3]
+-%}
+{%- capture body -%}
+  <div class="bcollectionlist39__board" data-board
+    ><header class="bcollectionlist39__head"
+      >{%- if s.label != blank -%}<p class="bcollectionlist39__cap bcollectionlist39__muted bcollectionlist39__eyebrow"><span class="bcollectionlist39__rule" aria-hidden="true"></span>{{ s.label | escape }} · <span class="bcollectionlist39__acc">{% if n < 10 %}0{% endif %}{{ n }}</span></p>{%- endif -%}
+      {%- if s.heading != blank -%}<h2 class="bcollectionlist39__h">{{ s.heading }}</h2>{%- endif -%}
+      {%- if s.text != blank -%}<p class="bcollectionlist39__lead">{{ s.text | escape }}</p>{%- endif -%}
+      {%- if s.link_label != blank -%}
+        <a class="bcollectionlist39__all" href="{{ s.link | default: routes.all_products_collection_url }}">{{ s.link_label | escape }}{%- render 'blko-ui-icon', name: 'arrow-up-right', size: 16, stroke: 1.5 -%}</a
+      >{%- endif -%}
+    </header
+    >{%- if focal -%}
+      <div class="bcollectionlist39__focal"
+        >{%- render 'blko-collection-list-39-card', b: focal, i: 1, role: 'focal', sizes: '(min-width: 768px) 40vw, 82vw' -%}
+        {%- if s.plate_caption != blank or focal.settings.latin != blank -%}
+          <p class="bcollectionlist39__cap bcollectionlist39__muted bcollectionlist39__vcap" aria-hidden="true">{{ s.plate_caption | escape }}{% if s.plate_caption != blank and focal.settings.latin != blank %} · {% endif %}{{ focal.settings.latin | escape }}</p
+        >{%- endif -%}
+        {%- if front -%}{%- render 'blko-collection-list-39-card', b: front, i: 2, role: 'front', sizes: '(min-width: 768px) 18vw, 40vw' -%}{%- endif -%}
+      </div
+    >{%- endif -%}
+    {%- if mid_a -%}
+      <div class="bcollectionlist39__mids"
+        >{%- render 'blko-collection-list-39-card', b: mid_a, i: 3, role: 'mid', sizes: '(min-width: 768px) 18vw, 45vw' -%}
+        {%- if mid_b -%}{%- render 'blko-collection-list-39-card', b: mid_b, i: 4, role: 'mid2', sizes: '(min-width: 768px) 18vw, 45vw' -%}{%- endif -%}
+      </div
+    >{%- endif -%}
+  </div
+>{%- endcapture -%}
+<div class="bcollectionlist39{%- if blko_sid != 'scheme-2' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-bcollectionlist39
+  >{%- assign lbl_d = 'blko.collection_list_39.label' | t -%}{%- assign lbl = s.label | default: lbl_d -%}
+  {%- render 'blko-ui-section', surface: 'alt', bleed: true, label: lbl, inner: 'bcollectionlist39__in', children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Collection list 39",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "The shelves"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading (italic = accent)",
+      "default": "Four shelves, one <em>apothecary</em>"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Every formula we pour, pinned where you would look for it. Start with the oils."
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label",
+      "default": "All 53 formulas"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link",
+      "info": "Defaults to all products."
+    },
+    {
+      "type": "text",
+      "id": "plate_caption",
+      "label": "Focal plate caption",
+      "default": "Plate I",
+      "info": "Runs up the focal plate's right edge on desktop, followed by its botanical line."
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Order sets the role: 1 = large focal plate, 2 = small plate pinned over it, 3 and 4 = mid plates."
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Defaults to the collection image. Set a focal point to steer the 4:5 crop."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "info": "Defaults to the collection title."
+        },
+        {
+          "type": "text",
+          "id": "note",
+          "label": "Line",
+          "default": "Cold-pressed, poured into amber glass"
+        },
+        {
+          "type": "text",
+          "id": "latin",
+          "label": "Botanical line",
+          "default": "Rosa canina, squalane, jojoba"
+        },
+        {
+          "type": "header",
+          "content": "Preview"
+        },
+        {
+          "type": "number",
+          "id": "preview_count",
+          "label": "Count shown before a collection is picked",
+          "default": 18
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection list 39",
+      "blocks": [
+        {
+          "type": "collection",
+          "settings": {
+            "title": "Face oils",
+            "note": "Cold-pressed, poured into amber glass",
+            "latin": "Rosa canina, squalane, jojoba",
+            "preview_count": 18
+          }
+        },
+        {
+          "type": "collection",
+          "settings": {
+            "title": "Masks",
+            "note": "Clay, oat and fresh fruit, mixed to order",
+            "latin": "Kaolin, Avena sativa",
+            "preview_count": 9
+          }
+        },
+        {
+          "type": "collection",
+          "settings": {
+            "title": "Balms and creams",
+            "note": "Whipped by hand, in refillable jars",
+            "latin": "Shea, calendula, beeswax",
+            "preview_count": 14
+          }
+        },
+        {
+          "type": "collection",
+          "settings": {
+            "title": "Cleansing bars",
+            "note": "Cut by hand, cured six weeks",
+            "latin": "Olive, lavender, oat",
+            "preview_count": 12
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

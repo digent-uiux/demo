@@ -1,0 +1,17 @@
+{
+  "blko": {
+    "header_19": {
+      "account": "Account",
+      "bag": "Cart, {{ count }} items",
+      "close": "Close menu",
+      "main": "Main",
+      "menu": "Menu",
+      "more": "More in {{ title }}",
+      "open": "Open menu",
+      "region": "Country / currency",
+      "search": "Search",
+      "sign_in": "Sign in",
+      "update": "Update"
+    }
+  }
+}

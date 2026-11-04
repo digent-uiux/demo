@@ -1,0 +1,278 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-2'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-process-steps-05.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-process-steps-05.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Balm "how it's made", alt surface. Left (4/12, sticky from 896px): a label on a hairline, the heading, one line and a
+  batch-code lookup in the apothecary label (double hairline frame). Right (7/12): one ruled timeline, a numbered step
+  per block (day stamp, 3:2 photo, title, one line) and a "Ships" stop. A valid code (L-MMDD = the day the herbs went
+  into the oil, this year) turns every "Day n" stamp into that batch's dates in the accent; a wrong one shows an inline
+  error. Works without the script as a static timeline.
+{%- endcomment -%}
+{%- liquid
+  assign uid = section.id | append: '-ps05'
+  assign day = 'blko.process_steps_05.day' | t
+-%}
+{%- capture body -%}
+  <div class="bprocesssteps05__side"
+    ><header class="bprocesssteps05__head"
+      >{%- if s.label != blank -%}<span class="bprocesssteps05__label bprocesssteps05__muted">{{ s.label | escape }}</span>{%- endif -%}
+      {%- if s.heading != blank -%}<h2 class="bprocesssteps05__h blko-ui-text--h2">{{ s.heading }}</h2>{%- endif -%}
+      {%- if s.text != blank -%}<p class="bprocesssteps05__lead">{{ s.text | escape }}</p>{%- endif -%}
+    </header
+    >{%- if s.lookup -%}
+      <div class="bprocesssteps05__frame"
+        ><form novalidate class="bprocesssteps05__form" data-form
+          >{%- capture code_id -%}{{ uid }}-code{%- endcapture -%}
+          {%- capture hint_id -%}{{ uid }}-code-hint{%- endcapture -%}
+          {%- capture ctl -%}
+            <div class="bprocesssteps05__ctl"
+              >{%- render 'blko-ui-input', id: code_id, placeholder: s.placeholder, autocomplete: 'off', describedBy: hint_id, className: 'bprocesssteps05__input' -%}
+              {%- render 'blko-ui-button', type: 'submit', variant: 'outline', children: s.button -%}
+            </div
+          >{%- endcapture -%}
+          {%- render 'blko-ui-field', id: code_id, label: s.code_label, hint: s.hint, children: ctl -%}
+          <p role="status" class="bprocesssteps05__status" data-status><span class="bprocesssteps05__muted">{{ 'blko.process_steps_05.typical' | t }}</span></p
+        ></form
+      ></div
+    >{%- endif -%}
+  </div
+  ><ol class="bprocesssteps05__line" data-line
+    >{%- for b in section.blocks -%}
+      {%- assign it = b.settings -%}
+      <li class="bprocesssteps05__step" {{ b.shopify_attributes }}
+        ><span aria-hidden="true" class="bprocesssteps05__dot"></span
+        >{%- if it.image != blank -%}
+          {{- it.image | image_url: width: 800 | image_tag: loading: 'lazy', widths: '400, 600, 800', sizes: '(min-width: 768px) 25vw, 100vw', class: 'bprocesssteps05__img' -}}
+        {%- else -%}
+          {%- assign phn = forloop.index0 | modulo: 2 | plus: 1 -%}{%- capture ph -%}lifestyle-{{ phn }}{%- endcapture -%}{{- ph | placeholder_svg_tag: 'bprocesssteps05__img bprocesssteps05__ph' -}}
+        {%- endif -%}
+        <div class="bprocesssteps05__copy"
+          ><p class="bprocesssteps05__label bprocesssteps05__meta"
+            ><span class="bprocesssteps05__muted">No. {% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span
+            ><span class="bprocesssteps05__muted" data-stamp data-from="{{ it.from }}" data-to="{{ it.to }}">{{ day }} {{ it.from }}{% if it.to != blank %}–{{ it.to }}{% endif %}</span
+          ></p
+          ><h3 class="bprocesssteps05__t blko-ui-text--h3">{{ it.title | escape }}</h3
+          >{%- if it.text != blank -%}<p class="bprocesssteps05__small">{{ it.text | escape }}</p>{%- endif -%}
+        </div
+      ></li
+    >{%- endfor -%}
+    {%- if s.ship_day != blank -%}
+      <li class="bprocesssteps05__label bprocesssteps05__muted bprocesssteps05__ship"><span aria-hidden="true" class="bprocesssteps05__dot bprocesssteps05__dot--end"></span>{{ 'blko.process_steps_05.ships' | t }} · <span data-stamp data-from="{{ s.ship_day }}">{{ day }} {{ s.ship_day }}</span></li
+    >{%- endif -%}
+  </ol
+>{%- endcapture -%}
+<div class="bprocesssteps05{%- if blko_sid != 'scheme-2' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-bprocesssteps05 data-year="{{ 'now' | date: '%Y' }}" data-ship="{{ s.ship_day }}" data-day="{{ day | escape }}" data-went="{{ 'blko.process_steps_05.went' | t | escape }}" data-shipped="{{ 'blko.process_steps_05.shipped' | t | escape }}" data-clear="{{ 'blko.process_steps_05.clear' | t | escape }}" data-typical="{{ 'blko.process_steps_05.typical' | t | escape }}" data-bad="{{ 'blko.process_steps_05.bad' | t | escape }}" data-hint="{{ s.hint | escape }}"
+  >{%- assign lbl = s.label | default: 'blko.process_steps_05.label' -%}
+  {%- render 'blko-ui-section', surface: 'alt', label: lbl, inner: 'bprocesssteps05__in', children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Process steps 05",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "How it’s made"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading (italic = accent)",
+      "default": "Four steps, one <em>small</em> batch"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Every bottle starts as herbs in oil at our workshop bench, and ships four weeks later."
+    },
+    {
+      "type": "number",
+      "id": "ship_day",
+      "label": "Ships on day",
+      "default": 28
+    },
+    {
+      "type": "header",
+      "content": "Batch lookup"
+    },
+    {
+      "type": "checkbox",
+      "id": "lookup",
+      "label": "Show batch lookup",
+      "default": true,
+      "info": "Codes read L-MMDD: the month and day the batch started, this year."
+    },
+    {
+      "type": "text",
+      "id": "code_label",
+      "label": "Field label",
+      "default": "Your batch code"
+    },
+    {
+      "type": "text",
+      "id": "hint",
+      "label": "Hint",
+      "default": "Printed on the bottle’s label."
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Placeholder",
+      "default": "L-0412"
+    },
+    {
+      "type": "text",
+      "id": "button",
+      "label": "Button",
+      "default": "Look up"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 144,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 144
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Macerate"
+        },
+        {
+          "type": "number",
+          "id": "from",
+          "label": "Starts on day",
+          "default": 0
+        },
+        {
+          "type": "number",
+          "id": "to",
+          "label": "Ends on day",
+          "info": "Leave empty for a one-day step."
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Line",
+          "default": "Dried calendula and rosehip steep in cold-pressed oil for three weeks, turned by hand each morning."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Process steps 05",
+      "blocks": [
+        {
+          "type": "step",
+          "settings": {
+            "title": "Macerate",
+            "from": 0,
+            "to": 21,
+            "text": "Dried calendula and rosehip steep in cold-pressed oil for three weeks, turned by hand each morning."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Press",
+            "from": 22,
+            "text": "The herbs are pressed out through linen and the golden oil rests overnight."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Pour",
+            "from": 23,
+            "text": "Oils go into amber glass, balms and bars into tins and moulds, all by hand."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Label",
+            "from": 24,
+            "text": "Each piece gets a paper label with its batch code, then rests a few days before it ships."
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

@@ -1,0 +1,10 @@
+{
+  "blko": {
+    "collection_banner_42": {
+      "all": "All",
+      "count": "{{ count }} essays",
+      "count_tag": "Essays on {{ tag }}",
+      "topics": "Journal topics"
+    }
+  }
+}

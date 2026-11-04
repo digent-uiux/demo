@@ -21,6 +21,8 @@
     {%- endif -%}
     {% render 'blko-meta-tags' %}
     {% render 'blko-theme-styles' %}
+    {% render 'blko-ds-tokens' %}
+    {%- render 'blko-color-schemes' -%}
     {{ 'blko-theme.css' | asset_url | stylesheet_tag }}
     {{ content_for_header }}
   </head>
@@ -31,5 +33,7 @@
       {{ content_for_layout }}
     </main>
     {% sections 'footer-group' %}
+    {% section 'blko-cart-drawer' %}
+    {% section 'blko-search-dialog' %}
   </body>
 </html>

@@ -8,6 +8,17 @@
   assign wordmark = settings.logo_text | default: shop.name
   # No menu yet (fresh store): show the demo categories, each linking to the collection of the same handle.
   assign fallback = section.settings.fallback_links | split: ','
+  # Shopify's starter menus (Home / Catalog / Contact) count as "not set yet" while Demo menu is on.
+  assign use_menu = false
+  if menu.links.size > 0
+    assign use_menu = true
+    assign menu_titles = menu.links | map: 'title' | join: ','
+    if section.settings.demo_menu
+      if menu_titles == 'Home,Catalog,Contact' or menu_titles == 'Home,Catalog' or menu_titles == 'Search'
+        assign use_menu = false
+      endif
+    endif
+  endif
   assign show_account = false
   if section.settings.show_account and shop.customer_accounts_enabled
     assign show_account = true
@@ -31,7 +42,7 @@
           </div>
           <nav aria-label="{{ 'blko.header.menu' | t }}">
             <ul class="blko-list-reset blko-header__drawer-list">
-              {%- for link in menu.links -%}
+              {%- if use_menu -%}{%- for link in menu.links -%}
                 <li>
                   <a href="{{ link.url }}" class="blko-h4"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
                   {%- if link.links.size > 0 -%}
@@ -42,14 +53,14 @@
                     </ul>
                   {%- endif -%}
                 </li>
-              {%- endfor -%}
-              {%- if menu.links.size == 0 -%}
+              {%- endfor -%}{%- endif -%}
+              {%- unless use_menu -%}
                 {%- for label in fallback -%}
                   {%- assign label = label | strip -%}
                   {%- if label == blank -%}{%- continue -%}{%- endif -%}
                   <li><a href="{{ routes.collections_url }}/{{ label | handleize }}" class="blko-h4">{{ label | escape }}</a></li>
                 {%- endfor -%}
-              {%- endif -%}
+              {%- endunless -%}
             </ul>
           </nav>
           <div class="blko-header__drawer-foot">
@@ -73,7 +84,7 @@
 
     <nav class="blko-header__nav" aria-label="{{ 'blko.header.main' | t }}">
       <ul class="blko-list-reset blko-header__nav-list">
-        {%- if menu.links.size > 0 -%}
+        {%- if use_menu -%}
           {%- for link in menu.links -%}
             <li{% if forloop.index > 4 %} class="blko-header__nav-extra"{% endif %}>
               <a href="{{ link.url }}" class="blko-header__link"{% if link.current or link.child_active %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
@@ -142,7 +153,7 @@
   .blko-header__brand { display: grid; justify-items: center; line-height: 1; text-decoration: none; white-space: nowrap; }
   .blko-header__logo { width: var(--logo-width, 140px); max-width: 50vw; height: auto; }
   .blko-header__wordmark { font-family: var(--font-heading, Georgia, serif); font-weight: var(--font-heading-weight, 500); font-size: var(--blko-text-h3, 22px); letter-spacing: -0.015em; }
-  .blko-header__tagline { display: none; margin-top: .375rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: var(--blko-text-label, 12px); opacity: .6; }
+  .blko-header__tagline { display: none; margin-top: .375rem; font-family: var(--blko-font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); font-size: var(--blko-text-label, 12px); opacity: .6; }
   .blko-header__icons { display: flex; align-items: center; justify-self: end; }
   .blko-header__icon { position: relative; }
   .blko-header__icon svg { width: 20px; height: 20px; }
@@ -191,7 +202,8 @@
     { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 8 },
     { "type": "header", "content": "Menu" },
     { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu", "info": "Also used for the mobile drawer." },
-    { "type": "text", "id": "fallback_links", "label": "Menu shown before a menu is set", "default": "Skincare, Makeup, Hair, Body, Sale", "info": "Comma separated. Each links to the collection with the same handle." },
+    { "type": "text", "id": "fallback_links", "label": "Demo menu", "default": "Skincare, Makeup, Hair, Body, Sale", "info": "Comma separated. Shown while no menu is set, or while the menu is Shopify's starter menu and Demo menu is on. Each links to the collection with the same handle." },
+    { "type": "checkbox", "id": "demo_menu", "label": "Demo menu replaces the starter menu", "default": true, "info": "Turn off to show Shopify's starter menu (Home, Catalog, Contact) as it is." },
     { "type": "header", "content": "Logo" },
     {
       "type": "select",

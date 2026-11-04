@@ -1,17 +1,13 @@
 {
   "sections": {
-    "main": {
-      "type": "blko-main-login",
+    "login-01": {
+      "type": "blko-login-01",
       "settings": {
-        "color_scheme": "scheme-1",
-        "padding_top": 80,
-        "padding_bottom": 80,
-        "heading": "Log in",
-        "layout": "center"
+        "tokens": "theme"
       }
     }
   },
   "order": [
-    "main"
+    "login-01"
   ]
 }

@@ -1,0 +1,32 @@
+{%- comment -%}
+  One result tile (search-results-30): 4:5 photo, No. · step, name, size and the matching ingredient, price and an
+  Add toggle. Params: n, url, title, image, step, size, price (cents), hit, vid (variant id, blank = preview toggle),
+  available, eager.
+{%- endcomment -%}
+{%- assign no = n | prepend: '0' | slice: -2, 2 -%}
+{%- if n > 99 -%}{%- assign no = n -%}{%- endif -%}
+<li class="bsearchresults30__item" data-item data-step="{{ step | strip | downcase | escape }}">
+  <a href="{{ url | default: '#' }}" class="bsearchresults30__ph" aria-label="{{ title | escape }}" tabindex="-1">
+    {%- if image != blank -%}
+      {%- if eager -%}{%- assign ld = 'eager' -%}{%- else -%}{%- assign ld = 'lazy' -%}{%- endif -%}
+      {{ image | image_url: width: 900 | image_tag: widths: '300, 450, 600, 900', sizes: '(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw', loading: ld, class: 'bsearchresults30__img', alt: image.alt | default: title }}
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'bsearchresults30__img bsearchresults30__ph-svg' }}
+    {%- endif -%}
+  </a>
+  <div class="bsearchresults30__meta">
+    <p class="bsearchresults30__cap">{{ 'blko.search_results_30.no' | t }} <span data-no>{{ no }}</span>{% if step != blank %} · {{ step | escape }}{% endif %}</p>
+    <h3 class="bsearchresults30__name blko-ui-text--h4"><a href="{{ url | default: '#' }}">{{ title | escape }}</a></h3>
+    <p class="bsearchresults30__size">{{ size | escape }}{% if hit != blank %}{% if size != blank %} · {% endif %}{{ 'blko.search_results_30.with' | t }} <span>{{ hit | escape }}</span>{% endif %}</p>
+  </div>
+  <div class="bsearchresults30__buy">
+    <span class="bsearchresults30__price">{{ price | money_without_trailing_zeros }}</span>
+    {%- assign a_add = 'blko.search_results_30.add_aria' | t | replace: '[name]', title | escape -%}
+    {%- assign a_rem = 'blko.search_results_30.remove_aria' | t | replace: '[name]', title | escape -%}
+    {%- if available == false -%}
+      <button type="button" class="bsearchresults30__add" disabled>{{ 'blko.search_results_30.sold_out' | t }}</button>
+    {%- else -%}
+      <button type="button" class="bsearchresults30__add" aria-pressed="false" aria-label="{{ a_add }}" data-add{% if vid != blank %} data-vid="{{ vid }}"{% endif %} data-a-add="{{ a_add }}" data-a-rem="{{ a_rem }}"><span data-off>{%- render 'blko-ui-icon', name: 'plus', size: 14, stroke: 2 -%}{{ 'blko.search_results_30.add' | t }}</span><span data-on hidden>{%- render 'blko-ui-icon', name: 'check', size: 14, stroke: 2 -%}{{ 'blko.search_results_30.in_bag' | t }}</span></button>
+    {%- endif -%}
+  </div>
+</li>

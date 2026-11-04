@@ -1,28 +1,190 @@
 {
   "sections": {
-    "main": { "type": "blko-main-page", "settings": {} },
-    "faq": {
-      "type": "blko-faq",
-      "blocks": {
-        "q_sensitive": { "type": "question", "settings": { "question": "Is it suitable for sensitive skin?", "answer": "<p>Yes. Every formula is fragrance free, alcohol free and patch-tested on sensitive skin before it reaches the shop. If you react easily, start with one product and patch-test behind the ear for two days.</p>" } },
-        "q_routine": { "type": "question", "settings": { "question": "In what order should I apply the products?", "answer": "<p>Thinnest to thickest: cleanser, then serum on damp skin, then moisturiser, then three drops of face oil pressed in last. In the morning finish with sunscreen.</p>" } },
-        "q_retinol": { "type": "question", "settings": { "question": "Can I use the serum with retinol or vitamin C?", "answer": "<p>Yes. Our niacinamide serum sits well with both. Use vitamin C in the morning and retinol at night, and keep the serum in both routines.</p>" } },
-        "q_pregnancy": { "type": "question", "settings": { "question": "Are the formulas safe during pregnancy?", "answer": "<p>Most are, and each product page lists any ingredient to avoid. Check with your doctor or midwife if you are unsure.</p>" } },
-        "q_shelf": { "type": "question", "settings": { "question": "How long does a bottle keep once opened?", "answer": "<p>Twelve months after opening. Keep it away from heat and direct sun; every label shows the batch date.</p>" } }
-      },
-      "block_order": ["q_sensitive", "q_routine", "q_retinol", "q_pregnancy", "q_shelf"],
+    "page-header-09": {
+      "type": "blko-page-header-09",
       "settings": {
-        "color_scheme": "scheme-1",
-        "padding_top": 0,
-        "padding_bottom": 80,
-        "heading": "Skin questions, <em>answered</em>",
-        "text": "<p>Short, honest answers about our formulas and how to use them. Can’t find yours? Write to us.</p>",
-        "link_label": "Contact us",
-        "link_url": "/pages/contact",
-        "layout": "split",
-        "open_first": true
+        "tokens": "theme"
       }
+    },
+    "faq-37": {
+      "type": "blko-faq-37",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "chapter-1": {
+          "type": "chapter",
+          "settings": {
+            "title": "Your skin type"
+          }
+        },
+        "question-2": {
+          "type": "question",
+          "settings": {
+            "question": "How do I know which skin type I am?",
+            "answer": "<p>Wash with a gentle cleanser, pat dry and wait an hour without applying anything. Tight all over means dry, shine on the nose and forehead only means combination, shine everywhere means oily. If it stings or reddens easily, read our sensitive range first, whatever your type.</p>"
+          }
+        },
+        "question-3": {
+          "type": "question",
+          "settings": {
+            "question": "Is the face oil too rich for oily skin?",
+            "answer": "<p>Not usually. Rosehip and squalane sit close to the skin's own sebum, so oily skin often makes less once it stops being stripped. Start with two drops at night only.</p>"
+          }
+        },
+        "question-4": {
+          "type": "question",
+          "settings": {
+            "question": "My skin changes with the seasons. Do I need two routines?",
+            "answer": "<p>Keep the cleanser and serum all year and swap only the last step: the whipped cream from spring to autumn, the balm when the heating comes on.</p>"
+          }
+        },
+        "chapter-5": {
+          "type": "chapter",
+          "settings": {
+            "title": "Actives, in plain words"
+          }
+        },
+        "question-6": {
+          "type": "question",
+          "settings": {
+            "question": "Can I use bakuchiol and vitamin C together?",
+            "answer": "<p>Yes. Bakuchiol is gentle enough to share a routine with vitamin C, though we still suggest vitamin C in the morning and bakuchiol at night so each has its own time to work.</p>"
+          }
+        },
+        "question-7": {
+          "type": "question",
+          "settings": {
+            "question": "Why don't you use synthetic retinol?",
+            "answer": "<p>We formulate with bakuchiol and rosehip oil, which smooth texture without the dryness many people get from retinol. If you already use a prescription retinoid, keep it and skip our bakuchiol serum.</p>"
+          }
+        },
+        "question-8": {
+          "type": "question",
+          "settings": {
+            "question": "Are your essential oils safe for sensitive skin?",
+            "answer": "<p>The face range is fragrance-free. Only the body balms carry essential oils, under 0.5%, and every one is named on the label.</p>"
+          }
+        },
+        "chapter-9": {
+          "type": "chapter",
+          "settings": {
+            "title": "Opened jars & returns"
+          }
+        },
+        "question-10": {
+          "type": "question",
+          "settings": {
+            "question": "Can I return a jar I've already opened?",
+            "answer": "<p>Yes, within 30 days, even half used. If something doesn't agree with your skin, send it back and we refund in full or swap it for a different formula.</p>"
+          }
+        },
+        "question-11": {
+          "type": "question",
+          "settings": {
+            "question": "How long does a jar keep once it's open?",
+            "answer": "<p>Look for the small open-jar symbol on the base: 6M means six months, 12M a year. Our balms hold no water, so they keep their full 12 months with clean, dry fingers or the spatula.</p>"
+          }
+        },
+        "question-12": {
+          "type": "question",
+          "settings": {
+            "question": "What happens to the products you get back?",
+            "answer": "<p>Unopened returns go back to stock. Opened ones can't be resold, so they are emptied and the glass and tins are cleaned and recycled.</p>"
+          }
+        },
+        "chapter-13": {
+          "type": "chapter",
+          "settings": {
+            "title": "Orders & delivery"
+          }
+        },
+        "question-14": {
+          "type": "question",
+          "settings": {
+            "question": "When will my order arrive?",
+            "answer": "<p>Orders placed before 1 pm leave the same working day. Standard delivery takes 2–4 days and is free from $75; next-day delivery is $9.</p>"
+          }
+        },
+        "question-15": {
+          "type": "question",
+          "settings": {
+            "question": "Is the packaging plastic-free?",
+            "answer": "<p>The jars are glass or aluminium, the lids are aluminium and the box is recycled card held with paper tape. The only plastic is the pump on the cleanser, which you can send back to us.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "chapter-1",
+        "question-2",
+        "question-3",
+        "question-4",
+        "chapter-5",
+        "question-6",
+        "question-7",
+        "question-8",
+        "chapter-9",
+        "question-10",
+        "question-11",
+        "question-12",
+        "chapter-13",
+        "question-14",
+        "question-15"
+      ]
+    },
+    "contact-38": {
+      "type": "blko-contact-38",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "route-1": {
+          "type": "route",
+          "settings": {
+            "kind": "write",
+            "title": "Write to the bench",
+            "fig": "4",
+            "unit": "hours, in bench hours",
+            "hours": "Mon–Sat · 9:00–17:00",
+            "note": "Best for a routine, a reaction or a batch question. Iris or Margot answers, and signs with a name.",
+            "button": "Hand in the slip"
+          }
+        },
+        "route-2": {
+          "type": "route",
+          "settings": {
+            "kind": "chat",
+            "title": "Chat with Nadia",
+            "fig": "3",
+            "unit": "minutes",
+            "hours": "Mon–Sat · 9–17",
+            "note": "Our esthetician, for a quick which-one question.",
+            "button": "Start a chat"
+          }
+        },
+        "route-3": {
+          "type": "route",
+          "settings": {
+            "kind": "call",
+            "title": "Call the studio",
+            "fig": "0",
+            "unit": "minutes on hold",
+            "hours": "Mon–Fri · 10–16",
+            "note": "Orders and deliveries. Have the order number ready.",
+            "button": "Call the studio"
+          }
+        }
+      },
+      "block_order": [
+        "route-1",
+        "route-2",
+        "route-3"
+      ]
     }
   },
-  "order": ["main", "faq"]
+  "order": [
+    "page-header-09",
+    "faq-37",
+    "contact-38"
+  ]
 }

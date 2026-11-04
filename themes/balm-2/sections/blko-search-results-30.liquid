@@ -1,0 +1,695 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-search-results-30.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-search-results-30.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Dispensary index, balm. A hairline search field that submits to Shopify search, the query echoed as a quiet h1
+  ("12 results for rosehip"), chips that filter the tiles by product type (ritual step) with counts, a four-up grid of
+  4:5 products with an Add toggle (/cart/add.js, /cart/change.js to take it out), and "From the journal", a ruled list
+  of matching articles and pages. No results: a note, suggested searches and three shelf links.
+  On the search page everything comes from search.results (paginated); elsewhere the sample blocks fill a preview
+  filtered by the sample query.
+{%- endcomment -%}
+{{ 'blko-balm-motion.css' | asset_url | stylesheet_tag -}}
+<script src="{{ 'blko-balm-motion.js' | asset_url }}" defer="defer"></script
+>{%- liquid
+  assign live = false
+  if request.page_type == 'search'
+    assign live = true
+  endif
+  if live
+    assign q = search.terms | strip
+  else
+    assign q = s.demo_q | strip
+  endif
+  assign qd = q | downcase
+  assign search_url = routes.search_url | default: '/search'
+  assign n_products = 0
+  assign n_rows = 0
+  assign total = 0
+  assign steps_seen = 'x|'
+  assign types = ''
+-%}
+{%- capture cards -%}
+  {%- if live -%}
+    {%- if search.performed -%}
+    {%- paginate search.results by s.per_page -%}
+      {%- assign total = search.results_count -%}
+      {%- for item in search.results -%}
+        {%- if item.object_type != 'product' -%}{%- continue -%}{%- endif -%}
+        {%- assign n_products = n_products | plus: 1 -%}
+        {%- assign st = item.type | strip -%}
+        {%- if st != blank -%}
+          {%- assign stl = st | downcase -%}
+          {%- assign steps_seen = steps_seen | append: '|' | append: stl | append: '|' -%}
+          {%- assign types = types | append: st | append: '§' -%}
+        {%- endif -%}
+        {%- assign hit = '' -%}
+        {%- for tg in item.tags -%}{%- assign tgd = tg | downcase -%}{%- if qd != blank and tgd contains qd -%}{%- assign hit = tgd -%}{%- break -%}{%- endif -%}{%- endfor -%}
+        {%- assign v = item.selected_or_first_available_variant -%}
+        {%- assign sz = '' -%}{%- unless item.has_only_default_variant -%}{%- assign sz = v.title -%}{%- endunless -%}
+        {%- if n_products < 5 -%}{%- assign eager = true -%}{%- else -%}{%- assign eager = false -%}{%- endif -%}
+        {%- render 'blko-search-results-30-card', n: n_products, url: item.url, title: item.title, image: item.featured_image, step: st, size: sz, price: item.price, hit: hit, vid: v.id, available: item.available, eager: eager -%}
+      {%- endfor -%}
+      {%- capture rows -%}
+        {%- for item in search.results -%}
+          {%- if item.object_type == 'product' -%}{%- continue -%}{%- endif -%}
+          {%- if n_rows >= s.journal_max -%}{%- break -%}{%- endif -%}
+          {%- assign n_rows = n_rows | plus: 1 -%}
+          {%- assign words = item.content | strip_html | split: ' ' | size -%}
+          {%- assign mins = words | divided_by: 200 | at_least: 1 -%}
+          {%- if item.object_type == 'article' -%}
+            {%- assign dek = item.excerpt_or_content | strip_html | truncatewords: 16 -%}
+            {%- capture meta -%}{{ item.published_at | date: '%b %-d, %Y' }} · {{ mins }} {{ 'blko.search_results_30.min' | t }}{%- endcapture -%}
+          {%- else -%}
+            {%- assign dek = item.content | strip_html | truncatewords: 16 -%}
+            {%- capture meta -%}{{ mins }} {{ 'blko.search_results_30.min' | t }}{%- endcapture -%}
+          {%- endif -%}
+          {%- render 'blko-search-results-30-row', n: n_rows, url: item.url, title: item.title, dek: dek, meta: meta -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+      {%- capture pager -%}
+        {%- if paginate.pages > 1 -%}
+        <nav class="bsearchresults30__pager" aria-label="{{ 'blko.search_results_30.filter' | t }}"
+          >{%- if paginate.previous -%}<a href="{{ paginate.previous.url }}" class="bsearchresults30__pg" aria-label="{{ 'blko.search_results_30.prev' | t }}">{%- render 'blko-ui-icon', name: 'arrow-left', size: 16, stroke: 1.5 -%}</a>{%- endif -%}
+          {%- for part in paginate.parts -%}
+            {%- if part.is_link -%}<a href="{{ part.url }}" class="bsearchresults30__pg">{{ part.title }}</a
+            >{%- elsif part.title == paginate.current_page -%}<span class="bsearchresults30__pg is-on" aria-current="page">{{ part.title }}</span
+            >{%- else -%}<span class="bsearchresults30__pg">{{ part.title }}</span>{%- endif -%}
+          {%- endfor -%}
+          {%- if paginate.next -%}<a href="{{ paginate.next.url }}" class="bsearchresults30__pg" aria-label="{{ 'blko.search_results_30.next' | t }}">{%- render 'blko-ui-icon', name: 'arrow-right', size: 16, stroke: 1.5 -%}</a>{%- endif -%}
+        </nav
+        >{%- endif -%}
+      {%- endcapture -%}
+    {%- endpaginate -%}
+    {%- endif -%}
+  {%- else -%}
+    {%- for b in section.blocks -%}
+      {%- if b.type != 'product' -%}{%- continue -%}{%- endif -%}
+      {%- assign bs = b.settings -%}
+      {%- capture hay -%}{{ bs.title }}, {{ bs.step }}, {{ bs.inci }}{%- endcapture -%}
+      {%- assign hay = hay | downcase -%}
+      {%- if qd != blank -%}{%- unless hay contains qd -%}{%- continue -%}{%- endunless -%}{%- endif -%}
+      {%- assign n_products = n_products | plus: 1 -%}
+      {%- assign stl = bs.step | strip | downcase -%}
+      {%- assign steps_seen = steps_seen | append: '|' | append: stl | append: '|' -%}
+      {%- assign hit = '' -%}
+      {%- if qd != blank -%}
+        {%- assign inci = bs.inci | split: ',' -%}
+        {%- for ig in inci -%}{%- assign igd = ig | strip | downcase -%}{%- if igd contains qd -%}{%- assign hit = igd -%}{%- break -%}{%- endif -%}{%- endfor -%}
+      {%- endif -%}
+      {%- assign cents = bs.price | times: 100 -%}
+      {%- assign url = '#' -%}{%- assign vid = '' -%}{%- assign img = bs.image -%}
+      {%- if bs.product != blank -%}
+        {%- assign url = bs.product.url -%}{%- assign vid = bs.product.selected_or_first_available_variant.id -%}
+        {%- if img == blank -%}{%- assign img = bs.product.featured_image -%}{%- endif -%}
+      {%- endif -%}
+      {%- if n_products < 5 -%}{%- assign eager = true -%}{%- else -%}{%- assign eager = false -%}{%- endif -%}
+      {%- render 'blko-search-results-30-card', n: n_products, url: url, title: bs.title, image: img, step: bs.step, size: bs.size, price: cents, hit: hit, vid: vid, eager: eager -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endcapture -%}
+{%- unless live -%}
+  {%- capture rows -%}
+    {%- for b in section.blocks -%}
+      {%- if b.type != 'story' -%}{%- continue -%}{%- endif -%}
+      {%- if n_rows >= s.journal_max -%}{%- break -%}{%- endif -%}
+      {%- assign bs = b.settings -%}
+      {%- capture hay -%}{{ bs.title }}, {{ bs.keys }}{%- endcapture -%}
+      {%- assign hay = hay | downcase -%}
+      {%- if qd != blank -%}{%- unless hay contains qd -%}{%- continue -%}{%- endunless -%}{%- endif -%}
+      {%- assign n_rows = n_rows | plus: 1 -%}
+      {%- capture meta -%}{{ bs.date | escape }} · {{ bs.mins }} {{ 'blko.search_results_30.min' | t }}{%- endcapture -%}
+      {%- render 'blko-search-results-30-row', n: n_rows, url: bs.link, title: bs.title, dek: bs.dek, meta: meta -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+  {%- assign total = n_products | plus: n_rows -%}
+{%- endunless -%}
+{%- liquid
+  unless s.show_journal
+    assign rows = ''
+    if live
+    else
+      assign total = n_products
+    endif
+    assign n_rows = 0
+  endunless
+  if live
+    assign chip_list = types | split: '§' | uniq
+  else
+    assign chip_list = s.steps | split: ','
+  endif
+  assign steps_seen = steps_seen | append: 'x'
+  assign tot2 = total | prepend: '0' | slice: -2, 2
+  if total > 99
+    assign tot2 = total
+  endif
+  assign q_esc = q | escape
+-%}
+{%- capture body -%}
+  <form role="search" action="{{ search_url }}" method="get" class="bsearchresults30__form" data-form
+    ><label for="sr30-q-{{ section.id }}" class="bsearchresults30__cap">{{ s.field_label | escape }}</label
+    ><div class="bsearchresults30__field"
+      >{%- render 'blko-ui-icon', name: 'search', size: 16, stroke: 1.5, className: 'bsearchresults30__sico' -%}
+      <input id="sr30-q-{{ section.id }}" type="search" name="q" value="{{ q_esc }}" placeholder="{{ s.placeholder | escape }}" autocomplete="off" class="bsearchresults30__input" data-q
+      ><input type="hidden" name="options[prefix]" value="last"
+      ><button type="button" aria-label="{{ 'blko.search_results_30.clear' | t }}" class="bsearchresults30__clear" data-clear{% if q == blank %} hidden{% endif %}>{%- render 'blko-ui-icon', name: 'x', size: 16, stroke: 1.5 -%}</button
+      ><button type="submit" class="bsearchresults30__go">{{ 'blko.search_results_30.submit' | t }}</button
+    ></div
+  ></form
+
+  ><header class="bsearchresults30__head"
+    ><p class="bsearchresults30__cap">{{ 'blko.search_results_30.index' | t | replace: '[n]', tot2 }}</p
+    ><h1 class="bsearchresults30__h1 blko-ui-text--h1"
+      >{%- if q != blank -%}
+        {%- if total == 1 -%}{%- assign rk = 'blko.search_results_30.result_one' -%}{%- else -%}{%- assign rk = 'blko.search_results_30.result_other' -%}{%- endif -%}
+        {{ rk | t | replace: '[n]', total }} <em>{{ q_esc }}</em
+      >{%- else -%}{{ s.heading_all | escape }}{%- endif -%}
+    </h1
+  ></header
+
+  >{%- if total == 0 -%}
+  <div class="bsearchresults30__empty"
+    >{%- if s.empty_text != blank -%}<p class="bsearchresults30__etext">{{ s.empty_text | escape }}</p>{%- endif -%}
+    {%- assign sug = s.suggest | split: ',' -%}
+    {%- if sug.size > 0 -%}
+    <div class="bsearchresults30__try"
+      ><p class="bsearchresults30__cap">{{ 'blko.search_results_30.try' | t }}</p
+      ><ul class="bsearchresults30__sugg"
+        >{%- for t in sug -%}{%- assign tt = t | strip -%}{%- if tt == blank -%}{%- continue -%}{%- endif -%}
+        <li><a href="{{ search_url }}?q={{ tt | url_encode }}&amp;options%5Bprefix%5D=last" class="bsearchresults30__chip">{{ tt | escape }}</a></li
+        >{%- endfor -%}
+      </ul
+    ></div
+    >{%- endif -%}
+    <ul class="bsearchresults30__shelves"
+      >{%- if s.shelf_1 != blank -%}<li><a href="{{ s.shelf_1_url | default: routes.all_products_collection_url }}">{{ s.shelf_1 | escape }}</a></li>{%- endif -%}
+      {%- if s.shelf_2 != blank -%}<li><a href="{{ s.shelf_2_url | default: routes.all_products_collection_url }}">{{ s.shelf_2 | escape }}</a></li>{%- endif -%}
+      {%- if s.shelf_3 != blank -%}<li><a href="{{ s.shelf_3_url | default: routes.all_products_collection_url }}">{{ s.shelf_3 | escape }}</a></li>{%- endif -%}
+    </ul
+  ></div
+  >{%- else -%}
+    {%- if n_products > 0 -%}
+    <div class="bsearchresults30__shop"
+      ><div role="group" aria-label="{{ 'blko.search_results_30.filter' | t }}" class="bsearchresults30__chips" data-chips
+        ><button type="button" class="bsearchresults30__step" aria-pressed="true" data-step-btn="">{{ 'blko.search_results_30.all' | t }}<span>{{ n_products | prepend: '0' | slice: -2, 2 }}</span></button
+        >{%- for c in chip_list -%}
+          {%- assign cl = c | strip -%}{%- if cl == blank -%}{%- continue -%}{%- endif -%}
+          {%- assign cd = cl | downcase -%}
+          {%- assign needle = '|' | append: cd | append: '|' -%}
+          {%- assign cn = steps_seen | split: needle | size | minus: 1 -%}
+          <button type="button" class="bsearchresults30__step" aria-pressed="false" data-step-btn="{{ cd | escape }}"{% if cn == 0 %} disabled{% endif %}>{{ cl | escape }}<span>{{ cn | prepend: '0' | slice: -2, 2 }}</span></button
+        >{%- endfor -%}
+      </div
+      ><ul class="bsearchresults30__grid" data-grid>{{ cards }}</ul
+      >{{ pager -}}
+      <p role="status" class="bsearchresults30__sr" data-status data-t="{{ 'blko.search_results_30.shown' | t }}"></p
+    ></div
+    >{%- endif -%}
+    {%- if n_rows > 0 -%}
+    <section aria-labelledby="sr30-j-{{ section.id }}" class="bsearchresults30__journal"
+      ><div class="bsearchresults30__jhead"
+        >{%- assign nr2 = n_rows | prepend: '0' | slice: -2, 2 -%}
+        <p class="bsearchresults30__cap">{{ 'blko.search_results_30.stories' | t | replace: '[n]', nr2 }}</p
+        ><h2 id="sr30-j-{{ section.id }}" class="bsearchresults30__h2 blko-ui-text--h2">{{ 'blko.search_results_30.journal' | t }}</h2
+      ></div
+      ><ol class="bsearchresults30__jlist">{{ rows }}</ol
+    ></section
+    >{%- endif -%}
+  {%- endif -%}
+{%- endcapture -%}
+<div class="bsearchresults30{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px"
+  >{%- render 'blko-ui-section', surface: 'bg', label: s.label, inner: 'bsearchresults30__inner', children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Search, ritual step chips",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "On the search page this shows the shopper's query: products in a 4:5 grid with chips by product type, and matching articles and pages as a journal list. The sample blocks only fill the preview elsewhere."
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Region label",
+      "default": "Search results"
+    },
+    {
+      "type": "text",
+      "id": "field_label",
+      "label": "Field label",
+      "default": "Search the apothecary"
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Placeholder",
+      "default": "An ingredient, a step, a product"
+    },
+    {
+      "type": "text",
+      "id": "heading_all",
+      "label": "Heading without a query",
+      "default": "Everything on the shelves"
+    },
+    {
+      "type": "range",
+      "id": "per_page",
+      "label": "Results per page",
+      "min": 4,
+      "max": 48,
+      "step": 4,
+      "default": 24
+    },
+    {
+      "type": "checkbox",
+      "id": "show_journal",
+      "label": "Show journal results",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "journal_max",
+      "label": "Journal rows",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "header",
+      "content": "No results"
+    },
+    {
+      "type": "textarea",
+      "id": "empty_text",
+      "label": "Note",
+      "default": "Nothing on our shelves goes by that name. Check the spelling, or try one of the ingredients we press and steep ourselves."
+    },
+    {
+      "type": "text",
+      "id": "suggest",
+      "label": "Suggested searches",
+      "info": "Comma separated.",
+      "default": "rosehip, oat, calendula, squalane"
+    },
+    {
+      "type": "text",
+      "id": "shelf_1",
+      "label": "Shelf 1",
+      "default": "Face oils"
+    },
+    {
+      "type": "url",
+      "id": "shelf_1_url",
+      "label": "Shelf 1 link"
+    },
+    {
+      "type": "text",
+      "id": "shelf_2",
+      "label": "Shelf 2",
+      "default": "Balms and creams"
+    },
+    {
+      "type": "url",
+      "id": "shelf_2_url",
+      "label": "Shelf 2 link"
+    },
+    {
+      "type": "text",
+      "id": "shelf_3",
+      "label": "Shelf 3",
+      "default": "Cleansing bars"
+    },
+    {
+      "type": "url",
+      "id": "shelf_3_url",
+      "label": "Shelf 3 link"
+    },
+    {
+      "type": "header",
+      "content": "Outside the search page"
+    },
+    {
+      "type": "text",
+      "id": "demo_q",
+      "label": "Sample query",
+      "default": "rosehip"
+    },
+    {
+      "type": "text",
+      "id": "steps",
+      "label": "Sample chips",
+      "info": "Comma separated; on the search page the chips are the product types.",
+      "default": "Cleanse, Treat, Seal, Body"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 112,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 112
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product (sample)",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "Optional: makes Add work in the preview."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Name",
+          "default": "Rosehip Face Oil"
+        },
+        {
+          "type": "text",
+          "id": "step",
+          "label": "Ritual step",
+          "default": "Treat"
+        },
+        {
+          "type": "text",
+          "id": "size",
+          "label": "Size",
+          "default": "30 ml"
+        },
+        {
+          "type": "number",
+          "id": "price",
+          "label": "Price",
+          "default": 54
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "inci",
+          "label": "Ingredients",
+          "info": "Comma separated; searched and echoed.",
+          "default": "rosehip, sea buckthorn, vitamin E"
+        }
+      ]
+    },
+    {
+      "type": "story",
+      "name": "Journal story (sample)",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Oil cleansing on a Sunday: a ten-minute ritual"
+        },
+        {
+          "type": "text",
+          "id": "dek",
+          "label": "Dek",
+          "default": "Massage dry, emulsify with warm water, lift with a muslin."
+        },
+        {
+          "type": "text",
+          "id": "date",
+          "label": "Date",
+          "default": "Sep 27, 2026"
+        },
+        {
+          "type": "number",
+          "id": "mins",
+          "label": "Minutes",
+          "default": 6
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "keys",
+          "label": "Search keywords",
+          "default": "rosehip, oil, cleanse"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Search, ritual step chips",
+      "blocks": [
+        {
+          "type": "product",
+          "settings": {
+            "title": "Rosehip Face Oil",
+            "step": "Treat",
+            "size": "30 ml",
+            "price": 54,
+            "inci": "rosehip, sea buckthorn, vitamin E"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "title": "Oat Milk Cleanser",
+            "step": "Cleanse",
+            "size": "150 ml",
+            "price": 32,
+            "inci": "colloidal oat, rosehip, glycerin"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "title": "Barrier Balm",
+            "step": "Seal",
+            "size": "50 ml",
+            "price": 38,
+            "inci": "shea, rosehip, calendula"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "title": "Calendula Serum",
+            "step": "Treat",
+            "size": "30 ml",
+            "price": 48,
+            "inci": "calendula, rosehip, oat"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "title": "Night Repair Cream",
+            "step": "Seal",
+            "size": "50 ml",
+            "price": 62,
+            "inci": "rosehip, ceramides, squalane"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "title": "Hydrating Mist",
+            "step": "Treat",
+            "size": "100 ml",
+            "price": 26,
+            "inci": "rose water, aloe, glycerin"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "title": "Squalane Drops",
+            "step": "Treat",
+            "size": "30 ml",
+            "price": 44,
+            "inci": "squalane, rosehip"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "title": "Lip and Cheek Tin",
+            "step": "Seal",
+            "size": "12 g",
+            "price": 22,
+            "inci": "beeswax, rosehip, beetroot"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "title": "Clay Mask",
+            "step": "Cleanse",
+            "size": "75 ml",
+            "price": 36,
+            "inci": "kaolin, oat, lavender"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "title": "Amber Body Oil",
+            "step": "Body",
+            "size": "100 ml",
+            "price": 46,
+            "inci": "rosehip, sunflower, lavender"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "title": "Gentle Scrub",
+            "step": "Body",
+            "size": "200 g",
+            "price": 28,
+            "inci": "cane sugar, sweet almond, lemon peel"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "title": "Cream Cleansing Bar",
+            "step": "Cleanse",
+            "size": "110 g",
+            "price": 18,
+            "inci": "olive, oat, shea"
+          }
+        },
+        {
+          "type": "story",
+          "settings": {
+            "title": "Oil cleansing on a Sunday: a ten-minute ritual",
+            "dek": "Massage dry, emulsify with warm water, lift with a muslin.",
+            "date": "Sep 27, 2026",
+            "mins": 6,
+            "keys": "rosehip, oil, cleanse"
+          }
+        },
+        {
+          "type": "story",
+          "settings": {
+            "title": "The four-step evening routine, in the right order",
+            "dek": "Thinnest texture first, and why the oil always goes last.",
+            "date": "Oct 20, 2026",
+            "mins": 6,
+            "keys": "routine, rosehip, squalane, serum"
+          }
+        },
+        {
+          "type": "story",
+          "settings": {
+            "title": "Winter swaps: when to trade your serum for a richer cream",
+            "dek": "If your skin feels tight by noon, the serum isn't the problem.",
+            "date": "Sep 18, 2026",
+            "mins": 5,
+            "keys": "cream, rosehip, ceramides"
+          }
+        },
+        {
+          "type": "story",
+          "settings": {
+            "title": "Colloidal oat: why it calms a tight, itchy face",
+            "dek": "Finely milled oat holds water on the skin.",
+            "date": "Oct 16, 2026",
+            "mins": 5,
+            "keys": "oat, cleanser"
+          }
+        },
+        {
+          "type": "story",
+          "settings": {
+            "title": "Calendula: what a petal infusion does for redness",
+            "dek": "Steeped in sunflower oil for six weeks, then strained.",
+            "date": "Sep 9, 2026",
+            "mins": 5,
+            "keys": "calendula, balm, redness"
+          }
+        },
+        {
+          "type": "story",
+          "settings": {
+            "title": "Lavender oil: soothing note or irritant?",
+            "dek": "What linalool does on sensitive skin.",
+            "date": "Oct 1, 2026",
+            "mins": 7,
+            "keys": "lavender"
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

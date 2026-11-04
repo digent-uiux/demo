@@ -1,0 +1,39 @@
+{%- comment -%} One specimen plate: b (collection block), i (1-based position), role (focal | front | mid | mid2), sizes. {%- endcomment -%}
+{%- liquid
+  assign it = b.settings
+  assign c = it.collection
+  assign fallback = 'blko.collection_list_39.collection' | t
+  assign title = it.title | default: c.title | default: fallback
+  assign url = c.url | default: '#'
+  assign pic = it.image | default: c.featured_image | default: c.products.first.featured_media.preview_image
+  if c != blank
+    assign count = c.products_count
+  else
+    assign count = it.preview_count
+  endif
+  assign num = i
+  if i < 10
+    assign num = '0' | append: i
+  endif
+-%}
+<article class="bcollectionlist39__plate bcollectionlist39__plate--{{ role }}" {{ b.shopify_attributes }}>
+  <div class="bcollectionlist39__media">
+    {%- if pic != blank -%}
+      {%- capture fp -%}object-position: {{ pic.presentation.focal_point | default: '50% 50%' }}{%- endcapture -%}
+      {{- pic | image_url: width: 1300 | image_tag: loading: 'lazy', widths: '450, 900, 1300', sizes: sizes, class: 'bcollectionlist39__img', style: fp, alt: title -}}
+    {%- else -%}
+      {%- assign phn = i | minus: 1 | modulo: 6 | plus: 1 -%}{%- capture ph -%}collection-{{ phn }}{%- endcapture -%}{{- ph | placeholder_svg_tag: 'bcollectionlist39__img bcollectionlist39__ph' -}}
+    {%- endif -%}
+  </div>
+  <div class="bcollectionlist39__label">
+    <p class="bcollectionlist39__cap bcollectionlist39__muted bcollectionlist39__meta"><span>{{ 'blko.collection_list_39.shelf' | t }} {{ num }}</span><span>{{ 'blko.collection_list_39.formulas' | t: count: count }}</span></p>
+    <div class="bcollectionlist39__row">
+      <span class="bcollectionlist39__num" aria-hidden="true">{{ num }}</span>
+      <div class="bcollectionlist39__txt">
+        <h3 class="bcollectionlist39__name"><a href="{{ url }}" class="bcollectionlist39__link">{{ title | escape }}</a></h3>
+        {%- if it.note != blank -%}<p class="bcollectionlist39__note">{{ it.note | escape }}</p>{%- endif -%}
+        {%- if it.latin != blank -%}<p class="bcollectionlist39__latin">{{ it.latin | escape }}</p>{%- endif -%}
+      </div>
+    </div>
+  </div>
+</article>

@@ -1,30 +1,169 @@
 {
   "sections": {
-    "banner": {
-      "type": "blko-collection-banner",
+    "collection-banner-73": {
+      "type": "blko-collection-banner-73",
       "settings": {
-        "show_description": true,
-        "link_label": "Shop the range"
-      }
+        "tokens": "theme"
+      },
+      "blocks": {
+        "sub-1": {
+          "type": "sub",
+          "settings": {
+            "title": "All",
+            "preview_count": 12
+          }
+        },
+        "sub-2": {
+          "type": "sub",
+          "settings": {
+            "title": "Face oils",
+            "preview_count": 4
+          }
+        },
+        "sub-3": {
+          "type": "sub",
+          "settings": {
+            "title": "Serums",
+            "preview_count": 3
+          }
+        },
+        "sub-4": {
+          "type": "sub",
+          "settings": {
+            "title": "Cleansers",
+            "preview_count": 3
+          }
+        },
+        "sub-5": {
+          "type": "sub",
+          "settings": {
+            "title": "Sets",
+            "preview_count": 2
+          }
+        }
+      },
+      "block_order": [
+        "sub-1",
+        "sub-2",
+        "sub-3",
+        "sub-4",
+        "sub-5"
+      ]
     },
-    "main": {
-      "type": "blko-main-collection",
+    "collection-grid-44": {
+      "type": "blko-collection-grid-44",
       "settings": {
-        "color_scheme": "scheme-1",
-        "padding_top": 80,
-        "padding_bottom": 80,
-        "show_banner": false,
-        "per_page": 12,
-        "columns_desktop": 4,
-        "columns_mobile": "2",
-        "filter_type": "top",
-        "show_sort": true,
-        "show_count": true,
-        "card_ratio": "theme",
-        "show_rating": true,
-        "quick_add": false
-      }
+        "tokens": "theme"
+      },
+      "blocks": {
+        "tile-1": {
+          "type": "tile",
+          "settings": {
+            "shape": "wide"
+          }
+        },
+        "badge-2": {
+          "type": "badge",
+          "settings": {
+            "when": "sale",
+            "label": "Sale"
+          }
+        },
+        "badge-3": {
+          "type": "badge",
+          "settings": {
+            "when": "sold_out",
+            "label": "Sold out"
+          }
+        },
+        "product-4": {
+          "type": "product",
+          "settings": {
+            "title": "Rosehip Seed Oil",
+            "price": 54,
+            "compare": 0,
+            "chips": "Dry skin, 30 ml",
+            "sold_out": false,
+            "sizes": false,
+            "rank": 3
+          }
+        },
+        "product-5": {
+          "type": "product",
+          "settings": {
+            "title": "Sea Buckthorn Serum",
+            "price": 48,
+            "compare": 58,
+            "chips": "Dull skin, 30 ml",
+            "sold_out": false,
+            "sizes": false,
+            "rank": 1
+          }
+        },
+        "product-6": {
+          "type": "product",
+          "settings": {
+            "title": "Squalane Drops",
+            "price": 44,
+            "compare": 0,
+            "chips": "All skin, 50 ml",
+            "sold_out": false,
+            "sizes": true,
+            "rank": 4
+          }
+        },
+        "product-7": {
+          "type": "product",
+          "settings": {
+            "title": "Jojoba Balance Oil",
+            "price": 38,
+            "compare": 0,
+            "chips": "Oily skin, 30 ml",
+            "sold_out": false,
+            "sizes": false,
+            "rank": 5
+          }
+        },
+        "product-8": {
+          "type": "product",
+          "settings": {
+            "title": "Marula Night Oil",
+            "price": 62,
+            "compare": 0,
+            "chips": "Dry skin, 15 ml",
+            "sold_out": true,
+            "sizes": false,
+            "rank": 2
+          }
+        },
+        "product-9": {
+          "type": "product",
+          "settings": {
+            "title": "Calendula Calm Serum",
+            "price": 46,
+            "compare": 0,
+            "chips": "Sensitive, 30 ml",
+            "sold_out": false,
+            "sizes": false,
+            "rank": 6
+          }
+        }
+      },
+      "block_order": [
+        "tile-1",
+        "badge-2",
+        "badge-3",
+        "product-4",
+        "product-5",
+        "product-6",
+        "product-7",
+        "product-8",
+        "product-9"
+      ]
     }
   },
-  "order": ["banner", "main"]
+  "order": [
+    "collection-banner-73",
+    "collection-grid-44"
+  ]
 }

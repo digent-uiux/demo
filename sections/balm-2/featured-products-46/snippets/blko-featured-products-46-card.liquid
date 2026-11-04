@@ -1,0 +1,116 @@
+{%- comment -%}
+  featured-products-46 balm card ("Step 01" = routine order): product (live) or name/kind/price/compare/chips/state/ph (preview line).
+  Packshot = product.featured_media (4:5, centred low); hover crossfades to product.media[1] when there is one.
+  In-image add: a pill from 1024px (fades in on hover / focus-within), a round "+" below. Several variants: a
+  "Choose size" link to the product. Sold out: dimmed picture, a small-caps label, a disabled pill, muted price.
+  Chips: tags "skin:…" / "size:…" (prefix stripped), else custom.skin_type / custom.volume_ml; at most two.
+{%- endcomment -%}
+{%- liquid
+  assign chips = ''
+  assign sold = false
+  assign sizes = false
+  if product != blank
+    assign name = product.title
+    assign kind = product.type
+    assign url = product.url
+    assign v = product.selected_or_first_available_variant
+    unless product.available
+      assign sold = true
+    endunless
+    if product.variants.size > 1
+      assign sizes = true
+    endif
+    for tag in product.tags
+      assign tp = tag | split: ':'
+      assign tk = tp.first | strip | downcase
+      if tp.size > 1
+        if tk == 'skin' or tk == 'size'
+          assign tv = tag | remove_first: tp.first | remove_first: ':' | strip
+          assign chips = chips | append: tv | append: '|'
+        endif
+      endif
+    endfor
+    if chips == blank
+      if product.metafields.custom.skin_type != blank
+        assign chips = chips | append: product.metafields.custom.skin_type.value | append: '|'
+      endif
+      if product.metafields.custom.volume_ml != blank
+        assign chips = chips | append: product.metafields.custom.volume_ml.value | append: ' ml|'
+      endif
+    endif
+  else
+    assign name = name | strip
+    assign kind = kind | strip
+    assign url = '#'
+    assign price = price | strip | plus: 0
+    assign compare = compare | strip | plus: 0
+    assign chips = chip_line | strip | replace: ',', '|'
+    assign st = state | strip | downcase
+    if st == 'sold'
+      assign sold = true
+    elsif st == 'sizes'
+      assign sizes = true
+    endif
+  endif
+  assign chip_list = chips | split: '|'
+  assign t_name = name | escape
+-%}
+<li class="bfeaturedproducts46__item{% if sold %} bfeaturedproducts46__item--sold{% endif %}">
+  <div class="bfeaturedproducts46__media">
+    {%- if product != blank and product.featured_media != blank -%}
+      {%- capture alt -%}{{ product.featured_media.alt | default: name | escape }}{%- endcapture -%}
+      {{- product.featured_media | image_url: width: 900 | image_tag: loading: 'lazy', alt: alt, widths: '320, 480, 640, 900', sizes: '(min-width: 768px) 25vw, 50vw', class: 'bfeaturedproducts46__img bfeaturedproducts46__pack' -}}
+      {%- if product.media.size > 1 and sold == false -%}
+        {{- product.media[1] | image_url: width: 900 | image_tag: loading: 'lazy', alt: '', widths: '320, 480, 640, 900', sizes: '(min-width: 768px) 25vw, 50vw', class: 'bfeaturedproducts46__img bfeaturedproducts46__alt' -}}
+      {%- endif -%}
+    {%- else -%}
+      {%- capture ph_name -%}product-{{ ph | default: 1 }}{%- endcapture -%}
+      {{- ph_name | placeholder_svg_tag: 'bfeaturedproducts46__img bfeaturedproducts46__pack bfeaturedproducts46__ph' -}}
+    {%- endif -%}
+    {%- if sold -%}
+      <span class="bfeaturedproducts46__label bfeaturedproducts46__flag">{{ t_sold }}</span>
+      <button type="button" class="bfeaturedproducts46__act bfeaturedproducts46__act--sold" disabled>{{ t_sold }}</button>
+    {%- elsif sizes -%}
+      <a href="{{ url }}" class="bfeaturedproducts46__act">
+        {%- render 'blko-ui-icon', name: 'plus', size: 16, className: 'bfeaturedproducts46__ico' -%}
+        <span class="bfeaturedproducts46__txt">{{ t_choose }}<span class="blko-ui-sr-only"> {{ t_for }} {{ t_name }}</span></span>
+      </a>
+    {%- elsif product != blank -%}
+      <form method="post" action="{{ routes.cart_add_url }}" class="bfeaturedproducts46__form" data-add>
+        <input type="hidden" name="id" value="{{ v.id }}"><input type="hidden" name="quantity" value="1">
+        <button type="submit" class="bfeaturedproducts46__act" data-btn aria-pressed="false">
+          {%- render 'blko-ui-icon', name: 'plus', size: 16, className: 'bfeaturedproducts46__ico bfeaturedproducts46__ico--add' -%}
+          {%- render 'blko-ui-icon', name: 'check', size: 16, className: 'bfeaturedproducts46__ico bfeaturedproducts46__ico--done' -%}
+          <span class="bfeaturedproducts46__txt bfeaturedproducts46__txt--add">{{ t_add_a }}<span class="blko-ui-sr-only"> {{ t_name }}</span> {{ t_add_b }}</span>
+          <span class="bfeaturedproducts46__txt bfeaturedproducts46__txt--done">{{ t_added }}</span>
+        </button>
+      </form>
+    {%- else -%}
+      <button type="button" class="bfeaturedproducts46__act" data-toggle aria-pressed="false">
+        {%- render 'blko-ui-icon', name: 'plus', size: 16, className: 'bfeaturedproducts46__ico bfeaturedproducts46__ico--add' -%}
+        {%- render 'blko-ui-icon', name: 'check', size: 16, className: 'bfeaturedproducts46__ico bfeaturedproducts46__ico--done' -%}
+        <span class="bfeaturedproducts46__txt bfeaturedproducts46__txt--add">{{ t_add_a }}<span class="blko-ui-sr-only"> {{ t_name }}</span> {{ t_add_b }}</span>
+        <span class="bfeaturedproducts46__txt bfeaturedproducts46__txt--done">{{ t_added }}</span>
+      </button>
+    {%- endif -%}
+  </div>
+  <div class="bfeaturedproducts46__copy">
+    <div class="bfeaturedproducts46__meta">
+      <span class="bfeaturedproducts46__label bfeaturedproducts46__muted">{{ t_step }} {% if n < 10 %}0{% endif %}{{ n }}{% if kind != blank %} <span class="bfeaturedproducts46__kind">· {{ kind | escape }}</span>{% endif %}</span>
+      {%- if product != blank -%}
+        {%- assign cmp = product.compare_at_price -%}
+        {%- if sold -%}{%- assign cmp = nil -%}{%- endif -%}
+        {%- render 'blko-ui-price', amount: product.price, compareAt: cmp, size: 'sm', cents: true, className: 'bfeaturedproducts46__price' -%}
+      {%- else -%}
+        {%- if compare > price and sold == false -%}{%- assign cmp = compare -%}{%- else -%}{%- assign cmp = nil -%}{%- endif -%}
+        {%- render 'blko-ui-price', amount: price, compareAt: cmp, size: 'sm', className: 'bfeaturedproducts46__price' -%}
+      {%- endif -%}
+    </div>
+    <h3 class="bfeaturedproducts46__name"><a href="{{ url }}">{{ t_name }}</a></h3>
+    {%- if chip_list.size > 0 -%}
+      <ul class="bfeaturedproducts46__chips" aria-label="{{ t_details | escape }}">
+        {%- for c in chip_list limit: 2 -%}{%- if c != blank -%}<li class="bfeaturedproducts46__chip">{{ c | strip | escape }}</li>{%- endif -%}{%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</li>

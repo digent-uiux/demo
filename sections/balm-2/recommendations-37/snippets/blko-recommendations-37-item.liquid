@@ -1,0 +1,63 @@
+{%- comment -%}
+  recommendations-37 item, drawn twice: part 'mount' (a figure on the plate) or 'row' (a line of the key).
+  product (live, mf = [namespace, key]) or b (preview block); i = index0, n = count, ph = placeholder number.
+{%- endcomment -%}
+{%- liquid
+  if product != blank
+    assign name = product.title
+    assign url = product.url
+    assign img = product.featured_media
+    assign note = nil
+    if mf.size == 2
+      assign note = product.metafields[mf[0]][mf[1]].value
+    endif
+    if note == blank
+      assign note = product.description | strip_html | truncatewords: 10
+    endif
+    assign v = product.selected_or_first_available_variant
+  else
+    assign name = b.settings.title
+    assign url = routes.all_products_collection_url
+    assign img = b.settings.image
+    assign note = b.settings.note
+  endif
+  assign k = i | plus: 1
+-%}
+{%- if part == 'mount' -%}
+  {%- if i == 0 -%}{%- assign w = 900 -%}{%- else -%}{%- assign w = 500 -%}{%- endif -%}
+  <a href="{{ url }}" tabindex="-1" aria-hidden="true" class="brecommendations37__mount brecommendations37__m{{ k }}of{{ n }}" style="--i:{{ i }}" data-i="{{ i }}">
+    {%- if img != blank -%}
+      {{- img | image_url: width: w | image_tag: alt: '', loading: 'lazy', widths: '300, 500, 700, 900', sizes: '(min-width: 768px) 24vw, 50vw', class: 'brecommendations37__img' -}}
+    {%- else -%}
+      {%- capture ph_name -%}product-{{ ph | default: 1 }}{%- endcapture -%}
+      {{- ph_name | placeholder_svg_tag: 'brecommendations37__img brecommendations37__ph' -}}
+    {%- endif -%}
+    <span class="brecommendations37__lbl brecommendations37__tag">{{ 'blko.recommendations_37.fig' | t }} <span class="brecommendations37__acc">{{ k }}</span></span>
+  </a>
+{%- else -%}
+  <li class="brecommendations37__row" data-i="{{ i }}"{% if b %} {{ b.shopify_attributes }}{% endif %}>
+    <span aria-hidden="true" class="brecommendations37__num">{{ k }}</span>
+    <div class="brecommendations37__txt">
+      <h3 class="brecommendations37__name"><a href="{{ url }}"><span class="blko-ui-sr-only">{{ 'blko.recommendations_37.fig' | t }} {{ k }}: </span>{{ name | escape }}</a></h3>
+      {%- if note != blank -%}<p class="brecommendations37__note">{{ note | escape }}</p>{%- endif -%}
+    </div>
+    <div class="brecommendations37__buy">
+      {%- if product != blank -%}
+        <span class="brecommendations37__price">{%- render 'blko-ui-money', amount: product.price, cents: true -%}</span>
+        <form method="post" action="{{ routes.cart_add_url }}" class="brecommendations37__form" data-add>
+          <input type="hidden" name="id" value="{{ v.id }}"><input type="hidden" name="quantity" value="1">
+          {%- if v.available -%}
+            {%- capture at -%}data-btn data-added="{{ t_added | escape }}"{%- endcapture -%}
+            {%- render 'blko-ui-button', variant: 'outline', size: 'sm', type: 'submit', children: t_add, attrs: at -%}
+          {%- else -%}
+            {%- render 'blko-ui-button', variant: 'outline', size: 'sm', type: 'button', children: t_sold, attrs: 'disabled' -%}
+          {%- endif -%}
+        </form>
+      {%- else -%}
+        <span class="brecommendations37__price">{%- render 'blko-ui-money', amount: b.settings.price -%}</span>
+        {%- capture at -%}data-toggle aria-pressed="false" data-add-label="{{ t_add | escape }}" data-added="{{ t_added | escape }}"{%- endcapture -%}
+        {%- render 'blko-ui-button', variant: 'outline', size: 'sm', type: 'button', children: t_add, attrs: at -%}
+      {%- endif -%}
+    </div>
+  </li>
+{%- endif -%}

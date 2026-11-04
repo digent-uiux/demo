@@ -1,0 +1,19 @@
+{
+  "blko": {
+    "recommendations_50": {
+      "add": "Add sample",
+      "added": "In the pouch",
+      "adding": "Adding",
+      "empty": "Empty",
+      "error": "Could not update the pouch. Please try again.",
+      "full": "Pouch full",
+      "label": "Samples to try",
+      "of": "of",
+      "pouch": "Sample pouch",
+      "remove": "Remove [name] from the pouch",
+      "removing": "Removing",
+      "shelf": "Deluxe samples",
+      "sold_out": "Sold out"
+    }
+  }
+}

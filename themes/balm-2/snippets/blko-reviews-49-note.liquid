@@ -1,0 +1,25 @@
+{%- comment -%}
+  One note (a review block): b (block), i (index for the stagger), hide (past Show more). The stamp column holds the lot
+  (accent), the time used and the skin; then stars, title, text, name · verified · date and an optional photo.
+{%- endcomment -%}
+{%- assign r = b.settings -%}
+<li class="breviews49__note" data-note data-stars="{{ r.stars }}" data-skin="{{ r.skin | strip | handleize }}" style="--n: {{ i }}"{% if hide %} hidden{% endif %} {{ b.shopify_attributes }}>
+  <p class="breviews49__cap breviews49__muted breviews49__stamp">
+    {%- if r.lot != blank -%}<span class="breviews49__lot">{{ 'blko.reviews_49.lot' | t }} {{ r.lot | escape }}</span>{%- endif -%}
+    {%- if r.used != blank -%}<span>{{ r.used | escape }}</span>{%- endif -%}
+    {%- if r.skin != blank -%}<span>{{ 'blko.reviews_49.skin_of' | t: skin: r.skin | escape }}</span>{%- endif -%}
+  </p>
+  <div class="breviews49__nb{% if r.photo != blank %} breviews49__nb--photo{% endif %}">
+    <div class="breviews49__txt">
+      {%- render 'blko-ui-stars', value: r.stars, size: 'xs' -%}
+      {%- if r.title != blank -%}<h3 class="breviews49__rt">{{ r.title | escape }}</h3>{%- endif -%}
+      {%- if r.body != blank -%}<p class="breviews49__body">{{ r.body | escape }}</p>{%- endif -%}
+      <p class="breviews49__cap breviews49__muted breviews49__by">
+        {%- if r.name != blank -%}<span class="breviews49__who">{{ r.name | escape }}</span>{%- endif -%}
+        {%- if r.verified -%}<span aria-hidden="true">·</span><span>{{ 'blko.reviews_49.verified' | t }}</span>{%- endif -%}
+        {%- if r.date != blank -%}<span aria-hidden="true">·</span><time>{{ r.date | escape }}</time>{%- endif -%}
+      </p>
+    </div>
+    {%- if r.photo != blank -%}{{ r.photo | image_url: width: 192 | image_tag: loading: 'lazy', widths: '96, 144, 192', sizes: '(min-width: 768px) 96px, 72px', class: 'breviews49__ph', alt: r.photo.alt | default: '' }}{%- endif -%}
+  </div>
+</li>

@@ -1,0 +1,15 @@
+{
+  "blko": {
+    "search_dialog": {
+      "all": "All",
+      "collections": "Shelves",
+      "from": "From {{ price }}",
+      "no_results": "Nothing on the shelves for “{{ terms }}”.",
+      "pages": "Journal and pages",
+      "products": "Formulas",
+      "search_for": "Search for “{{ terms }}”",
+      "show": "Show results for",
+      "suggestions": "Suggestions"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "blko": {
+    "testimonial_13": {
+      "average": "average",
+      "choose": "Choose a review",
+      "label": "Customer review",
+      "no": "No.",
+      "review_n": "Review {{ n }} of {{ total }}, {{ name }}",
+      "reviews": "reviews",
+      "shelf": "On their shelf"
+    }
+  }
+}

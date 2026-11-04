@@ -1,0 +1,310 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-testimonial-13.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-testimonial-13.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Balm "words that come into focus": one review as the block's single big moment. A small-caps line on a hairline (eyebrow,
+  the review's number, the store rating), then the quote across ten columns in light body type with its <em> words in the
+  display face, an accent opening mark hanging into the margin; under it the reader (avatar, name, detail, stars) and what
+  they bought (packshot, name, price, linked), then a numbered index to the other reviews and the reviews link.
+  Blocks "quote" (max 5): only the first shows until the index picks another (the index hides with one block).
+  Rating: the rating + count settings, or the first review's product reviews metafields (reviews.rating /
+  reviews.rating_count, as review apps write them) when that product has them.
+  Motion (balm kit on only; static = every word sharp): the quote racks into focus word by word when shown, the display
+  words last; picking another review replays it. Buttons only change colour.
+{%- endcomment -%}
+{%- liquid
+  assign quotes = section.blocks | where: 'type', 'quote'
+  assign r_val = s.rating | plus: 0
+  assign r_count = s.rating_count
+  assign p0 = quotes.first.settings.product
+  if p0 != blank and p0.metafields.reviews.rating.value != blank
+    assign r_val = p0.metafields.reviews.rating.value.rating | plus: 0
+    assign r_count = p0.metafields.reviews.rating_count.value | default: r_count
+  endif
+  assign shelf = 'blko.testimonial_13.shelf' | t
+-%}
+{%- capture body -%}
+  {%- if s.heading != blank -%}<h2 class="blko-ui-sr-only">{{ s.heading | escape }}</h2>{%- endif -%}
+  <div class="btestimonial13__top btestimonial13__cap"
+    ><p class="btestimonial13__line"
+      >{%- if s.eyebrow != blank -%}<span>{{ s.eyebrow | escape }}</span><span class="btestimonial13__rule" aria-hidden="true"></span>{%- endif -%}
+      <span class="btestimonial13__ink">{{ 'blko.testimonial_13.no' | t }} <span data-no>01</span></span
+    ></p
+    >{%- if s.show_rating -%}
+      <p class="btestimonial13__line">{%- render 'blko-ui-stars', value: r_val, size: 'xs' -%}<span><span class="btestimonial13__ink">{{ r_val | round: 1 }}</span> {{ 'blko.testimonial_13.average' | t }} · {% render 'blko-ui-number', value: r_count %} {{ 'blko.testimonial_13.reviews' | t }}</span></p
+    >{%- endif -%}
+  </div
+  ><div class="btestimonial13__stage" data-stage
+    >{%- for b in quotes limit: 5 -%}
+      {%- assign q = b.settings -%}
+      {%- assign p = q.product -%}
+      {%- assign p_title = p.title | default: q.preview_name -%}
+      <figure class="btestimonial13__fig" data-quote{% unless forloop.first %} hidden{% endunless %} {{ b.shopify_attributes }}
+        ><blockquote class="btestimonial13__q" data-q
+          ><span class="btestimonial13__mark btestimonial13__mark--open" aria-hidden="true">&ldquo;</span>{{ q.quote }}<span class="btestimonial13__mark" aria-hidden="true">&rdquo;</span
+        ></blockquote
+        ><figcaption class="btestimonial13__cap-row" data-fade
+          ><div class="btestimonial13__who"
+            >{%- if q.avatar != blank -%}
+              {{ q.avatar | image_url: width: 112 | image_tag: loading: 'lazy', alt: '', widths: '56, 112, 168', sizes: '56px', class: 'btestimonial13__av' -}}
+            {%- else -%}
+              <span class="btestimonial13__av btestimonial13__av--ph" aria-hidden="true">{{ q.name | slice: 0 }}</span
+            >{%- endif -%}
+            <span class="btestimonial13__meta"
+              ><span class="btestimonial13__name">{{ q.name | escape }}</span
+              >{%- if q.detail != blank -%}<span class="btestimonial13__cap btestimonial13__muted">{{ q.detail | escape }}</span>{%- endif -%}
+              {%- render 'blko-ui-stars', value: q.stars, size: 'xs' -%}
+            </span
+          ></div
+          >{%- if p_title != blank -%}
+            <a href="{{ p.url | default: '#' }}" class="btestimonial13__prod"
+              >{%- if p.featured_image != blank -%}
+                {{ p.featured_image | image_url: width: 168 | image_tag: loading: 'lazy', alt: p.featured_image.alt | default: p_title, widths: '56, 112, 168', sizes: '56px', class: 'btestimonial13__pi' -}}
+              {%- else -%}
+                {{ 'product-1' | placeholder_svg_tag: 'btestimonial13__pi btestimonial13__ph' -}}
+              {%- endif -%}
+              <span class="btestimonial13__meta"
+                ><span class="btestimonial13__cap btestimonial13__muted">{{ shelf }}</span
+                ><span class="btestimonial13__pt">{{ p_title | escape }}</span
+                >{%- if p != blank -%}{%- render 'blko-ui-price', amount: p.price, compareAt: p.compare_at_price, cents: true, size: 'sm' -%}{%- elsif q.preview_price != blank -%}{%- render 'blko-ui-price', amount: q.preview_price, size: 'sm' -%}{%- endif -%}
+              </span
+            ></a
+          >{%- endif -%}
+        </figcaption
+      ></figure
+    >{%- endfor -%}
+  </div
+  ><div class="btestimonial13__foot"
+    >{%- if quotes.size > 1 -%}
+      <div class="btestimonial13__index btestimonial13__cap" role="group" aria-label="{{ 'blko.testimonial_13.choose' | t | escape }}"
+        >{%- for b in quotes limit: 5 -%}
+          <button type="button" class="btestimonial13__ix" data-ix="{{ forloop.index0 }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}" aria-label="{{ 'blko.testimonial_13.review_n' | t: n: forloop.index, total: quotes.size, name: b.settings.name | escape }}">{{ forloop.index | prepend: '0' | slice: -2, 2 }}<span aria-hidden="true"></span></button
+        >{%- endfor -%}
+      </div
+    >{%- endif -%}
+    {%- if s.link_label != blank -%}{%- render 'blko-ui-arrow-link', href: s.link, children: s.link_label -%}{%- endif -%}
+  </div
+>{%- endcapture -%}
+<div class="btestimonial13{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-btestimonial13
+  >{%- assign lbl = 'blko.testimonial_13.label' | t -%}
+  {%- render 'blko-ui-section', surface: 'bg', label: lbl, inner: 'btestimonial13__in', children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Testimonial 13",
+  "tag": "section",
+  "max_blocks": 5,
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Overheard at the counter"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading (screen readers)",
+      "default": "What customers say"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "Show rating",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "rating",
+      "label": "Rating",
+      "default": "4.9",
+      "info": "Used when the first review's product has no reviews metafield."
+    },
+    {
+      "type": "number",
+      "id": "rating_count",
+      "label": "Review count",
+      "default": 2140
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label",
+      "default": "Read all reviews"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 112,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 112
+    }
+  ],
+  "blocks": [
+    {
+      "type": "quote",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "quote",
+          "label": "Quote",
+          "default": "Three drops at <em>night</em>, and by <em>morning</em> my skin looks <em>rested</em>. Even better a month in.",
+          "info": "Italic words are set in the display face."
+        },
+        {
+          "type": "image_picker",
+          "id": "avatar",
+          "label": "Avatar"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Hannah Moore"
+        },
+        {
+          "type": "text",
+          "id": "detail",
+          "label": "Detail",
+          "default": "Combination skin · 6 weeks in"
+        },
+        {
+          "type": "range",
+          "id": "stars",
+          "label": "Stars",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "header",
+          "content": "What they bought"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "text",
+          "id": "preview_name",
+          "label": "Name before a product is picked",
+          "default": "Rosehip Seed Oil"
+        },
+        {
+          "type": "text",
+          "id": "preview_price",
+          "label": "Price before a product is picked",
+          "default": "54"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonial 13",
+      "blocks": [
+        {
+          "type": "quote",
+          "settings": {
+            "quote": "Three drops at <em>night</em>, and by <em>morning</em> my skin looks <em>rested</em>. Even better a month in.",
+            "name": "Hannah Moore",
+            "detail": "Combination skin · 6 weeks in",
+            "stars": 5,
+            "preview_name": "Rosehip Seed Oil",
+            "preview_price": "54"
+          }
+        },
+        {
+          "type": "quote",
+          "settings": {
+            "quote": "The first <em>balm</em> that never stings. The <em>redness</em> on my cheeks has gone <em>quiet</em>.",
+            "name": "Priya Shah",
+            "detail": "Reactive skin · 3 months in",
+            "stars": 5,
+            "preview_name": "Oat Barrier Balm",
+            "preview_price": "38"
+          }
+        },
+        {
+          "type": "quote",
+          "settings": {
+            "quote": "I stopped <em>layering</em> five products. One oil, and my skin feels like <em>mine</em> again.",
+            "name": "Clara Jensen",
+            "detail": "Dry skin · 2 months in",
+            "stars": 4,
+            "preview_name": "Squalane Night Oil",
+            "preview_price": "46"
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

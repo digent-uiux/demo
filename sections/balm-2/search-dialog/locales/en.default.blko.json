@@ -1,0 +1,11 @@
+{
+  "blko": {
+    "search_dialog": {
+      "close": "Close search",
+      "field": "Search",
+      "from": "From {{ price }}",
+      "often": "Often searched",
+      "trending": "Trending now"
+    }
+  }
+}

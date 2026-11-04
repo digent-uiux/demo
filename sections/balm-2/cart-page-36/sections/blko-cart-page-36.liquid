@@ -1,0 +1,499 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-cart-page-36.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-cart-page-36.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Cart page, balm: the dispensary ledger. A small-caps count line and a didone h1 with one italic word; a "free shipping
+  from [x]" hairline that fills in amber; the bag as a ruled list of numbered rows (square photo, name, variant and
+  plan lines, unit price, a stepper, the line price, remove with undo); the summary in a double-hairline label frame
+  (subtotal, cart-level discounts, shipping, gift note, total, a gift-note switch with a card message, checkout).
+  With items in the cart everything is the real cart: the stepper and remove post to /cart/change.js with section
+  rendering and swap this section in place; Undo puts the removed line back through /cart/add.js; the gift note saves to
+  cart.note through /cart/update.js; Check out posts the cart form. After every change it dispatches
+  blko:cart:updated {detail: cart}. On an empty cart page the empty state shows (three shelves and a button). Line
+  blocks are the preview (theme editor with an empty cart, or the block outside the cart page). Shipping is an estimate
+  from the threshold and fee settings, in the shop currency; the real rate is set at checkout.
+{%- endcomment -%}
+{{ 'blko-balm-motion.css' | asset_url | stylesheet_tag -}}
+<script src="{{ 'blko-balm-motion.js' | asset_url }}" defer="defer"></script
+>{%- liquid
+  assign live = false
+  if cart.item_count > 0 and cart.items.size > 0
+    assign live = true
+  endif
+  assign real_empty = false
+  if live == false and request.page_type == 'cart' and request.design_mode == false
+    assign real_empty = true
+  endif
+  assign lines = section.blocks | where: 'type', 'line'
+  assign free_c = s.free_over | times: 100
+  assign fee_c = s.ship_fee | times: 100
+  if live
+    assign count = cart.item_count
+    assign subt = cart.items_subtotal_price
+    assign after = cart.total_price
+  else
+    assign count = 0
+    assign subt = 0
+    unless real_empty
+      for b in lines
+        assign lc = b.settings.price | times: 100 | times: b.settings.qty
+        assign count = count | plus: b.settings.qty
+        assign subt = subt | plus: lc
+      endfor
+    endunless
+    assign after = subt
+  endif
+  assign ship = fee_c
+  if subt >= free_c or count == 0
+    assign ship = 0
+  endif
+  assign total = after | plus: ship
+  assign left = free_c | minus: subt | at_least: 0
+  assign fill = 1
+  if free_c > 0
+    assign capped = subt | at_most: free_c
+    assign fill = capped | times: 1.0 | divided_by: free_c
+  endif
+  if count < 10
+    assign cnt2 = count | prepend: '0'
+  else
+    assign cnt2 = count
+  endif
+  if count == 1
+    assign count_label = 'blko.cart_page_36.item' | t | replace: '[n]', cnt2
+  else
+    assign count_label = 'blko.cart_page_36.items' | t | replace: '[n]', cnt2
+  endif
+  assign m0 = 0 | money_without_trailing_zeros
+  assign free_m = free_c | money_without_trailing_zeros
+  assign free_from = 'blko.cart_page_36.free_from' | t | replace: '[x]', free_m
+  assign gift_on = false
+  if live and cart.note != blank
+    assign gift_on = true
+  endif
+  assign note_v = ''
+  if live
+    assign note_v = cart.note
+  endif
+-%}
+{%- capture body -%}
+<header class="bcartpage36__head"
+  ><p class="bcartpage36__cap bcartpage36__muted">{{ s.eyebrow | escape }} · <span data-count>{{ count_label }}</span></p
+  ><h1 class="bcartpage36__h1">{{ s.heading }}</h1
+></header
+
+>{%- unless live -%}
+<div class="bcartpage36__empty" data-empty-view
+  ><p class="bcartpage36__cap bcartpage36__muted">{{ s.empty_label | escape }}</p
+  ><h2 class="bcartpage36__eh">{{ s.empty_title | escape }}</h2
+  ><p class="bcartpage36__et bcartpage36__muted">{{ s.empty_text | escape }}</p
+  ><ul class="bcartpage36__shelves"
+    >{%- for i in (1..3) -%}
+      {%- assign kl = 'shelf_' | append: i | append: '_label' -%}
+      {%- assign ku = 'shelf_' | append: i | append: '_link' -%}
+      {%- if s[kl] != blank -%}<li><a href="{{ s[ku] | default: routes.all_products_collection_url }}" class="bcartpage36__shelf">{{ s[kl] | escape }}</a></li>{%- endif -%}
+    {%- endfor -%}
+  </ul
+  ><div class="bcartpage36__eb"
+    >{%- capture shop_in -%}{{ s.shop_label | escape }}{%- render 'blko-ui-icon', name: 'arrow-up-right' -%}{%- endcapture -%}
+    {%- assign shop_href = s.shop_link | default: routes.all_products_collection_url -%}
+    {%- render 'blko-ui-button', href: shop_href, children: shop_in -%}
+    {%- render 'blko-ui-button', variant: 'link', attrs: 'data-undo data-put-back hidden', children: '' -%}
+  </div
+></div
+>{%- endunless -%}
+
+{%- unless real_empty -%}
+<div class="bcartpage36__body"
+  ><div class="bcartpage36__main"
+    ><div class="bcartpage36__meter" role="group" aria-label="{{ 'blko.cart_page_36.progress' | t | escape }}"
+      ><p class="bcartpage36__mt bcartpage36__small"
+        ><span aria-live="polite"><span data-left-on{% if left == 0 %} hidden{% endif %}>{{ 'blko.cart_page_36.add_for_a' | t }} <span class="bcartpage36__acc bcartpage36__tab" data-left>{{ left | money_without_trailing_zeros }}</span> {{ 'blko.cart_page_36.add_for_b' | t }}</span><span data-left-done{% if left > 0 %} hidden{% endif %}>{{ s.free_done | escape }}</span></span
+        ><span class="bcartpage36__cap bcartpage36__muted">{{ free_from }}</span
+      ></p
+      ><div class="bcartpage36__track" aria-hidden="true"><span class="bcartpage36__fill" data-fill style="transform:scaleX({{ fill }})"></span></div
+    ></div
+
+    ><ol class="bcartpage36__lines" aria-label="{{ 'blko.cart_page_36.lines' | t | escape }}" data-lines
+      >{%- if live -%}
+        {%- for it in cart.items -%}
+          {%- liquid
+            assign each = it.final_price | money_without_trailing_zeros
+            assign paid = it.final_line_price | money_without_trailing_zeros
+            assign was = ''
+            if it.original_line_price > it.final_line_price
+              assign was = it.original_line_price | money_without_trailing_zeros
+            endif
+            assign max = 99
+            if it.variant.inventory_management == 'shopify' and it.variant.inventory_policy == 'deny' and it.variant.inventory_quantity > 0
+              assign max = it.variant.inventory_quantity
+            endif
+            assign alt = it.image.alt | default: it.product.title
+          -%}
+          {%- capture meta -%}
+            {%- unless it.product.has_only_default_variant -%}<p class="bcartpage36__cap bcartpage36__muted">{{ it.variant.title | escape }}</p>{%- endunless -%}
+            {%- if it.selling_plan_allocation -%}<p class="bcartpage36__cap bcartpage36__muted">{{ it.selling_plan_allocation.selling_plan.name | escape }}</p>{%- endif -%}
+            {%- for p in it.properties -%}{%- assign pf = p.first | slice: 0 -%}{%- if p.last != blank and pf != '_' -%}<p class="bcartpage36__cap bcartpage36__muted">{{ p.first | escape }} · {{ p.last | escape }}</p>{%- endif -%}{%- endfor -%}
+            {%- for a in it.line_level_discount_allocations -%}<p class="bcartpage36__cap bcartpage36__acc">{{ a.discount_application.title | escape }} · −{{ a.amount | money_without_trailing_zeros }}</p>{%- endfor -%}
+          {%- endcapture -%}
+          {%- capture attrs -%}data-key="{{ it.key }}" data-variant="{{ it.variant.id }}"{% if it.selling_plan_allocation %} data-plan="{{ it.selling_plan_allocation.selling_plan.id }}"{% endif %} data-props="{{ it.properties | json | escape }}"{%- endcapture -%}
+          {%- render 'blko-cart-page-36-line', n: forloop.index, attrs: attrs, qty: it.quantity, max: max, name: it.product.title, href: it.url, image: it.image, alt: alt, meta: meta, each: each, paid: paid, was: was -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for b in lines -%}
+          {%- liquid
+            assign unit = b.settings.price | times: 100
+            assign lc = unit | times: b.settings.qty
+            assign each = unit | money_without_trailing_zeros
+            assign paid = lc | money_without_trailing_zeros
+            assign alt = b.settings.image.alt | default: b.settings.title
+          -%}
+          {%- capture meta -%}{%- if b.settings.size != blank -%}<p class="bcartpage36__cap bcartpage36__muted">{{ b.settings.size | escape }}</p>{%- endif -%}{%- endcapture -%}
+          {%- capture attrs -%}data-key="{{ b.id }}" data-price="{{ unit }}" {{ b.shopify_attributes }}{%- endcapture -%}
+          {%- render 'blko-cart-page-36-line', n: forloop.index, attrs: attrs, qty: b.settings.qty, max: 12, name: b.settings.title, href: '', image: b.settings.image, alt: alt, meta: meta, each: each, paid: paid, was: '' -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </ol
+
+    ><p role="status" class="bcartpage36__status bcartpage36__small bcartpage36__muted" data-status></p
+  ></div
+
+  ><aside aria-label="{{ 'blko.cart_page_36.aside' | t | escape }}" class="bcartpage36__aside"
+    ><div class="bcartpage36__frame"
+      ><div class="bcartpage36__lab"
+        ><p class="bcartpage36__cap bcartpage36__muted">{{ s.summary_label | escape }}</p
+        ><p class="bcartpage36__labh">{{ s.summary_title | escape }}</p
+      ></div
+      ><dl class="bcartpage36__dl"
+        ><div class="bcartpage36__dr"><dt class="bcartpage36__muted">{{ 'blko.cart_page_36.subtotal' | t }}</dt><dd data-subtotal>{{ subt | money_without_trailing_zeros }}</dd></div
+        >{%- if live -%}
+          {%- for da in cart.cart_level_discount_applications -%}
+          <div class="bcartpage36__dr"><dt class="bcartpage36__muted">{{ 'blko.cart_page_36.discount' | t }} · {{ da.title | escape }}</dt><dd class="bcartpage36__acc">−{{ da.total_allocated_amount | money_without_trailing_zeros }}</dd></div
+          >{%- endfor -%}
+        {%- endif -%}
+        <div class="bcartpage36__dr"><dt class="bcartpage36__muted">{{ 'blko.cart_page_36.shipping' | t }}</dt><dd data-ship>{% if ship > 0 %}{{ ship | money_without_trailing_zeros }}{% else %}{{ 'blko.cart_page_36.free' | t }}{% endif %}</dd></div
+        >{%- if s.show_gift -%}<div class="bcartpage36__dr"><dt class="bcartpage36__muted">{{ 'blko.cart_page_36.gift_row' | t }}</dt><dd data-gift-row>{% if gift_on %}{{ 'blko.cart_page_36.included' | t }}{% else %}{{ 'blko.cart_page_36.none' | t }}{% endif %}</dd></div>{%- endif -%}
+        <div class="bcartpage36__dr bcartpage36__dt"><dt class="bcartpage36__cap">{{ 'blko.cart_page_36.total' | t }}</dt><dd class="bcartpage36__total" data-total>{{ total | money_without_trailing_zeros }}</dd></div
+      ></dl
+
+      >{%- if s.show_gift -%}
+      <div class="bcartpage36__gift{% if gift_on %} is-on{% endif %}" data-gift
+        >{%- render 'blko-ui-switch', label: s.gift_label, checked: gift_on, name: 'gift' -%}
+        <label class="bcartpage36__note"
+          ><span class="blko-ui-sr-only">{{ 'blko.cart_page_36.note_sr' | t }}</span
+          ><textarea class="bcartpage36__ta" rows="3" maxlength="160" name="note" placeholder="{{ s.gift_placeholder | escape }}" data-note>{{ note_v | escape }}</textarea
+          ><span class="bcartpage36__cap bcartpage36__muted bcartpage36__cnt"><span data-cnt>{{ note_v | size }}</span> / 160</span
+        ></label
+      ></div
+      >{%- endif -%}
+
+      <form action="{{ routes.cart_url }}" method="post" class="bcartpage36__co" data-checkout-form
+        >{%- if live -%}<input type="hidden" name="note" value="{{ note_v | escape }}" data-note-mirror>{%- endif -%}
+        {%- capture co_in -%}{{ 'blko.cart_page_36.checkout' | t }}{%- render 'blko-ui-icon', name: 'arrow-up-right' -%}{%- endcapture -%}
+        {%- render 'blko-ui-button', type: 'submit', size: 'lg', full: true, attrs: 'name="checkout"', children: co_in -%}
+      </form
+      >{%- if s.fine_print != blank -%}<p class="bcartpage36__small bcartpage36__muted bcartpage36__fine">{{ s.fine_print | escape }}</p>{%- endif -%}
+    </div
+  ></aside
+></div
+>{%- endunless -%}
+{%- endcapture -%}
+<div class="bcartpage36{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-mode="{% if live %}live{% else %}demo{% endif %}"{% if real_empty %} data-is-empty{% endif %} data-section="{{ section.id }}" data-m0="{{ m0 | escape }}" data-free="{{ free_c }}" data-fee="{{ fee_c }}" data-l-item="{{ 'blko.cart_page_36.item' | t | escape }}" data-l-items="{{ 'blko.cart_page_36.items' | t | escape }}" data-l-free="{{ 'blko.cart_page_36.free' | t | escape }}" data-l-inc="{{ 'blko.cart_page_36.included' | t | escape }}" data-l-none="{{ 'blko.cart_page_36.none' | t | escape }}" data-l-off="{{ 'blko.cart_page_36.off' | t | escape }}" data-l-undo="{{ 'blko.cart_page_36.undo' | t | escape }}" data-l-back="{{ 'blko.cart_page_36.put_back' | t | escape }}" data-l-err="{{ 'blko.cart_page_36.error' | t | escape }}" data-l-busy="{{ 'blko.cart_page_36.updating' | t | escape }}"
+  >{%- render 'blko-ui-section', surface: 'bg', label: s.label, inner: 'bcartpage36__inner', children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Cart page, ledger",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "With items in the cart the rows, discounts and gift note are the real cart. The Line blocks are the preview (theme editor with an empty cart). Shipping is an estimate from the threshold and fee below, in your shop currency; the real rate is set at checkout."
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Region label",
+      "default": "Your bag"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Count line",
+      "default": "The bag"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading (em allowed)",
+      "info": "Wrap words in <span> to set them in the light body face.",
+      "default": "<span>Your bag,</span> <em>weighed</em> and labelled"
+    },
+    {
+      "type": "header",
+      "content": "Free shipping"
+    },
+    {
+      "type": "number",
+      "id": "free_over",
+      "label": "Free shipping from",
+      "info": "In your shop currency.",
+      "default": 75
+    },
+    {
+      "type": "number",
+      "id": "ship_fee",
+      "label": "Shipping estimate below it",
+      "default": 6
+    },
+    {
+      "type": "text",
+      "id": "free_done",
+      "label": "Text once it is free",
+      "default": "Shipping is on us. Your parcel goes out in recycled card."
+    },
+    {
+      "type": "header",
+      "content": "Summary"
+    },
+    {
+      "type": "text",
+      "id": "summary_label",
+      "label": "Label line",
+      "default": "Order label"
+    },
+    {
+      "type": "text",
+      "id": "summary_title",
+      "label": "Label title",
+      "default": "Batch for one"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_gift",
+      "label": "Show gift note",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "gift_label",
+      "label": "Gift note switch",
+      "default": "Add a handwritten gift note"
+    },
+    {
+      "type": "text",
+      "id": "gift_placeholder",
+      "label": "Gift note placeholder",
+      "default": "Written by hand on a card, no prices in the parcel."
+    },
+    {
+      "type": "text",
+      "id": "fine_print",
+      "label": "Fine print",
+      "default": "Taxes at checkout · returns within 30 days"
+    },
+    {
+      "type": "header",
+      "content": "Empty bag"
+    },
+    {
+      "type": "text",
+      "id": "empty_label",
+      "label": "Label",
+      "default": "No. 00"
+    },
+    {
+      "type": "text",
+      "id": "empty_title",
+      "label": "Heading",
+      "default": "The bag is empty for now."
+    },
+    {
+      "type": "textarea",
+      "id": "empty_text",
+      "label": "Text",
+      "default": "Everything is made in small batches and waits on the shelves. Start with the one your skin asks for most."
+    },
+    {
+      "type": "text",
+      "id": "shelf_1_label",
+      "label": "Shelf 1",
+      "default": "Face oils"
+    },
+    {
+      "type": "url",
+      "id": "shelf_1_link",
+      "label": "Shelf 1 link"
+    },
+    {
+      "type": "text",
+      "id": "shelf_2_label",
+      "label": "Shelf 2",
+      "default": "Balms and creams"
+    },
+    {
+      "type": "url",
+      "id": "shelf_2_link",
+      "label": "Shelf 2 link"
+    },
+    {
+      "type": "text",
+      "id": "shelf_3_label",
+      "label": "Shelf 3",
+      "default": "Cleansing bars"
+    },
+    {
+      "type": "url",
+      "id": "shelf_3_link",
+      "label": "Shelf 3 link"
+    },
+    {
+      "type": "text",
+      "id": "shop_label",
+      "label": "Button label",
+      "default": "Back to the shelves"
+    },
+    {
+      "type": "url",
+      "id": "shop_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128
+    }
+  ],
+  "blocks": [
+    {
+      "type": "line",
+      "name": "Line (preview)",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Name",
+          "default": "Rosehip Face Oil"
+        },
+        {
+          "type": "text",
+          "id": "size",
+          "label": "Size line",
+          "default": "15 ml · amber dropper"
+        },
+        {
+          "type": "number",
+          "id": "price",
+          "label": "Price",
+          "default": 32
+        },
+        {
+          "type": "range",
+          "id": "qty",
+          "label": "Quantity",
+          "min": 1,
+          "max": 12,
+          "step": 1,
+          "default": 1
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Cart page, ledger",
+      "blocks": [
+        {
+          "type": "line"
+        },
+        {
+          "type": "line",
+          "settings": {
+            "title": "Cream Cleansing Bar",
+            "size": "110 g · unwrapped",
+            "price": 18
+          }
+        },
+        {
+          "type": "line",
+          "settings": {
+            "title": "Lip and Cheek Tin",
+            "size": "12 g · rose tint",
+            "price": 22
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

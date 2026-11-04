@@ -46,7 +46,8 @@ Do not use a zip.
 | `padding_top` | range | Top padding | 8 |
 | `padding_bottom` | range | Bottom padding | 8 |
 | `menu` | link_list | Menu | main-menu |
-| `fallback_links` | text | Menu shown before a menu is set | Skincare, Makeup, Hair, Body, Sale |
+| `fallback_links` | text | Demo menu | Skincare, Makeup, Hair, Body, Sale |
+| `demo_menu` | checkbox | Demo menu replaces the starter menu | true |
 | `logo_position` | select | Logo position | center |
 | `tagline` | text | Tagline | Skincare for slow mornings |
 | `show_search` | checkbox | Show search | true |

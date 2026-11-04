@@ -1,5 +1,42 @@
 [
   {
+    "id": "account-35",
+    "kind": "section",
+    "category": "customer-account",
+    "name": "Dispensary account",
+    "description": "Dispensary account section from the Balm 2 theme.",
+    "file": "balm-2/sections/customer-account--account-35.html",
+    "deps": [],
+    "credits": [
+      {
+        "photo_id": "photo-1672062519512-ef6821193510",
+        "page_url": "https://unsplash.com/photos/photo-1672062519512-ef6821193510"
+      },
+      {
+        "photo_id": "photo-1778036086682-3c2cb6e05a41",
+        "page_url": "https://unsplash.com/photos/photo-1778036086682-3c2cb6e05a41"
+      }
+    ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "announcement-06",
+    "kind": "section",
+    "category": "announcement",
+    "name": "Announcement 06 - Serif",
+    "description": "Announcement 06 - Serif section from the Balm 2 theme.",
+    "file": "balm-2/sections/announcement--announcement-06.html",
+    "deps": [],
+    "credits": [],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
     "id": "announcement",
     "kind": "section",
     "category": "announcement",
@@ -8,6 +45,122 @@
     "file": "balm-2/sections/announcement--announcement.html",
     "deps": [],
     "credits": [],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "article-31",
+    "kind": "section",
+    "category": "article",
+    "name": "Journal long-read",
+    "description": "Journal long-read section from the Balm 2 theme.",
+    "file": "balm-2/sections/article--article-31.html",
+    "deps": [],
+    "credits": [
+      {
+        "photo_id": "photo-1608571899712-2109dac47629",
+        "page_url": "https://unsplash.com/photos/photo-1608571899712-2109dac47629"
+      },
+      {
+        "photo_id": "photo-1778036086682-3c2cb6e05a41",
+        "page_url": "https://unsplash.com/photos/photo-1778036086682-3c2cb6e05a41"
+      },
+      {
+        "photo_id": "photo-1789182219591-1230167cb1e8",
+        "page_url": "https://unsplash.com/photos/photo-1789182219591-1230167cb1e8"
+      }
+    ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "blog-37",
+    "kind": "section",
+    "category": "main-blog",
+    "name": "Herbarium sheets journal",
+    "description": "Herbarium sheets journal section from the Balm 2 theme.",
+    "file": "balm-2/sections/main-blog--blog-37.html",
+    "deps": [],
+    "credits": [
+      {
+        "photo_id": "photo-1567765865603-cb729e7cd5a6",
+        "page_url": "https://unsplash.com/photos/photo-1567765865603-cb729e7cd5a6"
+      },
+      {
+        "photo_id": "photo-1586810504230-09dab6b8e01b",
+        "page_url": "https://unsplash.com/photos/photo-1586810504230-09dab6b8e01b"
+      },
+      {
+        "photo_id": "photo-1639256643085-b5e6d72f7da4",
+        "page_url": "https://unsplash.com/photos/photo-1639256643085-b5e6d72f7da4"
+      },
+      {
+        "photo_id": "photo-1727715447752-9ef7ca9a778a",
+        "page_url": "https://unsplash.com/photos/photo-1727715447752-9ef7ca9a778a"
+      },
+      {
+        "photo_id": "photo-1775407896237-1ac68f7e9b28",
+        "page_url": "https://unsplash.com/photos/photo-1775407896237-1ac68f7e9b28"
+      }
+    ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "blog-64",
+    "kind": "section",
+    "category": "featured-blog-posts",
+    "name": "Catalogue drawer stories",
+    "description": "Catalogue drawer stories section from the Balm 2 theme.",
+    "file": "balm-2/sections/featured-blog-posts--blog-64.html",
+    "deps": [],
+    "credits": [
+      {
+        "photo_id": "photo-1550159793-ecaa76eaffde",
+        "page_url": "https://unsplash.com/photos/photo-1550159793-ecaa76eaffde"
+      },
+      {
+        "photo_id": "photo-1598048851887-0263d4f43e73",
+        "page_url": "https://unsplash.com/photos/photo-1598048851887-0263d4f43e73"
+      },
+      {
+        "photo_id": "photo-1758796545670-dee15e65784e",
+        "page_url": "https://unsplash.com/photos/photo-1758796545670-dee15e65784e"
+      }
+    ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "blog-89",
+    "kind": "section",
+    "category": "featured-blog-posts",
+    "name": "Blog 89",
+    "description": "Blog 89 section from the Balm 2 theme.",
+    "file": "balm-2/sections/featured-blog-posts--blog-89.html",
+    "deps": [],
+    "credits": [
+      {
+        "photo_id": "photo-1612630711787-ee1db6be22ea",
+        "page_url": "https://unsplash.com/photos/photo-1612630711787-ee1db6be22ea"
+      },
+      {
+        "photo_id": "photo-1645636224369-5f2b19d73a94",
+        "page_url": "https://unsplash.com/photos/photo-1645636224369-5f2b19d73a94"
+      },
+      {
+        "photo_id": "photo-1665378764522-b6ef870f388e",
+        "page_url": "https://unsplash.com/photos/photo-1665378764522-b6ef870f388e"
+      }
+    ],
     "targets": {
       "html": "ok",
       "shopify": "ok"
@@ -23,16 +176,105 @@
     "deps": [],
     "credits": [
       {
-        "photo_id": "photo-1596755389378-c31d21fd1273",
-        "page_url": "https://unsplash.com/photos/photo-1596755389378-c31d21fd1273"
+        "photo_id": "photo-1612630711787-ee1db6be22ea",
+        "page_url": "https://unsplash.com/photos/photo-1612630711787-ee1db6be22ea"
       },
       {
-        "photo_id": "photo-1600428877878-1a0fd85beda8",
-        "page_url": "https://unsplash.com/photos/photo-1600428877878-1a0fd85beda8"
+        "photo_id": "photo-1645636224369-5f2b19d73a94",
+        "page_url": "https://unsplash.com/photos/photo-1645636224369-5f2b19d73a94"
       },
       {
-        "photo_id": "photo-1763503836825-97f5450d155a",
-        "page_url": "https://unsplash.com/photos/photo-1763503836825-97f5450d155a"
+        "photo_id": "photo-1665378764522-b6ef870f388e",
+        "page_url": "https://unsplash.com/photos/photo-1665378764522-b6ef870f388e"
+      }
+    ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "cart-page-36",
+    "kind": "section",
+    "category": "cart",
+    "name": "Cart page, ledger",
+    "description": "Cart page, ledger section from the Balm 2 theme.",
+    "file": "balm-2/sections/cart--cart-page-36.html",
+    "deps": [],
+    "credits": [
+      {
+        "photo_id": "photo-1607006483224-73ce0729e22a",
+        "page_url": "https://unsplash.com/photos/photo-1607006483224-73ce0729e22a"
+      },
+      {
+        "photo_id": "photo-1608571899778-6f022cdb7828",
+        "page_url": "https://unsplash.com/photos/photo-1608571899778-6f022cdb7828"
+      },
+      {
+        "photo_id": "photo-1629259629982-a5a202ae888f",
+        "page_url": "https://unsplash.com/photos/photo-1629259629982-a5a202ae888f"
+      }
+    ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "collection-banner-42",
+    "kind": "section",
+    "category": "collection-banner",
+    "name": "Journal strip, topics",
+    "description": "Journal strip, topics section from the Balm 2 theme.",
+    "file": "balm-2/sections/collection-banner--collection-banner-42.html",
+    "deps": [],
+    "credits": [
+      {
+        "photo_id": "photo-1775642545871-ba7503fec638",
+        "page_url": "https://unsplash.com/photos/photo-1775642545871-ba7503fec638"
+      }
+    ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "collection-banner-73",
+    "kind": "section",
+    "category": "collection-banner",
+    "name": "Collection banner 73",
+    "description": "Collection banner 73 section from the Balm 2 theme.",
+    "file": "balm-2/sections/collection-banner--collection-banner-73.html",
+    "deps": [],
+    "credits": [
+      {
+        "photo_id": "photo-1608571702534-475517f598fa",
+        "page_url": "https://unsplash.com/photos/photo-1608571702534-475517f598fa"
+      },
+      {
+        "photo_id": "photo-1608571702600-5a5419d31475",
+        "page_url": "https://unsplash.com/photos/photo-1608571702600-5a5419d31475"
+      },
+      {
+        "photo_id": "photo-1608571702633-ef671c78ce25",
+        "page_url": "https://unsplash.com/photos/photo-1608571702633-ef671c78ce25"
+      },
+      {
+        "photo_id": "photo-1608571899778-6f022cdb7828",
+        "page_url": "https://unsplash.com/photos/photo-1608571899778-6f022cdb7828"
+      },
+      {
+        "photo_id": "photo-1608571899956-793de3e54f83",
+        "page_url": "https://unsplash.com/photos/photo-1608571899956-793de3e54f83"
+      },
+      {
+        "photo_id": "photo-1646579360571-de5ecf3af648",
+        "page_url": "https://unsplash.com/photos/photo-1646579360571-de5ecf3af648"
+      },
+      {
+        "photo_id": "photo-1781344116880-029945a42b75",
+        "page_url": "https://unsplash.com/photos/photo-1781344116880-029945a42b75"
       }
     ],
     "targets": {
@@ -50,6 +292,30 @@
     "deps": [],
     "credits": [
       {
+        "photo_id": "photo-1608571702534-475517f598fa",
+        "page_url": "https://unsplash.com/photos/photo-1608571702534-475517f598fa"
+      },
+      {
+        "photo_id": "photo-1608571702600-5a5419d31475",
+        "page_url": "https://unsplash.com/photos/photo-1608571702600-5a5419d31475"
+      },
+      {
+        "photo_id": "photo-1608571702633-ef671c78ce25",
+        "page_url": "https://unsplash.com/photos/photo-1608571702633-ef671c78ce25"
+      },
+      {
+        "photo_id": "photo-1608571899778-6f022cdb7828",
+        "page_url": "https://unsplash.com/photos/photo-1608571899778-6f022cdb7828"
+      },
+      {
+        "photo_id": "photo-1608571899956-793de3e54f83",
+        "page_url": "https://unsplash.com/photos/photo-1608571899956-793de3e54f83"
+      },
+      {
+        "photo_id": "photo-1646579360571-de5ecf3af648",
+        "page_url": "https://unsplash.com/photos/photo-1646579360571-de5ecf3af648"
+      },
+      {
         "photo_id": "photo-1781344116880-029945a42b75",
         "page_url": "https://unsplash.com/photos/photo-1781344116880-029945a42b75"
       }
@@ -60,31 +326,127 @@
     }
   },
   {
-    "id": "collection-list",
+    "id": "collection-grid-44",
     "kind": "section",
-    "category": "collection-list",
-    "name": "Collection list",
-    "description": "Grid of collection tiles with a heading and view-all link.",
-    "file": "balm-2/sections/collection-list--collection-list.html",
+    "category": "main-collection-product-grid",
+    "name": "Collection grid 44 - Balm",
+    "description": "Collection grid 44 - Balm section from the Balm 2 theme.",
+    "file": "balm-2/sections/main-collection-product-grid--collection-grid-44.html",
     "deps": [],
     "credits": [
       {
-        "photo_id": "photo-1596755389378-c31d21fd1273",
-        "page_url": "https://unsplash.com/photos/photo-1596755389378-c31d21fd1273"
+        "photo_id": "photo-1608571423539-e951b9b3871e",
+        "page_url": "https://unsplash.com/photos/photo-1608571423539-e951b9b3871e"
       },
       {
-        "photo_id": "photo-1763503836825-97f5450d155a",
-        "page_url": "https://unsplash.com/photos/photo-1763503836825-97f5450d155a"
+        "photo_id": "photo-1608571423902-eed4a5ad8108",
+        "page_url": "https://unsplash.com/photos/photo-1608571423902-eed4a5ad8108"
       },
       {
-        "photo_id": "photo-1781080922537-7d5338f96e95",
-        "page_url": "https://unsplash.com/photos/photo-1781080922537-7d5338f96e95"
+        "photo_id": "photo-1608571424237-381e6b43a2a7",
+        "page_url": "https://unsplash.com/photos/photo-1608571424237-381e6b43a2a7"
       },
       {
-        "photo_id": "photo-1781344116880-029945a42b75",
-        "page_url": "https://unsplash.com/photos/photo-1781344116880-029945a42b75"
+        "photo_id": "photo-1608571424266-edeb9bbefdec",
+        "page_url": "https://unsplash.com/photos/photo-1608571424266-edeb9bbefdec"
+      },
+      {
+        "photo_id": "photo-1608571424275-18c8d1dae768",
+        "page_url": "https://unsplash.com/photos/photo-1608571424275-18c8d1dae768"
+      },
+      {
+        "photo_id": "photo-1608571702600-5a5419d31475",
+        "page_url": "https://unsplash.com/photos/photo-1608571702600-5a5419d31475"
+      },
+      {
+        "photo_id": "photo-1608571702633-ef671c78ce25",
+        "page_url": "https://unsplash.com/photos/photo-1608571702633-ef671c78ce25"
+      },
+      {
+        "photo_id": "photo-1608571899712-2109dac47629",
+        "page_url": "https://unsplash.com/photos/photo-1608571899712-2109dac47629"
+      },
+      {
+        "photo_id": "photo-1608571899778-6f022cdb7828",
+        "page_url": "https://unsplash.com/photos/photo-1608571899778-6f022cdb7828"
+      },
+      {
+        "photo_id": "photo-1608571899784-613f67ca6ffb",
+        "page_url": "https://unsplash.com/photos/photo-1608571899784-613f67ca6ffb"
+      },
+      {
+        "photo_id": "photo-1608571899956-793de3e54f83",
+        "page_url": "https://unsplash.com/photos/photo-1608571899956-793de3e54f83"
+      },
+      {
+        "photo_id": "photo-1672763057373-361408b5f110",
+        "page_url": "https://unsplash.com/photos/photo-1672763057373-361408b5f110"
       }
     ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "collection-list-39",
+    "kind": "section",
+    "category": "collection-list",
+    "name": "Collection list 39",
+    "description": "Collection list 39 section from the Balm 2 theme.",
+    "file": "balm-2/sections/collection-list--collection-list-39.html",
+    "deps": [],
+    "credits": [
+      {
+        "photo_id": "photo-1618840313409-66c0d92d6f26",
+        "page_url": "https://unsplash.com/photos/photo-1618840313409-66c0d92d6f26"
+      },
+      {
+        "photo_id": "photo-1655892832074-4768d61f0431",
+        "page_url": "https://unsplash.com/photos/photo-1655892832074-4768d61f0431"
+      },
+      {
+        "photo_id": "photo-1690200191215-dbd85e2e4e0f",
+        "page_url": "https://unsplash.com/photos/photo-1690200191215-dbd85e2e4e0f"
+      },
+      {
+        "photo_id": "photo-1763668177859-0ed5669a795e",
+        "page_url": "https://unsplash.com/photos/photo-1763668177859-0ed5669a795e"
+      }
+    ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "contact-36",
+    "kind": "section",
+    "category": "contact",
+    "name": "Contact, written letter",
+    "description": "Contact, written letter section from the Balm 2 theme.",
+    "file": "balm-2/sections/contact--contact-36.html",
+    "deps": [],
+    "credits": [
+      {
+        "photo_id": "photo-1771128264855-1c032332cbc8",
+        "page_url": "https://unsplash.com/photos/photo-1771128264855-1c032332cbc8"
+      }
+    ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "contact-38",
+    "kind": "section",
+    "category": "contact",
+    "name": "Dispensary slips",
+    "description": "Dispensary slips section from the Balm 2 theme.",
+    "file": "balm-2/sections/contact--contact-38.html",
+    "deps": [],
+    "credits": [],
     "targets": {
       "html": "ok",
       "shopify": "ok"
@@ -100,8 +462,41 @@
     "deps": [],
     "credits": [
       {
-        "photo_id": "photo-1763503836825-97f5450d155a",
-        "page_url": "https://unsplash.com/photos/photo-1763503836825-97f5450d155a"
+        "photo_id": "photo-1771128264855-1c032332cbc8",
+        "page_url": "https://unsplash.com/photos/photo-1771128264855-1c032332cbc8"
+      }
+    ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "counters-16",
+    "kind": "section",
+    "category": "rich-text",
+    "name": "Counters, pour line",
+    "description": "Counters, pour line section from the Balm 2 theme.",
+    "file": "balm-2/sections/rich-text--counters-16.html",
+    "deps": [],
+    "credits": [],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "faq-37",
+    "kind": "section",
+    "category": "faq",
+    "name": "FAQ, chapters",
+    "description": "FAQ, chapters section from the Balm 2 theme.",
+    "file": "balm-2/sections/faq--faq-37.html",
+    "deps": [],
+    "credits": [
+      {
+        "photo_id": "photo-1778036086682-3c2cb6e05a41",
+        "page_url": "https://unsplash.com/photos/photo-1778036086682-3c2cb6e05a41"
       }
     ],
     "targets": {
@@ -119,8 +514,8 @@
     "deps": [],
     "credits": [
       {
-        "photo_id": "photo-1646110929780-b97f94dd7ccf",
-        "page_url": "https://unsplash.com/photos/photo-1646110929780-b97f94dd7ccf"
+        "photo_id": "photo-1778036086682-3c2cb6e05a41",
+        "page_url": "https://unsplash.com/photos/photo-1778036086682-3c2cb6e05a41"
       }
     ],
     "targets": {
@@ -129,29 +524,41 @@
     }
   },
   {
-    "id": "featured-collection",
+    "id": "featured-products-46",
     "kind": "section",
     "category": "featured-collection",
-    "name": "Featured collection",
-    "description": "Product row from one collection with quick add.",
-    "file": "balm-2/sections/featured-collection--featured-collection.html",
+    "name": "Featured products 46",
+    "description": "Featured products 46 section from the Balm 2 theme.",
+    "file": "balm-2/sections/featured-collection--featured-products-46.html",
     "deps": [],
     "credits": [
       {
-        "photo_id": "photo-1570172619644-dfd03ed5d881",
-        "page_url": "https://unsplash.com/photos/photo-1570172619644-dfd03ed5d881"
+        "photo_id": "photo-1608571423539-e951b9b3871e",
+        "page_url": "https://unsplash.com/photos/photo-1608571423539-e951b9b3871e"
       },
       {
-        "photo_id": "photo-1609097164502-59a1f0f9a66f",
-        "page_url": "https://unsplash.com/photos/photo-1609097164502-59a1f0f9a66f"
+        "photo_id": "photo-1608571423902-eed4a5ad8108",
+        "page_url": "https://unsplash.com/photos/photo-1608571423902-eed4a5ad8108"
       },
       {
-        "photo_id": "photo-1619451334792-150fd785ee74",
-        "page_url": "https://unsplash.com/photos/photo-1619451334792-150fd785ee74"
+        "photo_id": "photo-1608571424266-edeb9bbefdec",
+        "page_url": "https://unsplash.com/photos/photo-1608571424266-edeb9bbefdec"
       },
       {
-        "photo_id": "photo-1683944433023-027a3f443ae4",
-        "page_url": "https://unsplash.com/photos/photo-1683944433023-027a3f443ae4"
+        "photo_id": "photo-1608571702600-5a5419d31475",
+        "page_url": "https://unsplash.com/photos/photo-1608571702600-5a5419d31475"
+      },
+      {
+        "photo_id": "photo-1608571702633-ef671c78ce25",
+        "page_url": "https://unsplash.com/photos/photo-1608571702633-ef671c78ce25"
+      },
+      {
+        "photo_id": "photo-1608571899778-6f022cdb7828",
+        "page_url": "https://unsplash.com/photos/photo-1608571899778-6f022cdb7828"
+      },
+      {
+        "photo_id": "photo-1608571899784-613f67ca6ffb",
+        "page_url": "https://unsplash.com/photos/photo-1608571899784-613f67ca6ffb"
       }
     ],
     "targets": {
@@ -169,22 +576,48 @@
     "deps": [],
     "credits": [
       {
-        "photo_id": "photo-1576426863848-c21f53c60b19",
-        "page_url": "https://unsplash.com/photos/photo-1576426863848-c21f53c60b19"
+        "photo_id": "photo-1608571423539-e951b9b3871e",
+        "page_url": "https://unsplash.com/photos/photo-1608571423539-e951b9b3871e"
       },
       {
-        "photo_id": "photo-1638609927040-8a7e97cd9d6a",
-        "page_url": "https://unsplash.com/photos/photo-1638609927040-8a7e97cd9d6a"
+        "photo_id": "photo-1608571423902-eed4a5ad8108",
+        "page_url": "https://unsplash.com/photos/photo-1608571423902-eed4a5ad8108"
       },
       {
-        "photo_id": "photo-1646110929780-b97f94dd7ccf",
-        "page_url": "https://unsplash.com/photos/photo-1646110929780-b97f94dd7ccf"
+        "photo_id": "photo-1608571424266-edeb9bbefdec",
+        "page_url": "https://unsplash.com/photos/photo-1608571424266-edeb9bbefdec"
       },
       {
-        "photo_id": "photo-1781344116880-029945a42b75",
-        "page_url": "https://unsplash.com/photos/photo-1781344116880-029945a42b75"
+        "photo_id": "photo-1608571702600-5a5419d31475",
+        "page_url": "https://unsplash.com/photos/photo-1608571702600-5a5419d31475"
+      },
+      {
+        "photo_id": "photo-1608571702633-ef671c78ce25",
+        "page_url": "https://unsplash.com/photos/photo-1608571702633-ef671c78ce25"
+      },
+      {
+        "photo_id": "photo-1608571899778-6f022cdb7828",
+        "page_url": "https://unsplash.com/photos/photo-1608571899778-6f022cdb7828"
+      },
+      {
+        "photo_id": "photo-1608571899784-613f67ca6ffb",
+        "page_url": "https://unsplash.com/photos/photo-1608571899784-613f67ca6ffb"
       }
     ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "footer-16",
+    "kind": "section",
+    "category": "footer",
+    "name": "Footer 16 - Back label",
+    "description": "Footer 16 - Back label section from the Balm 2 theme.",
+    "file": "balm-2/sections/footer--footer-16.html",
+    "deps": [],
+    "credits": [],
     "targets": {
       "html": "ok",
       "shopify": "ok"
@@ -197,6 +630,20 @@
     "name": "Footer",
     "description": "Footer with brand, menus, newsletter, social links and payment marks.",
     "file": "balm-2/sections/footer--footer.html",
+    "deps": [],
+    "credits": [],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "header-19",
+    "kind": "section",
+    "category": "header",
+    "name": "Header 19 - Serif",
+    "description": "Header 19 - Serif section from the Balm 2 theme.",
+    "file": "balm-2/sections/header--header-19.html",
     "deps": [],
     "credits": [],
     "targets": {
@@ -219,6 +666,25 @@
     }
   },
   {
+    "id": "hero-11",
+    "kind": "section",
+    "category": "hero-banner",
+    "name": "Hero 11",
+    "description": "Hero 11 section from the Balm 2 theme.",
+    "file": "balm-2/sections/hero-banner--hero-11.html",
+    "deps": [],
+    "credits": [
+      {
+        "photo_id": "photo-1793100123538-396050d9f5c1",
+        "page_url": "https://unsplash.com/photos/photo-1793100123538-396050d9f5c1"
+      }
+    ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
     "id": "hero",
     "kind": "section",
     "category": "hero-banner",
@@ -228,8 +694,8 @@
     "deps": [],
     "credits": [
       {
-        "photo_id": "photo-1515377905703-c4788e51af15",
-        "page_url": "https://unsplash.com/photos/photo-1515377905703-c4788e51af15"
+        "photo_id": "photo-1793100123538-396050d9f5c1",
+        "page_url": "https://unsplash.com/photos/photo-1793100123538-396050d9f5c1"
       }
     ],
     "targets": {
@@ -238,17 +704,31 @@
     }
   },
   {
-    "id": "image-banner",
+    "id": "icon-list-22",
+    "kind": "section",
+    "category": "multicolumn",
+    "name": "Principles inside the lid",
+    "description": "Principles inside the lid section from the Balm 2 theme.",
+    "file": "balm-2/sections/multicolumn--icon-list-22.html",
+    "deps": [],
+    "credits": [],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "image-with-text-36",
     "kind": "section",
     "category": "image-with-text",
-    "name": "Image banner",
-    "description": "Wide image banner with overlay text and a button.",
-    "file": "balm-2/sections/image-with-text--image-banner.html",
+    "name": "Labelled cabinet plate",
+    "description": "Labelled cabinet plate section from the Balm 2 theme.",
+    "file": "balm-2/sections/image-with-text--image-with-text-36.html",
     "deps": [],
     "credits": [
       {
-        "photo_id": "photo-1556760544-74068565f05c",
-        "page_url": "https://unsplash.com/photos/photo-1556760544-74068565f05c"
+        "photo_id": "photo-1785248197578-62b9b9ef2338",
+        "page_url": "https://unsplash.com/photos/photo-1785248197578-62b9b9ef2338"
       }
     ],
     "targets": {
@@ -266,16 +746,16 @@
     "deps": [],
     "credits": [
       {
-        "photo_id": "photo-1556760544-74068565f05c",
-        "page_url": "https://unsplash.com/photos/photo-1556760544-74068565f05c"
+        "photo_id": "photo-1532092127457-c45cdfc70004",
+        "page_url": "https://unsplash.com/photos/photo-1532092127457-c45cdfc70004"
       },
       {
-        "photo_id": "photo-1614961233913-a5113a4a34ed",
-        "page_url": "https://unsplash.com/photos/photo-1614961233913-a5113a4a34ed"
+        "photo_id": "photo-1610663711502-35f870cfaea2",
+        "page_url": "https://unsplash.com/photos/photo-1610663711502-35f870cfaea2"
       },
       {
-        "photo_id": "photo-1646110929780-b97f94dd7ccf",
-        "page_url": "https://unsplash.com/photos/photo-1646110929780-b97f94dd7ccf"
+        "photo_id": "photo-1629940446133-4e3a63fcfbff",
+        "page_url": "https://unsplash.com/photos/photo-1629940446133-4e3a63fcfbff"
       }
     ],
     "targets": {
@@ -284,18 +764,14 @@
     }
   },
   {
-    "id": "ingredients",
+    "id": "ingredients-01",
     "kind": "section",
     "category": "ingredients",
-    "name": "Ingredients",
-    "description": "Ingredient cards with image, name and benefit.",
-    "file": "balm-2/sections/ingredients--ingredients.html",
+    "name": "Ingredients 01",
+    "description": "Ingredients 01 section from the Balm 2 theme.",
+    "file": "balm-2/sections/ingredients--ingredients-01.html",
     "deps": [],
     "credits": [
-      {
-        "photo_id": "photo-1499002238440-d264edd596ec",
-        "page_url": "https://unsplash.com/photos/photo-1499002238440-d264edd596ec"
-      },
       {
         "photo_id": "photo-1509423350716-97f9360b4e09",
         "page_url": "https://unsplash.com/photos/photo-1509423350716-97f9360b4e09"
@@ -307,6 +783,29 @@
       {
         "photo_id": "photo-1614961233913-a5113a4a34ed",
         "page_url": "https://unsplash.com/photos/photo-1614961233913-a5113a4a34ed"
+      },
+      {
+        "photo_id": "photo-1634304387535-e9b7ed3180d4",
+        "page_url": "https://unsplash.com/photos/photo-1634304387535-e9b7ed3180d4"
+      }
+    ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "login-01",
+    "kind": "section",
+    "category": "customer-account",
+    "name": "Apothecary sign-in",
+    "description": "Apothecary sign-in section from the Balm 2 theme.",
+    "file": "balm-2/sections/customer-account--login-01.html",
+    "deps": [],
+    "credits": [
+      {
+        "photo_id": "photo-1671492247311-df094daedc5d",
+        "page_url": "https://unsplash.com/photos/photo-1671492247311-df094daedc5d"
       }
     ],
     "targets": {
@@ -324,24 +823,8 @@
     "deps": [],
     "credits": [
       {
-        "photo_id": "photo-1515377905703-c4788e51af15",
-        "page_url": "https://unsplash.com/photos/photo-1515377905703-c4788e51af15"
-      },
-      {
-        "photo_id": "photo-1596462502278-27bfdc403348",
-        "page_url": "https://unsplash.com/photos/photo-1596462502278-27bfdc403348"
-      },
-      {
-        "photo_id": "photo-1599305090598-fe179d501227",
-        "page_url": "https://unsplash.com/photos/photo-1599305090598-fe179d501227"
-      },
-      {
-        "photo_id": "photo-1608571423902-eed4a5ad8108",
-        "page_url": "https://unsplash.com/photos/photo-1608571423902-eed4a5ad8108"
-      },
-      {
-        "photo_id": "photo-1617897903246-719242758050",
-        "page_url": "https://unsplash.com/photos/photo-1617897903246-719242758050"
+        "photo_id": "photo-1608571424634-58ae03e6edcf",
+        "page_url": "https://unsplash.com/photos/photo-1608571424634-58ae03e6edcf"
       }
     ],
     "targets": {
@@ -359,46 +842,12 @@
     "deps": [],
     "credits": [
       {
-        "photo_id": "photo-1488426862026-3ee34a7d66df",
-        "page_url": "https://unsplash.com/photos/photo-1488426862026-3ee34a7d66df"
-      }
-    ],
-    "targets": {
-      "html": "ok",
-      "shopify": "ok"
-    }
-  },
-  {
-    "id": "main-activate-account",
-    "kind": "section",
-    "category": "customer-account",
-    "name": "Activate account",
-    "description": "Account activation form that sets a first password.",
-    "file": "balm-2/sections/customer-account--main-activate-account.html",
-    "deps": [],
-    "credits": [
+        "photo_id": "photo-1672062519512-ef6821193510",
+        "page_url": "https://unsplash.com/photos/photo-1672062519512-ef6821193510"
+      },
       {
-        "photo_id": "photo-1438761681033-6461ffad8d80",
-        "page_url": "https://unsplash.com/photos/photo-1438761681033-6461ffad8d80"
-      }
-    ],
-    "targets": {
-      "html": "ok",
-      "shopify": "ok"
-    }
-  },
-  {
-    "id": "main-addresses",
-    "kind": "section",
-    "category": "customer-account",
-    "name": "Customer addresses",
-    "description": "Saved addresses list with add and edit forms.",
-    "file": "balm-2/sections/customer-account--main-addresses.html",
-    "deps": [],
-    "credits": [
-      {
-        "photo_id": "photo-1488426862026-3ee34a7d66df",
-        "page_url": "https://unsplash.com/photos/photo-1488426862026-3ee34a7d66df"
+        "photo_id": "photo-1778036086682-3c2cb6e05a41",
+        "page_url": "https://unsplash.com/photos/photo-1778036086682-3c2cb6e05a41"
       }
     ],
     "targets": {
@@ -416,16 +865,16 @@
     "deps": [],
     "credits": [
       {
-        "photo_id": "photo-1515377905703-c4788e51af15",
-        "page_url": "https://unsplash.com/photos/photo-1515377905703-c4788e51af15"
+        "photo_id": "photo-1608571899712-2109dac47629",
+        "page_url": "https://unsplash.com/photos/photo-1608571899712-2109dac47629"
       },
       {
-        "photo_id": "photo-1556760544-74068565f05c",
-        "page_url": "https://unsplash.com/photos/photo-1556760544-74068565f05c"
+        "photo_id": "photo-1778036086682-3c2cb6e05a41",
+        "page_url": "https://unsplash.com/photos/photo-1778036086682-3c2cb6e05a41"
       },
       {
-        "photo_id": "photo-1580489944761-15a19d654956",
-        "page_url": "https://unsplash.com/photos/photo-1580489944761-15a19d654956"
+        "photo_id": "photo-1789182219591-1230167cb1e8",
+        "page_url": "https://unsplash.com/photos/photo-1789182219591-1230167cb1e8"
       }
     ],
     "targets": {
@@ -443,24 +892,24 @@
     "deps": [],
     "credits": [
       {
-        "photo_id": "photo-1499002238440-d264edd596ec",
-        "page_url": "https://unsplash.com/photos/photo-1499002238440-d264edd596ec"
+        "photo_id": "photo-1567765865603-cb729e7cd5a6",
+        "page_url": "https://unsplash.com/photos/photo-1567765865603-cb729e7cd5a6"
       },
       {
-        "photo_id": "photo-1599305090598-fe179d501227",
-        "page_url": "https://unsplash.com/photos/photo-1599305090598-fe179d501227"
+        "photo_id": "photo-1586810504230-09dab6b8e01b",
+        "page_url": "https://unsplash.com/photos/photo-1586810504230-09dab6b8e01b"
       },
       {
-        "photo_id": "photo-1614961233913-a5113a4a34ed",
-        "page_url": "https://unsplash.com/photos/photo-1614961233913-a5113a4a34ed"
+        "photo_id": "photo-1639256643085-b5e6d72f7da4",
+        "page_url": "https://unsplash.com/photos/photo-1639256643085-b5e6d72f7da4"
       },
       {
-        "photo_id": "photo-1617897903246-719242758050",
-        "page_url": "https://unsplash.com/photos/photo-1617897903246-719242758050"
+        "photo_id": "photo-1727715447752-9ef7ca9a778a",
+        "page_url": "https://unsplash.com/photos/photo-1727715447752-9ef7ca9a778a"
       },
       {
-        "photo_id": "photo-1781344116880-029945a42b75",
-        "page_url": "https://unsplash.com/photos/photo-1781344116880-029945a42b75"
+        "photo_id": "photo-1775407896237-1ac68f7e9b28",
+        "page_url": "https://unsplash.com/photos/photo-1775407896237-1ac68f7e9b28"
       }
     ],
     "targets": {
@@ -478,28 +927,16 @@
     "deps": [],
     "credits": [
       {
-        "photo_id": "photo-1556760544-74068565f05c",
-        "page_url": "https://unsplash.com/photos/photo-1556760544-74068565f05c"
+        "photo_id": "photo-1607006483224-73ce0729e22a",
+        "page_url": "https://unsplash.com/photos/photo-1607006483224-73ce0729e22a"
       },
       {
-        "photo_id": "photo-1576426863848-c21f53c60b19",
-        "page_url": "https://unsplash.com/photos/photo-1576426863848-c21f53c60b19"
+        "photo_id": "photo-1608571899778-6f022cdb7828",
+        "page_url": "https://unsplash.com/photos/photo-1608571899778-6f022cdb7828"
       },
       {
-        "photo_id": "photo-1596755389378-c31d21fd1273",
-        "page_url": "https://unsplash.com/photos/photo-1596755389378-c31d21fd1273"
-      },
-      {
-        "photo_id": "photo-1599305090598-fe179d501227",
-        "page_url": "https://unsplash.com/photos/photo-1599305090598-fe179d501227"
-      },
-      {
-        "photo_id": "photo-1600428877878-1a0fd85beda8",
-        "page_url": "https://unsplash.com/photos/photo-1600428877878-1a0fd85beda8"
-      },
-      {
-        "photo_id": "photo-1617897903246-719242758050",
-        "page_url": "https://unsplash.com/photos/photo-1617897903246-719242758050"
+        "photo_id": "photo-1629259629982-a5a202ae888f",
+        "page_url": "https://unsplash.com/photos/photo-1629259629982-a5a202ae888f"
       }
     ],
     "targets": {
@@ -517,36 +954,52 @@
     "deps": [],
     "credits": [
       {
-        "photo_id": "photo-1550572017-4b7a301b9d81",
-        "page_url": "https://unsplash.com/photos/photo-1550572017-4b7a301b9d81"
-      },
-      {
-        "photo_id": "photo-1576426863848-c21f53c60b19",
-        "page_url": "https://unsplash.com/photos/photo-1576426863848-c21f53c60b19"
-      },
-      {
-        "photo_id": "photo-1599305090598-fe179d501227",
-        "page_url": "https://unsplash.com/photos/photo-1599305090598-fe179d501227"
+        "photo_id": "photo-1608571423539-e951b9b3871e",
+        "page_url": "https://unsplash.com/photos/photo-1608571423539-e951b9b3871e"
       },
       {
         "photo_id": "photo-1608571423902-eed4a5ad8108",
         "page_url": "https://unsplash.com/photos/photo-1608571423902-eed4a5ad8108"
       },
       {
-        "photo_id": "photo-1617897903246-719242758050",
-        "page_url": "https://unsplash.com/photos/photo-1617897903246-719242758050"
+        "photo_id": "photo-1608571424237-381e6b43a2a7",
+        "page_url": "https://unsplash.com/photos/photo-1608571424237-381e6b43a2a7"
       },
       {
-        "photo_id": "photo-1619451334792-150fd785ee74",
-        "page_url": "https://unsplash.com/photos/photo-1619451334792-150fd785ee74"
+        "photo_id": "photo-1608571424266-edeb9bbefdec",
+        "page_url": "https://unsplash.com/photos/photo-1608571424266-edeb9bbefdec"
       },
       {
-        "photo_id": "photo-1631390179406-0bfe17e9f89d",
-        "page_url": "https://unsplash.com/photos/photo-1631390179406-0bfe17e9f89d"
+        "photo_id": "photo-1608571424275-18c8d1dae768",
+        "page_url": "https://unsplash.com/photos/photo-1608571424275-18c8d1dae768"
       },
       {
-        "photo_id": "photo-1646110929780-b97f94dd7ccf",
-        "page_url": "https://unsplash.com/photos/photo-1646110929780-b97f94dd7ccf"
+        "photo_id": "photo-1608571702600-5a5419d31475",
+        "page_url": "https://unsplash.com/photos/photo-1608571702600-5a5419d31475"
+      },
+      {
+        "photo_id": "photo-1608571702633-ef671c78ce25",
+        "page_url": "https://unsplash.com/photos/photo-1608571702633-ef671c78ce25"
+      },
+      {
+        "photo_id": "photo-1608571899712-2109dac47629",
+        "page_url": "https://unsplash.com/photos/photo-1608571899712-2109dac47629"
+      },
+      {
+        "photo_id": "photo-1608571899778-6f022cdb7828",
+        "page_url": "https://unsplash.com/photos/photo-1608571899778-6f022cdb7828"
+      },
+      {
+        "photo_id": "photo-1608571899784-613f67ca6ffb",
+        "page_url": "https://unsplash.com/photos/photo-1608571899784-613f67ca6ffb"
+      },
+      {
+        "photo_id": "photo-1608571899956-793de3e54f83",
+        "page_url": "https://unsplash.com/photos/photo-1608571899956-793de3e54f83"
+      },
+      {
+        "photo_id": "photo-1672763057373-361408b5f110",
+        "page_url": "https://unsplash.com/photos/photo-1672763057373-361408b5f110"
       }
     ],
     "targets": {
@@ -564,46 +1017,8 @@
     "deps": [],
     "credits": [
       {
-        "photo_id": "photo-1438761681033-6461ffad8d80",
-        "page_url": "https://unsplash.com/photos/photo-1438761681033-6461ffad8d80"
-      }
-    ],
-    "targets": {
-      "html": "ok",
-      "shopify": "ok"
-    }
-  },
-  {
-    "id": "main-order",
-    "kind": "section",
-    "category": "customer-account",
-    "name": "Customer order",
-    "description": "Single order detail with line items, totals and addresses.",
-    "file": "balm-2/sections/customer-account--main-order.html",
-    "deps": [],
-    "credits": [
-      {
-        "photo_id": "photo-1488426862026-3ee34a7d66df",
-        "page_url": "https://unsplash.com/photos/photo-1488426862026-3ee34a7d66df"
-      }
-    ],
-    "targets": {
-      "html": "ok",
-      "shopify": "ok"
-    }
-  },
-  {
-    "id": "main-page",
-    "kind": "section",
-    "category": "page-header",
-    "name": "Page",
-    "description": "Generic page title and rich content.",
-    "file": "balm-2/sections/page-header--main-page.html",
-    "deps": [],
-    "credits": [
-      {
-        "photo_id": "photo-1499002238440-d264edd596ec",
-        "page_url": "https://unsplash.com/photos/photo-1499002238440-d264edd596ec"
+        "photo_id": "photo-1671492247311-df094daedc5d",
+        "page_url": "https://unsplash.com/photos/photo-1671492247311-df094daedc5d"
       }
     ],
     "targets": {
@@ -621,58 +1036,24 @@
     "deps": [],
     "credits": [
       {
-        "photo_id": "photo-1498843053639-170ff2122f35",
-        "page_url": "https://unsplash.com/photos/photo-1498843053639-170ff2122f35"
+        "photo_id": "photo-1571034248669-24cffde09d43",
+        "page_url": "https://unsplash.com/photos/photo-1571034248669-24cffde09d43"
       },
       {
-        "photo_id": "photo-1515377905703-c4788e51af15",
-        "page_url": "https://unsplash.com/photos/photo-1515377905703-c4788e51af15"
+        "photo_id": "photo-1608571899778-6f022cdb7828",
+        "page_url": "https://unsplash.com/photos/photo-1608571899778-6f022cdb7828"
       },
       {
-        "photo_id": "photo-1556760544-74068565f05c",
-        "page_url": "https://unsplash.com/photos/photo-1556760544-74068565f05c"
+        "photo_id": "photo-1608571899956-793de3e54f83",
+        "page_url": "https://unsplash.com/photos/photo-1608571899956-793de3e54f83"
       },
       {
-        "photo_id": "photo-1781344116880-029945a42b75",
-        "page_url": "https://unsplash.com/photos/photo-1781344116880-029945a42b75"
-      }
-    ],
-    "targets": {
-      "html": "ok",
-      "shopify": "ok"
-    }
-  },
-  {
-    "id": "main-register",
-    "kind": "section",
-    "category": "customer-account",
-    "name": "Customer register",
-    "description": "New customer registration form.",
-    "file": "balm-2/sections/customer-account--main-register.html",
-    "deps": [],
-    "credits": [
+        "photo_id": "photo-1679583401675-f37323132544",
+        "page_url": "https://unsplash.com/photos/photo-1679583401675-f37323132544"
+      },
       {
-        "photo_id": "photo-1438761681033-6461ffad8d80",
-        "page_url": "https://unsplash.com/photos/photo-1438761681033-6461ffad8d80"
-      }
-    ],
-    "targets": {
-      "html": "ok",
-      "shopify": "ok"
-    }
-  },
-  {
-    "id": "main-reset-password",
-    "kind": "section",
-    "category": "customer-account",
-    "name": "Reset password",
-    "description": "Form to set a new account password.",
-    "file": "balm-2/sections/customer-account--main-reset-password.html",
-    "deps": [],
-    "credits": [
-      {
-        "photo_id": "photo-1438761681033-6461ffad8d80",
-        "page_url": "https://unsplash.com/photos/photo-1438761681033-6461ffad8d80"
+        "photo_id": "photo-1789182219591-1230167cb1e8",
+        "page_url": "https://unsplash.com/photos/photo-1789182219591-1230167cb1e8"
       }
     ],
     "targets": {
@@ -690,38 +1071,52 @@
     "deps": [],
     "credits": [
       {
-        "photo_id": "photo-1515377905703-c4788e51af15",
-        "page_url": "https://unsplash.com/photos/photo-1515377905703-c4788e51af15"
+        "photo_id": "photo-1608571702534-475517f598fa",
+        "page_url": "https://unsplash.com/photos/photo-1608571702534-475517f598fa"
       },
       {
-        "photo_id": "photo-1526045478516-99145907023c",
-        "page_url": "https://unsplash.com/photos/photo-1526045478516-99145907023c"
+        "photo_id": "photo-1608571899712-2109dac47629",
+        "page_url": "https://unsplash.com/photos/photo-1608571899712-2109dac47629"
       },
       {
-        "photo_id": "photo-1576426863848-c21f53c60b19",
-        "page_url": "https://unsplash.com/photos/photo-1576426863848-c21f53c60b19"
+        "photo_id": "photo-1608571899778-6f022cdb7828",
+        "page_url": "https://unsplash.com/photos/photo-1608571899778-6f022cdb7828"
       },
       {
-        "photo_id": "photo-1608571423539-e951b9b3871e",
-        "page_url": "https://unsplash.com/photos/photo-1608571423539-e951b9b3871e"
+        "photo_id": "photo-1608571899784-613f67ca6ffb",
+        "page_url": "https://unsplash.com/photos/photo-1608571899784-613f67ca6ffb"
       },
       {
-        "photo_id": "photo-1608571423902-eed4a5ad8108",
-        "page_url": "https://unsplash.com/photos/photo-1608571423902-eed4a5ad8108"
+        "photo_id": "photo-1612630711787-ee1db6be22ea",
+        "page_url": "https://unsplash.com/photos/photo-1612630711787-ee1db6be22ea"
       },
       {
-        "photo_id": "photo-1617897903246-719242758050",
-        "page_url": "https://unsplash.com/photos/photo-1617897903246-719242758050"
+        "photo_id": "photo-1629259629982-a5a202ae888f",
+        "page_url": "https://unsplash.com/photos/photo-1629259629982-a5a202ae888f"
       },
       {
-        "photo_id": "photo-1619451334792-150fd785ee74",
-        "page_url": "https://unsplash.com/photos/photo-1619451334792-150fd785ee74"
+        "photo_id": "photo-1647943746660-1640133068d5",
+        "page_url": "https://unsplash.com/photos/photo-1647943746660-1640133068d5"
       },
       {
-        "photo_id": "photo-1631390179406-0bfe17e9f89d",
-        "page_url": "https://unsplash.com/photos/photo-1631390179406-0bfe17e9f89d"
+        "photo_id": "photo-1778036086682-3c2cb6e05a41",
+        "page_url": "https://unsplash.com/photos/photo-1778036086682-3c2cb6e05a41"
       }
     ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "marquee-06",
+    "kind": "section",
+    "category": "marquee",
+    "name": "Marquee 06",
+    "description": "Marquee 06 section from the Balm 2 theme.",
+    "file": "balm-2/sections/marquee--marquee-06.html",
+    "deps": [],
+    "credits": [],
     "targets": {
       "html": "ok",
       "shopify": "ok"
@@ -742,6 +1137,25 @@
     }
   },
   {
+    "id": "newsletter-10",
+    "kind": "section",
+    "category": "newsletter",
+    "name": "Newsletter, Sunday post",
+    "description": "Newsletter, Sunday post section from the Balm 2 theme.",
+    "file": "balm-2/sections/newsletter--newsletter-10.html",
+    "deps": [],
+    "credits": [
+      {
+        "photo_id": "photo-1781795035627-fa93f2863bba",
+        "page_url": "https://unsplash.com/photos/photo-1781795035627-fa93f2863bba"
+      }
+    ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
     "id": "newsletter",
     "kind": "section",
     "category": "newsletter",
@@ -751,10 +1165,76 @@
     "deps": [],
     "credits": [
       {
-        "photo_id": "photo-1552321554-5fefe8c9ef14",
-        "page_url": "https://unsplash.com/photos/photo-1552321554-5fefe8c9ef14"
+        "photo_id": "photo-1781795035627-fa93f2863bba",
+        "page_url": "https://unsplash.com/photos/photo-1781795035627-fa93f2863bba"
       }
     ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "not-found-31",
+    "kind": "section",
+    "category": "404-page",
+    "name": "404, quiet shelf",
+    "description": "404, quiet shelf section from the Balm 2 theme.",
+    "file": "balm-2/sections/404-page--not-found-31.html",
+    "deps": [],
+    "credits": [
+      {
+        "photo_id": "photo-1608571424634-58ae03e6edcf",
+        "page_url": "https://unsplash.com/photos/photo-1608571424634-58ae03e6edcf"
+      }
+    ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "page-header-07",
+    "kind": "section",
+    "category": "page-header",
+    "name": "Page header, plate",
+    "description": "Page header, plate section from the Balm 2 theme.",
+    "file": "balm-2/sections/page-header--page-header-07.html",
+    "deps": [],
+    "credits": [
+      {
+        "photo_id": "photo-1630527586722-8a6c8fa96994",
+        "page_url": "https://unsplash.com/photos/photo-1630527586722-8a6c8fa96994"
+      }
+    ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "page-header-08",
+    "kind": "section",
+    "category": "page-header",
+    "name": "Contact header, rail",
+    "description": "Contact header, rail section from the Balm 2 theme.",
+    "file": "balm-2/sections/page-header--page-header-08.html",
+    "deps": [],
+    "credits": [],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "page-header-09",
+    "kind": "section",
+    "category": "page-header",
+    "name": "FAQ header, search",
+    "description": "FAQ header, search section from the Balm 2 theme.",
+    "file": "balm-2/sections/page-header--page-header-09.html",
+    "deps": [],
+    "credits": [],
     "targets": {
       "html": "ok",
       "shopify": "ok"
@@ -770,16 +1250,82 @@
     "deps": [],
     "credits": [
       {
-        "photo_id": "photo-1550572017-4b7a301b9d81",
-        "page_url": "https://unsplash.com/photos/photo-1550572017-4b7a301b9d81"
+        "photo_id": "photo-1607006483224-73ce0729e22a",
+        "page_url": "https://unsplash.com/photos/photo-1607006483224-73ce0729e22a"
       },
       {
-        "photo_id": "photo-1624459311872-54933a141308",
-        "page_url": "https://unsplash.com/photos/photo-1624459311872-54933a141308"
+        "photo_id": "photo-1629259629982-a5a202ae888f",
+        "page_url": "https://unsplash.com/photos/photo-1629259629982-a5a202ae888f"
       },
       {
-        "photo_id": "photo-1646110929780-b97f94dd7ccf",
-        "page_url": "https://unsplash.com/photos/photo-1646110929780-b97f94dd7ccf"
+        "photo_id": "photo-1672062519512-ef6821193510",
+        "page_url": "https://unsplash.com/photos/photo-1672062519512-ef6821193510"
+      }
+    ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "process-steps-05",
+    "kind": "section",
+    "category": "process-steps",
+    "name": "Process steps 05",
+    "description": "Process steps 05 section from the Balm 2 theme.",
+    "file": "balm-2/sections/process-steps--process-steps-05.html",
+    "deps": [],
+    "credits": [
+      {
+        "photo_id": "photo-1552256028-2c58c3cbfa7a",
+        "page_url": "https://unsplash.com/photos/photo-1552256028-2c58c3cbfa7a"
+      },
+      {
+        "photo_id": "photo-1574670700790-fa314ab37787",
+        "page_url": "https://unsplash.com/photos/photo-1574670700790-fa314ab37787"
+      },
+      {
+        "photo_id": "photo-1709294707971-43949c5f8387",
+        "page_url": "https://unsplash.com/photos/photo-1709294707971-43949c5f8387"
+      },
+      {
+        "photo_id": "photo-1711207354771-8a52847af385",
+        "page_url": "https://unsplash.com/photos/photo-1711207354771-8a52847af385"
+      }
+    ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "product-detail-37",
+    "kind": "section",
+    "category": "main-product",
+    "name": "Product detail 37",
+    "description": "Product detail 37 section from the Balm 2 theme.",
+    "file": "balm-2/sections/main-product--product-detail-37.html",
+    "deps": [],
+    "credits": [
+      {
+        "photo_id": "photo-1571034248669-24cffde09d43",
+        "page_url": "https://unsplash.com/photos/photo-1571034248669-24cffde09d43"
+      },
+      {
+        "photo_id": "photo-1608571899778-6f022cdb7828",
+        "page_url": "https://unsplash.com/photos/photo-1608571899778-6f022cdb7828"
+      },
+      {
+        "photo_id": "photo-1608571899956-793de3e54f83",
+        "page_url": "https://unsplash.com/photos/photo-1608571899956-793de3e54f83"
+      },
+      {
+        "photo_id": "photo-1679583401675-f37323132544",
+        "page_url": "https://unsplash.com/photos/photo-1679583401675-f37323132544"
+      },
+      {
+        "photo_id": "photo-1789182219591-1230167cb1e8",
+        "page_url": "https://unsplash.com/photos/photo-1789182219591-1230167cb1e8"
       }
     ],
     "targets": {
@@ -795,7 +1341,116 @@
     "description": "Review summary with score bars beside a list of reviews.",
     "file": "balm-2/sections/reviews--product-reviews.html",
     "deps": [],
-    "credits": [],
+    "credits": [
+      {
+        "photo_id": "photo-1655026392641-bf283a5f12d4",
+        "page_url": "https://unsplash.com/photos/photo-1655026392641-bf283a5f12d4"
+      }
+    ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "product-story-43",
+    "kind": "section",
+    "category": "image-with-text",
+    "name": "Founder's letter",
+    "description": "Founder's letter section from the Balm 2 theme.",
+    "file": "balm-2/sections/image-with-text--product-story-43.html",
+    "deps": [],
+    "credits": [
+      {
+        "photo_id": "photo-1532092127457-c45cdfc70004",
+        "page_url": "https://unsplash.com/photos/photo-1532092127457-c45cdfc70004"
+      },
+      {
+        "photo_id": "photo-1610663711502-35f870cfaea2",
+        "page_url": "https://unsplash.com/photos/photo-1610663711502-35f870cfaea2"
+      },
+      {
+        "photo_id": "photo-1629940446133-4e3a63fcfbff",
+        "page_url": "https://unsplash.com/photos/photo-1629940446133-4e3a63fcfbff"
+      }
+    ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "recommendations-37",
+    "kind": "section",
+    "category": "product-recommendations",
+    "name": "Recommendations 37",
+    "description": "Recommendations 37 section from the Balm 2 theme.",
+    "file": "balm-2/sections/product-recommendations--recommendations-37.html",
+    "deps": [],
+    "credits": [
+      {
+        "photo_id": "photo-1607006483224-73ce0729e22a",
+        "page_url": "https://unsplash.com/photos/photo-1607006483224-73ce0729e22a"
+      },
+      {
+        "photo_id": "photo-1629259629982-a5a202ae888f",
+        "page_url": "https://unsplash.com/photos/photo-1629259629982-a5a202ae888f"
+      },
+      {
+        "photo_id": "photo-1672062519512-ef6821193510",
+        "page_url": "https://unsplash.com/photos/photo-1672062519512-ef6821193510"
+      }
+    ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "recommendations-50",
+    "kind": "section",
+    "category": "product-recommendations",
+    "name": "Recommendations 50",
+    "description": "Recommendations 50 section from the Balm 2 theme.",
+    "file": "balm-2/sections/product-recommendations--recommendations-50.html",
+    "deps": [],
+    "credits": [
+      {
+        "photo_id": "photo-1600857544200-b2f666a9a2ec",
+        "page_url": "https://unsplash.com/photos/photo-1600857544200-b2f666a9a2ec"
+      },
+      {
+        "photo_id": "photo-1625753784137-d4965dfe5e73",
+        "page_url": "https://unsplash.com/photos/photo-1625753784137-d4965dfe5e73"
+      },
+      {
+        "photo_id": "photo-1633171036157-78d53387fdc0",
+        "page_url": "https://unsplash.com/photos/photo-1633171036157-78d53387fdc0"
+      },
+      {
+        "photo_id": "photo-1638609927043-3eed02fdd24b",
+        "page_url": "https://unsplash.com/photos/photo-1638609927043-3eed02fdd24b"
+      }
+    ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "reviews-49",
+    "kind": "section",
+    "category": "reviews",
+    "name": "Reviews 49",
+    "description": "Reviews 49 section from the Balm 2 theme.",
+    "file": "balm-2/sections/reviews--reviews-49.html",
+    "deps": [],
+    "credits": [
+      {
+        "photo_id": "photo-1655026392641-bf283a5f12d4",
+        "page_url": "https://unsplash.com/photos/photo-1655026392641-bf283a5f12d4"
+      }
+    ],
     "targets": {
       "html": "ok",
       "shopify": "ok"
@@ -816,6 +1471,181 @@
     }
   },
   {
+    "id": "routine-builder-01",
+    "kind": "section",
+    "category": "routine-builder",
+    "name": "Routine builder 01",
+    "description": "Routine builder 01 section from the Balm 2 theme.",
+    "file": "balm-2/sections/routine-builder--routine-builder-01.html",
+    "deps": [],
+    "credits": [
+      {
+        "photo_id": "photo-1550572017-4b7a301b9d81",
+        "page_url": "https://unsplash.com/photos/photo-1550572017-4b7a301b9d81"
+      },
+      {
+        "photo_id": "photo-1578499177313-0416e8f509e6",
+        "page_url": "https://unsplash.com/photos/photo-1578499177313-0416e8f509e6"
+      },
+      {
+        "photo_id": "photo-1590439471364-192aa70c0b53",
+        "page_url": "https://unsplash.com/photos/photo-1590439471364-192aa70c0b53"
+      },
+      {
+        "photo_id": "photo-1608571423539-e951b9b3871e",
+        "page_url": "https://unsplash.com/photos/photo-1608571423539-e951b9b3871e"
+      },
+      {
+        "photo_id": "photo-1609097164468-b498a4ab436a",
+        "page_url": "https://unsplash.com/photos/photo-1609097164468-b498a4ab436a"
+      },
+      {
+        "photo_id": "photo-1609097164502-59a1f0f9a66f",
+        "page_url": "https://unsplash.com/photos/photo-1609097164502-59a1f0f9a66f"
+      },
+      {
+        "photo_id": "photo-1638609927040-8a7e97cd9d6a",
+        "page_url": "https://unsplash.com/photos/photo-1638609927040-8a7e97cd9d6a"
+      },
+      {
+        "photo_id": "photo-1646110929780-b97f94dd7ccf",
+        "page_url": "https://unsplash.com/photos/photo-1646110929780-b97f94dd7ccf"
+      },
+      {
+        "photo_id": "photo-1683944433023-027a3f443ae4",
+        "page_url": "https://unsplash.com/photos/photo-1683944433023-027a3f443ae4"
+      },
+      {
+        "photo_id": "photo-1763503836825-97f5450d155a",
+        "page_url": "https://unsplash.com/photos/photo-1763503836825-97f5450d155a"
+      }
+    ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "scroll-images-02",
+    "kind": "section",
+    "category": "scroll-images",
+    "name": "Scroll images 02",
+    "description": "Scroll images 02 section from the Balm 2 theme.",
+    "file": "balm-2/sections/scroll-images--scroll-images-02.html",
+    "deps": [],
+    "credits": [
+      {
+        "photo_id": "photo-1608571424634-58ae03e6edcf",
+        "page_url": "https://unsplash.com/photos/photo-1608571424634-58ae03e6edcf"
+      }
+    ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "search-results-30",
+    "kind": "section",
+    "category": "main-search",
+    "name": "Search, ritual step chips",
+    "description": "Search, ritual step chips section from the Balm 2 theme.",
+    "file": "balm-2/sections/main-search--search-results-30.html",
+    "deps": [],
+    "credits": [
+      {
+        "photo_id": "photo-1608571702534-475517f598fa",
+        "page_url": "https://unsplash.com/photos/photo-1608571702534-475517f598fa"
+      },
+      {
+        "photo_id": "photo-1608571899712-2109dac47629",
+        "page_url": "https://unsplash.com/photos/photo-1608571899712-2109dac47629"
+      },
+      {
+        "photo_id": "photo-1608571899778-6f022cdb7828",
+        "page_url": "https://unsplash.com/photos/photo-1608571899778-6f022cdb7828"
+      },
+      {
+        "photo_id": "photo-1608571899784-613f67ca6ffb",
+        "page_url": "https://unsplash.com/photos/photo-1608571899784-613f67ca6ffb"
+      },
+      {
+        "photo_id": "photo-1612630711787-ee1db6be22ea",
+        "page_url": "https://unsplash.com/photos/photo-1612630711787-ee1db6be22ea"
+      },
+      {
+        "photo_id": "photo-1629259629982-a5a202ae888f",
+        "page_url": "https://unsplash.com/photos/photo-1629259629982-a5a202ae888f"
+      },
+      {
+        "photo_id": "photo-1647943746660-1640133068d5",
+        "page_url": "https://unsplash.com/photos/photo-1647943746660-1640133068d5"
+      },
+      {
+        "photo_id": "photo-1778036086682-3c2cb6e05a41",
+        "page_url": "https://unsplash.com/photos/photo-1778036086682-3c2cb6e05a41"
+      }
+    ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "team-06",
+    "kind": "section",
+    "category": "team",
+    "name": "Team, bench stations",
+    "description": "Team, bench stations section from the Balm 2 theme.",
+    "file": "balm-2/sections/team--team-06.html",
+    "deps": [],
+    "credits": [
+      {
+        "photo_id": "photo-1573461160327-b450ce3d8e7f",
+        "page_url": "https://unsplash.com/photos/photo-1573461160327-b450ce3d8e7f"
+      },
+      {
+        "photo_id": "photo-1594307046705-fe441d4e1e5c",
+        "page_url": "https://unsplash.com/photos/photo-1594307046705-fe441d4e1e5c"
+      },
+      {
+        "photo_id": "photo-1608571702603-739aa0c6690b",
+        "page_url": "https://unsplash.com/photos/photo-1608571702603-739aa0c6690b"
+      },
+      {
+        "photo_id": "photo-1680034976850-129b4a07be56",
+        "page_url": "https://unsplash.com/photos/photo-1680034976850-129b4a07be56"
+      }
+    ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
+    "id": "testimonial-13",
+    "kind": "section",
+    "category": "testimonials",
+    "name": "Testimonial 13",
+    "description": "Testimonial 13 section from the Balm 2 theme.",
+    "file": "balm-2/sections/testimonials--testimonial-13.html",
+    "deps": [],
+    "credits": [
+      {
+        "photo_id": "photo-1577746838851-816a43ca8733",
+        "page_url": "https://unsplash.com/photos/photo-1577746838851-816a43ca8733"
+      },
+      {
+        "photo_id": "photo-1608571899778-6f022cdb7828",
+        "page_url": "https://unsplash.com/photos/photo-1608571899778-6f022cdb7828"
+      }
+    ],
+    "targets": {
+      "html": "ok",
+      "shopify": "ok"
+    }
+  },
+  {
     "id": "testimonial",
     "kind": "section",
     "category": "testimonials",
@@ -825,31 +1655,12 @@
     "deps": [],
     "credits": [
       {
-        "photo_id": "photo-1488426862026-3ee34a7d66df",
-        "page_url": "https://unsplash.com/photos/photo-1488426862026-3ee34a7d66df"
+        "photo_id": "photo-1577746838851-816a43ca8733",
+        "page_url": "https://unsplash.com/photos/photo-1577746838851-816a43ca8733"
       },
       {
-        "photo_id": "photo-1672763057373-361408b5f110",
-        "page_url": "https://unsplash.com/photos/photo-1672763057373-361408b5f110"
-      }
-    ],
-    "targets": {
-      "html": "ok",
-      "shopify": "ok"
-    }
-  },
-  {
-    "id": "why",
-    "kind": "section",
-    "category": "multicolumn",
-    "name": "Why it works",
-    "description": "Numbered reasons beside an image with a button.",
-    "file": "balm-2/sections/multicolumn--why.html",
-    "deps": [],
-    "credits": [
-      {
-        "photo_id": "photo-1438761681033-6461ffad8d80",
-        "page_url": "https://unsplash.com/photos/photo-1438761681033-6461ffad8d80"
+        "photo_id": "photo-1608571899778-6f022cdb7828",
+        "page_url": "https://unsplash.com/photos/photo-1608571899778-6f022cdb7828"
       }
     ],
     "targets": {

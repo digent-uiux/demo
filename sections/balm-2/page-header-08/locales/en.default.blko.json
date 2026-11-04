@@ -1,0 +1,12 @@
+{
+  "blko": {
+    "page_header_08": {
+      "breadcrumb": "Breadcrumb",
+      "closed": "Closed · opens {day} at {hour}:00",
+      "home": "Home",
+      "open_now": "Open now · {time} in {place}",
+      "today": "today",
+      "tomorrow": "tomorrow"
+    }
+  }
+}

@@ -2,24 +2,21 @@
   "type": "header",
   "name": "Header group",
   "sections": {
-    "announcement": {
-      "type": "blko-announcement",
+    "announcement-06": {
+      "type": "blko-announcement-06",
       "settings": {
-        "text": "It’s <em>glow</em> season, 15% off your first order",
-        "code": "GLOW15",
-        "link": "",
-        "dismissible": true,
-        "home_only": true
+        "tokens": "theme"
       }
     },
-    "header": {
-      "type": "blko-header",
+    "header-19": {
+      "type": "blko-header-19",
       "settings": {
-        "menu": "main-menu",
-        "tagline": "Skincare for slow mornings",
-        "sticky": true
+        "tokens": "theme"
       }
     }
   },
-  "order": ["announcement", "header"]
+  "order": [
+    "announcement-06",
+    "header-19"
+  ]
 }

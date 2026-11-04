@@ -1,0 +1,433 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-collection-banner-73.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-collection-banner-73.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Collection page opener, half of one idea with collection-grid-44 ("the shelf label and the case"): a paper shelf
+  label in a double hairline frame is stuck over the left edge of a soft photo of the shelf (the back plane), and a sharp
+  bottle photo (the front plane) stands in front, overhanging the shelf's foot. 12 columns: label 1-5, shelf 5-10,
+  bottle 10-12. The label: number + label (+ collection name), kicker, h1 as a type combo (heading font + an <em> word
+  in the light body face), lead, a hairline ledger (contents = the product count, then the merchant's lines) and the
+  arrow link. 1024px+: the shelf stretches to the label's height; the bottle's foot and the caption share one baseline.
+  Phones: label, then the photo pair, then the chips (they scroll inside their own box, 20px gutters).
+  Rack focus (balm's signature, small form): on load the focus racks from the shelf to the bottle (html.blko-kit-balm
+  only; bottle very soft and shelf near sharp at first, then they trade; the blur stays on the pictures inside crisp
+  frames); a "Focus: Front / Back" switch under the photos racks it by hand (script.js; hidden without JS). Static and
+  reduced motion: bottle sharp, shelf soft (the final frame).
+  Reads the collection on a collection template (title, description, featured product image, collection image, product
+  count); the settings override each one. Front: image, else the collection's featured image, else its image. Back:
+  back image, else the collection image, else the front image.
+  Sub-collection nav (hairline row under the banner): "Shop by shelf" small caps, then a round thumb, small-caps name
+  and amber product count per sub-collection, no boxes; the current one gets aria-current="page", a thin ring and an
+  amber underline. Below 1024px the row is a
+  horizontally scrollable strip of hairline chips. Source: the "Sub-collection menu" (links to collections; reads
+  link.object.featured_image and products_count), else the "Sub-collection" blocks (one collection picker each).
+{%- endcomment -%}
+{%- liquid
+  assign c = collection
+  if s.collection != blank
+    assign c = s.collection
+  endif
+  assign count = c.products_count | default: s.preview_count
+  assign front = s.image | default: c.featured_image | default: c.image
+  assign back = s.image_back | default: c.image | default: front
+  if s.heading != blank
+    assign title = s.heading
+  else
+    assign title = c.title | escape
+  endif
+  assign text = s.text
+  if text == blank and c.description != blank
+    assign text = c.description | strip_html | truncatewords: 28
+  endif
+  assign lines = s.ledger | newline_to_br | split: '<br />'
+-%}
+{%- capture body -%}
+  <div class="bcollectionbanner73__label-box"
+    ><div class="bcollectionbanner73__label-in"
+      ><p class="bcollectionbanner73__label bcollectionbanner73__muted bcollectionbanner73__split"
+        ><span>{{ s.number | escape }}{% if s.number != blank and s.label != blank %} · {% endif %}{{ s.label | escape }}</span
+        >{%- if s.show_name and c.title != blank -%}<span>{{ c.title | escape }}</span>{%- endif -%}
+      </p
+      ><div class="bcollectionbanner73__head"
+        >{%- if s.kicker != blank -%}<span class="bcollectionbanner73__label bcollectionbanner73__muted">{{ s.kicker | escape }}</span>{%- endif -%}
+        <h1 class="bcollectionbanner73__h">{{ title }}</h1
+        >{%- if text != blank -%}<p class="bcollectionbanner73__lead">{{ text | escape }}</p>{%- endif -%}
+      </div
+      ><dl class="bcollectionbanner73__ledger"
+        >{%- if count != blank -%}<div class="bcollectionbanner73__lrow"><dt class="bcollectionbanner73__label bcollectionbanner73__muted">{{ 'blko.collection_banner_73.contents' | t }}</dt><dd>{{ count }} {{ s.count_label | escape }}</dd></div>{%- endif -%}
+        {%- for l in lines -%}
+          {%- assign kv = l | strip | split: ':' -%}
+          {%- if kv.size > 1 -%}<div class="bcollectionbanner73__lrow"><dt class="bcollectionbanner73__label bcollectionbanner73__muted">{{ kv[0] | strip | escape }}</dt><dd>{{ kv[1] | strip | escape }}</dd></div>{%- endif -%}
+        {%- endfor -%}
+      </dl
+      >{%- if s.link_label != blank -%}{%- render 'blko-ui-arrow-link', href: s.link, children: s.link_label -%}{%- endif -%}
+    </div
+  ></div
+  ><figure class="bcollectionbanner73__fig" data-focus="front" data-fig
+    ><div class="bcollectionbanner73__plane bcollectionbanner73__back"
+      >{%- if back != blank -%}
+        {{- back | image_url: width: 1200 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '600, 900, 1200', sizes: '(min-width: 1024px) 50vw, 90vw', class: 'bcollectionbanner73__img' -}}
+      {%- else -%}
+        {{- 'lifestyle-2' | placeholder_svg_tag: 'bcollectionbanner73__img bcollectionbanner73__ph' -}}
+      {%- endif -%}
+    </div
+    ><div class="bcollectionbanner73__plane bcollectionbanner73__front"
+      ><div class="bcollectionbanner73__fmedia"
+        >{%- if front != blank -%}
+          {{- front | image_url: width: 700 | image_tag: loading: 'eager', widths: '350, 500, 700', sizes: '(min-width: 1024px) 25vw, 50vw', class: 'bcollectionbanner73__img' -}}
+        {%- else -%}
+          {{- 'product-3' | placeholder_svg_tag: 'bcollectionbanner73__img bcollectionbanner73__ph' -}}
+        {%- endif -%}
+      </div
+    ></div
+    ><figcaption class="bcollectionbanner73__label bcollectionbanner73__muted bcollectionbanner73__cap"
+      >{%- if s.caption != blank -%}<span class="bcollectionbanner73__capt">{{ s.caption | escape }}</span>{%- endif -%}
+      <span class="bcollectionbanner73__focus" role="group" aria-label="{{ 'blko.collection_banner_73.focus' | t | escape }}" hidden data-focus-ui
+        ><span aria-hidden="true">{{ 'blko.collection_banner_73.focus' | t }}</span
+        ><button type="button" class="bcollectionbanner73__label bcollectionbanner73__fbtn" aria-pressed="true" data-plane="front">{{ 'blko.collection_banner_73.front' | t }}</button
+        ><button type="button" class="bcollectionbanner73__label bcollectionbanner73__fbtn" aria-pressed="false" data-plane="back">{{ 'blko.collection_banner_73.back' | t }}</button
+      ></span
+    ></figcaption
+  ></figure
+  >{%- liquid
+    assign menu = s.menu
+    assign use_menu = false
+    if menu != blank and menu.links.size > 0
+      assign use_menu = true
+    endif
+    assign subs = section.blocks | where: 'type', 'sub'
+    assign t_count = 'blko.collection_banner_73.products' | t
+  -%}
+  {%- if use_menu or subs.size > 0 -%}
+    <nav class="bcollectionbanner73__nav" aria-label="{{ 'blko.collection_banner_73.subnav' | t }}"
+      >{%- if s.nav_label != blank -%}<p class="bcollectionbanner73__label bcollectionbanner73__muted bcollectionbanner73__navlabel">{{ s.nav_label | escape }}</p>{%- endif -%}
+      <ul class="bcollectionbanner73__subs"
+        >{%- if use_menu -%}
+          {%- for link in menu.links -%}
+            {%- liquid
+              assign o = nil
+              if link.type == 'collection_link'
+                assign o = link.object
+              endif
+              assign cur = false
+              if link.current or o != nil and c != blank and o.handle == c.handle
+                assign cur = true
+              endif
+            -%}
+            <li class="bcollectionbanner73__sub"
+              ><a class="bcollectionbanner73__sublink{% if cur %} bcollectionbanner73__sublink--on{% endif %}" href="{{ link.url }}"{% if cur %} aria-current="page"{% endif %}
+                ><span class="bcollectionbanner73__thumb"
+                  >{%- if o != nil and o.featured_image != blank -%}
+                    {{- o.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '', widths: '64, 128, 160', sizes: '64px', class: 'bcollectionbanner73__timg' -}}
+                  {%- else -%}
+                    {%- capture ph -%}product-{{ forloop.index | modulo: 6 | plus: 1 }}{%- endcapture -%}
+                    {{- ph | placeholder_svg_tag: 'bcollectionbanner73__timg bcollectionbanner73__ph' -}}
+                  {%- endif -%}
+                </span
+                ><span class="bcollectionbanner73__label bcollectionbanner73__subname">{{ link.title | escape }}{%- if s.show_count and o != nil -%}<span class="bcollectionbanner73__count">{{ o.products_count }}<span class="blko-ui-sr-only"> {{ t_count }}</span></span>{%- endif -%}</span
+              ></a
+            ></li
+          >{%- endfor -%}
+        {%- else -%}
+          {%- for b in subs -%}
+            {%- liquid
+              assign o = b.settings.collection
+              assign nm = b.settings.title
+              if nm == blank and o != blank
+                assign nm = o.title
+              endif
+              assign href = '#'
+              assign n = b.settings.preview_count
+              if o != blank
+                assign href = o.url
+                assign n = o.products_count
+              endif
+              assign cur = false
+              if o != blank and c != blank and o.handle == c.handle
+                assign cur = true
+              elsif o == blank and c == blank and forloop.first
+                assign cur = true
+              endif
+            -%}
+            <li class="bcollectionbanner73__sub" {{ b.shopify_attributes }}
+              ><a class="bcollectionbanner73__sublink{% if cur %} bcollectionbanner73__sublink--on{% endif %}" href="{{ href }}"{% if cur %} aria-current="page"{% endif %}
+                ><span class="bcollectionbanner73__thumb"
+                  >{%- if o != blank and o.featured_image != blank -%}
+                    {{- o.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '', widths: '64, 128, 160', sizes: '64px', class: 'bcollectionbanner73__timg' -}}
+                  {%- else -%}
+                    {%- capture ph -%}product-{{ forloop.index | modulo: 6 | plus: 1 }}{%- endcapture -%}
+                    {{- ph | placeholder_svg_tag: 'bcollectionbanner73__timg bcollectionbanner73__ph' -}}
+                  {%- endif -%}
+                </span
+                ><span class="bcollectionbanner73__label bcollectionbanner73__subname">{{ nm | escape }}{%- if s.show_count and n != blank -%}<span class="bcollectionbanner73__count">{{ n }}<span class="blko-ui-sr-only"> {{ t_count }}</span></span>{%- endif -%}</span
+              ></a
+            ></li
+          >{%- endfor -%}
+        {%- endif -%}
+      </ul
+    ></nav
+  >{%- endif -%}
+{%- endcapture -%}
+<div class="bcollectionbanner73{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-bcollectionbanner73
+  >{%- assign lbl = c.title | default: 'blko.collection_banner_73.label' -%}
+  {%- render 'blko-ui-section', surface: 'bg', label: lbl, inner: 'bcollectionbanner73__in', children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Collection banner 73",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection",
+      "info": "On a collection page the current collection is used."
+    },
+    {
+      "type": "text",
+      "id": "number",
+      "label": "Label number",
+      "default": "No. 01"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Collection"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_name",
+      "label": "Show collection name on the label",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "count_label",
+      "label": "Count label",
+      "default": "formulas"
+    },
+    {
+      "type": "number",
+      "id": "preview_count",
+      "label": "Count shown without a collection",
+      "default": 12
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "Small batch, since the kitchen table"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Defaults to the collection title. Italic words are set in the light body face.",
+      "default": "The apothecary <em>shelf</em>"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "info": "Defaults to the collection description.",
+      "default": "Oils, serums, balms and bars, each with one clear job, mixed by hand and bottled in amber glass."
+    },
+    {
+      "type": "textarea",
+      "id": "ledger",
+      "label": "Ledger lines",
+      "info": "One per line, as Name: value. The product count comes first on its own.",
+      "default": "Glass: Amber, UV-filtering\nShelves: 05"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label",
+      "default": "Browse the shelf"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link",
+      "info": "Point it at the product grid below."
+    },
+    {
+      "type": "header",
+      "content": "Photos (rack focus)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Front image (in focus)",
+      "info": "A single product. Defaults to the collection's featured image."
+    },
+    {
+      "type": "image_picker",
+      "id": "image_back",
+      "label": "Back image (soft)",
+      "info": "The shelf or the shop. Defaults to the collection image."
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "Caption",
+      "default": "Pictured · amber glass, 30 ml"
+    },
+    {
+      "type": "header",
+      "content": "Sub-collections"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Sub-collection menu",
+      "info": "Links that point to collections show the collection image and product count. Leave empty to use the Sub-collection blocks."
+    },
+    {
+      "type": "text",
+      "id": "nav_label",
+      "label": "Row label",
+      "default": "Shop by shelf"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_count",
+      "label": "Show product counts",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128
+    }
+  ],
+  "blocks": [
+    {
+      "type": "sub",
+      "name": "Sub-collection",
+      "limit": 10,
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Name",
+          "info": "Defaults to the collection title."
+        },
+        {
+          "type": "number",
+          "id": "preview_count",
+          "label": "Count shown without a collection",
+          "default": 3
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection banner 73",
+      "blocks": [
+        {
+          "type": "sub",
+          "settings": {
+            "title": "All",
+            "preview_count": 12
+          }
+        },
+        {
+          "type": "sub",
+          "settings": {
+            "title": "Face oils",
+            "preview_count": 4
+          }
+        },
+        {
+          "type": "sub",
+          "settings": {
+            "title": "Serums",
+            "preview_count": 3
+          }
+        },
+        {
+          "type": "sub",
+          "settings": {
+            "title": "Cleansers",
+            "preview_count": 3
+          }
+        },
+        {
+          "type": "sub",
+          "settings": {
+            "title": "Sets",
+            "preview_count": 2
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

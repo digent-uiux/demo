@@ -14,7 +14,7 @@
         "type": "text",
         "id": "logo_text",
         "label": "Wordmark",
-        "default": "Balm & Co",
+        "default": "Balm",
         "info": "Shown in the header and footer when no logo image is set. Empty uses the store name."
       },
       {
@@ -142,19 +142,19 @@
         "type": "color",
         "id": "color_sale",
         "label": "Sale price",
-        "default": "#9b0d33"
+        "default": "#9a3412"
       },
       {
         "type": "color",
         "id": "color_input_bg",
         "label": "Input background",
-        "default": "#fffdf8"
+        "default": "#faf7f1"
       },
       {
         "type": "color",
         "id": "color_input_text",
         "label": "Input text",
-        "default": "#262f29"
+        "default": "#24211c"
       }
     ]
   },
@@ -202,12 +202,12 @@
           }
         ],
         "default": "theme",
-        "info": "Theme fonts match the design exactly. Shopify library uses the two font pickers below."
+        "info": "Presets use Shopify library fonts to match their heading and body pair. Theme fonts uses the bundled font files."
       },
       {
         "type": "select",
         "id": "theme_font_pair",
-        "label": "Theme font pair",
+        "label": "Bundled font pair",
         "options": [
           {
             "value": "default",
@@ -215,24 +215,25 @@
           },
           {
             "value": "linen",
-            "label": "Linen (Cormorant Garamond + Hanken Grotesk)"
+            "label": "Linen (bundled fonts)"
           },
           {
             "value": "noir",
-            "label": "Noir (Bodoni Moda + Karla)"
+            "label": "Noir (bundled fonts)"
           },
           {
             "value": "rose",
-            "label": "Rose (Fraunces + DM Sans)"
+            "label": "Rose (bundled fonts)"
           }
         ],
-        "default": "default"
+        "default": "default",
+        "info": "Applies only to Theme fonts. Presets select Shopify library and use the font pickers below."
       },
       {
         "type": "font_picker",
         "id": "font_heading",
         "label": "Headings",
-        "default": "bodoni_moda_n5"
+        "default": "bodoni_moda_n4"
       },
       {
         "type": "checkbox",
@@ -262,7 +263,7 @@
         "label": "Heading letter spacing",
         "min": -6,
         "max": 10,
-        "step": 1,
+        "step": 0.5,
         "unit": "%",
         "default": -2,
         "info": "Hundredths of an em."
@@ -312,7 +313,7 @@
         "max": 20,
         "step": 1,
         "unit": "%",
-        "default": 0,
+        "default": 2,
         "info": "Hundredths of an em."
       },
       {
@@ -351,7 +352,7 @@
         "max": 40,
         "step": 2,
         "unit": "px",
-        "default": 40,
+        "default": 0,
         "info": "40 makes pill buttons."
       },
       {

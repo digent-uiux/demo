@@ -1,0 +1,23 @@
+{%- comment -%} One product row of the article-31 card. Params: n, url, title, image, size, note, price (cents), vid, available. {%- endcomment -%}
+{%- assign no = n | prepend: '0' | slice: -2, 2 -%}
+<li class="barticle31__prod">
+  <div class="barticle31__pph">
+    {%- if image != blank -%}
+      {{ image | image_url: width: 240 | image_tag: widths: '120, 160, 240', sizes: '72px', loading: 'lazy', class: 'barticle31__img', alt: image.alt | default: title }}
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'barticle31__img barticle31__phsvg' }}
+    {%- endif -%}
+  </div>
+  <div class="barticle31__pcopy">
+    <p class="barticle31__cap">{{ 'blko.article_31.no' | t }} {{ no }}{% if size != blank %} · {{ size | escape }}{% endif %}</p>
+    <p class="barticle31__pname">{% if url != blank %}<a href="{{ url }}">{{ title | escape }}</a>{% else %}{{ title | escape }}{% endif %}</p>
+    {%- if note != blank -%}<p class="barticle31__pnote">{{ note | escape }}</p>{%- endif -%}
+    {%- if available -%}
+      {%- assign a_add = 'blko.article_31.add_aria' | t | replace: '[name]', title | escape -%}
+      {%- assign a_rem = 'blko.article_31.remove_aria' | t | replace: '[name]', title | escape -%}
+      <button type="button" class="barticle31__add" aria-pressed="false" aria-label="{{ a_add }}" data-add{% if vid != blank %} data-vid="{{ vid }}"{% endif %} data-key="{{ n }}" data-a-add="{{ a_add }}" data-a-rem="{{ a_rem }}"><span data-off>{%- render 'blko-ui-icon', name: 'plus', size: 14, stroke: 2 -%}{{ 'blko.article_31.add' | t }} · {{ price | money_without_trailing_zeros }}</span><span data-on hidden>{%- render 'blko-ui-icon', name: 'check', size: 14, stroke: 2 -%}{{ 'blko.article_31.in_bag' | t }}</span></button>
+    {%- else -%}
+      <button type="button" class="barticle31__add" disabled>{{ 'blko.article_31.sold_out' | t }}</button>
+    {%- endif -%}
+  </div>
+</li>

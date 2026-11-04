@@ -1,0 +1,321 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-7'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-recommendations-50.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-recommendations-50.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Balm sample shelf and pouch (pop-2 linen, every token flipped onto it). Copy (small caps label, display heading with
+  an italic word, one line) and the sample pouch on the left; the shelf on the right: 3:4 plates whose widths step down
+  and up so the tops step while the feet stand on one hairline, each with a shelf label (No. 0N · size, the name, how
+  long it lasts, price) and a full-width "Add sample". The pouch (a double-hairline label frame) has N numbered slots
+  that fill with the photo and name of each sample in the cart; when it is full the other buttons say so and wait.
+  Live: add posts /cart/add.js, remove posts /cart/change.js (quantity 0); then blko:cart:add (on add) and
+  blko:cart:updated {detail: cart} go out, so the cart-page-36 section re-renders itself from the server and the header
+  count / drawer stay in sync. A blko:cart:updated from another block (removing a line in the bag) resyncs the pouch.
+  Source, in order: the picked products; Shopify recommendations (fetched through routes.product_recommendations_url
+  for the product on the page or the first cart line, hidden when nothing comes back); the preview items otherwise.
+{%- endcomment -%}
+{%- liquid
+  assign mode = 'preview'
+  assign seed = product
+  if seed == blank and cart.item_count > 0
+    assign seed = cart.items.first.product
+  endif
+  if s.products != blank and s.products.size > 0
+    assign mode = 'list'
+  elsif recommendations.performed
+    if recommendations.products_count > 0
+      assign mode = 'rec'
+    else
+      assign mode = 'none'
+    endif
+  elsif seed != blank and seed.id != blank
+    assign mode = 'fetch'
+  endif
+  assign t_add = 'blko.recommendations_50.add' | t
+  assign t_added = 'blko.recommendations_50.added' | t
+  assign t_full = 'blko.recommendations_50.full' | t
+  assign t_sold = 'blko.recommendations_50.sold_out' | t
+  assign mf_size = s.size_field | split: '.'
+  assign mf_lasts = s.lasts_field | split: '.'
+  assign slots = s.slots | default: 3
+-%}
+<div class="brecommendations50{%- if blko_sid != 'scheme-7' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-brecommendations50 data-root="{{ routes.root_url }}" data-currency="{{ cart.currency.iso_code | default: shop.currency }}" data-slots="{{ slots }}" data-t-remove="{{ 'blko.recommendations_50.remove' | t | escape }}" data-t-empty="{{ 'blko.recommendations_50.empty' | t | escape }}" data-t-adding="{{ 'blko.recommendations_50.adding' | t | escape }}" data-t-removing="{{ 'blko.recommendations_50.removing' | t | escape }}" data-t-error="{{ 'blko.recommendations_50.error' | t | escape }}"{% if mode == 'fetch' %} data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ seed.id }}&limit={{ s.limit }}&intent={{ s.intent }}" hidden{% endif %}
+  >{%- if mode != 'none' and mode != 'fetch' -%}
+    {%- capture body -%}
+      <header class="brecommendations50__head"
+        >{%- if s.eyebrow != blank -%}<span class="brecommendations50__label brecommendations50__muted">{{ s.eyebrow | escape }}</span>{%- endif -%}
+        {%- if s.heading != blank -%}<h2 class="brecommendations50__h blko-ui-text--h2">{{ s.heading }}</h2>{%- endif -%}
+        {%- if s.line != blank -%}<p class="brecommendations50__line">{{ s.line | escape }}</p>{%- endif -%}
+      </header
+      ><ul class="brecommendations50__shelf" aria-label="{{ 'blko.recommendations_50.shelf' | t | escape }}" data-items
+        >{%- case mode -%}
+          {%- when 'list' -%}
+            {%- for p in s.products limit: s.limit -%}{%- render 'blko-recommendations-50-card', n: forloop.index, product: p, mf_size: mf_size, mf_lasts: mf_lasts, t_add: t_add, t_added: t_added, t_full: t_full, t_sold: t_sold -%}{%- endfor -%}
+          {%- when 'rec' -%}
+            {%- for p in recommendations.products limit: s.limit -%}{%- render 'blko-recommendations-50-card', n: forloop.index, product: p, mf_size: mf_size, mf_lasts: mf_lasts, t_add: t_add, t_added: t_added, t_full: t_full, t_sold: t_sold -%}{%- endfor -%}
+          {%- else -%}
+            {%- for b in section.blocks limit: s.limit -%}
+              {%- assign ph = forloop.index0 | modulo: 6 | plus: 1 -%}
+              {%- render 'blko-recommendations-50-card', n: forloop.index, b: b, ph: ph, t_add: t_add, t_added: t_added, t_full: t_full -%}
+            {%- endfor -%}
+        {%- endcase -%}
+      </ul
+      ><aside class="brecommendations50__pouch" aria-labelledby="{{ section.id }}-pouch"
+        ><div class="brecommendations50__phead"
+          ><h3 id="{{ section.id }}-pouch" class="brecommendations50__label">{{ 'blko.recommendations_50.pouch' | t }}</h3
+          ><span class="brecommendations50__label brecommendations50__muted"><span data-n>0</span> {{ 'blko.recommendations_50.of' | t }} {{ slots }}</span
+        ></div
+        ><ol class="brecommendations50__slots" data-slots-list
+          >{%- for i in (1..slots) -%}
+            <li class="brecommendations50__slot" data-slot
+              ><div class="brecommendations50__well"><span class="brecommendations50__snum" aria-hidden="true">0{{ i }}</span></div
+              ><span class="brecommendations50__sname">{{ 'blko.recommendations_50.empty' | t }}</span
+            ></li
+          >{%- endfor -%}
+        </ol
+        ><p role="status" class="brecommendations50__label brecommendations50__muted brecommendations50__status" data-status data-idle="{{ s.status_idle | escape }}" data-tail="{{ s.status_tail | escape }}">{{ s.status_idle | escape }}</p
+      ></aside
+    >{%- endcapture -%}
+    {%- assign lbl = 'blko.recommendations_50.label' | t -%}
+    {%- render 'blko-ui-section', surface: 'pop-2', label: lbl, inner: 'brecommendations50__in', className: 'brecommendations50__sec', children: body -%}
+  {%- endif -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Recommendations 50",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Samples · from the same shelf"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading (italic = accent)",
+      "default": "Try it <em>small</em> first"
+    },
+    {
+      "type": "text",
+      "id": "line",
+      "label": "Line",
+      "default": "Deluxe sizes of what people pair with a bag like yours. Pick up to three; each is enough for a fair trial."
+    },
+    {
+      "type": "range",
+      "id": "slots",
+      "label": "Pouch slots",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "text",
+      "id": "status_idle",
+      "label": "Status line",
+      "default": "Ships in the same parcel, in recycled card"
+    },
+    {
+      "type": "text",
+      "id": "status_tail",
+      "label": "Status after adding",
+      "default": "ships in the same parcel"
+    },
+    {
+      "type": "header",
+      "content": "Products"
+    },
+    {
+      "type": "product_list",
+      "id": "products",
+      "label": "Samples",
+      "limit": 8,
+      "info": "Leave empty to use Shopify recommendations for the product on the page (or the first cart item)."
+    },
+    {
+      "type": "select",
+      "id": "intent",
+      "label": "Recommendations",
+      "default": "complementary",
+      "options": [
+        {
+          "value": "related",
+          "label": "Related"
+        },
+        {
+          "value": "complementary",
+          "label": "Complementary (Search & Discovery)"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "label": "Samples shown",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "text",
+      "id": "size_field",
+      "label": "Size label (product metafield)",
+      "default": "custom.sample_size",
+      "info": "namespace.key; falls back to the first variant name."
+    },
+    {
+      "type": "text",
+      "id": "lasts_field",
+      "label": "How long it lasts (product metafield)",
+      "default": "custom.lasts"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-7"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 112,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 112
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Preview item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Name",
+          "default": "Rich night cream"
+        },
+        {
+          "type": "text",
+          "id": "size",
+          "label": "Size",
+          "default": "Mini jar · 15 ml"
+        },
+        {
+          "type": "text",
+          "id": "lasts",
+          "label": "How long it lasts",
+          "default": "About 2 weeks"
+        },
+        {
+          "type": "number",
+          "id": "price",
+          "label": "Price",
+          "default": 16
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Recommendations 50",
+      "blocks": [
+        {
+          "type": "item",
+          "settings": {
+            "title": "Rich night cream",
+            "size": "Mini jar · 15 ml",
+            "lasts": "About 2 weeks",
+            "price": 16
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "title": "Olive & lavender bar",
+            "size": "Guest size · 40 g",
+            "lasts": "3 weeks of showers",
+            "price": 8
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "title": "Calendula hand cream",
+            "size": "Travel tube · 20 ml",
+            "lasts": "A month in a coat pocket",
+            "price": 11
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "title": "Cucumber gel mask",
+            "size": "Mini jar · 20 ml",
+            "lasts": "About 6 masks",
+            "price": 13
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

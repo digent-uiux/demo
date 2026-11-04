@@ -1,0 +1,269 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-2'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-not-found-31.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  404, balm: a small "Error 404 · No. 000" label, one line of didone display type, one sentence, a hairline search field
+  (GET routes.search_url) and up to three collection links; on the right a 4:5 still life with a specimen caption.
+  Phones: the photo first. Motion: the balm kit only (the still life racks into focus on load).
+{%- endcomment -%}
+{{ 'blko-balm-motion.css' | asset_url | stylesheet_tag -}}
+<script src="{{ 'blko-balm-motion.js' | asset_url }}" defer="defer"></script
+>{%- assign qid = 'nf31-q-' | append: section.id -%}
+{%- capture body -%}
+  <figure class="bnotfound31__fig"
+    ><div class="bnotfound31__photo"
+      >{%- if s.image != blank -%}
+        {{ s.image | image_url: width: 1400 | image_tag: widths: '400, 600, 800, 1000, 1400', sizes: '(min-width: 768px) 40vw, 100vw', fetchpriority: 'high', class: 'bnotfound31__img', alt: s.image.alt -}}
+      {%- else -%}
+        {{ 'product-1' | placeholder_svg_tag: 'bnotfound31__img' -}}
+      {%- endif -%}
+    </div
+    >{%- if s.caption != blank -%}<figcaption class="bnotfound31__cap">{{ s.caption | escape }}</figcaption>{%- endif -%}
+  </figure
+  ><div class="bnotfound31__copy"
+    ><div class="bnotfound31__head"
+      ><p class="bnotfound31__cap">{{ s.label_text | escape }}{% if s.label_accent != blank %} <span class="bnotfound31__acc">{{ s.label_accent | escape }}</span>{% endif %}</p
+      ><h1 class="blko-ui-text--h1 bnotfound31__h1">{{ s.heading | escape }}{% if s.heading_em != blank %} <em>{{ s.heading_em | escape }}</em>{% endif %}</h1
+      >{%- if s.text != blank -%}<p class="bnotfound31__text">{{ s.text | escape }}</p>{%- endif -%}
+    </div
+    >{%- if s.show_search -%}
+    <form role="search" action="{{ routes.search_url }}" method="get" class="bnotfound31__form"
+      ><label for="{{ qid }}" class="bnotfound31__cap">{{ 'blko.not_found_31.search' | t }}</label
+      ><div class="bnotfound31__field"
+        ><input id="{{ qid }}" type="search" name="q" placeholder="{{ s.placeholder | escape }}" class="bnotfound31__input"
+        ><button type="submit" aria-label="{{ 'blko.not_found_31.search' | t }}" class="bnotfound31__go">{%- render 'blko-ui-icon', name: 'arrow-right', size: 16, stroke: 1.5, className: 'bnotfound31__ico' -%}</button
+      ></div
+      ><p class="bnotfound31__status" aria-hidden="true"></p
+    ></form
+    >{%- endif -%}
+    {%- if s.link_1_label != blank or s.link_2_label != blank or s.link_3_label != blank -%}
+    <nav aria-label="{{ 'blko.not_found_31.collections' | t }}" class="bnotfound31__nav"
+      >{%- if s.browse != blank -%}<p class="bnotfound31__cap">{{ s.browse | escape }}</p>{%- endif -%}
+      <ul class="bnotfound31__links"
+        >{%- assign n = 0 -%}
+        {%- for i in (1..3) -%}
+          {%- liquid
+            assign lk = 'link_' | append: i | append: '_label'
+            assign uk = 'link_' | append: i
+            assign l = s[lk]
+            assign u = s[uk] | default: routes.all_products_collection_url
+          -%}
+          {%- if l != blank -%}
+          {%- assign n = n | plus: 1 -%}
+          <li><span class="bnotfound31__num">{% if n < 10 %}0{% endif %}{{ n }}</span><a href="{{ u }}">{{ l | escape }}</a></li
+          >{%- endif -%}
+        {%- endfor -%}
+      </ul
+    ></nav
+    >{%- endif -%}
+  </div
+>{%- endcapture -%}
+<div class="bnotfound31{%- if blko_sid != 'scheme-2' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px"
+  >{%- render 'blko-ui-section', surface: s.surface, label: s.label, inner: 'bnotfound31__inner', children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "404, quiet shelf",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Region label",
+      "default": "Page not found"
+    },
+    {
+      "type": "text",
+      "id": "label_text",
+      "label": "Small label",
+      "default": "Error 404 ·"
+    },
+    {
+      "type": "text",
+      "id": "label_accent",
+      "label": "Small label, accent",
+      "default": "No. 000"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "This shelf is"
+    },
+    {
+      "type": "text",
+      "id": "heading_em",
+      "label": "Heading, italic word",
+      "default": "empty."
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "The page you were after has been moved or was never poured. Search the apothecary, or take one of the shelves."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Show search",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Search placeholder",
+      "default": "Rosehip, oat, a balm…"
+    },
+    {
+      "type": "header",
+      "content": "Collection links"
+    },
+    {
+      "type": "text",
+      "id": "browse",
+      "label": "Links heading",
+      "default": "Or browse"
+    },
+    {
+      "type": "text",
+      "id": "link_1_label",
+      "label": "Link 1 label",
+      "default": "Face oils"
+    },
+    {
+      "type": "url",
+      "id": "link_1",
+      "label": "Link 1"
+    },
+    {
+      "type": "text",
+      "id": "link_2_label",
+      "label": "Link 2 label",
+      "default": "Balms and creams"
+    },
+    {
+      "type": "url",
+      "id": "link_2",
+      "label": "Link 2"
+    },
+    {
+      "type": "text",
+      "id": "link_3_label",
+      "label": "Link 3 label",
+      "default": "Cleansing bars"
+    },
+    {
+      "type": "url",
+      "id": "link_3",
+      "label": "Link 3"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Still life"
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "Caption",
+      "default": "Specimen · amber glass, 30 ml, awaiting a pour"
+    },
+    {
+      "type": "select",
+      "id": "surface",
+      "label": "Colour",
+      "options": [
+        {
+          "value": "bg",
+          "label": "Background"
+        },
+        {
+          "value": "alt",
+          "label": "Alternate"
+        },
+        {
+          "value": "pop-1",
+          "label": "Pop 1"
+        }
+      ],
+      "default": "bg"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 144,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 144
+    }
+  ],
+  "presets": [
+    {
+      "name": "404, quiet shelf"
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

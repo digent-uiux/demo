@@ -1,0 +1,12 @@
+{
+  "blko": {
+    "newsletter_10": {
+      "email": "Email address",
+      "label": "Newsletter",
+      "letter": "Letter",
+      "posted": "Posted · thank you",
+      "thanks": "Thank you. The next letter is on its way.",
+      "to": "To"
+    }
+  }
+}

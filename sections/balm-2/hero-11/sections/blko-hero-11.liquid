@@ -1,0 +1,229 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-hero-11.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-hero-11.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Balm home hero: a calm split on the paper ground. Copy on the left five columns (a numbered label on a hairline, a
+  didone heading with one italic phrase, one lead line, two square buttons, a hairline row of facts); on the right a
+  tall still life whose warm ground melts into the page (focal point from the image). No scrim, no text over the photo.
+  Motion: the balm kit plays the load (rack focus, label wipe, heading out of soft focus). Here only the pointer light:
+  on fine pointers a soft amber patch drifts after the cursor (damped) and settles back on leave; off for ?static,
+  reduced motion, automated browsers and without the balm kit, where the patch rests (the final frame).
+{%- endcomment -%}
+{%- liquid
+  assign fp = s.image.presentation.focal_point | default: '50% 62%'
+  assign lbl = s.aria | default: s.label
+-%}
+<div class="bhero11{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-bhero11
+  ><section aria-label="{{ lbl | escape }}" class="bhero11__sec" style="padding-top:var(--pt);padding-bottom:var(--pb)"
+    ><div class="bhero11__grid"
+      ><div class="bhero11__copy" data-reveal-group
+        >{%- if s.label != blank or s.number != blank -%}
+          <p class="bhero11__label"><span aria-hidden="true" class="bhero11__rule"></span>{%- if s.number != blank -%}<span class="bhero11__num">{{ s.number | escape }}</span>{%- if s.label != blank -%}&nbsp;·&nbsp;{%- endif -%}{%- endif -%}{{ s.label | escape }}</p
+        >{%- endif -%}
+        {%- if s.heading != blank -%}<h1 class="bhero11__h">{{ s.heading }}</h1>{%- endif -%}
+        {%- if s.lead != blank -%}<p class="bhero11__lead">{{ s.lead | escape }}</p>{%- endif -%}
+        {%- if s.btn1 != blank or s.btn2 != blank -%}
+          <div class="bhero11__ctas"
+            >{%- if s.btn1 != blank -%}{%- render 'blko-ui-button', size: 'lg', href: s.btn1_link, children: s.btn1, iconAfter: 'arrow-up-right' -%}{%- endif -%}
+            {%- if s.btn2 != blank -%}{%- render 'blko-ui-button', size: 'lg', variant: 'outline', href: s.btn2_link, children: s.btn2 -%}{%- endif -%}
+          </div
+        >{%- endif -%}
+        {%- if section.blocks.size > 0 -%}
+          <dl class="bhero11__facts"
+            >{%- for b in section.blocks -%}
+              <div class="bhero11__fact" {{ b.shopify_attributes }}><dt>{{ b.settings.title | escape }}</dt><dd>{{ b.settings.value | escape }}</dd></div
+            >{%- endfor -%}
+          </dl
+        >{%- endif -%}
+      </div
+      ><figure class="bhero11__fig" data-fig
+        >{%- if s.image != blank -%}
+          {%- capture st -%}object-position: {{ fp }}{%- endcapture -%}
+          {{- s.image | image_url: width: 1800 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '600, 900, 1200, 1400, 1800', sizes: '(min-width: 768px) 58vw, 100vw', class: 'bhero11__img', style: st -}}
+        {%- else -%}
+          {{- 'lifestyle-2' | placeholder_svg_tag: 'bhero11__img bhero11__ph' -}}
+        {%- endif -%}
+        <span aria-hidden="true" class="bhero11__light"></span
+      ></figure
+    ></div
+  ></section
+></div
+
+>
+
+{% schema %}
+{
+  "name": "Hero 11",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Tall still life; set the focal point on the subject"
+    },
+    {
+      "type": "text",
+      "id": "number",
+      "label": "Number",
+      "default": "No. 01"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Rosehip face oil"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading (italic = accent)",
+      "default": "One drop, <em>all day</em> glow."
+    },
+    {
+      "type": "textarea",
+      "id": "lead",
+      "label": "Lead",
+      "default": "Rosehip and squalane, cold-pressed in small batches. It sinks in within a minute and never feels greasy."
+    },
+    {
+      "type": "text",
+      "id": "btn1",
+      "label": "First button",
+      "default": "Shop face oils"
+    },
+    {
+      "type": "url",
+      "id": "btn1_link",
+      "label": "First button link"
+    },
+    {
+      "type": "text",
+      "id": "btn2",
+      "label": "Second button",
+      "default": "See the ingredients"
+    },
+    {
+      "type": "url",
+      "id": "btn2_link",
+      "label": "Second button link"
+    },
+    {
+      "type": "text",
+      "id": "aria",
+      "label": "Section name (screen readers)",
+      "info": "Defaults to the label"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 0,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "fact",
+      "name": "Fact",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Size"
+        },
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Value",
+          "default": "30 ml"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero 11",
+      "blocks": [
+        {
+          "type": "fact",
+          "settings": {
+            "title": "Size",
+            "value": "30 ml"
+          }
+        },
+        {
+          "type": "fact",
+          "settings": {
+            "title": "Pressed",
+            "value": "Cold, by hand"
+          }
+        },
+        {
+          "type": "fact",
+          "settings": {
+            "title": "Batch",
+            "value": "No. 0426"
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

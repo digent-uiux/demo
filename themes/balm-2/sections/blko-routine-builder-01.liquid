@@ -1,0 +1,593 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-routine-builder-01.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-routine-builder-01.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Balm routine builder ("apothecary prescription"), surface base, inner cards on bg-alt. Concerns are a column of large serif words (native
+  radios, numbered; the chosen number turns to the accent), the steps are numbered I · II · III with square-photo
+  choices (native radios; the chosen one carries an accent rule; "for <concern>" marks the match) and an Include
+  checkbox each; on the right a framed apothecary label writes the ritual line by line (AM/PM marks, size, price), the
+  total and the ritual saving. Choosing a concern picks, per step, the first option whose "For concerns" lists it.
+  The whole builder is a /cart/add form (items[n][id]), so it adds the chosen variants even without JS; with JS it
+  posts to /cart/add.js (lines carry a hidden _ritual property) and fires blko:cart:add + blko:cart:updated.
+  The ritual saving is shown only: set up a matching automatic discount (or bundle) in Shopify for it to apply.
+{%- endcomment -%}
+{%- liquid
+  assign concerns = section.blocks | where: 'type', 'concern'
+  assign steps = section.blocks | where: 'type', 'step'
+  assign options = section.blocks | where: 'type', 'option'
+  assign c1 = concerns.first.settings.name | strip
+  assign c1d = c1 | downcase
+  assign uid = 'rb01-' | append: section.id
+  assign off = s.ritual_off
+  assign subtotal = 0
+  assign n_lines = 0
+  assign lines_html = ''
+  assign t_match = 'blko.routine_builder_01.match' | t
+-%}
+{%- capture sun -%}{%- render 'blko-ui-icon', name: 'sun', size: 12 -%}{%- endcapture -%}
+{%- capture moon -%}{%- render 'blko-ui-icon', name: 'moon', size: 12 -%}{%- endcapture -%}
+{%- capture steps_html -%}
+  {%- for st in steps -%}
+    {%- assign k = forloop.index -%}
+    {%- assign k0 = forloop.index0 -%}
+    {%- comment -%}default pick: first option of this step whose "for" list holds the first concern, else the first option{%- endcomment -%}
+    {%- assign pick = nil -%}
+    {%- assign first = nil -%}
+    {%- for o in options -%}
+      {%- if o.settings.step == k -%}
+        {%- if first == nil -%}{%- assign first = o -%}{%- endif -%}
+        {%- if pick == nil -%}
+          {%- assign fors = o.settings.for | downcase | split: ',' -%}
+          {%- for f in fors -%}{%- assign fs = f | strip -%}{%- if fs == c1d -%}{%- assign pick = o -%}{%- endif -%}{%- endfor -%}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if pick == nil -%}{%- assign pick = first -%}{%- endif -%}
+    <fieldset class="broutinebuilder01__step" data-step="{{ k0 }}" data-numeral="{{ st.settings.numeral | escape }}" {{ st.shopify_attributes }}
+      ><legend class="blko-ui-sr-only">{{ 'blko.routine_builder_01.step' | t }} {{ st.settings.numeral }}: {{ st.settings.name }}</legend
+      ><div class="broutinebuilder01__stephead"
+        ><span aria-hidden="true" class="broutinebuilder01__stepname"><span class="broutinebuilder01__numeral">{{ st.settings.numeral | escape }}</span><span>{{ st.settings.name | escape }}</span></span
+        >{%- capture inc -%}{{ 'blko.routine_builder_01.include' | t }}<span class="blko-ui-sr-only"> {{ st.settings.name | downcase | escape }} {{ 'blko.routine_builder_01.step_suffix' | t }}</span>{%- endcapture -%}
+        {%- render 'blko-ui-checkbox', label: inc, checked: true, className: 'broutinebuilder01__inc' -%}
+      </div
+      >{%- if st.settings.line != blank -%}<p class="broutinebuilder01__stepline">{{ st.settings.line | escape }}</p>{%- endif -%}
+      <div class="broutinebuilder01__opts"
+        >{%- for o in options -%}
+          {%- if o.settings.step == k -%}
+            {%- liquid
+              assign p = o.settings.product
+              assign v = nil
+              if p != blank
+                assign v = p.selected_or_first_available_variant
+                assign oname = p.title
+                assign ocents = v.price
+                assign osize = o.settings.size
+                if osize == blank and p.has_only_default_variant == false
+                  assign osize = v.title
+                endif
+                assign oimg = p.featured_media | default: o.settings.image
+              else
+                assign oname = o.settings.name
+                assign ocents = o.settings.price | times: 100 | round
+                assign osize = o.settings.size
+                assign oimg = o.settings.image
+              endif
+              assign ofor = ''
+              assign fors = o.settings.for | downcase | split: ','
+              assign match = false
+              for f in fors
+                assign fs = f | strip
+                if fs != blank
+                  assign ofor = ofor | append: fs | append: '|'
+                  if fs == c1d
+                    assign match = true
+                  endif
+                endif
+              endfor
+              assign sel = false
+              if o.id == pick.id
+                assign sel = true
+              endif
+            -%}
+            <label class="broutinebuilder01__opt" {{ o.shopify_attributes }}
+              ><input type="radio" class="blko-ui-sr-only" name="items[{{ k0 }}][id]" value="{% if v %}{{ v.id }}{% else %}pv-{{ o.id }}{% endif %}"{% if sel %} checked{% endif %}{% if v and v.available == false %} disabled{% endif %} data-cents="{{ ocents }}" data-name="{{ oname | escape }}" data-size="{{ osize | escape }}" data-when="{{ o.settings.when }}" data-for="{{ ofor }}"{% unless v %} data-preview{% endunless %}
+              ><span class="broutinebuilder01__thumb"
+                >{%- if oimg != blank -%}{{ oimg | image_url: width: 160 | image_tag: loading: 'lazy', alt: '', widths: '112, 160', sizes: '56px', class: 'broutinebuilder01__img' }}{%- else -%}{%- assign phn = forloop.index0 | modulo: 6 | plus: 1 -%}{%- capture ph -%}product-{{ phn }}{%- endcapture -%}{{ ph | placeholder_svg_tag: 'broutinebuilder01__img broutinebuilder01__ph' }}{%- endif -%}
+              </span
+              ><span class="broutinebuilder01__ocopy"
+                ><span class="broutinebuilder01__oname">{{ oname | escape }}</span
+                ><span class="broutinebuilder01__ometa">{% if osize != blank %}{{ osize | escape }} · {% endif %}{%- render 'blko-ui-money', amount: ocents, cents: true -%}<span class="broutinebuilder01__match" data-match{% unless match %} hidden{% endunless %}>{{ t_match }} {{ c1d | escape }}</span></span
+              ></span
+            ></label
+            >{%- if sel -%}
+              {%- liquid
+                assign subtotal = subtotal | plus: ocents
+                assign n_lines = n_lines | plus: 1
+              -%}
+              {%- capture lines_html -%}{{ lines_html }}<li class="broutinebuilder01__ln"><span class="broutinebuilder01__lnum">{{ st.settings.numeral | escape }}</span><span class="broutinebuilder01__lcopy"><span class="broutinebuilder01__lname">{{ oname | escape }}</span><span class="broutinebuilder01__lmeta">{% if o.settings.when contains 'AM' %}{{ sun }}{% endif %}{% if o.settings.when contains 'PM' %}{{ moon }}{% endif %}{{ o.settings.when }}{% if osize != blank %} · {{ osize | escape }}{% endif %}</span></span><span class="broutinebuilder01__lprice">{%- render 'blko-ui-money', amount: ocents, cents: true -%}</span></li>{%- endcapture -%}
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div
+      ><input type="hidden" name="items[{{ k0 }}][quantity]" value="1"
+    ></fieldset
+  >{%- endfor -%}
+{%- endcapture -%}
+{%- liquid
+  assign full = false
+  if n_lines == steps.size and n_lines > 0
+    assign full = true
+  endif
+  assign total = subtotal
+  if full and off > 0
+    assign total = 100 | minus: off | times: subtotal | divided_by: 100
+  endif
+  assign off_s = off | append: ''
+  assign full_note = s.full_note | replace: '[off]', off_s
+  assign part_note = s.partial_note | replace: '[off]', off_s
+-%}
+{%- capture body -%}
+  <header class="broutinebuilder01__head"
+    ><div class="broutinebuilder01__headin"
+      >{%- if s.eyebrow != blank -%}<p class="broutinebuilder01__eyebrow"><span class="broutinebuilder01__label">{{ s.eyebrow | escape }}</span></p>{%- endif -%}
+      {%- if s.heading != blank -%}<h2 class="broutinebuilder01__h blko-ui-text--h2">{{ s.heading }}</h2>{%- endif -%}
+      {%- if s.lead != blank -%}<p class="broutinebuilder01__lead">{{ s.lead | escape }}</p>{%- endif -%}
+    </div
+  ></header
+  ><form method="post" action="{{ routes.cart_add_url }}" class="broutinebuilder01__grid" data-form
+    ><fieldset class="broutinebuilder01__concerns"
+      ><legend class="broutinebuilder01__label broutinebuilder01__muted broutinebuilder01__legend">{{ 'blko.routine_builder_01.concern' | t }}</legend
+      >{%- for c in concerns -%}
+        <label class="broutinebuilder01__concern" {{ c.shopify_attributes }}
+          ><input type="radio" class="blko-ui-sr-only" name="{{ uid }}-concern" value="{{ c.settings.name | strip | downcase | escape }}"{% if forloop.first %} checked{% endif %} data-n="{{ forloop.index }}"
+          ><span aria-hidden="true" class="broutinebuilder01__label broutinebuilder01__cnum">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span
+          ><span class="broutinebuilder01__cname">{{ c.settings.name | escape }}</span
+          >{%- if c.settings.note != blank -%}<span class="broutinebuilder01__cnote">{{ c.settings.note | escape }}</span>{%- endif -%}
+        </label
+      >{%- endfor -%}
+    </fieldset
+    ><div class="broutinebuilder01__steps">{{ steps_html }}</div
+    ><aside aria-label="{{ 'blko.routine_builder_01.aside' | t | escape }}" class="broutinebuilder01__aside"
+      ><div class="broutinebuilder01__frame"
+        ><div class="broutinebuilder01__card"
+          ><div class="broutinebuilder01__ctop"
+            ><span class="broutinebuilder01__label broutinebuilder01__muted">{{ 'blko.routine_builder_01.ritual_no' | t }} <span data-rno>01</span></span
+            ><p class="broutinebuilder01__for blko-ui-text--h3">{{ 'blko.routine_builder_01.for' | t }} <em data-rfor>{{ c1d | escape }}</em></p
+          ></div
+          ><ol class="broutinebuilder01__lines" aria-live="polite" data-lines data-empty="{{ 'blko.routine_builder_01.empty' | t | escape }}"
+            >{%- if n_lines == 0 -%}<li class="broutinebuilder01__empty">{{ 'blko.routine_builder_01.empty' | t }}</li>{%- else -%}{{ lines_html }}{%- endif -%}
+          </ol
+          ><div class="broutinebuilder01__foot"
+            ><div class="broutinebuilder01__sum"
+              ><span class="broutinebuilder01__note" data-note data-full="{{ full_note | escape }}" data-part="{{ part_note | escape }}">{% if full and off > 0 %}{{ full_note | escape }}{% elsif off > 0 %}{{ part_note | escape }}{% endif %}</span
+              ><span data-total>{%- if full and off > 0 -%}{%- render 'blko-ui-price', amount: total, compareAt: subtotal, size: 'lg', cents: true -%}{%- else -%}{%- render 'blko-ui-price', amount: total, size: 'lg', cents: true -%}{%- endif -%}</span
+            ></div
+            >{%- assign al = 'blko.routine_builder_01.add' | t -%}
+            {%- capture at -%}data-add data-added="{{ 'blko.routine_builder_01.added' | t | escape }}"{% if n_lines == 0 %} disabled{% endif %}{%- endcapture -%}
+            {%- render 'blko-ui-button', variant: 'primary', size: 'lg', full: true, type: 'submit', children: al, attrs: at -%}
+            <p class="broutinebuilder01__err" role="status" data-err hidden>{{ 'blko.routine_builder_01.error' | t }}</p
+            >{%- if s.foot != blank -%}<p class="broutinebuilder01__label broutinebuilder01__muted broutinebuilder01__fnote">{{ s.foot | escape }}</p>{%- endif -%}
+          </div
+        ></div
+      ></div
+      ><span hidden data-ico-sun>{{ sun }}</span><span hidden data-ico-moon>{{ moon }}</span
+    ></aside
+  ></form
+>{%- endcapture -%}
+<div class="broutinebuilder01{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-broutinebuilder01 data-root="{{ routes.root_url }}" data-off="{{ off }}" data-money="{{ shop.money_format | strip_html | escape }}" data-match-word="{{ t_match | escape }}"
+  >{%- assign lbl = 'blko.routine_builder_01.label' | t -%}
+  {%- render 'blko-ui-section', surface: 'bg', label: lbl, inner: 'broutinebuilder01__in', children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Routine builder 01",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "The ritual, prescribed"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading (italic = accent)",
+      "default": "Build a ritual for <em>your</em> skin"
+    },
+    {
+      "type": "text",
+      "id": "lead",
+      "label": "Lead",
+      "default": "Tell us what your skin is asking for. We'll write the three steps; you can change any of them."
+    },
+    {
+      "type": "header",
+      "content": "Ritual label"
+    },
+    {
+      "type": "range",
+      "id": "ritual_off",
+      "label": "Full ritual saving (%)",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "default": 10,
+      "info": "Shown only. Set up a matching automatic discount or bundle in Shopify. 0 hides it."
+    },
+    {
+      "type": "text",
+      "id": "full_note",
+      "label": "Note with every step",
+      "default": "Full ritual, [off]% off"
+    },
+    {
+      "type": "text",
+      "id": "partial_note",
+      "label": "Note when a step is left out",
+      "default": "Add all three steps to save [off]%"
+    },
+    {
+      "type": "text",
+      "id": "foot",
+      "label": "Small print",
+      "default": "Lasts about 10 weeks · Glass, refillable"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128
+    }
+  ],
+  "blocks": [
+    {
+      "type": "concern",
+      "name": "Concern",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Concern",
+          "default": "Dryness"
+        },
+        {
+          "type": "text",
+          "id": "note",
+          "label": "Line",
+          "default": "Tight after washing, flaky by noon"
+        }
+      ]
+    },
+    {
+      "type": "step",
+      "name": "Step",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "text",
+          "id": "numeral",
+          "label": "Numeral",
+          "default": "I"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Cleanse"
+        },
+        {
+          "type": "text",
+          "id": "line",
+          "label": "Line",
+          "default": "Melt away the day without stripping."
+        }
+      ]
+    },
+    {
+      "type": "option",
+      "name": "Step option",
+      "settings": [
+        {
+          "type": "range",
+          "id": "step",
+          "label": "Step (1 = first step block)",
+          "min": 1,
+          "max": 4,
+          "step": 1,
+          "default": 1
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "text",
+          "id": "for",
+          "label": "For concerns",
+          "info": "Comma separated, as written in the concern blocks",
+          "default": "Dryness"
+        },
+        {
+          "type": "select",
+          "id": "when",
+          "label": "When",
+          "default": "AM · PM",
+          "options": [
+            {
+              "value": "AM",
+              "label": "AM"
+            },
+            {
+              "value": "PM",
+              "label": "PM"
+            },
+            {
+              "value": "AM · PM",
+              "label": "AM · PM"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "size",
+          "label": "Size",
+          "info": "Falls back to the variant name",
+          "default": "30 ml"
+        },
+        {
+          "type": "header",
+          "content": "Preview (no product)"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Oat Milk Cleansing Balm"
+        },
+        {
+          "type": "number",
+          "id": "price",
+          "label": "Price",
+          "default": 42
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Routine builder 01",
+      "blocks": [
+        {
+          "type": "concern",
+          "settings": {
+            "name": "Dryness",
+            "note": "Tight after washing, flaky by noon"
+          }
+        },
+        {
+          "type": "concern",
+          "settings": {
+            "name": "Dullness",
+            "note": "Tired, uneven, no glow"
+          }
+        },
+        {
+          "type": "concern",
+          "settings": {
+            "name": "Redness",
+            "note": "Flushes easily, reacts to new things"
+          }
+        },
+        {
+          "type": "concern",
+          "settings": {
+            "name": "Fine lines",
+            "note": "Softening around the eyes and mouth"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "numeral": "I",
+            "name": "Cleanse",
+            "line": "Melt away the day without stripping."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "numeral": "II",
+            "name": "Treat",
+            "line": "One active, chosen for your concern."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "numeral": "III",
+            "name": "Protect",
+            "line": "Seal it in, then face the weather."
+          }
+        },
+        {
+          "type": "option",
+          "settings": {
+            "step": 1,
+            "name": "Oat Milk Cleansing Balm",
+            "size": "100 ml",
+            "price": 42,
+            "when": "PM",
+            "for": "Dryness, Fine lines"
+          }
+        },
+        {
+          "type": "option",
+          "settings": {
+            "step": 1,
+            "name": "Olive Leaf Gel Wash",
+            "size": "150 ml",
+            "price": 36,
+            "when": "AM · PM",
+            "for": "Dullness"
+          }
+        },
+        {
+          "type": "option",
+          "settings": {
+            "step": 1,
+            "name": "Rose Clay Cleansing Bar",
+            "size": "110 g",
+            "price": 24,
+            "when": "AM · PM",
+            "for": "Redness"
+          }
+        },
+        {
+          "type": "option",
+          "settings": {
+            "step": 2,
+            "name": "Hyaluronic Olive Mist",
+            "size": "30 ml",
+            "price": 68,
+            "when": "AM · PM",
+            "for": "Dryness"
+          }
+        },
+        {
+          "type": "option",
+          "settings": {
+            "step": 2,
+            "name": "Sea Buckthorn Vitamin C",
+            "size": "15 ml",
+            "price": 72,
+            "when": "AM",
+            "for": "Dullness"
+          }
+        },
+        {
+          "type": "option",
+          "settings": {
+            "step": 2,
+            "name": "Calendula Calm Drops",
+            "size": "30 ml",
+            "price": 58,
+            "when": "AM · PM",
+            "for": "Redness"
+          }
+        },
+        {
+          "type": "option",
+          "settings": {
+            "step": 2,
+            "name": "Bakuchiol Night Cream",
+            "size": "30 ml",
+            "price": 84,
+            "when": "PM",
+            "for": "Fine lines"
+          }
+        },
+        {
+          "type": "option",
+          "settings": {
+            "step": 3,
+            "name": "Olive Butter Day Cream",
+            "size": "50 ml",
+            "price": 56,
+            "when": "AM",
+            "for": "Dryness, Fine lines"
+          }
+        },
+        {
+          "type": "option",
+          "settings": {
+            "step": 3,
+            "name": "Rose Sugar Polish",
+            "size": "120 g",
+            "price": 48,
+            "when": "AM",
+            "for": "Redness, Dullness"
+          }
+        },
+        {
+          "type": "option",
+          "settings": {
+            "step": 3,
+            "name": "Barrier Night Cream",
+            "size": "50 ml",
+            "price": 62,
+            "when": "PM",
+            "for": ""
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

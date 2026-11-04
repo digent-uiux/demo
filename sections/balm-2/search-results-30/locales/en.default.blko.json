@@ -1,0 +1,27 @@
+{
+  "blko": {
+    "search_results_30": {
+      "add": "Add",
+      "add_aria": "Add [name] to bag",
+      "all": "All",
+      "clear": "Clear search",
+      "filter": "Filter by type",
+      "in_bag": "In bag",
+      "index": "Index · [n] entries",
+      "journal": "From the journal",
+      "min": "min",
+      "next": "Next page",
+      "no": "No.",
+      "prev": "Previous page",
+      "remove_aria": "Remove [name] from bag",
+      "result_one": "[n] result for",
+      "result_other": "[n] results for",
+      "shown": "[n] products shown",
+      "sold_out": "Sold out",
+      "stories": "[n] stories",
+      "submit": "Search",
+      "try": "Try instead",
+      "with": "with"
+    }
+  }
+}

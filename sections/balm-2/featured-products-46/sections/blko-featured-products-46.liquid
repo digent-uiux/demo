@@ -1,0 +1,269 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-featured-products-46.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-featured-products-46.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Balm "ritual hours": the tabs are a sundial. A hairline arc of the day (hour ticks over a bench line) with one hour
+  per tab block under it (Bodoni hour + Karla unit + small-caps title); a small amber sun stands on the arc over the
+  chosen hour and glides there when another hour is picked (rises once from beyond the left end as the dial enters,
+  only under the balm kit). Copy (eyebrow, h2 with an <em> Bodoni word on a Karla light line, lead) on columns 1–6,
+  the dial on 8–12; the shelf (vitrine) runs the full width below: four 4:5 shots joined edge to edge on desktop.
+  Balm card (snippet blko-featured-products-46-card, same spec as collection-grid-44): uniform packshot that crossfades
+  to the product's second image on hover; an in-image Add to bag pill that fades in from 1024px (a round "+" below);
+  "Choose size" link when the product has several variants; a "Step 01 · Kind" small-caps row with the price (sale
+  amber, compare-at struck); the name; one or two chips from tags "skin:…" / "size:…" or custom.skin_type /
+  custom.volume_ml; sold out = dimmed image, label, disabled pill, muted price. Phones 2-up.
+  Each tab shows its picked collection (product.type is the kind); without one, its preview lines fill in.
+  Add to bag is a plain /cart/add form (works without JS); with JS it posts to /cart/add.js and fires blko:cart:add.
+{%- endcomment -%}
+{%- liquid
+  assign uid = 'fp46-' | append: section.id
+  assign tabs = section.blocks | where: 'type', 'tab'
+  assign angs = '90'
+  case tabs.size
+    when 2
+      assign angs = '112,68'
+    when 3
+      assign angs = '120,90,60'
+    when 4
+      assign angs = '124.2,100.8,79.2,55.8'
+  endcase
+  assign angs = angs | split: ','
+  assign t_add_a = 'blko.featured_products_46.add_a' | t
+  assign t_add_b = 'blko.featured_products_46.add_b' | t
+  assign t_added = 'blko.featured_products_46.added' | t
+  assign t_choose = 'blko.featured_products_46.choose' | t
+  assign t_for = 'blko.featured_products_46.for' | t
+  assign t_sold = 'blko.featured_products_46.sold_out' | t
+  assign t_details = 'blko.featured_products_46.details' | t
+  assign t_step = 'blko.featured_products_46.step' | t
+-%}
+{%- capture body -%}
+  <div class="bfeaturedproducts46__top"
+    ><div class="bfeaturedproducts46__head"
+      >{%- if s.eyebrow != blank -%}<p class="bfeaturedproducts46__label bfeaturedproducts46__muted bfeaturedproducts46__eb"><span aria-hidden="true"></span>{{ s.eyebrow | escape }}</p>{%- endif -%}
+      {%- if s.heading != blank -%}<h2 class="bfeaturedproducts46__h">{{ s.heading }}</h2>{%- endif -%}
+      {%- if s.lead != blank -%}<p class="bfeaturedproducts46__lead">{{ s.lead | escape }}</p>{%- endif -%}
+    </div
+    >{%- if tabs.size > 1 -%}
+      <div class="bfeaturedproducts46__dial" data-dial style="--a: {{ angs[0] }}deg"
+        ><svg viewBox="0 0 300 72" aria-hidden="true" focusable="false" class="bfeaturedproducts46__svg"
+          ><path d="M17.7 70A200 200 0 0 1 282.3 70" class="bfeaturedproducts46__arc" vector-effect="non-scaling-stroke"
+          /><path d="M267.6 58.2L265.5 61M250 46.8L247 52M231.3 37.3L229.9 40.5M211.8 29.8L210.7 33.1M191.6 24.4L190.9 27.8M170.9 21.1L170.5 24.6M150 20L150 26M129.1 21.1L129.5 24.6M108.4 24.4L109.1 27.8M88.2 29.8L89.3 33.1M68.7 37.3L70.1 40.5M50 46.8L53 52M32.4 58.2L34.5 61" class="bfeaturedproducts46__ticks" vector-effect="non-scaling-stroke"
+          /><line x1="0" y1="71.5" x2="300" y2="71.5" class="bfeaturedproducts46__bench" vector-effect="non-scaling-stroke"
+          /><g class="bfeaturedproducts46__sun"><circle cx="200" cy="0" r="13" opacity=".14"/><circle cx="200" cy="0" r="7.5" opacity=".22"/><circle cx="200" cy="0" r="4"/></g
+        ></svg
+        ><div role="tablist" aria-label="{{ 'blko.featured_products_46.hours' | t | escape }}" class="bfeaturedproducts46__tabs" style="--n: {{ tabs.size }}"
+          >{%- for t in tabs -%}
+            <button type="button" role="tab" id="{{ uid }}-t{{ forloop.index0 }}" aria-controls="{{ uid }}-p{{ forloop.index0 }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" tabindex="{% if forloop.first %}0{% else %}-1{% endif %}" data-a="{{ angs[forloop.index0] }}" class="bfeaturedproducts46__tab"
+              ><span class="bfeaturedproducts46__hr"><span class="bfeaturedproducts46__num">{{ t.settings.hour | escape }}</span>{%- if t.settings.unit != blank -%}<span class="bfeaturedproducts46__unit">{{ t.settings.unit | escape }}</span>{%- endif -%}</span
+              ><span class="bfeaturedproducts46__label bfeaturedproducts46__tt">{{ t.settings.title | default: 'Tab' | escape }}</span
+            ></button
+          >{%- endfor -%}
+        </div
+      ></div
+    >{%- endif -%}
+  </div
+  >{%- for t in tabs -%}
+    <div class="bfeaturedproducts46__panel" id="{{ uid }}-p{{ forloop.index0 }}"{% if tabs.size > 1 %} role="tabpanel" aria-labelledby="{{ uid }}-t{{ forloop.index0 }}"{% endif %}{% unless forloop.first %} hidden{% endunless %} {{ t.shopify_attributes }}><ul
+       class="bfeaturedproducts46__grid"
+        >{%- assign c = t.settings.collection -%}
+        {%- if c != blank and c.products_count > 0 -%}
+          {%- for p in c.products limit: t.settings.limit -%}
+            {%- render 'blko-featured-products-46-card', n: forloop.index, product: p, t_step: t_step, t_add_a: t_add_a, t_add_b: t_add_b, t_added: t_added, t_choose: t_choose, t_for: t_for, t_sold: t_sold, t_details: t_details -%}
+          {%- endfor -%}
+        {%- else -%}
+          {%- assign rows = t.settings.items | newline_to_br | split: '<br />' -%}
+          {%- assign n = 0 -%}
+          {%- for row in rows -%}
+            {%- assign parts = row | strip | split: '|' -%}
+            {%- if parts.size > 0 and parts[0] != blank and n < t.settings.limit -%}
+              {%- assign n = n | plus: 1 -%}
+              {%- assign pi = forloop.index0 | modulo: 6 | plus: 1 -%}
+              {%- render 'blko-featured-products-46-card', n: n, name: parts[0], kind: parts[1], price: parts[2], compare: parts[3], chip_line: parts[4], state: parts[5], ph: pi, t_step: t_step, t_add_a: t_add_a, t_add_b: t_add_b, t_added: t_added, t_choose: t_choose, t_for: t_for, t_sold: t_sold, t_details: t_details -%}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+      </ul
+    ></div
+  >{%- endfor -%}
+  <p class="bfeaturedproducts46__err" role="status" aria-live="polite" data-err hidden>{{ 'blko.featured_products_46.error' | t }}</p
+>{%- endcapture -%}
+<div class="bfeaturedproducts46{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-bfeaturedproducts46 data-root="{{ routes.root_url }}"
+  >{%- assign lbl = 'blko.featured_products_46.label' | t -%}
+  {%- render 'blko-ui-section', surface: 'bg', label: lbl, inner: 'bfeaturedproducts46__in', children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Featured products 46",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "The routine, by the hour"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Wrap one word in italics to set it in the display face.",
+      "default": "Shop the <em>routine</em>"
+    },
+    {
+      "type": "text",
+      "id": "lead",
+      "label": "Lead",
+      "default": "Pick the hour. Each shelf is set in the order we use it at the bench, left to right."
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Hour",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Tab title",
+          "default": "Morning"
+        },
+        {
+          "type": "text",
+          "id": "hour",
+          "label": "Hour (short, e.g. 07 or Sun)",
+          "default": "07"
+        },
+        {
+          "type": "text",
+          "id": "unit",
+          "label": "Unit (e.g. am)",
+          "default": "am"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection",
+          "info": "Products in routine order: step 01 first."
+        },
+        {
+          "type": "range",
+          "id": "limit",
+          "label": "Products",
+          "min": 2,
+          "max": 8,
+          "step": 1,
+          "default": 4
+        },
+        {
+          "type": "textarea",
+          "id": "items",
+          "label": "Preview lines (no collection)",
+          "info": "One per line: Name | Kind | price | compare-at price | chips, comma separated | sold or sizes"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured products 46",
+      "blocks": [
+        {
+          "type": "tab",
+          "settings": {
+            "title": "Morning",
+            "hour": "07",
+            "unit": "am",
+            "items": "Jojoba cleansing oil | Cleanser | 32 | | Oily skin, 100 ml\nSea buckthorn serum | Serum | 38 | 46 | Dull skin, 30 ml\nSqualane drops | Oil | 44 | | All skin, 15 ml | sold\nRosehip face oil | Oil | 54 | | Dry skin, 30 ml"
+          }
+        },
+        {
+          "type": "tab",
+          "settings": {
+            "title": "Evening",
+            "hour": "10",
+            "unit": "pm",
+            "items": "Camellia cleansing oil | Cleanser | 42 | 50 | Dry skin, 30 ml\nCalendula serum | Serum | 48 | | Sensitive skin\nBakuchiol night serum | Serum | 52 | | Mature skin, 30 ml | sizes\nMarula night oil | Oil | 48 | | Mature skin, 30 ml"
+          }
+        },
+        {
+          "type": "tab",
+          "settings": {
+            "title": "Weekly",
+            "hour": "Sun",
+            "unit": "",
+            "items": "Travel dropper set | Set of four | 58 | | All skin, 4 × 10 ml\nMorning serum trio | Set of three | 112 | | All skin, 3 × 15 ml\nNight oil pair | Set of two | 90 | | Mature skin | sizes\nRosehip and squalane duo | Set of two | 86 | 98 | Dry skin, 2 × 30 ml"
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

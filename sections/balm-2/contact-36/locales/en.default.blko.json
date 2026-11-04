@@ -1,0 +1,27 @@
+{
+  "blko": {
+    "contact_36": {
+      "again": "Write another letter",
+      "choose": "choose one",
+      "email_ph": "you@email.com",
+      "err_email": "Add an email we can write back to.",
+      "err_message": "Write a few more words, at least {{ count }}.",
+      "err_name": "Tell us your name.",
+      "err_topic": "Choose what you're writing about.",
+      "letter": "Your letter",
+      "n_blanks": "{n} blanks to fill",
+      "name_ph": "your name",
+      "no": "No.",
+      "one_blank": "One blank to fill",
+      "sealed": "Sealed and sent.",
+      "sealed_named": "Sealed and sent, {name}.",
+      "sealed_text": "Your letter is on the bench. A reply will come within one working day.",
+      "sealed_text_full": "Your letter about {topic} is on the bench. A reply will come to {email} within one working day.",
+      "sealing": "Sealing…",
+      "server_error": "The letter didn't send",
+      "sign_ph": "sign here (optional)",
+      "word": "word",
+      "words": "words"
+    }
+  }
+}

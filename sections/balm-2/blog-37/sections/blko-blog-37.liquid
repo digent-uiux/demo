@@ -1,0 +1,436 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-blog-37.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-blog-37.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  The herbarium cabinet, balm journal: each article is a mounted specimen sheet. The first sheet of each page is the
+  lead (a 7-column 4:5 plate held by photo corners, its herbarium label pasted over the corner, a big amber sheet number
+  and the title in didone beside it, the number in amber didone); the envelope word is didone italic; the rest hang on the wall below in an asymmetric 12-column rhythm. Each label:
+  sheet No., family (first tag, linked to the tagged view), collected (date), by (author, read time). An article with no
+  image and a custom.inci metafield is a glassine seed envelope. Pagination is a ruled sheet counter.
+  Live: blog.articles, paginated. Preview: the post blocks, paged in the browser. Phones: one column, sheets alternate
+  a 10% indent. Motion: the balm kit, plus the labels pasting down after their plates (CSS, kit flag only).
+{%- endcomment -%}
+{{ 'blko-balm-motion.css' | asset_url | stylesheet_tag -}}
+<script src="{{ 'blko-balm-motion.js' | asset_url }}" defer="defer"></script
+>{%- liquid
+  assign jb = blog
+  if jb == blank
+    assign jb = s.blog
+  endif
+  assign live = false
+  if jb != blank and jb.articles_count > 0
+    assign live = true
+  endif
+  assign per = s.per_page
+  assign n_demo = 0
+  for b in section.blocks
+    if b.type == 'post'
+      assign n_demo = n_demo | plus: 1
+    endif
+  endfor
+-%}
+{%- capture grid -%}
+  {%- if live -%}
+    {%- paginate jb.articles by per -%}
+      {%- assign total = paginate.items -%}
+      {%- assign first = paginate.current_offset | plus: 1 -%}
+      {%- for a in jb.articles -%}
+        {%- assign pos = forloop.index0 -%}
+        {%- assign n = paginate.current_offset | plus: forloop.index -%}
+        {%- assign last = n -%}
+        {%- assign w = pos | minus: 1 | modulo: 5 | plus: 1 -%}
+        {%- assign words = a.content | strip_html | split: ' ' | size -%}
+        {%- assign mins = '' -%}
+        {%- if s.show_mins -%}{%- assign mins = words | divided_by: 200 | floor | at_least: 1 -%}{%- endif -%}
+        {%- assign dek = a.excerpt | default: a.content | strip_html | truncatewords: 18 -%}
+        {%- assign word = a.title | split: ':' | first | split: ',' | first -%}
+        {%- capture iso -%}{{ a.published_at | date: '%Y-%m-%d' }}{%- endcapture -%}
+        {%- capture dt -%}{{ a.published_at | date: '%b %-d, %Y' }}{%- endcapture -%}
+        {%- assign fam = a.tags.first -%}
+        {%- capture fam_url -%}{% if fam != blank %}{{ jb.url }}/tagged/{{ fam | handleize }}{% endif %}{%- endcapture -%}
+        {%- assign tags = a.tags | join: ' · ' -%}
+        {%- if pos == 0 -%}{%- assign is_lead = true -%}{%- else -%}{%- assign is_lead = false -%}{%- endif -%}
+        {%- render 'blko-blog-37-sheet', url: a.url, title: a.title, dek: dek, family: fam, family_url: fam_url, tags: tags, by: a.author, mins: mins, date: dt, iso: iso, image: a.image, word: word, inci: a.metafields.custom.inci, n: n, lead: is_lead, w: w, page: 1 -%}
+      {%- endfor -%}
+      {%- capture nav -%}
+        <nav aria-label="{{ 'blko.blog_37.pages' | t }}" class="bblog37__nav"
+          >{%- if paginate.previous -%}<a href="{{ paginate.previous.url }}" class="bblog37__cap bblog37__step">{%- render 'blko-ui-icon', name: 'arrow-left', size: 16, stroke: 2 -%}<span class="bblog37__steplbl">{{ 'blko.blog_37.newer' | t }}</span></a
+          >{%- else -%}<span class="bblog37__cap bblog37__step is-off" aria-disabled="true">{%- render 'blko-ui-icon', name: 'arrow-left', size: 16, stroke: 2 -%}<span class="bblog37__steplbl">{{ 'blko.blog_37.newer' | t }}</span></span>{%- endif -%}
+          <div class="bblog37__mid"
+            ><p class="bblog37__cap bblog37__muted bblog37__count">{{ 'blko.blog_37.count' | t | replace: '[a]', first | replace: '[b]', last | replace: '[t]', total }}</p
+            >{%- if paginate.pages > 1 -%}
+            <ol class="bblog37__pages"
+              >{%- for part in paginate.parts -%}
+                {%- assign pn = part.title | prepend: '0' | slice: -2, 2 -%}
+                {%- assign pl = 'blko.blog_37.page' | t | replace: '[n]', part.title -%}
+                <li>{%- if part.is_link -%}<a href="{{ part.url }}" class="bblog37__pg" aria-label="{{ pl }}">{{ pn }}</a
+                >{%- elsif part.title == paginate.current_page -%}<span class="bblog37__pg" aria-current="page" aria-label="{{ pl }}">{{ pn }}</span
+                >{%- else -%}<span class="bblog37__pg">{{ part.title }}</span>{%- endif -%}</li
+              >{%- endfor -%}
+            </ol
+            >{%- endif -%}
+          </div
+          >{%- if paginate.next -%}<a href="{{ paginate.next.url }}" class="bblog37__cap bblog37__step"><span class="bblog37__steplbl">{{ 'blko.blog_37.older' | t }}</span>{% render 'blko-ui-icon', name: 'arrow-right', size: 16, stroke: 2 %}</a
+          >{%- else -%}<span class="bblog37__cap bblog37__step is-off" aria-disabled="true"><span class="bblog37__steplbl">{{ 'blko.blog_37.older' | t }}</span>{% render 'blko-ui-icon', name: 'arrow-right', size: 16, stroke: 2 %}</span>{%- endif -%}
+        </nav
+      >{%- endcapture -%}
+    {%- endpaginate -%}
+  {%- else -%}
+    {%- assign i = 0 -%}
+    {%- for b in section.blocks -%}
+      {%- if b.type != 'post' -%}{%- continue -%}{%- endif -%}
+      {%- assign bs = b.settings -%}
+      {%- assign pos = i | modulo: per -%}
+      {%- assign pg = i | divided_by: per | floor | plus: 1 -%}
+      {%- assign i = i | plus: 1 -%}
+      {%- if pg > 1 -%}{%- assign hide = true -%}{%- else -%}{%- assign hide = false -%}{%- endif -%}
+      {%- if pos == 0 -%}{%- assign is_lead = true -%}{%- else -%}{%- assign is_lead = false -%}{%- endif -%}
+      {%- assign w = pos | minus: 1 | modulo: 5 | plus: 1 -%}
+      {%- assign tl = bs.topic | split: ',' -%}
+      {%- assign fam = tl.first | strip -%}
+      {%- assign tags = bs.topic | replace: ', ', ' · ' | replace: ',', ' · ' -%}
+      {%- assign mins = '' -%}
+      {%- if s.show_mins -%}{%- assign mins = bs.mins -%}{%- endif -%}
+      {%- render 'blko-blog-37-sheet', url: bs.link, title: bs.title, dek: bs.dek, family: fam, tags: tags, by: bs.by, mins: mins, date: bs.date, image: bs.image, word: bs.word, inci: bs.inci, n: i, lead: is_lead, w: w, page: pg, hide: hide -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endcapture -%}
+{%- unless live -%}
+  {%- capture nav -%}
+    {%- assign pages = n_demo | plus: per | minus: 1 | divided_by: per | floor -%}
+    {%- assign last = per | at_most: n_demo -%}
+    <nav aria-label="{{ 'blko.blog_37.pages' | t }}" class="bblog37__nav" data-pager data-per="{{ per }}" data-total="{{ n_demo }}"
+      ><button type="button" class="bblog37__cap bblog37__step" data-prev disabled>{%- render 'blko-ui-icon', name: 'arrow-left', size: 16, stroke: 2 -%}<span class="bblog37__steplbl">{{ 'blko.blog_37.newer' | t }}</span></button
+      ><div class="bblog37__mid"
+        ><p class="bblog37__cap bblog37__muted bblog37__count" data-count data-t="{{ 'blko.blog_37.count' | t }}">{{ 'blko.blog_37.count' | t | replace: '[a]', 1 | replace: '[b]', last | replace: '[t]', n_demo }}</p
+        ><ol class="bblog37__pages" data-pages
+          >{%- for p in (1..pages) -%}
+            {%- assign pn = p | prepend: '0' | slice: -2, 2 -%}
+            <li><button type="button" class="bblog37__pg" data-goto="{{ p }}" aria-label="{{ 'blko.blog_37.page' | t | replace: '[n]', p }}"{% if p == 1 %} aria-current="page"{% endif %}>{{ pn }}</button></li
+          >{%- endfor -%}
+        </ol
+      ></div
+      ><button type="button" class="bblog37__cap bblog37__step" data-next{% if pages < 2 %} disabled{% endif %}><span class="bblog37__steplbl">{{ 'blko.blog_37.older' | t }}</span>{% render 'blko-ui-icon', name: 'arrow-right', size: 16, stroke: 2 %}</button
+    ></nav
+  >{%- endcapture -%}
+{%- endunless -%}
+{%- capture body -%}
+  <ul class="bblog37__wall" data-wall aria-label="{{ s.label | escape }}">{{ grid }}</ul
+  >{{ nav -}}
+{%- endcapture -%}
+<div class="bblog37{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px"
+  >{%- render 'blko-ui-section', surface: 'bg', bleed: true, label: s.label, className: 'bblog37__section', inner: 'bblog37__inner', children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Herbarium sheets journal",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "On a blog page this lists the blog's articles as herbarium sheets, six (or your number) a page: the first of each page is the lead sheet. Each label shows the article's first tag (family), date, author and read time. An article with no image but a custom.inci metafield is set as a seed envelope: the word before the first colon or comma, and the INCI line. The post blocks only fill the preview elsewhere."
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Region label",
+      "default": "The journal"
+    },
+    {
+      "type": "range",
+      "id": "per_page",
+      "label": "Sheets per page",
+      "min": 3,
+      "max": 24,
+      "step": 3,
+      "default": 6
+    },
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Blog",
+      "info": "Used outside a blog page. On a blog page the current blog is listed."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_mins",
+      "label": "Show read time",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 112,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 112
+    }
+  ],
+  "blocks": [
+    {
+      "type": "post",
+      "name": "Post (preview)",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "The four-step evening routine, in the right order"
+        },
+        {
+          "type": "textarea",
+          "id": "dek",
+          "label": "Dek",
+          "default": "Cleanse, tone, treat, seal: thinnest texture first, and why the oil always goes last."
+        },
+        {
+          "type": "text",
+          "id": "topic",
+          "label": "Tags (first = family)",
+          "default": "Routines"
+        },
+        {
+          "type": "text",
+          "id": "by",
+          "label": "Author",
+          "default": "Mara"
+        },
+        {
+          "type": "number",
+          "id": "mins",
+          "label": "Minutes",
+          "default": 6
+        },
+        {
+          "type": "text",
+          "id": "date",
+          "label": "Date",
+          "default": "Oct 20, 2026"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Cover"
+        },
+        {
+          "type": "text",
+          "id": "word",
+          "label": "Ingredient word",
+          "info": "With no cover and an INCI line, the sheet is set as a seed envelope."
+        },
+        {
+          "type": "text",
+          "id": "inci",
+          "label": "INCI line"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Herbarium sheets journal",
+      "blocks": [
+        {
+          "type": "post",
+          "settings": {
+            "title": "The four-step evening routine, in the right order",
+            "dek": "Cleanse, tone, treat, seal: thinnest texture first, and why the oil always goes last.",
+            "topic": "Routines, Evening",
+            "by": "Mara",
+            "mins": 6,
+            "date": "Oct 20, 2026"
+          }
+        },
+        {
+          "type": "post",
+          "settings": {
+            "title": "Colloidal oat: why it calms a tight, itchy face",
+            "dek": "Finely milled oat holds water on the skin and quiets the sting after a cold walk.",
+            "topic": "Ingredients",
+            "by": "Iris",
+            "mins": 5,
+            "date": "Oct 16, 2026"
+          }
+        },
+        {
+          "type": "post",
+          "settings": {
+            "title": "Warming a balm between your palms",
+            "dek": "Thirty seconds of body heat turns a firm balm into something that glides.",
+            "topic": "Rituals",
+            "by": "Celine",
+            "mins": 4,
+            "date": "Oct 12, 2026"
+          }
+        },
+        {
+          "type": "post",
+          "settings": {
+            "title": "Squalane, explained: the oil your skin already makes",
+            "dek": "Light, stable and non-greasy. Where ours comes from, and who should skip it.",
+            "topic": "Ingredients",
+            "by": "Iris",
+            "mins": 5,
+            "date": "Oct 9, 2026",
+            "word": "Squalane",
+            "inci": "Squalane (olive-derived)"
+          }
+        },
+        {
+          "type": "post",
+          "settings": {
+            "title": "Beeswax, and why our balms set firm in the tin",
+            "dek": "A little wax holds the oils still until your skin warms them. How much, and why.",
+            "topic": "Ingredients",
+            "by": "Mara",
+            "mins": 4,
+            "date": "Oct 5, 2026"
+          }
+        },
+        {
+          "type": "post",
+          "settings": {
+            "title": "Lavender oil: soothing note or irritant?",
+            "dek": "What linalool does on sensitive skin, and why we keep it under half a percent.",
+            "topic": "Ingredients",
+            "by": "Celine",
+            "mins": 7,
+            "date": "Oct 1, 2026"
+          }
+        },
+        {
+          "type": "post",
+          "settings": {
+            "title": "Oil cleansing on a Sunday: a ten-minute ritual",
+            "dek": "Massage dry, emulsify with warm water, lift with a muslin. Your week's sunscreen goes with it.",
+            "topic": "Rituals",
+            "by": "Mara",
+            "mins": 6,
+            "date": "Sep 27, 2026"
+          }
+        },
+        {
+          "type": "post",
+          "settings": {
+            "title": "Ceramides vs. fatty acids: what rebuilds the barrier",
+            "dek": "Both, in the right ratio. A plain guide to the lipids between your skin cells.",
+            "topic": "Ingredients",
+            "by": "Iris",
+            "mins": 8,
+            "date": "Sep 22, 2026",
+            "word": "Ceramides",
+            "inci": "Ceramide NP, AP, EOP"
+          }
+        },
+        {
+          "type": "post",
+          "settings": {
+            "title": "Winter swaps: trade the serum for a richer cream",
+            "dek": "If your skin feels tight by noon, the serum isn't the problem. The seal is.",
+            "topic": "Routines",
+            "by": "Celine",
+            "mins": 5,
+            "date": "Sep 18, 2026"
+          }
+        },
+        {
+          "type": "post",
+          "settings": {
+            "title": "Bath bars and the case for a slower cleanse",
+            "dek": "Cold-process soap, superfat and why a bar can be kinder than a foaming gel.",
+            "topic": "Rituals",
+            "by": "Mara",
+            "mins": 4,
+            "date": "Sep 13, 2026"
+          }
+        },
+        {
+          "type": "post",
+          "settings": {
+            "title": "Calendula: what a petal infusion does for redness",
+            "dek": "Steeped in sunflower oil for six weeks, strained, then folded into our balm.",
+            "topic": "Ingredients",
+            "by": "Iris",
+            "mins": 5,
+            "date": "Sep 9, 2026",
+            "word": "Calendula",
+            "inci": "Calendula officinalis flower extract"
+          }
+        },
+        {
+          "type": "post",
+          "settings": {
+            "title": "One tin for lips, cuticles and dry brows",
+            "dek": "A pocket balm that does five jobs, and the order to use it in on a long flight.",
+            "topic": "Rituals",
+            "by": "Celine",
+            "mins": 3,
+            "date": "Sep 4, 2026"
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

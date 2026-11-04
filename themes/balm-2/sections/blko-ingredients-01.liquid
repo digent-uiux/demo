@@ -1,0 +1,255 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-ingredients-01.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-ingredients-01.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Balm ingredients, flat bg. Left (4/12, sticky from 896px): eyebrow, calm h2, one lead line and the full INCI list in
+  the apothecary label (a double hairline frame, a native details). Right (8/12): a hairline grid; the first ingredient
+  is the focal wide card (large crop, percentage set big in Bodoni beside a Karla 300 note, a Bodoni name, a tag), the rest sit below as a row of three.
+  All crops share one warm, softened grade so the board reads as one shoot.
+{%- endcomment -%}
+{%- capture body -%}
+  <div class="bingredients01__side"
+    >{%- if s.eyebrow != blank -%}<p class="bingredients01__label bingredients01__muted">{{ s.eyebrow | escape }}</p>{%- endif -%}
+    {%- if s.heading != blank -%}<h2 class="bingredients01__h blko-ui-text--h2">{{ s.heading }}</h2>{%- endif -%}
+    {%- if s.lead != blank -%}<p class="bingredients01__lead">{{ s.lead | escape }}</p>{%- endif -%}
+    {%- if s.inci != blank -%}
+      <div class="bingredients01__frame"
+        ><details class="bingredients01__det"
+          ><summary class="bingredients01__sum"><span class="bingredients01__label">{{ s.inci_title | escape }}</span><span aria-hidden="true" class="bingredients01__plus">+</span></summary
+          ><p class="bingredients01__inci">{{ s.inci | escape }}</p
+        ></details
+      ></div
+    >{%- endif -%}
+  </div
+  ><ul class="bingredients01__grid"
+    >{%- for b in section.blocks -%}
+      {%- assign it = b.settings -%}
+      {%- capture no -%}<span class="bingredients01__label bingredients01__muted">No. {% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>{%- endcapture -%}
+      {%- capture photo -%}
+        <div class="bingredients01__media"
+          >{%- if it.image != blank -%}
+            {%- if forloop.first -%}{%- assign sz = '(min-width: 896px) 36vw, 100vw' -%}{%- else -%}{%- assign sz = '(min-width: 896px) 20vw, (min-width: 576px) 33vw, 100vw' -%}{%- endif -%}
+            {{- it.image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '360, 480, 720, 900', sizes: sz, class: 'bingredients01__img' -}}
+          {%- else -%}
+            {%- assign phn = forloop.index0 | modulo: 6 | plus: 1 -%}{%- capture ph -%}product-{{ phn }}{%- endcapture -%}{{- ph | placeholder_svg_tag: 'bingredients01__img bingredients01__ph' -}}
+          {%- endif -%}
+        </div
+      >{%- endcapture -%}
+      {%- if forloop.first -%}
+        <li class="bingredients01__cell bingredients01__hero" {{ b.shopify_attributes }}
+          >{{ photo -}}
+          <div class="bingredients01__herocopy"
+            ><div class="bingredients01__row">{{ no }}{%- if it.tag != blank -%}<span class="bingredients01__label bingredients01__muted">{{ it.tag | escape }}</span>{%- endif -%}</div
+            >{%- if it.amount != blank -%}<p class="bingredients01__fig"><span class="bingredients01__big blko-ui-text--display">{{ it.amount | escape }}</span>{%- if it.amount_note != blank -%}<span class="bingredients01__note">{{ it.amount_note | escape }}</span>{%- endif -%}</p>{%- endif -%}
+            <h3 class="bingredients01__name bingredients01__name--lead blko-ui-text--h3">{{ it.name | escape }}</h3
+            >{%- if it.text != blank -%}<p class="bingredients01__text">{{ it.text | escape }}</p>{%- endif -%}
+          </div
+        ></li
+      >{%- else -%}
+        <li class="bingredients01__cell" {{ b.shopify_attributes }}
+          >{{ photo -}}
+          <div class="bingredients01__row">{{ no }}{%- if it.amount != blank -%}<span class="bingredients01__amt blko-ui-text--h4">{{ it.amount | escape }}</span>{%- endif -%}</div
+          ><h3 class="bingredients01__name bingredients01__name--sm">{{ it.name | escape }}</h3
+          >{%- if it.text != blank -%}<p class="bingredients01__small">{{ it.text | escape }}</p>{%- endif -%}
+        </li
+      >{%- endif -%}
+    {%- endfor -%}
+  </ul
+>{%- endcapture -%}
+<div class="bingredients01{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-bingredients01
+  >{%- assign lbl = 'blko.ingredients_01.label' | t -%}
+  {%- render 'blko-ui-section', surface: 'bg', label: lbl, inner: 'bingredients01__in', children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Ingredients 01",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "In every jar"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading (italic = accent)",
+      "default": "Four ingredients doing the <em>heavy</em> lifting"
+    },
+    {
+      "type": "textarea",
+      "id": "lead",
+      "label": "Lead",
+      "default": "Each one is listed with its concentration. No fillers, no synthetic fragrance, nothing hidden behind “parfum”."
+    },
+    {
+      "type": "text",
+      "id": "inci_title",
+      "label": "Ingredient list title",
+      "default": "Full ingredient list"
+    },
+    {
+      "type": "textarea",
+      "id": "inci",
+      "label": "Full ingredient list (INCI)",
+      "default": "Aloe Barbadensis Leaf Juice, Aqua, Glycerin, Avena Sativa Kernel Flour, Squalane, Citrus Aurantium Dulcis Peel Oil, Niacinamide, Sodium Hyaluronate, Lavandula Angustifolia Oil, Xanthan Gum, Tocopherol, Citric Acid, Linalool."
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128
+    }
+  ],
+  "blocks": [
+    {
+      "type": "ingredient",
+      "name": "Ingredient",
+      "limit": 7,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Aloe vera"
+        },
+        {
+          "type": "text",
+          "id": "amount",
+          "label": "Concentration",
+          "default": "40%"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Line",
+          "default": "Cold-pressed leaf juice that cools and calms redness on contact."
+        },
+        {
+          "type": "text",
+          "id": "amount_note",
+          "label": "Concentration note (first ingredient only)",
+          "default": "of the formula"
+        },
+        {
+          "type": "text",
+          "id": "tag",
+          "label": "Tag (first ingredient only)",
+          "default": "The base"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Ingredients 01",
+      "blocks": [
+        {
+          "type": "ingredient",
+          "settings": {
+            "name": "Aloe vera",
+            "amount": "40%",
+            "amount_note": "of the formula",
+            "text": "Cold-pressed leaf juice that cools and calms redness on contact.",
+            "tag": "The base"
+          }
+        },
+        {
+          "type": "ingredient",
+          "settings": {
+            "name": "Colloidal oat",
+            "amount": "5%",
+            "amount_note": "",
+            "text": "Finely milled oats soothe itch and help skin hold on to water.",
+            "tag": ""
+          }
+        },
+        {
+          "type": "ingredient",
+          "settings": {
+            "name": "Sweet orange",
+            "amount": "2%",
+            "amount_note": "",
+            "text": "A gentle source of vitamin C that brightens dull, tired skin.",
+            "tag": ""
+          }
+        },
+        {
+          "type": "ingredient",
+          "settings": {
+            "name": "Lavender",
+            "amount": "0.5%",
+            "amount_note": "",
+            "text": "Steam-distilled flowers for a soft scent that winds you down.",
+            "tag": ""
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

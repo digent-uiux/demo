@@ -37,7 +37,7 @@ Without the plugin: every item in the live catalog (https://blocko.ai/browse/) a
 ## Themes
 
 - `balm`: 210 sections/blocks as Liquid, 10 gaps (see `catalog.json`). Demo: `demo/balm/`.
-- `balm-2`: 43 sections as Liquid (Blocko v2 balm), 0 gaps; 36 have an HTML demo (see `catalog.json`). Demo: `demo/balm-2/`.
+- `balm-2`: 84 sections as Liquid (Blocko v2 balm), 0 gaps; 65 have an HTML demo (see `catalog.json`). Demo: `demo/balm-2/`.
 - `linen`: 44 sections as Liquid (Blocko v2 linen), 0 gaps; 35 have an HTML demo (see `catalog.json`). Demo: `demo/linen/`.
 - `roast`: 49 sections as Liquid (Blocko v2 roast), 0 gaps; 41 have an HTML demo (see `catalog.json`). Demo: `demo/roast/`.
 - `bare`: 210 sections/blocks as Liquid, 10 gaps (see `catalog.json`). Demo: `demo/bare/`.

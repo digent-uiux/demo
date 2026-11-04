@@ -1,0 +1,34 @@
+{
+  "blko": {
+    "cart_page_36": {
+      "add_for_a": "Add",
+      "add_for_b": "for free shipping.",
+      "aside": "Order summary",
+      "checkout": "Check out",
+      "discount": "Discount",
+      "each": "[x] each",
+      "error": "The bag didn’t update. Try again.",
+      "free": "Free",
+      "free_from": "Free from [x]",
+      "gift_row": "Gift note",
+      "included": "Included",
+      "item": "[n] item",
+      "items": "[n] items",
+      "lines": "Items in your bag",
+      "no": "No.",
+      "none": "None",
+      "note_sr": "Gift note",
+      "off": "[name] is off the list.",
+      "progress": "Free shipping progress",
+      "put_back": "Put [name] back",
+      "qty": "[name] quantity",
+      "rm": "Remove [name]",
+      "shipping": "Shipping",
+      "subtotal": "Subtotal",
+      "total": "Total",
+      "undo": "Undo",
+      "updating": "Updating your bag",
+      "was": "Was"
+    }
+  }
+}

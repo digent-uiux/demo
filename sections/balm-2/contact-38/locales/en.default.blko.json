@@ -1,0 +1,16 @@
+{
+  "blko": {
+    "contact_38": {
+      "call_aria": "Call {{ phone }}",
+      "closed": "Closed now, opens at {{ hour }}:00",
+      "closed_weekdays": "Closed now, opens weekdays at {{ hour }}:00",
+      "email_ph": "you@email.com",
+      "err_body": "Write your question in a line or two.",
+      "err_email": "Add an email we can answer to, like you@email.com.",
+      "no": "No.",
+      "open": "Open now, until {{ hour }}:00",
+      "received": "Received",
+      "received_text": "Your slip is on the bench. The answer goes to your email within four bench hours."
+    }
+  }
+}

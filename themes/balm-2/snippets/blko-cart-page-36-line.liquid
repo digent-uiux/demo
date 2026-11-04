@@ -1,0 +1,30 @@
+{%- comment -%}
+  One ledger row. attrs: data attributes for the script (live: data-key/data-variant…; preview: data-price).
+  n: position (1-based); meta: captured small-caps lines under the name; each/paid/was: formatted money (was may be blank).
+{%- endcomment -%}
+{%- liquid
+  assign t_qty = 'blko.cart_page_36.qty' | t | replace: '[name]', name
+  assign t_rm = 'blko.cart_page_36.rm' | t | replace: '[name]', name
+  assign t_each = 'blko.cart_page_36.each' | t | replace: '[x]', each
+  if n < 10
+    assign nn = n | prepend: '0'
+  else
+    assign nn = n
+  endif
+-%}
+<li class="bcartpage36__li" data-line-item {{ attrs }} data-qty="{{ qty }}" data-name="{{ name | escape }}">
+  <span class="bcartpage36__cap bcartpage36__no"><span class="bcartpage36__nol">{{ 'blko.cart_page_36.no' | t }} </span><span data-no>{{ nn }}</span></span>
+  <div class="bcartpage36__ph">
+    {%- if image != blank -%}{{ image | image_url: width: 312 | image_tag: class: 'bcartpage36__img', loading: 'lazy', widths: '144, 208, 312', sizes: '(min-width: 768px) 104px, 72px', alt: alt }}{%- else -%}{{ 'product-1' | placeholder_svg_tag: 'bcartpage36__img bcartpage36__phsvg' }}{%- endif -%}
+  </div>
+  <div class="bcartpage36__copy">
+    <h3 class="bcartpage36__name">{% if href != blank and href != '#' %}<a href="{{ href }}">{{ name | escape }}</a>{% else %}{{ name | escape }}{% endif %}</h3>
+    {{ meta }}
+    <p class="bcartpage36__small bcartpage36__muted bcartpage36__tab">{{ t_each }}</p>
+  </div>
+  <div class="bcartpage36__ctl">
+    {%- render 'blko-ui-quantity', value: qty, max: max, size: 'sm', label: t_qty -%}
+    <p class="bcartpage36__price"><span data-paid>{{ paid }}</span>{% if was != blank %}<s class="bcartpage36__was"><span class="blko-ui-sr-only">{{ 'blko.cart_page_36.was' | t }} </span>{{ was }}</s>{% endif %}</p>
+    <button type="button" class="bcartpage36__rm" data-rm aria-label="{{ t_rm | escape }}">{%- render 'blko-ui-icon', name: 'x', size: 16, stroke: 1.5 -%}</button>
+  </div>
+</li>

@@ -61,7 +61,6 @@
       "home": 0,
       "collection": 0,
       "product": 0,
-      "product-alternate": 0,
       "cart": 0,
       "search": 0,
       "blog": 0,
@@ -71,12 +70,7 @@
       "contact": 0,
       "faq": 0,
       "account-login": 0,
-      "account-register": 0,
-      "account-reset-password": 0,
-      "account-activate": 0,
-      "account": 0,
-      "account-order": 0,
-      "account-addresses": 0
+      "account": 0
     }
   },
   {

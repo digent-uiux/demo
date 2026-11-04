@@ -1,0 +1,291 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-collection-banner-42.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Blog opener, balm: a small-caps label with the essay count, the h1 at h2 size, one quiet line, then the blog's tags
+  as a hairline-ruled run of italic serif links with superscript counts ("All" first); the open tag carries the amber
+  rule. Right: a small square plate with a numbered caption. Live: the picked blog (else the current blog): its
+  articles_count, all_tags and /tagged/ URLs, counts from its articles. With no blog the topic blocks show (preview).
+{%- endcomment -%}
+{{ 'blko-balm-motion.css' | asset_url | stylesheet_tag -}}
+<script src="{{ 'blko-balm-motion.js' | asset_url }}" defer="defer"></script
+>{%- liquid
+  assign src = s.blog
+  if src == blank and blog != blank
+    assign src = blog
+  endif
+  assign live = false
+  if src != blank and src.all_tags.size > 0
+    assign live = true
+  endif
+  assign cur = current_tags.first
+  if live
+    assign total = src.articles_count
+    assign all_url = src.url
+  else
+    assign total = 0
+    for b in section.blocks
+      assign total = total | plus: b.settings.count
+    endfor
+    assign all_url = s.all_link | default: '#journal'
+  endif
+-%}
+{%- capture body -%}
+  <div class="bcollectionbanner42__copy"
+    ><p class="bcollectionbanner42__cap bcollectionbanner42__eyebrow"><span aria-hidden="true" class="bcollectionbanner42__dash"></span><span>{{ s.eyebrow | escape }} · <span>{% if cur != blank %}{{ 'blko.collection_banner_42.count_tag' | t: count: '', tag: cur }}{% else %}{{ 'blko.collection_banner_42.count' | t: count: total }}{% endif %}</span></span></p
+    ><h1 class="bcollectionbanner42__h1">{{ s.heading | escape }}{% if s.heading_em != blank %} <em>{{ s.heading_em | escape }}</em>{% endif %}{% if s.heading_after != blank %} {{ s.heading_after | escape }}{% endif %}</h1
+    >{%- if s.text != blank -%}<p class="bcollectionbanner42__lead">{{ s.text | escape }}</p>{%- endif -%}
+    <nav aria-label="{{ 'blko.collection_banner_42.topics' | t }}" class="bcollectionbanner42__nav"
+      ><ul class="bcollectionbanner42__topics"
+        ><li><a href="{{ all_url }}" class="bcollectionbanner42__topic{% if cur == blank %} is-on{% endif %}"{% if cur == blank %} aria-current="page"{% endif %}>{{ 'blko.collection_banner_42.all' | t }}</a></li
+        >{%- if live -%}
+          {%- for t in src.all_tags limit: s.max_tags -%}
+            {%- assign c = 0 -%}
+            {%- for a in src.articles -%}{%- if a.tags contains t -%}{%- assign c = c | plus: 1 -%}{%- endif -%}{%- endfor -%}
+            <li><a href="{{ src.url }}/tagged/{{ t | handle }}" class="bcollectionbanner42__topic{% if cur == t %} is-on{% endif %}"{% if cur == t %} aria-current="page"{% endif %}>{{ t | escape }}{% if c > 0 %}<sup>{{ c }}</sup>{% endif %}</a></li
+          >{%- endfor -%}
+        {%- else -%}
+          {%- for b in section.blocks -%}
+            <li {{ b.shopify_attributes }}><a href="{{ b.settings.link | default: '#journal' }}" class="bcollectionbanner42__topic">{{ b.settings.name | escape }}{% if b.settings.count > 0 %}<sup>{{ b.settings.count }}</sup>{% endif %}</a></li
+          >{%- endfor -%}
+        {%- endif -%}
+      </ul
+    ></nav
+  ></div
+  ><figure class="bcollectionbanner42__fig"
+    ><div class="bcollectionbanner42__plate"
+      >{%- if s.image != blank -%}
+        {{ s.image | image_url: width: 600 | image_tag: widths: '200, 300, 480, 600', sizes: '(min-width: 768px) 240px, 144px', class: 'bcollectionbanner42__img', alt: s.image.alt -}}
+      {%- else -%}
+        {{ 'image' | placeholder_svg_tag: 'bcollectionbanner42__img' -}}
+      {%- endif -%}
+    </div
+    >{%- if s.caption != blank -%}<figcaption class="bcollectionbanner42__cap bcollectionbanner42__muted">{{ s.caption | escape }}</figcaption>{%- endif -%}
+  </figure
+>{%- endcapture -%}
+<div class="bcollectionbanner42{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px"
+  >{%- render 'blko-ui-section', surface: s.surface, bleed: true, label: s.label, className: 'bcollectionbanner42__section', inner: 'bcollectionbanner42__inner', children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Journal strip, topics",
+  "tag": "div",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Region label",
+      "default": "The journal"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Label",
+      "default": "The journal"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Notes on"
+    },
+    {
+      "type": "text",
+      "id": "heading_em",
+      "label": "Heading, italic word",
+      "default": "slow"
+    },
+    {
+      "type": "text",
+      "id": "heading_after",
+      "label": "Heading, after",
+      "default": "skin, from the apothecary"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "How we press, blend and use what goes in the jar. Read one with the kettle on."
+    },
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Blog",
+      "info": "Blank uses the current blog. Topics are its tags; with no tags the topic blocks show."
+    },
+    {
+      "type": "range",
+      "id": "max_tags",
+      "label": "Topics shown",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "url",
+      "id": "all_link",
+      "label": "\"All\" link (preview)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Plate photo"
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "Plate caption",
+      "default": "Plate 12 · The oil hour"
+    },
+    {
+      "type": "select",
+      "id": "surface",
+      "label": "Colour",
+      "options": [
+        {
+          "value": "alt",
+          "label": "Alternate"
+        },
+        {
+          "value": "bg",
+          "label": "Background"
+        },
+        {
+          "value": "pop-1",
+          "label": "Pop 1"
+        }
+      ],
+      "default": "alt"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 96,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 96
+    }
+  ],
+  "blocks": [
+    {
+      "type": "topic",
+      "name": "Topic (preview)",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Routine"
+        },
+        {
+          "type": "number",
+          "id": "count",
+          "label": "Count",
+          "default": 14
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Journal strip, topics",
+      "blocks": [
+        {
+          "type": "topic",
+          "settings": {
+            "name": "Routine",
+            "count": 14
+          }
+        },
+        {
+          "type": "topic",
+          "settings": {
+            "name": "Actives",
+            "count": 11
+          }
+        },
+        {
+          "type": "topic",
+          "settings": {
+            "name": "Ingredients",
+            "count": 16
+          }
+        },
+        {
+          "type": "topic",
+          "settings": {
+            "name": "Evening rituals",
+            "count": 7
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

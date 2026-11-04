@@ -2,57 +2,42 @@
   "type": "footer",
   "name": "Footer group",
   "sections": {
-    "footer": {
-      "type": "blko-footer",
+    "footer-16": {
+      "type": "blko-footer-16",
+      "settings": {
+        "tokens": "theme"
+      },
       "blocks": {
-        "menu-shop": {
+        "menu-1": {
           "type": "menu",
           "settings": {
-            "heading": "Shop",
-            "menu": "main-menu"
+            "title": "Shop",
+            "links": "Face\nBody\nBalms\nSets\nRefills"
           }
         },
-        "menu-help": {
+        "menu-2": {
           "type": "menu",
           "settings": {
-            "heading": "Help",
-            "menu": "footer"
+            "title": "Care",
+            "links": "Delivery\nReturns\nSkin quiz\nContact"
           }
         },
-        "menu-studio": {
+        "menu-3": {
           "type": "menu",
           "settings": {
-            "heading": "Studio",
-            "menu": "footer"
-          }
-        },
-        "newsletter": {
-          "type": "newsletter",
-          "settings": {
-            "heading": "Join our newsletter",
-            "text": "New formulas and routines, twice a month."
-          }
-        },
-        "brand": {
-          "type": "brand",
-          "settings": {
-            "text": "<p>Organic skincare, made in small batches.</p>"
+            "title": "Studio",
+            "links": "About\nIngredients\nThe workshop\nJournal"
           }
         }
       },
       "block_order": [
-        "brand",
-        "menu-shop",
-        "menu-help",
-        "menu-studio",
-        "newsletter"
-      ],
-      "settings": {
-        "show_payment": true
-      }
+        "menu-1",
+        "menu-2",
+        "menu-3"
+      ]
     }
   },
   "order": [
-    "footer"
+    "footer-16"
   ]
 }

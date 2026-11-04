@@ -3,151 +3,115 @@
     "page": "home",
     "title": "Balm 2 \u2014 Home",
     "sectionIds": [
-      "hero",
-      "featured-tabs",
-      "ingredients",
-      "image-banner",
-      "featured-collection",
-      "why",
-      "testimonial",
-      "blog-posts",
-      "newsletter"
+      "hero-11",
+      "marquee-06",
+      "featured-products-46",
+      "ingredients-01",
+      "scroll-images-02",
+      "collection-list-39",
+      "testimonial-13",
+      "routine-builder-01",
+      "blog-89",
+      "newsletter-10"
     ]
   },
   {
     "page": "collection",
     "title": "Shop",
     "sectionIds": [
-      "collection-banner",
-      "main-collection"
+      "collection-banner-73",
+      "collection-grid-44"
     ]
   },
   {
     "page": "product",
     "title": "Product",
     "sectionIds": [
-      "main-product",
-      "pairs-well",
-      "product-reviews"
-    ]
-  },
-  {
-    "page": "product-alternate",
-    "title": "Product (alternate)",
-    "sectionIds": [
-      "main-product",
-      "pairs-well",
-      "product-reviews"
+      "product-detail-37",
+      "process-steps-05",
+      "recommendations-37",
+      "reviews-49"
     ]
   },
   {
     "page": "cart",
-    "title": "Your bag",
+    "title": "Your cart",
     "sectionIds": [
-      "main-cart"
+      "cart-page-36",
+      "recommendations-50"
     ]
   },
   {
     "page": "search",
     "title": "Search",
     "sectionIds": [
-      "main-search"
+      "search-results-30"
     ]
   },
   {
     "page": "blog",
     "title": "Journal",
     "sectionIds": [
-      "main-blog"
+      "collection-banner-42",
+      "blog-37"
     ]
   },
   {
     "page": "article",
     "title": "Article",
     "sectionIds": [
-      "main-article"
+      "article-31",
+      "blog-64"
     ]
   },
   {
     "page": "404",
     "title": "Page not found",
     "sectionIds": [
-      "main-404"
+      "not-found-31"
     ]
   },
   {
     "page": "about",
     "title": "About",
     "sectionIds": [
-      "main-page",
-      "image-with-text",
-      "multicolumn",
-      "rich-text"
+      "page-header-07",
+      "product-story-43",
+      "image-with-text-36",
+      "icon-list-22",
+      "counters-16",
+      "team-06"
     ]
   },
   {
     "page": "contact",
     "title": "Contact",
     "sectionIds": [
-      "main-page",
-      "contact-form"
+      "page-header-08",
+      "contact-36"
     ]
   },
   {
     "page": "faq",
     "title": "FAQ",
     "sectionIds": [
-      "main-page",
-      "faq"
+      "page-header-09",
+      "faq-37",
+      "contact-38"
     ]
   },
   {
     "page": "account-login",
     "title": "Sign in",
     "sectionIds": [
-      "main-login"
-    ]
-  },
-  {
-    "page": "account-register",
-    "title": "Create account",
-    "sectionIds": [
-      "main-register"
-    ]
-  },
-  {
-    "page": "account-reset-password",
-    "title": "Reset password",
-    "sectionIds": [
-      "main-reset-password"
-    ]
-  },
-  {
-    "page": "account-activate",
-    "title": "Activate account",
-    "sectionIds": [
-      "main-activate-account"
+      "login-01"
     ]
   },
   {
     "page": "account",
     "title": "Your account",
     "sectionIds": [
-      "main-account"
-    ]
-  },
-  {
-    "page": "account-order",
-    "title": "Order details",
-    "sectionIds": [
-      "main-order"
-    ]
-  },
-  {
-    "page": "account-addresses",
-    "title": "Addresses",
-    "sectionIds": [
-      "main-addresses"
+      "account-35"
     ]
   }
 ]

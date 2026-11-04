@@ -1,0 +1,29 @@
+{
+  "blko": {
+    "cart_drawer": {
+      "schema": {
+        "name": "Cart drawer",
+        "enabled": "Open the drawer after add to cart",
+        "enabled_info": "Off: the bag icon goes to the cart page.",
+        "heading": "Heading",
+        "free_over": "Free shipping from (store currency, 0 hides the bar)",
+        "empty_heading": "Empty heading",
+        "empty_text": "Empty text",
+        "empty_link": "Empty button link"
+      }
+    },
+    "search_dialog": {
+      "schema": {
+        "name": "Search dialog",
+        "results": "Predictive search results",
+        "label": "Label",
+        "placeholder": "Placeholder",
+        "terms": "Suggested terms",
+        "terms_info": "Comma-separated. Shown before the shopper types.",
+        "show_trending": "Show trending products",
+        "trending": "Trending collection",
+        "trending_info": "Four products shown before the shopper types. Blank = all products."
+      }
+    }
+  }
+}

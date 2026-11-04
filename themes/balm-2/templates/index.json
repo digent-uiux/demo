@@ -1,243 +1,560 @@
 {
   "sections": {
-    "hero": {
-      "type": "blko-hero",
+    "hero-11": {
+      "type": "blko-hero-11",
       "settings": {
-        "overlay_opacity": 60,
-        "heading": "One drop, <em>all day</em> glow.",
-        "text": "Rosehip and squalane, cold-pressed in small batches. Sinks in within a minute and never feels greasy.",
-        "button_label": "Shop face oils",
-        "button_label_2": "See the ingredients"
-      }
-    },
-    "featured_tabs": {
-      "type": "blko-featured-tabs",
+        "tokens": "theme"
+      },
       "blocks": {
-        "tab_bestsellers": {
-          "type": "tab",
+        "fact-1": {
+          "type": "fact",
           "settings": {
-            "label": "Bestsellers"
+            "title": "Size",
+            "value": "30 ml"
           }
         },
-        "tab_new": {
-          "type": "tab",
+        "fact-2": {
+          "type": "fact",
           "settings": {
-            "label": "New"
+            "title": "Pressed",
+            "value": "Cold, by hand"
           }
         },
-        "tab_sets": {
-          "type": "tab",
+        "fact-3": {
+          "type": "fact",
           "settings": {
-            "label": "Sets"
+            "title": "Batch",
+            "value": "No. 0426"
           }
         }
       },
       "block_order": [
-        "tab_bestsellers",
-        "tab_new",
-        "tab_sets"
-      ],
-      "settings": {
-        "heading": "Shop the routine",
-        "tabs_label": "Product sets"
-      }
-    },
-    "ingredients": {
-      "type": "blko-ingredients",
-      "blocks": {
-        "aloe": {
-          "type": "ingredient",
-          "settings": {
-            "amount": "40%",
-            "name": "Aloe vera",
-            "text": "Cold-pressed leaf juice that cools and calms redness on contact."
-          }
-        },
-        "oat": {
-          "type": "ingredient",
-          "settings": {
-            "amount": "5%",
-            "name": "Colloidal oat",
-            "text": "Finely milled oats soothe itch and help skin hold on to water."
-          }
-        },
-        "orange": {
-          "type": "ingredient",
-          "settings": {
-            "amount": "2%",
-            "name": "Sweet orange",
-            "text": "A gentle source of vitamin C that brightens dull, tired skin."
-          }
-        },
-        "lavender": {
-          "type": "ingredient",
-          "settings": {
-            "amount": "0.5%",
-            "name": "Lavender",
-            "text": "Steam-distilled flowers for a soft scent that winds you down."
-          }
-        }
-      },
-      "block_order": [
-        "aloe",
-        "oat",
-        "orange",
-        "lavender"
-      ],
-      "settings": {
-        "heading": "Four ingredients doing the heavy lifting",
-        "note": "Every ingredient is listed with its concentration. No fillers, no synthetic fragrance, nothing hidden behind “parfum”.",
-        "list_label": "Full ingredient list",
-        "list": "<p>Aloe Barbadensis Leaf Juice, Aqua, Glycerin, Avena Sativa Kernel Flour, Squalane, Citrus Aurantium Dulcis Peel Oil, Niacinamide, Sodium Hyaluronate, Lavandula Angustifolia Oil, Xanthan Gum, Tocopherol, Citric Acid, Linalool.</p>"
-      }
-    },
-    "image_banner": {
-      "type": "blko-image-banner",
-      "settings": {
-        "heading": "Press, don’t rub",
-        "text": "Three drops, warmed in your palms, pressed in after cleansing.",
-        "button_label": "Shop face oils"
-      }
-    },
-    "bestsellers": {
-      "type": "blko-featured-collection",
-      "settings": {
-        "heading": "Bestsellers",
-        "products_to_show": 4,
-        "link_label": "Shop all"
-      }
-    },
-    "why": {
-      "type": "blko-why",
-      "blocks": {
-        "row_1": {
-          "type": "row",
-          "settings": {
-            "icon": "flask-conical",
-            "title": "10% niacinamide, 1% zinc",
-            "text": "Enough to calm shine and visible pores, gentle enough for every day."
-          }
-        },
-        "row_2": {
-          "type": "row",
-          "settings": {
-            "icon": "droplets",
-            "title": "Water-light texture",
-            "text": "Sinks in within a minute, no film under moisturiser or makeup."
-          }
-        },
-        "row_3": {
-          "type": "row",
-          "settings": {
-            "icon": "leaf",
-            "title": "Fragrance free, vegan",
-            "text": "No essential oils, no alcohol, nothing added for scent."
-          }
-        },
-        "row_4": {
-          "type": "row",
-          "settings": {
-            "icon": "sun",
-            "title": "Morning and night",
-            "text": "Safe with sunscreen, retinol and vitamin C."
-          }
-        }
-      },
-      "block_order": [
-        "row_1",
-        "row_2",
-        "row_3",
-        "row_4"
-      ],
-      "settings": {
-        "heading": "Why it's in every routine",
-        "lead": "Two years on one serum, so you don't need three.",
-        "button_label": "Shop the serum"
-      }
-    },
-    "testimonial": {
-      "type": "blko-testimonial",
-      "settings": {
-        "rating": "4.9",
-        "rating_count": "2,140",
-        "button_label": "Read all reviews"
-      },
-      "blocks": {
-        "quote_1": {
-          "type": "quote",
-          "settings": {
-            "quote": "Three drops at night and my skin looks rested by morning. Even better after a month.",
-            "author": "Hannah Moore",
-            "author_detail": "Combination skin"
-          }
-        }
-      },
-      "block_order": [
-        "quote_1"
+        "fact-1",
+        "fact-2",
+        "fact-3"
       ]
     },
-    "blog_posts": {
-      "type": "blko-blog-posts",
+    "marquee-06": {
+      "type": "blko-marquee-06",
       "settings": {
-        "heading": "From the journal",
-        "posts_to_show": 3,
-        "link_label": "All stories"
-      }
-    },
-    "newsletter": {
-      "type": "blko-newsletter",
-      "settings": {
-        "heading": "Calm skin, delivered",
-        "lead": "One letter every other Sunday: new formulas and routines that work.",
-        "button_label": "Subscribe",
-        "note": "Unsubscribe any time."
-      }
-    },
-    "order_detail": {
-      "type": "blko-order-detail",
+        "tokens": "theme"
+      },
       "blocks": {
-        "item_1": {
-          "type": "line_item",
+        "promise-1": {
+          "type": "promise",
           "settings": {
-            "title": "Rosehip face oil",
-            "variant": "30 ml",
-            "quantity": 1,
-            "price": 48
+            "text": "Cold-pressed in small batches"
           }
         },
-        "item_2": {
-          "type": "line_item",
+        "promise-2": {
+          "type": "promise",
           "settings": {
-            "title": "Niacinamide serum",
-            "variant": "15 ml travel",
-            "quantity": 1,
-            "price": 36
+            "text": "Refillable amber glass"
+          }
+        },
+        "promise-3": {
+          "type": "promise",
+          "settings": {
+            "text": "Every bottle numbered by batch"
+          }
+        },
+        "promise-4": {
+          "type": "promise",
+          "settings": {
+            "text": "Free shipping from $75"
+          }
+        },
+        "promise-5": {
+          "type": "promise",
+          "settings": {
+            "text": "Returns within 30 days, opened or not"
           }
         }
       },
       "block_order": [
-        "item_1",
-        "item_2"
-      ],
+        "promise-1",
+        "promise-2",
+        "promise-3",
+        "promise-4",
+        "promise-5"
+      ]
+    },
+    "featured-products-46": {
+      "type": "blko-featured-products-46",
       "settings": {
-        "heading": "Order details",
-        "sample_number": "1042",
-        "sample_date": "May 18, 2026",
-        "sample_status": "Delivered",
-        "sample_shipping": 0
+        "tokens": "theme"
+      },
+      "blocks": {
+        "tab-1": {
+          "type": "tab",
+          "settings": {
+            "title": "Morning",
+            "hour": "07",
+            "unit": "am",
+            "items": "Jojoba cleansing oil | Cleanser | 32 | | Oily skin, 100 ml\nSea buckthorn serum | Serum | 38 | 46 | Dull skin, 30 ml\nSqualane drops | Oil | 44 | | All skin, 15 ml | sold\nRosehip face oil | Oil | 54 | | Dry skin, 30 ml"
+          }
+        },
+        "tab-2": {
+          "type": "tab",
+          "settings": {
+            "title": "Evening",
+            "hour": "10",
+            "unit": "pm",
+            "items": "Camellia cleansing oil | Cleanser | 42 | 50 | Dry skin, 30 ml\nCalendula serum | Serum | 48 | | Sensitive skin\nBakuchiol night serum | Serum | 52 | | Mature skin, 30 ml | sizes\nMarula night oil | Oil | 48 | | Mature skin, 30 ml"
+          }
+        },
+        "tab-3": {
+          "type": "tab",
+          "settings": {
+            "title": "Weekly",
+            "hour": "Sun",
+            "unit": "",
+            "items": "Travel dropper set | Set of four | 58 | | All skin, 4 × 10 ml\nMorning serum trio | Set of three | 112 | | All skin, 3 × 15 ml\nNight oil pair | Set of two | 90 | | Mature skin | sizes\nRosehip and squalane duo | Set of two | 86 | 98 | Dry skin, 2 × 30 ml"
+          }
+        }
+      },
+      "block_order": [
+        "tab-1",
+        "tab-2",
+        "tab-3"
+      ]
+    },
+    "ingredients-01": {
+      "type": "blko-ingredients-01",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "ingredient-1": {
+          "type": "ingredient",
+          "settings": {
+            "name": "Aloe vera",
+            "amount": "40%",
+            "amount_note": "of the formula",
+            "text": "Cold-pressed leaf juice that cools and calms redness on contact.",
+            "tag": "The base"
+          }
+        },
+        "ingredient-2": {
+          "type": "ingredient",
+          "settings": {
+            "name": "Colloidal oat",
+            "amount": "5%",
+            "amount_note": "",
+            "text": "Finely milled oats soothe itch and help skin hold on to water.",
+            "tag": ""
+          }
+        },
+        "ingredient-3": {
+          "type": "ingredient",
+          "settings": {
+            "name": "Sweet orange",
+            "amount": "2%",
+            "amount_note": "",
+            "text": "A gentle source of vitamin C that brightens dull, tired skin.",
+            "tag": ""
+          }
+        },
+        "ingredient-4": {
+          "type": "ingredient",
+          "settings": {
+            "name": "Lavender",
+            "amount": "0.5%",
+            "amount_note": "",
+            "text": "Steam-distilled flowers for a soft scent that winds you down.",
+            "tag": ""
+          }
+        }
+      },
+      "block_order": [
+        "ingredient-1",
+        "ingredient-2",
+        "ingredient-3",
+        "ingredient-4"
+      ]
+    },
+    "scroll-images-02": {
+      "type": "blko-scroll-images-02",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "step-1": {
+          "type": "step",
+          "settings": {
+            "kicker": "Picked",
+            "heading": "Wild hips, after the first frost",
+            "text": "Gathered by hand from hedgerows in late October, when the fruit is soft and full of oil."
+          }
+        },
+        "step-2": {
+          "type": "step",
+          "settings": {
+            "kicker": "Steeped",
+            "heading": "Six weeks in cold-pressed oil",
+            "text": "The petals and seeds rest in squalane in the dark until the oil turns a deep amber."
+          }
+        },
+        "step-3": {
+          "type": "step",
+          "settings": {
+            "kicker": "Poured",
+            "heading": "Bottled the week it is ready",
+            "text": "Filtered through linen, poured into amber glass and numbered by batch."
+          }
+        }
+      },
+      "block_order": [
+        "step-1",
+        "step-2",
+        "step-3"
+      ]
+    },
+    "collection-list-39": {
+      "type": "blko-collection-list-39",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "collection-1": {
+          "type": "collection",
+          "settings": {
+            "title": "Face oils",
+            "note": "Cold-pressed, poured into amber glass",
+            "latin": "Rosa canina, squalane, jojoba",
+            "preview_count": 18
+          }
+        },
+        "collection-2": {
+          "type": "collection",
+          "settings": {
+            "title": "Masks",
+            "note": "Clay, oat and fresh fruit, mixed to order",
+            "latin": "Kaolin, Avena sativa",
+            "preview_count": 9
+          }
+        },
+        "collection-3": {
+          "type": "collection",
+          "settings": {
+            "title": "Balms and creams",
+            "note": "Whipped by hand, in refillable jars",
+            "latin": "Shea, calendula, beeswax",
+            "preview_count": 14
+          }
+        },
+        "collection-4": {
+          "type": "collection",
+          "settings": {
+            "title": "Cleansing bars",
+            "note": "Cut by hand, cured six weeks",
+            "latin": "Olive, lavender, oat",
+            "preview_count": 12
+          }
+        }
+      },
+      "block_order": [
+        "collection-1",
+        "collection-2",
+        "collection-3",
+        "collection-4"
+      ]
+    },
+    "testimonial-13": {
+      "type": "blko-testimonial-13",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "quote-1": {
+          "type": "quote",
+          "settings": {
+            "quote": "Three drops at <em>night</em>, and by <em>morning</em> my skin looks <em>rested</em>. Even better a month in.",
+            "name": "Hannah Moore",
+            "detail": "Combination skin · 6 weeks in",
+            "stars": 5,
+            "preview_name": "Rosehip Seed Oil",
+            "preview_price": "54"
+          }
+        },
+        "quote-2": {
+          "type": "quote",
+          "settings": {
+            "quote": "The first <em>balm</em> that never stings. The <em>redness</em> on my cheeks has gone <em>quiet</em>.",
+            "name": "Priya Shah",
+            "detail": "Reactive skin · 3 months in",
+            "stars": 5,
+            "preview_name": "Oat Barrier Balm",
+            "preview_price": "38"
+          }
+        },
+        "quote-3": {
+          "type": "quote",
+          "settings": {
+            "quote": "I stopped <em>layering</em> five products. One oil, and my skin feels like <em>mine</em> again.",
+            "name": "Clara Jensen",
+            "detail": "Dry skin · 2 months in",
+            "stars": 4,
+            "preview_name": "Squalane Night Oil",
+            "preview_price": "46"
+          }
+        }
+      },
+      "block_order": [
+        "quote-1",
+        "quote-2",
+        "quote-3"
+      ]
+    },
+    "routine-builder-01": {
+      "type": "blko-routine-builder-01",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "concern-1": {
+          "type": "concern",
+          "settings": {
+            "name": "Dryness",
+            "note": "Tight after washing, flaky by noon"
+          }
+        },
+        "concern-2": {
+          "type": "concern",
+          "settings": {
+            "name": "Dullness",
+            "note": "Tired, uneven, no glow"
+          }
+        },
+        "concern-3": {
+          "type": "concern",
+          "settings": {
+            "name": "Redness",
+            "note": "Flushes easily, reacts to new things"
+          }
+        },
+        "concern-4": {
+          "type": "concern",
+          "settings": {
+            "name": "Fine lines",
+            "note": "Softening around the eyes and mouth"
+          }
+        },
+        "step-5": {
+          "type": "step",
+          "settings": {
+            "numeral": "I",
+            "name": "Cleanse",
+            "line": "Melt away the day without stripping."
+          }
+        },
+        "step-6": {
+          "type": "step",
+          "settings": {
+            "numeral": "II",
+            "name": "Treat",
+            "line": "One active, chosen for your concern."
+          }
+        },
+        "step-7": {
+          "type": "step",
+          "settings": {
+            "numeral": "III",
+            "name": "Protect",
+            "line": "Seal it in, then face the weather."
+          }
+        },
+        "option-8": {
+          "type": "option",
+          "settings": {
+            "step": 1,
+            "name": "Oat Milk Cleansing Balm",
+            "size": "100 ml",
+            "price": 42,
+            "when": "PM",
+            "for": "Dryness, Fine lines"
+          }
+        },
+        "option-9": {
+          "type": "option",
+          "settings": {
+            "step": 1,
+            "name": "Olive Leaf Gel Wash",
+            "size": "150 ml",
+            "price": 36,
+            "when": "AM · PM",
+            "for": "Dullness"
+          }
+        },
+        "option-10": {
+          "type": "option",
+          "settings": {
+            "step": 1,
+            "name": "Rose Clay Cleansing Bar",
+            "size": "110 g",
+            "price": 24,
+            "when": "AM · PM",
+            "for": "Redness"
+          }
+        },
+        "option-11": {
+          "type": "option",
+          "settings": {
+            "step": 2,
+            "name": "Hyaluronic Olive Mist",
+            "size": "30 ml",
+            "price": 68,
+            "when": "AM · PM",
+            "for": "Dryness"
+          }
+        },
+        "option-12": {
+          "type": "option",
+          "settings": {
+            "step": 2,
+            "name": "Sea Buckthorn Vitamin C",
+            "size": "15 ml",
+            "price": 72,
+            "when": "AM",
+            "for": "Dullness"
+          }
+        },
+        "option-13": {
+          "type": "option",
+          "settings": {
+            "step": 2,
+            "name": "Calendula Calm Drops",
+            "size": "30 ml",
+            "price": 58,
+            "when": "AM · PM",
+            "for": "Redness"
+          }
+        },
+        "option-14": {
+          "type": "option",
+          "settings": {
+            "step": 2,
+            "name": "Bakuchiol Night Cream",
+            "size": "30 ml",
+            "price": 84,
+            "when": "PM",
+            "for": "Fine lines"
+          }
+        },
+        "option-15": {
+          "type": "option",
+          "settings": {
+            "step": 3,
+            "name": "Olive Butter Day Cream",
+            "size": "50 ml",
+            "price": 56,
+            "when": "AM",
+            "for": "Dryness, Fine lines"
+          }
+        },
+        "option-16": {
+          "type": "option",
+          "settings": {
+            "step": 3,
+            "name": "Rose Sugar Polish",
+            "size": "120 g",
+            "price": 48,
+            "when": "AM",
+            "for": "Redness, Dullness"
+          }
+        },
+        "option-17": {
+          "type": "option",
+          "settings": {
+            "step": 3,
+            "name": "Barrier Night Cream",
+            "size": "50 ml",
+            "price": 62,
+            "when": "PM",
+            "for": ""
+          }
+        }
+      },
+      "block_order": [
+        "concern-1",
+        "concern-2",
+        "concern-3",
+        "concern-4",
+        "step-5",
+        "step-6",
+        "step-7",
+        "option-8",
+        "option-9",
+        "option-10",
+        "option-11",
+        "option-12",
+        "option-13",
+        "option-14",
+        "option-15",
+        "option-16",
+        "option-17"
+      ]
+    },
+    "blog-89": {
+      "type": "blko-blog-89",
+      "settings": {
+        "tokens": "theme"
+      },
+      "blocks": {
+        "post-1": {
+          "type": "post",
+          "settings": {
+            "title": "How to layer a cream over an oil",
+            "excerpt": "Thin to thick, then press, never rub: the order that keeps both working.",
+            "date": "2026-10-21",
+            "topic": "Routines",
+            "read": "4"
+          }
+        },
+        "post-2": {
+          "type": "post",
+          "settings": {
+            "title": "A slower evening routine in four steps",
+            "excerpt": "Ten unhurried minutes with a roller, a stone and one warm cloth.",
+            "date": "2026-10-09",
+            "topic": "Rituals",
+            "read": "6"
+          }
+        },
+        "post-3": {
+          "type": "post",
+          "settings": {
+            "title": "What cold-pressed really means",
+            "excerpt": "Below forty degrees, from seed to bottle: why the heat matters.",
+            "date": "2026-09-30",
+            "topic": "Sourcing",
+            "read": "5"
+          }
+        }
+      },
+      "block_order": [
+        "post-1",
+        "post-2",
+        "post-3"
+      ]
+    },
+    "newsletter-10": {
+      "type": "blko-newsletter-10",
+      "settings": {
+        "tokens": "theme"
       }
     }
   },
   "order": [
-    "hero",
-    "featured_tabs",
-    "ingredients",
-    "image_banner",
-    "bestsellers",
-    "why",
-    "testimonial",
-    "blog_posts",
-    "order_detail",
-    "newsletter"
+    "hero-11",
+    "marquee-06",
+    "featured-products-46",
+    "ingredients-01",
+    "scroll-images-02",
+    "collection-list-39",
+    "testimonial-13",
+    "routine-builder-01",
+    "blog-89",
+    "newsletter-10"
   ]
 }

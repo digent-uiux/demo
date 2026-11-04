@@ -1,0 +1,11 @@
+{
+  "blko": {
+    "product_story_43": {
+      "enc": "Enc.",
+      "fold": "Fold the letter",
+      "ps": "P.S.",
+      "read": "Read the whole letter",
+      "signature": "Signature: {{ name }}"
+    }
+  }
+}

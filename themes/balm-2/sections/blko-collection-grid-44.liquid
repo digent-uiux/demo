@@ -1,0 +1,649 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-collection-grid-44.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-collection-grid-44.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Balm collection shelf, half of one idea with collection-banner-73 ("the shelf label and the case"): a ruled
+  dispensing case. Every product sits in its own compartment (hairline rules on every side, collapsed into one line
+  between neighbours, no gaps), named by its coordinate (A·1, A·2 …: row letter, column number) in small caps set into
+  the rule above it like a drawer label; script.js reads the coordinates from the real layout (density, filters,
+  width); without JS they read 01, 02 …
+  Head: the count as a type combo (heading-font figures + light body-font words, aria-live), the current sort in small
+  caps, a density toggle (3 / 4 columns on desktop, 1 / 2 on phones; aria-pressed, remembered in localStorage) and a
+  "Filter · Sort" button with the active count. Applied filters show as removable chips under it.
+  Filter drawer: a <dialog> from the right over a dimmed, 6px-blurred page: sort (radio list), "In stock only" (the
+  Search & Discovery availability filter, hidden when the store has none), the other filters (list, boolean, price range)
+  as collapsible groups, and a sticky footer with Clear and "Show N <count word>" (N refreshes through the Section
+  Rendering API as you tick). Apply submits the GET form; without JS the drawer renders inline as a plain form.
+  Phones: a "Filter · Sort" pill fixed at the bottom centre fades in while the grid is in view and the head is not.
+  Cards stay calm and identical (snippet blko-collection-grid-44-card: packshot + hover crossfade to the second image,
+  in-image Add to bag pill that posts /cart/add.js then dispatches blko:cart:add, "+" on phones, Choose <option> for
+  products with variants, sold-out state, tag/metafield chips, sale price in the accent). The compartment is the frame.
+  The pull-out note (snippet blko-collection-grid-44-tile): a wide compartment (2 columns in 4-up, the full row in
+  3-up and on phones; or large 2 × 2) with a photo and a paper slip with an index tab pulled out past its right edge.
+  Motion: changing the density re-racks the case (each compartment glides from its old place and size, FLIP 700ms;
+  balm kit only, never under reduced motion). Load more appends the next page via the Section Rendering API (page
+  links stay for no-JS). Without a collection the preview product blocks fill in, sorted client side.
+{%- endcomment -%}
+{%- liquid
+  assign coll = collection
+  if coll == blank or coll.handle == blank
+    assign coll = s.collection
+  endif
+  assign live = false
+  if coll != blank and coll.handle != blank
+    assign live = true
+  endif
+  assign per = s.per_page
+  assign tile = nil
+  for b in section.blocks
+    if b.type == 'tile'
+      assign tile = b
+      break
+    endif
+  endfor
+  assign tile_after = 2
+  if tile != nil
+    assign tile_after = tile.settings.after
+  endif
+  assign sort_cur = coll.sort_by | default: coll.default_sort_by
+  assign uid = 'cg44-' | append: section.id
+  assign pv_n = section.blocks | where: 'type', 'product' | size
+  assign sale_lbl = ''
+  assign sold_lbl = ''
+  for b in section.blocks
+    if b.type == 'badge' and b.settings.when == 'sale'
+      assign sale_lbl = b.settings.label
+    elsif b.type == 'badge' and b.settings.when == 'sold_out'
+      assign sold_lbl = b.settings.label
+    endif
+  endfor
+  assign next_url = ''
+  assign active_n = 0
+  assign stock_f = nil
+  assign facet_n = 0
+  if live
+    for f in coll.filters
+      if f.param_name == 'filter.v.availability'
+        assign stock_f = f
+      else
+        assign facet_n = facet_n | plus: 1
+      endif
+      if f.type == 'price_range'
+        if f.min_value.value != nil or f.max_value.value != nil
+          assign active_n = active_n | plus: 1
+        endif
+      else
+        assign active_n = active_n | plus: f.active_values.size
+      endif
+    endfor
+    assign total_n = coll.products_count
+  else
+    assign total_n = pv_n
+  endif
+-%}
+{%- capture count_word -%}{{ s.count_word | escape }}{%- endcapture -%}
+{%- capture body -%}
+<noscript><style>.bcollectiongrid44 .bcollectiongrid44__dlg{display:flex;position:static;translate:none;width:auto;height:auto;border:0}.bcollectiongrid44 .bcollectiongrid44__open,.bcollectiongrid44 .bcollectiongrid44__x,.bcollectiongrid44 .bcollectiongrid44__dens{display:none}.bcollectiongrid44 .bcollectiongrid44__dfoot{position:static}</style></noscript
+><form class="bcollectiongrid44__ctl" action="{{ coll.url | default: routes.all_products_collection_url }}" method="get" data-ctl
+  ><div class="bcollectiongrid44__row" data-row
+    ><p class="bcollectiongrid44__count" aria-live="polite"><span class="bcollectiongrid44__big" data-count data-total="{{ total_n }}">{% if total_n < 10 %}0{% endif %}{{ total_n }}</span> <span class="bcollectiongrid44__word">{{ count_word }} {{ 'blko.collection_grid_44.in_case' | t }}</span></p
+    ><div class="bcollectiongrid44__tools"
+      >{%- assign sort_name = 'blko.collection_grid_44.featured' | t -%}
+      {%- if live -%}{%- for o in coll.sort_options -%}{%- if o.value == sort_cur -%}{%- assign sort_name = o.name -%}{%- endif -%}{%- endfor -%}{%- endif -%}
+      <p class="bcollectiongrid44__label bcollectiongrid44__muted bcollectiongrid44__sorted">{{ 'blko.collection_grid_44.sorted' | t }} · {{ sort_name | escape }}</p
+      ><div class="bcollectiongrid44__dens" role="group" aria-label="{{ 'blko.collection_grid_44.density' | t | escape }}"
+        ><button type="button" class="bcollectiongrid44__dbtn" aria-pressed="false" aria-label="{{ 'blko.collection_grid_44.fewer' | t | escape }}" data-density="airy"><span aria-hidden="true" class="bcollectiongrid44__bars"><span></span><span class="bcollectiongrid44__bt"></span><span class="bcollectiongrid44__bd"></span></span></button
+        ><button type="button" class="bcollectiongrid44__dbtn" aria-pressed="true" aria-label="{{ 'blko.collection_grid_44.more_cols' | t | escape }}" data-density="dense"><span aria-hidden="true" class="bcollectiongrid44__bars"><span></span><span></span><span class="bcollectiongrid44__bt"></span><span class="bcollectiongrid44__bd"></span></span></button
+      ></div
+      ><button type="button" class="bcollectiongrid44__label bcollectiongrid44__open" aria-haspopup="dialog" aria-controls="{{ uid }}-dlg" data-open
+        >{%- render 'blko-ui-icon', name: 'sliders-horizontal', size: 16 -%}{{ 'blko.collection_grid_44.filter' | t }}{%- if active_n > 0 -%}<span class="bcollectiongrid44__accent"> ({{ active_n }})</span>{%- endif -%}
+      </button
+    ></div
+  ></div
+
+  >{%- if live and active_n > 0 -%}
+  <ul class="bcollectiongrid44__active"
+    >{%- for f in coll.filters -%}
+      {%- for v in f.active_values -%}
+        <li><a href="{{ v.url_to_remove }}" class="bcollectiongrid44__chip" aria-label="{{ 'blko.collection_grid_44.remove' | t: name: v.label | escape }}">{{ v.label | escape }}{%- render 'blko-ui-icon', name: 'x', size: 12 -%}</a></li
+      >{%- endfor -%}
+      {%- if f.type == 'price_range' and f.min_value.value != nil or f.type == 'price_range' and f.max_value.value != nil -%}
+        {%- capture pl -%}{{ f.min_value.value | default: 0 | money }}–{{ f.max_value.value | default: f.range_max | money }}{%- endcapture -%}
+        <li><a href="{{ f.url_to_remove }}" class="bcollectiongrid44__chip" aria-label="{{ 'blko.collection_grid_44.remove' | t: name: pl | escape }}">{{ pl }}{%- render 'blko-ui-icon', name: 'x', size: 12 -%}</a></li
+      >{%- endif -%}
+    {%- endfor -%}
+    <li><a href="{{ coll.url }}?sort_by={{ sort_cur }}" class="bcollectiongrid44__label bcollectiongrid44__clear">{{ 'blko.collection_grid_44.clear_all' | t }}</a></li
+  ></ul
+  >{%- endif -%}
+
+  <dialog id="{{ uid }}-dlg" class="bcollectiongrid44__dlg" aria-labelledby="{{ uid }}-dt" data-dlg
+    ><div class="bcollectiongrid44__dhead"
+      ><p id="{{ uid }}-dt" class="bcollectiongrid44__dtitle">{{ 'blko.collection_grid_44.drawer' | t }}</p
+      ><button type="button" class="bcollectiongrid44__x" aria-label="{{ 'blko.collection_grid_44.close' | t | escape }}" data-close>{%- render 'blko-ui-icon', name: 'x', size: 20 -%}</button
+    ></div
+    ><div class="bcollectiongrid44__dbody"
+      ><details class="bcollectiongrid44__grp"
+        ><summary class="bcollectiongrid44__sum"><span class="bcollectiongrid44__label">{{ 'blko.collection_grid_44.sort' | t }}</span><span class="bcollectiongrid44__note">{%- render 'blko-ui-icon', name: 'chevron-down', size: 16 -%}</span></summary
+        ><div class="bcollectiongrid44__vals" role="radiogroup" aria-label="{{ 'blko.collection_grid_44.sort' | t | escape }}"
+          >{%- if live -%}
+            {%- for o in coll.sort_options -%}
+              <label class="bcollectiongrid44__val"><input type="radio" name="sort_by" value="{{ o.value }}"{% if o.value == sort_cur %} checked{% endif %}><span aria-hidden="true" class="bcollectiongrid44__radio"></span><span>{{ o.name | escape }}</span></label
+            >{%- endfor -%}
+          {%- else -%}
+            <label class="bcollectiongrid44__val"><input type="radio" name="sort_by" value="manual" checked><span aria-hidden="true" class="bcollectiongrid44__radio"></span><span>{{ 'blko.collection_grid_44.featured' | t }}</span></label
+            ><label class="bcollectiongrid44__val"><input type="radio" name="sort_by" value="created-descending"><span aria-hidden="true" class="bcollectiongrid44__radio"></span><span>{{ 'blko.collection_grid_44.newest' | t }}</span></label
+            ><label class="bcollectiongrid44__val"><input type="radio" name="sort_by" value="price-ascending"><span aria-hidden="true" class="bcollectiongrid44__radio"></span><span>{{ 'blko.collection_grid_44.low' | t }}</span></label
+            ><label class="bcollectiongrid44__val"><input type="radio" name="sort_by" value="price-descending"><span aria-hidden="true" class="bcollectiongrid44__radio"></span><span>{{ 'blko.collection_grid_44.high' | t }}</span></label
+          >{%- endif -%}
+        </div
+      ></details
+
+      >{%- if stock_f != nil -%}
+        {%- for v in stock_f.values -%}
+          {%- if v.value == '1' -%}
+            <label class="bcollectiongrid44__sw"
+              ><span class="bcollectiongrid44__label">{{ 'blko.collection_grid_44.in_stock' | t }}</span
+              ><input type="checkbox" role="switch" name="{{ v.param_name }}" value="{{ v.value }}"{% if v.active %} checked{% endif %}
+              ><span aria-hidden="true" class="bcollectiongrid44__track"></span
+            ></label
+          >{%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+
+      {%- if live -%}
+        {%- assign gi = 0 -%}
+        {%- for f in coll.filters -%}
+          {%- if f.param_name == 'filter.v.availability' -%}{%- continue -%}{%- endif -%}
+          {%- liquid
+            assign f_on = f.active_values.size
+            if f.type == 'price_range'
+              assign f_on = 0
+              if f.min_value.value != nil or f.max_value.value != nil
+                assign f_on = 1
+              endif
+            endif
+          -%}
+          <details class="bcollectiongrid44__grp"{% if gi == 0 or f_on > 0 %} open{% endif %}><summary
+             class="bcollectiongrid44__sum"><span class="bcollectiongrid44__label">{{ f.label | escape }}</span><span class="bcollectiongrid44__note">{%- if f_on > 0 -%}<span class="bcollectiongrid44__accent">{% if f_on < 10 %}0{% endif %}{{ f_on }}</span>{%- endif -%}{%- render 'blko-ui-icon', name: 'chevron-down', size: 16 -%}</span></summary
+            >{%- case f.type -%}
+              {%- when 'price_range' -%}
+                {%- assign cur = cart.currency.symbol | default: '$' -%}
+                <div class="bcollectiongrid44__price-r"
+                  ><label class="bcollectiongrid44__pf"><span class="bcollectiongrid44__muted">{{ 'blko.collection_grid_44.from' | t }} {{ cur }}</span
+                    ><input type="number" inputmode="decimal" name="{{ f.min_value.param_name }}" min="0" max="{{ f.range_max | money_without_currency | remove: ',' }}" placeholder="0"{% if f.min_value.value %} value="{{ f.min_value.value | money_without_currency | remove: ',' }}"{% endif %} class="bcollectiongrid44__num"
+                  ></label
+                  ><label class="bcollectiongrid44__pf"><span class="bcollectiongrid44__muted">{{ 'blko.collection_grid_44.to' | t }} {{ cur }}</span
+                    ><input type="number" inputmode="decimal" name="{{ f.max_value.param_name }}" min="0" max="{{ f.range_max | money_without_currency | remove: ',' }}" placeholder="{{ f.range_max | money_without_currency | remove: ',' }}"{% if f.max_value.value %} value="{{ f.max_value.value | money_without_currency | remove: ',' }}"{% endif %} class="bcollectiongrid44__num"
+                  ></label
+                ></div
+              >{%- else -%}
+                <ul class="bcollectiongrid44__vals"
+                  >{%- for v in f.values -%}
+                    <li><label class="bcollectiongrid44__val{% if v.count == 0 and v.active == false %} is-empty{% endif %}"
+                      ><input type="checkbox" name="{{ v.param_name }}" value="{{ v.value }}"{% if v.active %} checked{% endif %}{% if v.count == 0 and v.active == false %} disabled{% endif %}
+                      ><span aria-hidden="true" class="bcollectiongrid44__box">{%- render 'blko-ui-icon', name: 'check', size: 12 -%}</span
+                      ><span>{{ v.label | escape }}</span><span class="bcollectiongrid44__muted bcollectiongrid44__vc">{{ v.count }}</span
+                    ></label></li
+                  >{%- endfor -%}
+                </ul
+            >{%- endcase -%}
+          </details
+          >{%- assign gi = gi | plus: 1 -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </div
+    ><div class="bcollectiongrid44__dfoot"
+      >{%- assign cl = 'blko.collection_grid_44.clear' | t -%}
+      {%- capture clear_href -%}{{ coll.url | default: routes.all_products_collection_url }}?sort_by={{ sort_cur }}{%- endcapture -%}
+      {%- render 'blko-ui-button', variant: 'outline', href: clear_href, children: cl, attrs: 'data-clear' -%}
+      {%- capture show -%}<span>{{ 'blko.collection_grid_44.show' | t }} <span data-n>{{ total_n }}</span> {{ count_word }}</span>{%- endcapture -%}
+      {%- render 'blko-ui-button', type: 'submit', children: show, attrs: 'data-apply' -%}
+    </div
+  ></dialog
+></form
+
+>{%- if live -%}
+  {%- paginate coll.products by per -%}
+    {%- if coll.products.size == 0 -%}
+      <div class="bcollectiongrid44__empty" data-empty
+        ><p class="bcollectiongrid44__etitle">{%- if active_n > 0 -%}{{ 'blko.collection_grid_44.empty' | t }}{%- else -%}{{ 'blko.collection_grid_44.empty_all' | t }}{%- endif -%}</p
+        >{%- if active_n > 0 -%}{%- assign rl = 'blko.collection_grid_44.reset' | t -%}{%- render 'blko-ui-button', variant: 'outline', href: coll.url, children: rl -%}{%- endif -%}
+      </div
+    >{%- else -%}
+    <ul class="bcollectiongrid44__grid" data-grid
+      >{%- for p in coll.products -%}
+        <li class="bcollectiongrid44__cell" data-card
+          ><span class="bcollectiongrid44__label bcollectiongrid44__co" aria-hidden="true" data-co>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span
+          >{%- render 'blko-collection-grid-44-card', p: p, n: forloop.index, sale_lbl: sale_lbl, sold_lbl: sold_lbl -%}
+        </li
+        >{%- if forloop.index == tile_after and paginate.current_page == 1 and tile != nil -%}{%- render 'blko-collection-grid-44-tile', t: tile -%}{%- endif -%}
+      {%- endfor -%}
+    </ul
+    >{%- liquid
+      assign shown_n = paginate.current_offset | plus: coll.products.size
+      assign total = paginate.items
+      if paginate.next
+        assign next_url = paginate.next.url
+      endif
+      assign pct = shown_n | times: 100 | divided_by: total
+    -%}
+    {%- if paginate.pages > 1 -%}
+    <div class="bcollectiongrid44__more" data-more-wrap data-next="{{ next_url }}"
+      ><div class="bcollectiongrid44__prog"
+        ><p class="bcollectiongrid44__label bcollectiongrid44__muted"><span data-shown>{% if shown_n < 10 %}0{% endif %}{{ shown_n }}</span> {{ 'blko.collection_grid_44.of' | t }} {% if total < 10 %}0{% endif %}{{ total }}</p
+        ><span aria-hidden="true" class="bcollectiongrid44__rule"><span data-fill style="width:{{ pct }}%"></span></span
+      ></div
+      >{%- if next_url != blank -%}
+        {%- assign ml = 'blko.collection_grid_44.more' | t -%}
+        {%- render 'blko-ui-button', variant: 'outline', href: next_url, children: ml, attrs: 'data-more', className: 'bcollectiongrid44__mbtn' -%}
+      {%- endif -%}
+      <nav class="bcollectiongrid44__pages" aria-label="{{ 'blko.collection_grid_44.pages' | t | escape }}" data-pages
+        >{%- for part in paginate.parts -%}
+          {%- if part.is_link -%}<a href="{{ part.url }}" class="bcollectiongrid44__pg">{{ part.title }}</a>{%- elsif part.title == paginate.current_page -%}<span class="bcollectiongrid44__pg" aria-current="page">{{ part.title }}</span>{%- else -%}<span class="bcollectiongrid44__pg">{{ part.title }}</span>{%- endif -%}
+        {%- endfor -%}
+      </nav
+    ></div
+    >{%- endif -%}
+    {%- endif -%}
+  {%- endpaginate -%}
+{%- else -%}
+  {%- assign n = 0 -%}
+  <ul class="bcollectiongrid44__grid" data-grid
+    >{%- for b in section.blocks -%}
+      {%- if b.type != 'product' -%}{%- continue -%}{%- endif -%}
+      {%- assign bs = b.settings -%}
+      <li class="bcollectiongrid44__cell" data-card data-i="{{ n }}" data-price="{{ bs.price }}" data-new="{{ bs.rank }}"{% if n >= per %} hidden{% endif %} {{ b.shopify_attributes }}>
+        {%- assign n1 = n | plus: 1 -%}
+        <span class="bcollectiongrid44__label bcollectiongrid44__co" aria-hidden="true" data-co>{% if n1 < 10 %}0{% endif %}{{ n1 }}</span
+        >{%- if bs.product != blank -%}
+          {%- render 'blko-collection-grid-44-card', p: bs.product, n: n1, sale_lbl: sale_lbl, sold_lbl: sold_lbl -%}
+        {%- else -%}
+          {%- render 'blko-collection-grid-44-card', b: bs, n: n1, sale_lbl: sale_lbl, sold_lbl: sold_lbl -%}
+        {%- endif -%}
+      </li
+      >{%- assign n = n | plus: 1 -%}
+      {%- if n == tile_after and tile != nil -%}{%- render 'blko-collection-grid-44-tile', t: tile -%}{%- endif -%}
+    {%- endfor -%}
+  </ul
+  >{%- if n > per -%}
+    {%- assign pct = per | times: 100 | divided_by: n -%}
+    <div class="bcollectiongrid44__more" data-more-wrap
+      ><div class="bcollectiongrid44__prog"
+        ><p class="bcollectiongrid44__label bcollectiongrid44__muted"><span data-shown>{% if per < 10 %}0{% endif %}{{ per }}</span> {{ 'blko.collection_grid_44.of' | t }} {% if n < 10 %}0{% endif %}{{ n }}</p
+        ><span aria-hidden="true" class="bcollectiongrid44__rule"><span data-fill style="width:{{ pct }}%"></span></span
+      ></div
+      >{%- assign ml = 'blko.collection_grid_44.more' | t -%}
+      {%- render 'blko-ui-button', variant: 'outline', children: ml, attrs: 'data-more', className: 'bcollectiongrid44__mbtn' -%}
+    </div
+  >{%- endif -%}
+{%- endif -%}
+<button type="button" class="bcollectiongrid44__fpill" aria-haspopup="dialog" aria-controls="{{ uid }}-dlg" aria-hidden="true" tabindex="-1" data-open data-fpill
+  >{%- render 'blko-ui-icon', name: 'sliders-horizontal', size: 16 -%}{{ 'blko.collection_grid_44.filter' | t }}{%- if active_n > 0 -%}<span> ({{ active_n }})</span>{%- endif -%}
+</button
+>{%- endcapture -%}
+<div class="bcollectiongrid44{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-bcollectiongrid44 data-live="{{ live }}" data-per="{{ per }}" data-section="{{ section.id }}" data-density="dense" data-added="{{ 'blko.collection_grid_44.added' | t | escape }}" data-error="{{ 'blko.collection_grid_44.error' | t | escape }}"
+  >{%- assign lbl = 'blko.collection_grid_44.label' | t -%}
+  {%- render 'blko-ui-section', surface: 'bg', label: lbl, inner: 'bcollectiongrid44__in', children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Collection grid 44 - Balm",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection (when not on a collection page)"
+    },
+    {
+      "type": "range",
+      "id": "per_page",
+      "label": "Products per page",
+      "min": 4,
+      "max": 48,
+      "step": 2,
+      "default": 10,
+      "info": "With the wide tile an even count (10, 14…) fills the 4-up rows; with the large tile use a multiple of 4."
+    },
+    {
+      "type": "text",
+      "id": "count_word",
+      "label": "Count word",
+      "default": "formulas"
+    },
+    {
+      "type": "header",
+      "content": "Preview (no collection): product blocks"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 144
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Pull-out note",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "range",
+          "id": "after",
+          "label": "After product",
+          "min": 1,
+          "max": 12,
+          "step": 1,
+          "default": 2
+        },
+        {
+          "type": "select",
+          "id": "shape",
+          "label": "Shape",
+          "options": [
+            {
+              "value": "wide",
+              "label": "Wide (2 columns, full row on 3-up and phones)"
+            },
+            {
+              "value": "large",
+              "label": "Large (2 × 2)"
+            }
+          ],
+          "default": "wide"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Ritual notes"
+        },
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Number",
+          "default": "No. 01"
+        },
+        {
+          "type": "text",
+          "id": "meta",
+          "label": "Note detail",
+          "default": "4 min read"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Oil first, then balm: the two-step night"
+        },
+        {
+          "type": "text",
+          "id": "cta",
+          "label": "Link text",
+          "default": "Read the ritual"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    },
+    {
+      "type": "badge",
+      "name": "Card flag",
+      "limit": 2,
+      "settings": [
+        {
+          "type": "select",
+          "id": "when",
+          "label": "Shows on",
+          "options": [
+            {
+              "value": "sale",
+              "label": "Products on sale"
+            },
+            {
+              "value": "sold_out",
+              "label": "Sold-out products"
+            }
+          ],
+          "default": "sale"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Sale"
+        }
+      ]
+    },
+    {
+      "type": "product",
+      "name": "Preview product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product (optional)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Packshot"
+        },
+        {
+          "type": "image_picker",
+          "id": "hover",
+          "label": "Hover image (lifestyle)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Name",
+          "default": "Rosehip Seed Oil"
+        },
+        {
+          "type": "number",
+          "id": "price",
+          "label": "Price",
+          "default": 54
+        },
+        {
+          "type": "number",
+          "id": "compare",
+          "label": "Compare-at price (0 = none)",
+          "default": 0
+        },
+        {
+          "type": "text",
+          "id": "chips",
+          "label": "Chips (comma separated, up to 2)",
+          "default": "Dry skin, 30 ml"
+        },
+        {
+          "type": "checkbox",
+          "id": "sold_out",
+          "label": "Sold out",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "sizes",
+          "label": "Has sizes (shows Choose size)",
+          "default": false
+        },
+        {
+          "type": "number",
+          "id": "rank",
+          "label": "Newest rank (1 = newest)",
+          "default": 1
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection grid 44 - Balm",
+      "blocks": [
+        {
+          "type": "tile",
+          "settings": {
+            "shape": "wide"
+          }
+        },
+        {
+          "type": "badge",
+          "settings": {
+            "when": "sale",
+            "label": "Sale"
+          }
+        },
+        {
+          "type": "badge",
+          "settings": {
+            "when": "sold_out",
+            "label": "Sold out"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "title": "Rosehip Seed Oil",
+            "price": 54,
+            "compare": 0,
+            "chips": "Dry skin, 30 ml",
+            "sold_out": false,
+            "sizes": false,
+            "rank": 3
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "title": "Sea Buckthorn Serum",
+            "price": 48,
+            "compare": 58,
+            "chips": "Dull skin, 30 ml",
+            "sold_out": false,
+            "sizes": false,
+            "rank": 1
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "title": "Squalane Drops",
+            "price": 44,
+            "compare": 0,
+            "chips": "All skin, 50 ml",
+            "sold_out": false,
+            "sizes": true,
+            "rank": 4
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "title": "Jojoba Balance Oil",
+            "price": 38,
+            "compare": 0,
+            "chips": "Oily skin, 30 ml",
+            "sold_out": false,
+            "sizes": false,
+            "rank": 5
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "title": "Marula Night Oil",
+            "price": 62,
+            "compare": 0,
+            "chips": "Dry skin, 15 ml",
+            "sold_out": true,
+            "sizes": false,
+            "rank": 2
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "title": "Calendula Calm Serum",
+            "price": 46,
+            "compare": 0,
+            "chips": "Sensitive, 30 ml",
+            "sold_out": false,
+            "sizes": false,
+            "rank": 6
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

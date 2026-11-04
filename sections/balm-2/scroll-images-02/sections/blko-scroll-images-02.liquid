@@ -1,0 +1,231 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-scroll-images-02.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-scroll-images-02.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Balm pinned scene ("rack focus through amber glass"), surface bg. Left: label, heading, numbered steps; right: one 4:5
+  plate. Static (the default markup, also ?static, reduced motion, automated browsers and themes without the balm kit):
+  the final frame, unpinned: the last photo in focus, every step in ink, the counter full.
+  With the balm kit (html.blko-kit-balm) the script pins a 100svh stage inside a (length × 100svh) track: scrolling
+  racks focus from one photo to the next (outgoing softens and dims, incoming comes sharp out of the blur, a 1.04
+  settle), the step in focus is in ink, the others fall back, and a hairline under the plate fills with the counter.
+  Only filter, opacity and transform move.
+{%- endcomment -%}
+{%- assign n = section.blocks.size -%}
+<div class="bscrollimages02{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-bscrollimages02 data-len="{{ s.length }}"
+  ><section aria-label="{{ s.aria | default: 'blko.scroll_images_02.label' | escape }}" class="bscrollimages02__sec"
+    ><div class="bscrollimages02__track" data-track
+      ><div class="bscrollimages02__stage"
+        ><div class="bscrollimages02__grid"
+          ><div class="bscrollimages02__copy"
+            ><div class="bscrollimages02__head"
+              >{%- if s.label != blank -%}<p class="bscrollimages02__label bscrollimages02__muted bscrollimages02__kicker"><span aria-hidden="true" class="bscrollimages02__rule"></span>{{ s.label | escape }}</p>{%- endif -%}
+              {%- if s.heading != blank -%}<h2 class="bscrollimages02__h">{{ s.heading }}</h2>{%- endif -%}
+            </div
+            ><ol class="bscrollimages02__steps"
+              >{%- for b in section.blocks -%}
+                <li class="bscrollimages02__step" data-item {{ b.shopify_attributes }}
+                  ><span class="bscrollimages02__label bscrollimages02__no">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span
+                  ><div
+                    >{%- if b.settings.kicker != blank -%}<p class="bscrollimages02__label bscrollimages02__muted">{{ b.settings.kicker | escape }}</p>{%- endif -%}
+                    <h3 class="bscrollimages02__sh">{{ b.settings.heading | escape }}</h3
+                    >{%- if b.settings.text != blank -%}<p class="bscrollimages02__st">{{ b.settings.text | escape }}</p>{%- endif -%}
+                  </div
+                ></li
+              >{%- endfor -%}
+            </ol
+            >{%- if s.button != blank -%}<div class="bscrollimages02__cta">{%- render 'blko-ui-button', size: 'lg', variant: 'outline', href: s.button_link, children: s.button, iconAfter: 'arrow-up-right' -%}</div>{%- endif -%}
+          </div
+          ><figure class="bscrollimages02__fig"
+            ><div class="bscrollimages02__plate"
+              >{%- for b in section.blocks -%}
+                <div class="bscrollimages02__ph{% if forloop.last %} is-on{% endif %}" data-photo
+                  >{%- if b.settings.image != blank -%}
+                    {{- b.settings.image | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '600, 900, 1200, 1400', sizes: '(min-width: 768px) 45vw, 100vw', class: 'bscrollimages02__img' -}}
+                  {%- else -%}
+                    {%- assign phn = forloop.index0 | modulo: 6 | plus: 1 -%}{%- capture ph -%}lifestyle-{{ phn | modulo: 2 | plus: 1 }}{%- endcapture -%}{{- ph | placeholder_svg_tag: 'bscrollimages02__img bscrollimages02__svg' -}}
+                  {%- endif -%}
+                </div
+              >{%- endfor -%}
+            </div
+            ><div aria-hidden="true" class="bscrollimages02__meter"
+              ><span class="bscrollimages02__label"><span data-count>{% if n < 10 %}0{% endif %}{{ n }}</span> / {% if n < 10 %}0{% endif %}{{ n }}</span
+              ><span class="bscrollimages02__bar"><span data-bar></span></span
+            ></div
+          ></figure
+        ></div
+      ></div
+    ></div
+  ></section
+></div
+
+>
+
+{% schema %}
+{
+  "name": "Scroll images 02",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "No. 01 · Rosehip face oil"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading (italic = accent)",
+      "default": "From the hip to the <em>bottle</em>"
+    },
+    {
+      "type": "text",
+      "id": "button",
+      "label": "Button",
+      "default": "Shop rosehip oil"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "range",
+      "id": "length",
+      "label": "Scene length (screens)",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "text",
+      "id": "aria",
+      "label": "Section name (screen readers)"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "kicker",
+          "label": "Label",
+          "default": "Picked"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Wild hips, after the first frost"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Line",
+          "default": "Gathered by hand from hedgerows in late October, when the fruit is soft and full of oil."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Scroll images 02",
+      "blocks": [
+        {
+          "type": "step",
+          "settings": {
+            "kicker": "Picked",
+            "heading": "Wild hips, after the first frost",
+            "text": "Gathered by hand from hedgerows in late October, when the fruit is soft and full of oil."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "kicker": "Steeped",
+            "heading": "Six weeks in cold-pressed oil",
+            "text": "The petals and seeds rest in squalane in the dark until the oil turns a deep amber."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "kicker": "Poured",
+            "heading": "Bottled the week it is ready",
+            "text": "Filtered through linen, poured into amber glass and numbered by batch."
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

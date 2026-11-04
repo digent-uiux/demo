@@ -1,0 +1,292 @@
+{%- liquid
+  assign s = section.settings
+  assign blko_sid = s.color_scheme.id | default: s.color_scheme | default: 'scheme-1'
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-blog-89.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-blog-89.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-balm', tokens: s.tokens -%}
+{%- comment -%}
+  Balm "bench window": an arched window (double hairline glazing frame, a sill plate naming the figure, "Fig. 01 ·
+  Topic") holds the picture of one journal note; beside it the notes are a numbered index (Bodoni numeral, small-caps
+  date · topic · read time, Karla title, one excerpt line). Pointing at or tabbing to an entry fills the window with its
+  picture from the sill up (balm kit only; static = the first note). Heading: a Karla light line with one <em> Bodoni
+  word. Picks a blog (latest 3–5 articles, topic = first tag, read time from the content); without a blog the preview
+  post blocks stand in. Phones: heading, the arch at 80% width, the index.
+{%- endcomment -%}
+{%- liquid
+  assign bl = s.blog
+  assign live = false
+  if bl != blank and bl.articles_count > 0
+    assign live = true
+  endif
+  assign t_read = 'blko.blog_89.read' | t
+  assign first_topic = ''
+-%}
+{%- capture pics -%}
+  {%- if live -%}
+    {%- for a in bl.articles limit: s.limit -%}
+      {%- render 'blko-blog-89-entry', part: 'pic', i: forloop.index, title: a.title, image: a.image, alt: a.image.alt -%}
+    {%- endfor -%}
+  {%- else -%}
+    {%- for b in section.blocks limit: s.limit -%}
+      {%- render 'blko-blog-89-entry', part: 'pic', i: forloop.index, title: b.settings.title, image: b.settings.image, alt: b.settings.title -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endcapture -%}
+{%- capture rows -%}
+  {%- if live -%}
+    {%- for a in bl.articles limit: s.limit -%}
+      {%- liquid
+        assign words = a.content | strip_html | split: ' ' | size
+        assign read = words | divided_by: 200 | at_least: 1
+        assign dek = ''
+        if s.show_excerpt
+          assign dek = a.excerpt | default: a.content | strip_html | truncatewords: 14
+        endif
+        if forloop.first
+          assign first_topic = a.tags.first
+        endif
+      -%}
+      {%- render 'blko-blog-89-entry', part: 'row', i: forloop.index, title: a.title, url: a.url, iso: a.published_at, topic: a.tags.first, read: read, dek: dek, t_read: t_read -%}
+    {%- endfor -%}
+  {%- else -%}
+    {%- for b in section.blocks limit: s.limit -%}
+      {%- liquid
+        assign dek = ''
+        if s.show_excerpt
+          assign dek = b.settings.excerpt
+        endif
+        if forloop.first
+          assign first_topic = b.settings.topic
+        endif
+      -%}
+      {%- render 'blko-blog-89-entry', part: 'row', i: forloop.index, title: b.settings.title, url: '#', iso: b.settings.date, topic: b.settings.topic, read: b.settings.read, dek: dek, t_read: t_read, attrs: b.shopify_attributes -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endcapture -%}
+{%- capture body -%}
+  <div class="bblog89__grid"
+    ><header class="bblog89__head"
+      >{%- if s.eyebrow != blank -%}<p class="bblog89__cap bblog89__eb"><span aria-hidden="true"></span>{{ s.eyebrow | escape }}</p>{%- endif -%}
+      {%- if s.heading != blank -%}<h2 class="bblog89__h">{{ s.heading }}</h2>{%- endif -%}
+    </header
+    ><figure class="bblog89__fig" data-fig
+      ><div class="bblog89__frame"><div class="bblog89__win" data-win>{{ pics }}<span class="bblog89__glaze" aria-hidden="true"></span></div></div
+      ><figcaption class="bblog89__sill"
+        ><span class="bblog89__fn">{{ 'blko.blog_89.fig' | t }} <span data-fn>01</span></span
+        ><span class="bblog89__cap bblog89__muted" data-ft>{{ first_topic | escape }}</span
+      ></figcaption
+    ></figure
+    ><div class="bblog89__side"
+      ><ol class="bblog89__list" aria-label="{{ 'blko.blog_89.index' | t | escape }}">{{ rows }}</ol
+      ><div class="bblog89__foot"
+        >{%- if live -%}
+          {%- assign shown = bl.articles_count | at_most: s.limit -%}
+          <p class="bblog89__cap bblog89__muted">{{ shown }} {{ 'blko.blog_89.of' | t }} {{ bl.articles_count }} {{ 'blko.blog_89.notes' | t }}</p
+        >{%- else -%}<span></span>{%- endif -%}
+        {%- if s.link_label != blank -%}<a href="{{ s.link | default: bl.url | default: '#' }}" class="bblog89__all">{{ s.link_label | escape }}{%- render 'blko-ui-icon', name: 'arrow-right', size: 16 -%}</a>{%- endif -%}
+      </div
+    ></div
+  ></div
+>{%- endcapture -%}
+<div class="bblog89{%- if blko_sid != 'scheme-1' %} color-{{ blko_sid }} blko-scheme-pick{% endif %}" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-bblog89
+  >{%- assign lbl = 'blko.blog_89.label' | t -%}
+  {%- render 'blko-ui-section', surface: 'bg', label: lbl, inner: 'bblog89__in', children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Blog 89",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "The journal"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Wrap one word in italics to set it in the display face.",
+      "default": "Notes from the <em>bench</em>"
+    },
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Blog"
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "label": "Notes",
+      "min": 3,
+      "max": 5,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "checkbox",
+      "id": "show_excerpt",
+      "label": "Show excerpt",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label",
+      "default": "All stories"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link",
+      "info": "Defaults to the blog."
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Balm)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "info": "Repaints the section with a scheme from Theme settings > Colors. Works when Colors, fonts, corners reads the theme's tokens.",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 128
+    }
+  ],
+  "blocks": [
+    {
+      "type": "post",
+      "name": "Preview post",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Shown only when no blog is picked (or the blog is empty)."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Picture"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "How to layer a cream over an oil"
+        },
+        {
+          "type": "text",
+          "id": "excerpt",
+          "label": "Excerpt"
+        },
+        {
+          "type": "text",
+          "id": "date",
+          "label": "Date (YYYY-MM-DD)",
+          "default": "2026-10-21"
+        },
+        {
+          "type": "text",
+          "id": "topic",
+          "label": "Topic",
+          "default": "Routines"
+        },
+        {
+          "type": "text",
+          "id": "read",
+          "label": "Minutes to read",
+          "default": "4"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Blog 89",
+      "blocks": [
+        {
+          "type": "post",
+          "settings": {
+            "title": "How to layer a cream over an oil",
+            "excerpt": "Thin to thick, then press, never rub: the order that keeps both working.",
+            "date": "2026-10-21",
+            "topic": "Routines",
+            "read": "4"
+          }
+        },
+        {
+          "type": "post",
+          "settings": {
+            "title": "A slower evening routine in four steps",
+            "excerpt": "Ten unhurried minutes with a roller, a stone and one warm cloth.",
+            "date": "2026-10-09",
+            "topic": "Rituals",
+            "read": "6"
+          }
+        },
+        {
+          "type": "post",
+          "settings": {
+            "title": "What cold-pressed really means",
+            "excerpt": "Below forty degrees, from seed to bottle: why the heat matters.",
+            "date": "2026-09-30",
+            "topic": "Sourcing",
+            "read": "5"
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

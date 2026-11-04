@@ -1,0 +1,20 @@
+{%- comment -%}
+  One ruled order row (account-35), a <details> that opens to its lines. Params: n, name, date, status, tone
+  (accent | text | muted), total (cents), open, lines (captured <li>s), links (captured HTML).
+{%- endcomment -%}
+<li class="baccount35__order">
+  <details class="baccount35__od"{% if open %} open{% endif %}>
+    <summary class="baccount35__sum">
+      <span class="baccount35__cap baccount35__acc baccount35__ono">{{ 'blko.account_35.no' | t }} {{ n | prepend: '0' | slice: -2, 2 }}</span>
+      <span class="baccount35__oname">{{ name | escape }}</span>
+      <span class="baccount35__cap baccount35__odate">{{ date }}</span>
+      <span class="baccount35__ostat"><span class="baccount35__pill baccount35__pill--{{ tone }}">{{ status | escape }}</span></span>
+      <span class="baccount35__ototal">{{ total | money_without_trailing_zeros }}</span>
+      <span class="baccount35__chev">{%- render 'blko-ui-icon', name: 'chevron-down', size: 16, stroke: 1.5 -%}</span>
+    </summary>
+    <ul class="baccount35__lines">
+      {{ lines }}
+      <li class="baccount35__olinks">{{ links }}</li>
+    </ul>
+  </details>
+</li>

@@ -1,0 +1,12 @@
+{%- comment -%} One order line (account-35). Params: image, title, size, qty, total (cents). {%- endcomment -%}
+<li class="baccount35__line">
+  <div class="baccount35__lph">
+    {%- if image != blank -%}
+      {{ image | image_url: width: 160 | image_tag: widths: '96, 160', sizes: '48px', loading: 'lazy', class: 'baccount35__img', alt: '' }}
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'baccount35__img baccount35__phsvg' }}
+    {%- endif -%}
+  </div>
+  <p class="baccount35__small">{{ title | escape }} <span class="baccount35__muted">{% if size != blank %}· {{ size | escape }} {% endif %}· ×{{ qty }}</span></p>
+  <p class="baccount35__small baccount35__num">{{ total | money_without_trailing_zeros }}</p>
+</li>
