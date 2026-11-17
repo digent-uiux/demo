@@ -1,0 +1,204 @@
+{%- comment -%}
+  Lather v3, cart page: the bag (home-v3/pages/cart/10-bag.html).
+  Real store: the cart object is rendered inside {% form 'cart', cart %} (updates[], note, remove links, checkout
+  button name="checkout"), so the page works without JS. With JS (blko-lv3-cart-bag.js) the lines are drawn from
+  window.LATHER.cart (real lines from /cart.js plus demo lines), quantity, remove and undo go through the runtime, and
+  the note is saved to the cart. Without real items (fresh install, local render) it shows the HTML empty state and
+  lists whatever demo lines the shopper adds on the page, as the HTML does.
+  Free shipping and the free gift share one progress block (snippet blko-lv3-free-gift-progress, Theme settings > Cart),
+  repainted live by blko-lv3-store.js. The gift line (property _gift) has no quantity control and shows "Free" at 0.
+{%- endcomment -%}
+{{ 'blko-lv3-cart-bag.css' | asset_url | stylesheet_tag }}
+{{ 'blko-lv3-free-gift.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-cart-bag.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+  assign n = cart.items.size | default: 0
+  assign free_ship = settings.free_shipping_threshold | default: s.free_ship
+  assign free_cents = free_ship | times: 100
+  assign total = cart.total_price | default: 0
+  assign left = free_cents | minus: total
+  assign total_money = total | money_without_trailing_zeros
+  assign keep_url = s.keep_link | default: routes.all_products_collection_url
+  assign empty_url = s.empty_link | default: routes.all_products_collection_url
+-%}
+<section class="s-cart-bag" aria-labelledby="cart-title" data-lv3-cart-bag data-real="{{ n }}" data-free="{{ free_ship }}">
+  <script type="application/json" data-cart-strings>
+    {
+      "ship_free_over": {{ s.ship_free_over | json }}, "ship_left": {{ s.ship_left | json }}, "ship_done": {{ s.ship_done | json }},
+      "shipping_calc": {{ s.shipping_calc | json }}, "shipping_free": {{ s.shipping_free | json }},
+      "checkout": {{ s.checkout_label | json }}, "removed_line": {{ s.removed_line | json }},
+      "st_removed": {{ s.st_removed | json }}, "st_updated": {{ s.st_updated | json }}, "st_restored": {{ s.st_restored | json }},
+      "st_thanks": {{ s.st_thanks | json }}, "remove": {{ s.remove_label | json }}, "fewer": {{ s.fewer_label | json }},
+      "more": {{ s.more_label | json }}, "qty": {{ s.qty_label | json }},
+      "fallback_url": {{ routes.all_products_collection_url | json }},
+      "urls": {
+        {%- for item in cart.items -%}{{ item.key | json }}: {{ item.url | json }}{% unless forloop.last %},{% endunless %}{%- endfor -%}
+      }
+    }
+  </script>
+  <template data-cart-ph>{{ 'product-1' | placeholder_svg_tag: 'blko-lv3-ph' }}</template>
+  <div class="wrap">
+    <div class="s-cart-bag__head">
+      <h1 class="h1" id="cart-title" tabindex="-1" data-rv="line"><span class="ln"><span>{{ s.heading }}</span></span></h1>
+      {%- if s.keep_label != blank -%}<a href="{{ keep_url }}" class="link">{{ s.keep_label | escape }}</a>{%- endif -%}
+    </div>
+    {%- form 'cart', cart, id: 'cart-form', class: 's-cart-bag__layout', novalidate: 'novalidate' -%}
+      <div>
+        <div class="s-cart-bag__undo" id="cart-undo" role="status" hidden><span id="cart-removed"></span><button type="button" class="link" id="cart-undo-button">{{ s.undo_label | escape }}</button></div>
+        <div id="cart-lines">
+          {%- liquid
+            assign gift_value_m = settings.free_gift_value | plus: 0 | money_without_trailing_zeros
+            if settings.free_gift_product != blank
+              assign gift_value_m = settings.free_gift_product.selected_or_first_available_variant.price | money_without_trailing_zeros
+            endif
+          -%}
+          {%- for item in cart.items -%}
+            {%- liquid
+              assign fewer = s.fewer_label | replace: '[name]', item.product.title | escape
+              assign more = s.more_label | replace: '[name]', item.product.title | escape
+              assign rm = s.remove_label | append: ' ' | append: item.product.title | escape
+            -%}
+            {%- if item.properties._gift != blank -%}
+            <article class="s-cart-bag__line s-cart-bag__line--gift" data-cart-index="{{ forloop.index0 }}">
+              <a href="{{ item.url }}">
+                {%- if item.image != blank -%}
+                  {{ item.image | image_url: width: 300 | image_tag: widths: '100, 200, 300', sizes: '100px', loading: 'lazy', alt: item.product.title }}
+                {%- else -%}
+                  {{ 'product-1' | placeholder_svg_tag: 'blko-lv3-ph' }}
+                {%- endif -%}
+              </a>
+              <div>
+                <h2>{{ item.product.title | escape }}</h2>
+                <p class="small">{{ settings.free_gift_note | replace: '[value]', gift_value_m | escape }}</p>
+                <input type="hidden" name="updates[]" value="1">
+              </div>
+              <div>
+                <span class="price">{% if item.final_line_price == 0 %}{{ settings.free_gift_free | escape }}{% else %}{{ item.final_line_price | money_without_trailing_zeros }}{% endif %}</span>
+                <a href="{{ item.url_to_remove }}" class="s-cart-bag__remove" data-remove data-gift-off aria-label="{{ settings.free_gift_remove | replace: '[name]', item.product.title | escape }}">{{ s.remove_label | escape }}</a>
+              </div>
+            </article>
+            {%- continue -%}
+            {%- endif -%}
+            <article class="s-cart-bag__line" data-cart-index="{{ forloop.index0 }}">
+              <a href="{{ item.url }}">
+                {%- if item.image != blank -%}
+                  {{ item.image | image_url: width: 300 | image_tag: widths: '100, 200, 300', sizes: '100px', loading: 'lazy', alt: item.product.title }}
+                {%- else -%}
+                  {{ 'product-1' | placeholder_svg_tag: 'blko-lv3-ph' }}
+                {%- endif -%}
+              </a>
+              <div>
+                <h2>{{ item.product.title | escape }}</h2>
+                {%- liquid
+                  assign meta = ''
+                  unless item.product.has_only_default_variant
+                    assign meta = item.variant.title
+                  endunless
+                  for p in item.properties
+                    assign first_char = p.first | slice: 0
+                    if p.last != blank and first_char != '_'
+                      if meta != ''
+                        assign meta = meta | append: ', '
+                      endif
+                      assign meta = meta | append: p.first | append: ': ' | append: p.last
+                    endif
+                  endfor
+                -%}
+                <p class="small">{{ meta | escape }}</p>
+                <div class="qty">
+                  <button type="button" data-change="-1" aria-label="{{ fewer }}">−</button>
+                  <input class="s-cart-bag__qty" type="number" name="updates[]" value="{{ item.quantity }}" min="0" max="99" inputmode="numeric" aria-label="{{ s.qty_label | escape }}">
+                  <button type="button" data-change="1" aria-label="{{ more }}"{% if item.quantity >= 99 %} disabled{% endif %}>+</button>
+                </div>
+              </div>
+              <div>
+                <span class="price">{{ item.final_line_price | money_without_trailing_zeros }}</span>
+                <a href="{{ item.url_to_remove }}" class="s-cart-bag__remove" data-remove aria-label="{{ rm }}">{{ s.remove_label | escape }}</a>
+              </div>
+            </article>
+          {%- endfor -%}
+        </div>
+        {%- if n > 0 -%}<button type="submit" name="update" class="link s-cart-bag__update" data-nojs>{{ s.update_label | escape }}</button>{%- endif -%}
+        <div id="cart-empty" class="s-cart-bag__empty"{% if n > 0 %} hidden{% endif %}>
+          <h2 class="h3">{{ s.empty_heading | escape }}</h2>
+          {%- if s.empty_text != blank -%}<p>{{ s.empty_text | escape }}</p>{%- endif -%}
+          {%- if s.empty_button != blank -%}<a class="btn btn--primary" href="{{ empty_url }}">{{ s.empty_button | escape }}</a>{%- endif -%}
+        </div>
+        <div class="s-cart-bag__note" id="cart-note-wrap"{% if n == 0 %} hidden{% endif %}>
+          <label for="cart-note">{{ s.note_label | escape }}</label>
+          <textarea id="cart-note" name="note" maxlength="500" placeholder="{{ s.note_placeholder | escape }}">{{ cart.note }}</textarea>
+          {%- if s.note_hint != blank -%}<p class="small">{{ s.note_hint | escape }}</p>{%- endif -%}
+        </div>
+      </div>
+      <aside class="s-cart-bag__summary" aria-label="{{ s.summary_label | escape }}">
+        <h2 class="h3">{{ s.summary_heading | escape }}</h2>
+        {%- comment -%} #cart-shipping stays as an empty, hidden target for blko-lv3-cart-bag.js; the visible message is in the progress block {%- endcomment -%}
+        <p class="s-cart-bag__ship" id="cart-shipping" hidden></p>
+        {%- render 'blko-lv3-free-gift-progress', id: 'cart-gift-progress', cls: 'ship ship--page', ship_free_over: s.ship_free_over, ship_left: s.ship_left, ship_done: s.ship_done -%}
+        <dl>
+          <dt>{{ s.subtotal_label | escape }}</dt><dd class="price" id="cart-subtotal">{{ cart.items_subtotal_price | default: 0 | money_without_trailing_zeros }}</dd>
+          {%- for d in cart.cart_level_discount_applications -%}
+            <dt>{{ d.title | escape }}</dt><dd>-{{ d.total_allocated_amount | money_without_trailing_zeros }}</dd>
+          {%- endfor -%}
+          <dt>{{ s.shipping_label | escape }}</dt><dd id="cart-shipping-cost">{% if n > 0 and free_cents > 0 and left <= 0 %}{{ s.shipping_free | escape }}{% else %}{{ s.shipping_calc | escape }}{% endif %}</dd>
+          <dt class="s-cart-bag__total">{{ s.total_label | escape }}</dt><dd class="price s-cart-bag__total" id="cart-total">{{ total_money }}</dd>
+        </dl>
+        <button class="btn btn--primary btn--block" type="submit" name="checkout" id="cart-checkout"{% if n == 0 %} disabled{% endif %}>{{ s.checkout_label | replace: '[amount]', total_money | escape }}</button>
+        <p class="s-cart-bag__status" id="cart-status" role="status" aria-live="polite"></p>
+        {%- if s.extras != blank -%}<p class="s-cart-bag__extras">{{ s.extras }}</p>{%- endif -%}
+      </aside>
+    {%- endform -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lather bag",
+  "class": "blko-lv3-section-cart-bag",
+  "settings": [
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Your <em>bag.</em>", "info": "Italic text shows in the accent style." },
+    { "type": "text", "id": "keep_label", "label": "Keep browsing link", "default": "Keep browsing" },
+    { "type": "url", "id": "keep_link", "label": "Keep browsing URL", "info": "Blank: all products." },
+    { "type": "header", "content": "Empty bag" },
+    { "type": "text", "id": "empty_heading", "label": "Heading", "default": "Room for a softer routine." },
+    { "type": "textarea", "id": "empty_text", "label": "Text", "default": "Start with a wash, or keep it small with the Oat bar for face and body." },
+    { "type": "text", "id": "empty_button", "label": "Button", "default": "Find your formula" },
+    { "type": "url", "id": "empty_link", "label": "Button URL", "info": "Blank: all products." },
+    { "type": "header", "content": "Lines" },
+    { "type": "text", "id": "remove_label", "label": "Remove", "default": "Remove" },
+    { "type": "text", "id": "undo_label", "label": "Undo", "default": "Undo" },
+    { "type": "text", "id": "removed_line", "label": "Removed line", "default": "[name] removed.", "info": "[name] = product." },
+    { "type": "text", "id": "fewer_label", "label": "One fewer (screen readers)", "default": "One fewer [name]" },
+    { "type": "text", "id": "more_label", "label": "One more (screen readers)", "default": "One more [name]" },
+    { "type": "text", "id": "qty_label", "label": "Quantity (screen readers)", "default": "Quantity" },
+    { "type": "text", "id": "update_label", "label": "Update button (shown only without JavaScript)", "default": "Update bag" },
+    { "type": "header", "content": "Order note" },
+    { "type": "text", "id": "note_label", "label": "Label", "default": "Anything we should know?" },
+    { "type": "text", "id": "note_placeholder", "label": "Placeholder", "default": "An order note, if you need one." },
+    { "type": "text", "id": "note_hint", "label": "Hint", "default": "Saved on this device with your bag." },
+    { "type": "header", "content": "Summary" },
+    { "type": "text", "id": "summary_heading", "label": "Heading", "default": "Your order" },
+    { "type": "text", "id": "summary_label", "label": "Summary label (screen readers)", "default": "Order summary" },
+    { "type": "range", "id": "free_ship", "label": "Free shipping from", "min": 0, "max": 200, "step": 5, "unit": "$", "default": 40, "info": "Used only when Theme settings > Cart has no free-shipping amount." },
+    { "type": "text", "id": "ship_free_over", "label": "Shipping, empty bag", "default": "Free shipping over [amount]." },
+    { "type": "text", "id": "ship_left", "label": "Shipping, not there yet", "default": "[amount] away from free shipping." },
+    { "type": "text", "id": "ship_done", "label": "Shipping, unlocked", "default": "Free shipping unlocked." },
+    { "type": "text", "id": "progress_label", "label": "Progress bar (screen readers)", "default": "Progress toward free shipping", "info": "Not used since the combined bar: see Theme settings > Cart > Free gift." },
+    { "type": "text", "id": "subtotal_label", "label": "Subtotal", "default": "Subtotal" },
+    { "type": "text", "id": "shipping_label", "label": "Shipping", "default": "Shipping" },
+    { "type": "text", "id": "shipping_calc", "label": "Shipping, not free", "default": "Calculated at checkout" },
+    { "type": "text", "id": "shipping_free", "label": "Shipping, free", "default": "Free" },
+    { "type": "text", "id": "total_label", "label": "Total", "default": "Total before shipping & tax" },
+    { "type": "text", "id": "checkout_label", "label": "Check out button", "default": "Check out, [amount]" },
+    { "type": "inline_richtext", "id": "extras", "label": "Note under the button", "default": "Skin reacted? Your first bottle of any formula is refundable within 30 days, used or not. <a href=\"/pages/help#refund\">How it works</a>" },
+    { "type": "header", "content": "Status messages" },
+    { "type": "text", "id": "st_removed", "label": "Removed", "default": "[name] removed. You can undo this change." },
+    { "type": "text", "id": "st_updated", "label": "Quantity updated", "default": "[name] quantity updated." },
+    { "type": "text", "id": "st_restored", "label": "Restored", "default": "[name] restored." },
+    { "type": "text", "id": "st_thanks", "label": "Demo check out", "default": "Thank you. Your order has been placed.", "info": "Shown only for demo lines (no product picked). Real lines go to Shopify checkout." }
+  ],
+  "presets": [{ "name": "Lather bag" }]
+}
+{% endschema %}

@@ -1,0 +1,65 @@
+{%- comment -%}
+  Lather v3, cart page: the add-on under the bag (home-v3/pages/cart/20-finish.html).
+  One product: a picked product wins (title, price, image, variant: Add posts to /cart/add.js through window.LATHER);
+  blank, the demo values (key 'bar') keep it working as in the HTML.
+{%- endcomment -%}
+{{ 'blko-lv3-cart-finish.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-cart-finish.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+  assign key = s.key | default: 'bar' | handleize
+  assign p = s.product
+  assign img_alt = s.image.alt | default: s.name
+  if p != blank
+    assign price_money = p.selected_or_first_available_variant.price | money_without_trailing_zeros
+  else
+    assign price_money = s.price | plus: 0 | money_without_trailing_zeros
+  endif
+-%}
+{%- render 'blko-lv3-product-data', key: key, product: p, name: s.name, size: s.size, price: s.price, line: s.line, labels: 'best,ff', img: s.image -%}
+<section class="s-cart-finish" aria-labelledby="cart-finish-title-{{ section.id }}" data-lv3-cart-finish>
+  <div class="wrap s-cart-finish__in">
+    <div class="s-cart-finish__product">
+      {%- if s.image != blank -%}
+        {{ s.image | image_url: width: 300 | image_tag: widths: '96, 192, 300', sizes: '96px', loading: 'lazy', alt: img_alt }}
+      {%- elsif p != blank and p.featured_media != blank -%}
+        {{ p.featured_media | image_url: width: 300 | image_tag: widths: '96, 192, 300', sizes: '96px', loading: 'lazy', alt: p.title }}
+      {%- else -%}
+        {{ 'product-2' | placeholder_svg_tag: 'blko-lv3-ph' }}
+      {%- endif -%}
+      <div>
+        <h2 class="h3" id="cart-finish-title-{{ section.id }}">{{ s.heading | escape }}</h2>
+        {%- if s.text != blank -%}<p>{{ s.text | escape }}</p>{%- endif -%}
+        <span class="price" data-lv3-price="{{ key }}">{{ price_money }}</span>
+      </div>
+    </div>
+    {%- if p == blank or p.available -%}
+      <button class="btn btn--light" type="button" data-add="{{ key }}">{{ s.button | escape }}</button>
+    {%- else -%}
+      <button class="btn btn--light" type="button" disabled>{{ s.sold_out | escape }}</button>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lather bag add-on",
+  "class": "blko-lv3-section-cart-finish",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "For the sink, too." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Oat bar for face and body. A simple addition, 120 g." },
+    { "type": "text", "id": "button", "label": "Button", "default": "Add Oat bar" },
+    { "type": "text", "id": "sold_out", "label": "Button, sold out", "default": "Sold out" },
+    { "type": "image_picker", "id": "image", "label": "Image", "info": "Blank: the product's image." },
+    { "type": "header", "content": "Product" },
+    { "type": "product", "id": "product", "label": "Product", "info": "Blank: the demo values below (no real checkout)." },
+    { "type": "text", "id": "key", "label": "Product key", "default": "bar", "info": "Same key as the bag drawer add-on, so it is shared." },
+    { "type": "text", "id": "name", "label": "Demo name", "default": "Oat bar" },
+    { "type": "text", "id": "size", "label": "Demo size", "default": "120 g" },
+    { "type": "text", "id": "price", "label": "Demo price, in cents", "default": "900" },
+    { "type": "textarea", "id": "line", "label": "Demo line", "default": "Oat milk soap bar for face and body. Rich lather that rinses soft." }
+  ],
+  "presets": [{ "name": "Lather bag add-on" }]
+}
+{% endschema %}

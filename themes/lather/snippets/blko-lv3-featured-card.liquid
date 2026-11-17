@@ -1,0 +1,81 @@
+{%- comment -%}
+  One product card of the Lather v3 featured rail (blko-lv3-featured). Same markup the HTML builds in JS.
+  Params: block (a "product" block of blko-lv3-featured), labels_text ("best:Best seller|ff:..."), qv_label, add_label, wish_label.
+  Real product (block.settings.product): title, price, featured image, second image on hover, URL.
+  Blank: the block's demo name, price (cents), image, and a Shopify placeholder.
+{%- endcomment -%}
+{%- liquid
+  assign b = block.settings
+  assign p = b.product
+  if p != blank
+    assign key = p.handle
+    assign name = p.title
+    assign price = p.selected_or_first_available_variant.price
+    assign img = p.featured_image
+    assign hv = b.hover
+    if hv == blank and p.images.size > 1
+      assign hv = p.images[1]
+    endif
+    assign size = b.size
+    if size == blank
+      assign v = p.selected_or_first_available_variant
+      unless v.title == 'Default Title'
+        assign size = v.title
+      endunless
+    endif
+    assign line = b.line
+    if line == blank
+      assign line = p.description | strip_html | truncatewords: 14
+    endif
+    assign url = p.url
+  else
+    assign key = b.key | default: block.id
+    assign name = b.name
+    assign price = b.price | plus: 0
+    assign img = b.image
+    assign hv = b.hover
+    assign size = b.size
+    assign line = b.line
+    assign url = blank
+  endif
+  assign lbl_s = b.labels | remove: ' '
+  if p != blank and p.selected_or_first_available_variant.compare_at_price > price
+    unless lbl_s contains 'sale'
+      assign lbl_s = lbl_s | append: ',sale'
+    endunless
+  endif
+  assign lbls = lbl_s | split: ','
+  assign alt = name | append: ', ' | append: size
+  if size == blank
+    assign alt = name
+  endif
+  assign label_pairs = labels_text | split: '|'
+-%}
+<li class="s-feat__card" {{ block.shopify_attributes }}>
+  <div class="s-feat__media">
+    <div class="labels">
+      {%- for k in lbls -%}
+        {%- for pair in label_pairs -%}
+          {%- assign kv = pair | split: ':' -%}
+          {%- if kv[0] == k and kv[1] != blank -%}<span class="label label--{{ k }}">{{ kv[1] | escape }}</span>{%- endif -%}
+        {%- endfor -%}
+      {%- endfor -%}
+    </div>
+    {%- if img != blank -%}
+      {{ img | image_url: width: 800 | image_tag: widths: '300, 450, 600, 800', sizes: '(max-width: 760px) 72vw, 300px', loading: 'lazy', alt: alt }}
+    {%- else -%}
+      {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph' }}
+    {%- endif -%}
+    {%- if hv != blank -%}
+      {{ hv | image_url: width: 800 | image_tag: widths: '300, 450, 600, 800', sizes: '(max-width: 760px) 72vw, 300px', loading: 'lazy', alt: '', class: 's-feat__hv' }}
+    {%- endif -%}
+    <button class="s-feat__qv" type="button" data-quick="{{ key | escape }}" aria-label="{{ qv_label | escape }} {{ name | escape }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg>{{ qv_label | escape }}</button>
+    {%- render 'blko-lv3-wishlist-heart', key: key, name: name, label: wish_label -%}
+  </div>
+  <h3 class="s-feat__name">{%- if url != blank -%}<a href="{{ url }}">{{ name | escape }}</a>{%- else -%}{{ name | escape }}{%- endif -%}</h3>
+  <p class="s-feat__line">{{ line | escape }}</p>
+  <div class="s-feat__buy">
+    <p class="price">{{ price | money_without_trailing_zeros }}{%- if size != blank -%}<span class="size">{{ size | escape }}</span>{%- endif -%}</p>
+    <button class="btn btn--ghost btn--sm" type="button" data-add="{{ key | escape }}" aria-label="{{ add_label | escape }} {{ name | escape }} to bag">{{ add_label | escape }}</button>
+  </div>
+</li>

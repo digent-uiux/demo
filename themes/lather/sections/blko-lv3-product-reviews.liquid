@@ -1,0 +1,77 @@
+{%- comment -%}
+  Lather v3, product page: reviews (home-v3/pages/product/50-reviews.html).
+  Heading and intro; review blocks (name, two detail lines, stars, quote); a foot line with a help link. No app needed.
+{%- endcomment -%}
+{{ 'blko-lv3-product-reviews.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign s = section.settings
+  assign anchor = s.anchor | handleize | default: 'pdp-reviews'
+-%}
+<section class="s-pdp-reviews" id="{{ anchor }}" aria-labelledby="{{ anchor }}-title"><div class="wrap">
+  <div class="s-pdp-reviews__head">
+    <h2 class="h2" id="{{ anchor }}-title" data-rv="line">
+      {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
+      {%- if s.heading_2 != blank -%}<span class="ln"><span>{{ s.heading_2 }}</span></span>{%- endif -%}
+    </h2>
+    {%- if s.text != blank -%}<p>{{ s.text | escape }}</p>{%- endif -%}
+  </div>
+  {%- for block in section.blocks -%}
+    {%- liquid
+      assign b = block.settings
+      assign r = b.rating | default: 5
+      assign stars = ''
+      for i in (1..r)
+        assign stars = stars | append: '★'
+      endfor
+      assign aria = s.stars_aria | replace: '[n]', r
+    -%}
+    <article class="s-pdp-reviews__row" data-rv="blur" {{ block.shopify_attributes }}>
+      <p class="s-pdp-reviews__person"><b>{{ b.name | escape }}</b>{{ b.detail_1 | escape }}{% if b.detail_2 != blank %}<br>{{ b.detail_2 | escape }}{% endif %}</p>
+      <blockquote class="s-pdp-reviews__quote"><span class="stars" role="img" aria-label="{{ aria | escape }}">{{ stars }}</span>{{ b.quote | escape }}</blockquote>
+    </article>
+  {%- endfor -%}
+  {%- if s.foot != blank or s.foot_link_label != blank -%}
+    <div class="s-pdp-reviews__foot">{{ s.foot | escape }}{%- if s.foot_link_label != blank -%}<a href="{{ s.foot_link | default: '#' }}" class="link">{{ s.foot_link_label | escape }}</a>{%- endif -%}</div>
+  {%- endif -%}
+</div></section>
+
+{% schema %}
+{
+  "name": "Lather product reviews",
+  "class": "blko-lv3-section-product-reviews",
+  "max_blocks": 10,
+  "settings": [
+    { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "The feel, in" },
+    { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "your <em>words.</em>", "info": "Italic text shows in the accent style." },
+    { "type": "textarea", "id": "text", "label": "Intro", "default": "Skin is personal. Read the experience alongside the ingredient list, not instead of it." },
+    { "type": "text", "id": "stars_aria", "label": "Stars label (screen readers)", "default": "[n] out of 5 stars" },
+    { "type": "header", "content": "Foot" },
+    { "type": "text", "id": "foot", "label": "Text", "default": "Every skin responds differently. Need help choosing?" },
+    { "type": "text", "id": "foot_link_label", "label": "Link label", "default": "Talk to us" },
+    { "type": "url", "id": "foot_link", "label": "Link" },
+    { "type": "header", "content": "Section" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "pdp-reviews", "info": "The buy box's reviews link points here." }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        { "type": "text", "id": "name", "label": "Name", "default": "Hannah K." },
+        { "type": "text", "id": "detail_1", "label": "Detail, line 1", "default": "Eczema-prone skin" },
+        { "type": "text", "id": "detail_2", "label": "Detail, line 2", "default": "Using it for 6 months" },
+        { "type": "range", "id": "rating", "label": "Stars", "min": 1, "max": 5, "step": 1, "default": 5 },
+        { "type": "textarea", "id": "quote", "label": "Quote", "default": "“First wash that doesn't leave my arms tight. No smell at all, which is the whole point.”" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather product reviews",
+      "blocks": [
+        { "type": "review", "settings": { "name": "Hannah K.", "detail_1": "Eczema-prone skin", "detail_2": "Using it for 6 months", "rating": 5, "quote": "“First wash that doesn't leave my arms tight. No smell at all, which is the whole point.”" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

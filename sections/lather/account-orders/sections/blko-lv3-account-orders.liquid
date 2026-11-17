@@ -1,0 +1,167 @@
+{%- comment -%}
+  Lather v3, account and orders (home-v3/pages/account/10-account.html, signed-in state) for customers/account and
+  customers/order. Same look as the access pages: intro column + panel.
+    account   greeting, customer.orders (paginated by 5, each links to its order), button, log out
+    order     one order: lines, totals, discounts, shipping address
+  Without a customer or order (Theme Editor preview, local render) both show the demo order from the settings.
+{%- endcomment -%}
+{{ 'blko-lv3-account-access.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+  assign view = s.view
+  if view == 'auto'
+    assign tname = template.name | remove: 'customers/'
+    if tname == 'order'
+      assign view = 'order'
+    else
+      assign view = 'account'
+    endif
+  endif
+  assign cta_url = s.cta_link | default: routes.all_products_collection_url
+  if s.cta_product != blank
+    assign cta_url = s.cta_product.url
+  endif
+-%}
+{%- capture demo_order -%}
+  <div class="s-acct-access__order">
+    {%- if s.demo_image != blank -%}
+      {{ s.demo_image | image_url: width: 200 | image_tag: widths: '64, 128, 200', sizes: '64px', loading: 'lazy', alt: s.demo_line }}
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'blko-lv3-ph' }}
+    {%- endif -%}
+    <div><b>{{ s.demo_number | escape }}</b><p>{{ s.demo_line | escape }}</p><p class="small">{{ s.demo_status | escape }}</p></div>
+    <span class="price">{{ s.demo_total | escape }}</span>
+  </div>
+{%- endcapture -%}
+
+<section class="s-acct-access" aria-labelledby="account-title-{{ section.id }}" data-view="{{ view }}">
+  <div class="wrap s-acct-access__grid">
+    {%- render 'blko-lv3-account-intro', s: s, sid: section.id -%}
+    <div class="s-acct-access__panel" id="account-panel">
+      {%- if view == 'order' -%}
+        <div id="account-order">
+          {%- if order -%}
+            <h2 class="h3" tabindex="-1">{{ s.order_heading | replace: '[number]', order.name | escape }}</h2>
+            <p class="small">{{ order.created_at | date: '%B %-d, %Y' }}{% if order.fulfillment_status_label != blank %}, {{ order.fulfillment_status_label | escape }}{% endif %}{% if order.cancelled %}, {{ s.cancelled_label | escape }}{% endif %}</p>
+            <div class="s-acct-access__orders">
+              {%- for line in order.line_items -%}
+                <div class="s-acct-access__order">
+                  {%- if line.image != blank -%}
+                    {{ line.image | image_url: width: 200 | image_tag: widths: '64, 128, 200', sizes: '64px', loading: 'lazy', alt: line.title }}
+                  {%- else -%}
+                    {{ 'product-1' | placeholder_svg_tag: 'blko-lv3-ph' }}
+                  {%- endif -%}
+                  <div><b>{{ line.product.title | default: line.title | escape }}</b>{% unless line.variant.title == 'Default Title' or line.variant.title == blank %}<p>{{ line.variant.title | escape }}</p>{% endunless %}<p class="small">{{ s.qty_label | escape }} {{ line.quantity }}</p></div>
+                  <span class="price">{{ line.final_line_price | money_without_trailing_zeros }}</span>
+                </div>
+              {%- endfor -%}
+              <dl class="s-acct-access__totals">
+                <dt>{{ s.subtotal_label | escape }}</dt><dd>{{ order.line_items_subtotal_price | money_without_trailing_zeros }}</dd>
+                {%- for d in order.cart_level_discount_applications -%}<dt>{{ d.title | escape }}</dt><dd>-{{ d.total_allocated_amount | money_without_trailing_zeros }}</dd>{%- endfor -%}
+                <dt>{{ s.shipping_label | escape }}</dt><dd>{{ order.shipping_price | money_without_trailing_zeros }}</dd>
+                <dt>{{ s.tax_label | escape }}</dt><dd>{{ order.tax_price | money_without_trailing_zeros }}</dd>
+                <dt class="s-acct-access__total">{{ s.total_label | escape }}</dt><dd class="price s-acct-access__total">{{ order.total_price | money_without_trailing_zeros }}</dd>
+              </dl>
+              {%- if order.shipping_address -%}
+                <div class="s-acct-access__address"><h3 class="h3">{{ s.ship_to_label | escape }}</h3><p>{{ order.shipping_address | format_address }}</p></div>
+              {%- endif -%}
+            </div>
+          {%- else -%}
+            <h2 class="h3" tabindex="-1">{{ s.demo_number | escape }}</h2>
+            <div class="s-acct-access__orders">{{ demo_order }}</div>
+          {%- endif -%}
+          <a class="link" href="{{ routes.account_url }}">{{ s.back_account_label | escape }}</a>
+        </div>
+
+      {%- else -%}
+        <div id="account-signed">
+          <h2 class="h3" id="account-greeting" tabindex="-1">
+            {%- if customer.first_name != blank -%}{{ s.hello | replace: '[name]', customer.first_name | escape }}{%- else -%}{{ s.welcome | escape }}{%- endif -%}
+          </h2>
+          <div class="s-acct-access__orders">
+            <h3 class="h3">{{ s.orders_heading | escape }}</h3>
+            {%- if customer -%}
+              {%- paginate customer.orders by 5 -%}
+                {%- for o in customer.orders -%}
+                  {%- assign first_line = o.line_items | first -%}
+                  <a class="s-acct-access__order" href="{{ o.customer_url }}">
+                    {%- if first_line.image != blank -%}
+                      {{ first_line.image | image_url: width: 200 | image_tag: widths: '64, 128, 200', sizes: '64px', loading: 'lazy', alt: first_line.title }}
+                    {%- else -%}
+                      {{ 'product-1' | placeholder_svg_tag: 'blko-lv3-ph' }}
+                    {%- endif -%}
+                    <div><b>{{ s.order_heading | replace: '[number]', o.name | escape }}</b><p>{{ o.line_items | map: 'title' | join: ', ' | escape }}</p><p class="small">{{ o.fulfillment_status_label | escape }}, {{ o.created_at | date: '%B %-d' }}</p></div>
+                    <span class="price">{{ o.total_price | money_without_trailing_zeros }}</span>
+                  </a>
+                {%- else -%}
+                  <p class="s-acct-access__note">{{ s.no_orders | escape }}</p>
+                {%- endfor -%}
+                {%- if paginate.pages > 1 -%}
+                  <nav class="s-acct-access__pages" aria-label="{{ s.pages_label | escape }}">
+                    {%- if paginate.previous -%}<a class="link" href="{{ paginate.previous.url }}">{{ s.prev_label | escape }}</a>{%- endif -%}
+                    {%- if paginate.next -%}<a class="link" href="{{ paginate.next.url }}">{{ s.next_label | escape }}</a>{%- endif -%}
+                  </nav>
+                {%- endif -%}
+              {%- endpaginate -%}
+            {%- else -%}
+              {{ demo_order }}
+            {%- endif -%}
+            {%- if s.cta_label != blank -%}<a href="{{ cta_url }}" class="btn btn--primary">{{ s.cta_label | escape }}</a>{%- endif -%}
+          </div>
+          <a class="link" href="{{ routes.account_logout_url | default: '/account/logout' }}" id="account-signout">{{ s.logout_label | escape }}</a>
+        </div>
+      {%- endif -%}
+      <p class="s-acct-access__status" id="account-status" role="status"></p>
+    </div>
+  </div>
+</section>
+
+
+{% schema %}
+{
+  "name": "Lather account and orders",
+  "class": "blko-lv3-section-account-orders",
+  "settings": [
+    {"type": "select", "id": "view", "label": "View", "default": "auto", "info": "Auto picks the panel from the template (customers/account, customers/order).", "options": [{"value": "auto", "label": "Auto"}, {"value": "account", "label": "Account and orders"}, {"value": "order", "label": "One order"}]},
+    {"type": "header", "content": "Intro"},
+    {"type": "text", "id": "eyebrow", "label": "Small label", "default": "Your account"},
+    {"type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "A little less"},
+    {"type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "to <em>remember.</em>", "info": "Italic text shows in the accent style."},
+    {"type": "textarea", "id": "text", "label": "Text", "default": "Your orders, your details, and an easier way back to the formulas you like."},
+    {"type": "text", "id": "help_label", "label": "Help link", "default": "Need help with an order?"},
+    {"type": "url", "id": "help_link", "label": "Help link URL", "info": "Blank: /pages/help."},
+    {"type": "image_picker", "id": "image", "label": "Image", "info": "Portrait, shown at 220 px on desktop."},
+    {"type": "text", "id": "image_alt", "label": "Image description", "default": "Soft wash on warm stone with leaf shadows", "info": "Used when the image has no alt text."},
+    {"type": "header", "content": "Account"},
+    {"type": "text", "id": "welcome", "label": "Greeting", "default": "Welcome back."},
+    {"type": "text", "id": "hello", "label": "Greeting with name", "default": "Hello, [name].", "info": "[name] = first name."},
+    {"type": "text", "id": "orders_heading", "label": "Orders heading", "default": "Your orders"},
+    {"type": "text", "id": "order_heading", "label": "Order title", "default": "Order [number]", "info": "[number] = order number, e.g. #1042."},
+    {"type": "text", "id": "no_orders", "label": "No orders yet", "default": "No orders yet. Your first one will show here."},
+    {"type": "text", "id": "cta_label", "label": "Button", "default": "Shop Calm wash"},
+    {"type": "product", "id": "cta_product", "label": "Button product"},
+    {"type": "url", "id": "cta_link", "label": "Button URL", "info": "Used when no product is picked. Blank: all products."},
+    {"type": "text", "id": "logout_label", "label": "Log out link", "default": "Log out"},
+    {"type": "text", "id": "pages_label", "label": "Pagination label (screen readers)", "default": "More orders"},
+    {"type": "text", "id": "prev_label", "label": "Newer orders", "default": "Newer orders"},
+    {"type": "text", "id": "next_label", "label": "Older orders", "default": "Older orders"},
+    {"type": "header", "content": "One order"},
+    {"type": "text", "id": "qty_label", "label": "Quantity", "default": "Quantity"},
+    {"type": "text", "id": "subtotal_label", "label": "Subtotal", "default": "Subtotal"},
+    {"type": "text", "id": "shipping_label", "label": "Shipping", "default": "Shipping"},
+    {"type": "text", "id": "tax_label", "label": "Tax", "default": "Tax"},
+    {"type": "text", "id": "total_label", "label": "Total", "default": "Total"},
+    {"type": "text", "id": "ship_to_label", "label": "Shipping address", "default": "Shipping to"},
+    {"type": "text", "id": "cancelled_label", "label": "Cancelled", "default": "cancelled"},
+    {"type": "text", "id": "back_account_label", "label": "Back link", "default": "Back to your account"},
+    {"type": "header", "content": "Demo order", "info": "Shown only in the Theme Editor preview, where there is no customer."},
+    {"type": "image_picker", "id": "demo_image", "label": "Image"},
+    {"type": "text", "id": "demo_number", "label": "Number", "default": "Order #1042"},
+    {"type": "text", "id": "demo_line", "label": "Line", "default": "Calm wash, 400 ml"},
+    {"type": "text", "id": "demo_status", "label": "Status", "default": "Delivered October 28"},
+    {"type": "text", "id": "demo_total", "label": "Total", "default": "$18"}
+  ],
+  "presets": [{ "name": "Lather account and orders" }]
+}
+{% endschema %}

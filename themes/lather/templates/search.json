@@ -1,88 +1,222 @@
 {
   "sections": {
-    "search-blog-search-results": {
-      "type": "blko-search-blog-search-results",
+    "find": {
+      "type": "blko-lv3-search-find",
       "settings": {
-        "crumb": "Search",
-        "heading": "Search the shop and the locker room.",
-        "text": "Look up scents, products and how-to guides.",
-        "placeholder": "Try “cedar” or “deodorant”",
-        "search_label": "Search products and guides",
-        "view_all_label": "See every result"
+        "heading_1": "A little help",
+        "heading_2": "finding <em>soft.</em>",
+        "text": "Search by product, ingredient or what your skin needs.",
+        "label": "What are you looking for?",
+        "placeholder": "Try oat, dry skin or body wash",
+        "button": "Search",
+        "types": "product,article",
+        "suggest_label": "Try",
+        "suggest_aria": "Popular searches"
       },
       "blocks": {
-        "block-1": {
-          "type": "tab",
-          "settings": {}
-        },
-        "block-2": {
-          "type": "tab",
+        "term_1": {
+          "type": "term",
           "settings": {
-            "key": "products",
-            "label": "Products",
-            "type": "product"
+            "term": "fragrance-free",
+            "label": "Fragrance-free"
           }
         },
-        "block-3": {
-          "type": "tab",
+        "term_2": {
+          "type": "term",
           "settings": {
-            "key": "articles",
-            "label": "Articles",
-            "type": "article"
+            "term": "body wash",
+            "label": "Body wash"
           }
         },
-        "block-4": {
-          "type": "tab",
+        "term_3": {
+          "type": "term",
           "settings": {
-            "key": "pages",
-            "label": "Pages",
-            "type": "page"
-          }
-        },
-        "block-5": {
-          "type": "filter",
-          "settings": {
-            "label": "All results"
-          }
-        },
-        "block-6": {
-          "type": "filter",
-          "settings": {
-            "key": "products",
-            "label": "Products",
-            "type": "product"
-          }
-        },
-        "block-7": {
-          "type": "filter",
-          "settings": {
-            "key": "articles",
-            "label": "Articles",
-            "type": "article"
-          }
-        },
-        "block-8": {
-          "type": "filter",
-          "settings": {
-            "key": "pages",
-            "label": "Pages",
-            "type": "page"
+            "term": "oat",
+            "label": "Oat"
           }
         }
       },
       "block_order": [
-        "block-1",
-        "block-2",
-        "block-3",
-        "block-4",
-        "block-5",
-        "block-6",
-        "block-7",
-        "block-8"
+        "term_1",
+        "term_2",
+        "term_3"
+      ]
+    },
+    "results": {
+      "type": "blko-lv3-search-results",
+      "settings": {
+        "per_page": 24,
+        "browse_limit": 12,
+        "heading_all": "The whole short list",
+        "count_one": "[count] product",
+        "count_other": "[count] products",
+        "heading_results": "Results for \u201c[terms]\u201d",
+        "res_one": "[count] result",
+        "res_other": "[count] results",
+        "pages_label": "Pages",
+        "prev_label": "Previous",
+        "next_label": "Next",
+        "add_label": "Add to bag",
+        "add_aria": "Add [name] to bag",
+        "sold_label": "Sold out",
+        "read_label": "Read",
+        "view_aria": "View",
+        "qv_aria": "Quick view",
+        "empty_heading": "Let's try something <em>simpler.</em>",
+        "empty_text": "We couldn't find a match. Try a product name, \u201coat\u201d or \u201cfragrance-free\u201d. You can also browse the full line.",
+        "empty_button": "Show all products",
+        "empty_link_label": "Shop the line",
+        "empty_link": "/collections/all",
+        "help_title": "Not sure what your skin needs?",
+        "help_text": "Start with the differences between our washes, or ask us a question.",
+        "help_button": "A little help",
+        "help_link": "/pages/help",
+        "help_aria": "Help choosing",
+        "noscript": "The full product list is shown above. Search needs JavaScript; you can still browse each product or <a href=\"/collections/all\">shop the line</a>."
+      },
+      "blocks": {
+        "product_calm": {
+          "type": "product",
+          "settings": {
+            "key": "calm",
+            "name": "Calm wash",
+            "size": "400 ml",
+            "price": "1800",
+            "line": "Everyday, eczema-prone skin. Colloidal oat and glycerin.",
+            "labels": "best,ff",
+            "ing": "Water, glycerin, coco-glucoside, decyl glucoside, colloidal oat, shea butter, sunflower seed oil, xanthan gum, citric acid, sodium benzoate. pH 5.5.",
+            "keywords": "wash body wash eczema prone daily dry tight fragrance free unscented no scent",
+            "image": "shopify://shop_images/t-calm.jpg"
+          }
+        },
+        "product_chamomile": {
+          "type": "product",
+          "settings": {
+            "key": "chamomile",
+            "name": "Chamomile wash",
+            "size": "400 ml",
+            "price": "2000",
+            "line": "Our only scented wash: 0.2% chamomile oil, allergens listed.",
+            "labels": "",
+            "ing": "Calm wash plus chamomile flower oil (0.2%). Allergens: bisabolol. pH 5.5.",
+            "keywords": "body wash chamomile scented scent floral sensitive scented chamomile",
+            "image": "shopify://shop_images/t-chamomile.jpg"
+          }
+        },
+        "product_soft": {
+          "type": "product",
+          "settings": {
+            "key": "soft",
+            "name": "Soft wash",
+            "size": "400 ml",
+            "price": "1800",
+            "line": "Our gentlest wash for sensitive skin. Low foam, rinses clean.",
+            "labels": "new,ff",
+            "ing": "Water, glycerin, coco-glucoside, colloidal oat, oat oil, sunflower seed oil, xanthan gum, citric acid, sodium benzoate. Fragrance-free. pH 5.5.",
+            "keywords": "body wash gentle sensitive low foam fragrance free unscented no scent",
+            "image": "shopify://shop_images/c-soft.jpg"
+          }
+        },
+        "product_rich": {
+          "type": "product",
+          "settings": {
+            "key": "rich",
+            "name": "Rich wash",
+            "size": "400 ml",
+            "price": "2000",
+            "line": "Very dry or winter skin. Thicker, almost a lotion.",
+            "labels": "ff",
+            "ing": "Calm wash plus extra shea butter and oat oil. Fragrance-free. pH 5.5.",
+            "keywords": "body wash winter very dry shea fragrance free unscented no scent",
+            "image": "shopify://shop_images/c-rich.jpg"
+          }
+        },
+        "product_lotion": {
+          "type": "product",
+          "settings": {
+            "key": "lotion",
+            "name": "Calm lotion",
+            "size": "250 ml",
+            "price": "2200",
+            "line": "Light lotion for damp skin, straight after the wash.",
+            "labels": "ff",
+            "ing": "Water, glycerin, shea butter, colloidal oat, squalane, ceramide NP, cetearyl alcohol, xanthan gum.",
+            "keywords": "body lotion moisturiser moisturizer damp skin fragrance free unscented no scent",
+            "image": "shopify://shop_images/c-lotion.jpg"
+          }
+        },
+        "product_cream": {
+          "type": "product",
+          "settings": {
+            "key": "cream",
+            "name": "Rich cream",
+            "size": "200 ml",
+            "price": "2400",
+            "line": "Thick cream for shins, elbows and hands.",
+            "labels": "ff",
+            "ing": "Shea butter, glycerin, oat oil, ceramide NP, squalane, beeswax-free.",
+            "keywords": "body cream moisturiser moisturizer very dry hands elbows shins fragrance free unscented no scent",
+            "image": "shopify://shop_images/c-cream.jpg"
+          }
+        },
+        "product_milk": {
+          "type": "product",
+          "settings": {
+            "key": "milk",
+            "name": "Body milk",
+            "size": "300 ml",
+            "price": "2000",
+            "line": "Light and quick for dry skin. Sinks in fast, never sticky.",
+            "labels": "new,ff",
+            "ing": "Water, glycerin, colloidal oat, sunflower seed oil, squalane, cetearyl alcohol, xanthan gum, sodium benzoate.",
+            "keywords": "body milk light lotion moisturiser moisturizer dry quick fragrance free unscented no scent",
+            "image": "shopify://shop_images/c-body-milk.jpg"
+          }
+        },
+        "product_little": {
+          "type": "product",
+          "settings": {
+            "key": "little",
+            "name": "Little lotion",
+            "size": "150 ml",
+            "price": "1400",
+            "line": "Soft, light oat lotion for ages 1 and up. Fragrance-free.",
+            "labels": "new,ff",
+            "ing": "Water, glycerin, colloidal oat, calendula oil, shea butter, cetearyl alcohol, xanthan gum, sodium benzoate.",
+            "keywords": "baby child children toddler lotion ages 1 fragrance free unscented no scent",
+            "image": "shopify://shop_images/c-little-lotion.jpg"
+          }
+        },
+        "product_bar": {
+          "type": "product",
+          "settings": {
+            "key": "bar",
+            "name": "Oat bar",
+            "size": "120 g",
+            "price": "900",
+            "line": "Oat milk soap bar for face and body. Rich lather that rinses soft.",
+            "labels": "best,ff",
+            "ing": "Sodium olivate, sodium cocoate, oat milk, colloidal oat, shea butter, glycerin.",
+            "keywords": "soap bar face body hands oat milk fragrance free unscented no scent",
+            "image": "shopify://shop_images/c-oat-bar.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "product_calm",
+        "product_chamomile",
+        "product_soft",
+        "product_rich",
+        "product_lotion",
+        "product_cream",
+        "product_milk",
+        "product_little",
+        "product_bar"
       ]
     }
   },
   "order": [
-    "search-blog-search-results"
+    "find",
+    "results"
   ]
 }

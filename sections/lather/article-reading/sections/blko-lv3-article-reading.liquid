@@ -1,0 +1,205 @@
+{%- comment -%}
+  Lather v3, article body (home-v3/pages/article/20-reading.html). Sticky "In this article" contents beside the body,
+  pull quote, note, checklist, product mentions with add-to-bag / quick view, and sources.
+  Real article: article.content is the body; the contents list is built from its h2 headings; "Product mention" blocks
+  are placed after the heading section set on each block; the article's tags close the body. The other blocks are the
+  demo article, shown only where there is no article (fresh install preview, local render).
+{%- endcomment -%}
+{{ 'blko-lv3-article-reading.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-article-reading.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+  assign real = false
+  if article != blank
+    assign real = true
+  endif
+-%}
+<section class="s-art-reading" aria-label="{{ s.label | escape }}" data-lv3-article{% if real %} data-auto-toc{% endif %}><div class="wrap s-art-reading__layout">
+  <nav class="s-art-reading__contents" aria-label="{{ s.toc_title | escape }}">
+    {%- if s.toc_title != blank -%}<strong>{{ s.toc_title | escape }}</strong>{%- endif -%}
+    {%- unless real -%}
+      {%- for block in section.blocks -%}
+        {%- assign b = block.settings -%}
+        {%- if block.type == 'heading' and b.anchor != blank -%}
+          <a href="#{{ b.anchor | handleize }}">{{ b.toc_label | default: b.heading | escape }}</a>
+        {%- elsif block.type == 'sources' and b.anchor != blank and b.toc_label != blank -%}
+          <a href="#{{ b.anchor | handleize }}">{{ b.toc_label | escape }}</a>
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endunless -%}
+  </nav>
+  <article class="s-art-reading__body" aria-label="{{ article.title | default: s.demo_label | escape }}">
+    {%- if real -%}{{ article.content }}{%- endif -%}
+    {%- for block in section.blocks -%}
+      {%- assign b = block.settings -%}
+      {%- case block.type -%}
+        {%- when 'product' -%}
+          {%- liquid
+            assign p = b.product
+            assign nm = b.name
+            assign cents = b.price | plus: 0
+            assign img = b.image
+            assign url = b.link
+            if p != blank
+              assign nm = p.title
+              assign cents = p.selected_or_first_available_variant.price
+              if img == blank
+                assign img = p.featured_image
+              endif
+              assign url = p.url
+            endif
+            if url == blank
+              assign url = routes.all_products_collection_url
+            endif
+            assign key = b.key | strip
+            if key == blank and p != blank
+              assign key = p.handle
+            endif
+            if key == blank
+              assign key = block.id
+            endif
+            assign alt = b.image_alt | default: nm
+          -%}
+          {%- render 'blko-lv3-product-data', key: key, product: p, name: b.name, size: b.size, price: b.price, line: b.line, labels: b.labels, img: b.image -%}
+          <div class="s-art-reading__product"{% if real %} data-after="{{ b.after }}"{% endif %} {{ block.shopify_attributes }}>
+            {%- capture pimg -%}{%- if img != blank -%}{{ img | image_url: width: 280 | image_tag: widths: '160, 224, 280', sizes: '112px', loading: 'lazy', alt: alt }}{%- else -%}{{ 'image' | placeholder_svg_tag: 'blko-lv3-ph' }}{%- endif -%}{%- endcapture -%}
+            {%- if b.image_action == 'quick' -%}
+              <button type="button" data-quick="{{ key | escape }}" aria-label="{{ s.quick_aria | replace: '[name]', nm | escape }}">{{ pimg }}</button>
+            {%- else -%}
+              <a href="{{ url }}" aria-label="{{ s.link_aria | replace: '[name]', nm | escape }}">{{ pimg }}</a>
+            {%- endif -%}
+            <div>
+              <h3>{{ nm | escape }}</h3>
+              {%- if b.text != blank -%}<p>{{ b.text | escape }}</p>{%- endif -%}
+              <span class="price" data-art-price="{{ key | escape }}">{{ cents | money_without_trailing_zeros }}</span><button class="btn btn--primary btn--sm" type="button" data-add="{{ key | escape }}">{{ s.add_label | replace: '[name]', nm | escape }}</button>
+            </div>
+          </div>
+        {%- when 'heading' -%}
+          {%- unless real -%}<h2{% if b.anchor != blank %} id="{{ b.anchor | handleize }}"{% endif %} {{ block.shopify_attributes }}>{{ b.heading | escape }}</h2>{%- endunless -%}
+        {%- when 'text' -%}
+          {%- unless real -%}<div style="display:contents" {{ block.shopify_attributes }}>{{ b.text }}</div>{%- endunless -%}
+        {%- when 'pull' -%}
+          {%- unless real -%}<p class="s-art-reading__pull" {{ block.shopify_attributes }}>{{ b.text | escape | newline_to_br }}</p>{%- endunless -%}
+        {%- when 'note' -%}
+          {%- unless real -%}<aside class="s-art-reading__note" {{ block.shopify_attributes }}>{%- if b.title != blank -%}<p><strong>{{ b.title | escape }}</strong></p>{%- endif -%}{{ b.text }}</aside>{%- endunless -%}
+        {%- when 'checklist' -%}
+          {%- unless real -%}
+            {%- assign items = b.items | newline_to_br | split: '<br />' -%}
+            <ul class="s-art-reading__checklist" {{ block.shopify_attributes }}>{%- for it in items -%}{%- assign li = it | strip -%}{%- if li != blank -%}<li>{{ li | escape }}</li>{%- endif -%}{%- endfor -%}</ul>
+          {%- endunless -%}
+        {%- when 'sources' -%}
+          {%- unless real -%}
+            <div class="s-art-reading__sources"{% if b.anchor != blank %} id="{{ b.anchor | handleize }}"{% endif %} {{ block.shopify_attributes }}>{%- if b.heading != blank -%}<h2>{{ b.heading | escape }}</h2>{%- endif -%}{{ b.list }}{%- if b.note != blank -%}<p>{{ b.note | escape }}</p>{%- endif -%}</div>
+          {%- endunless -%}
+      {%- endcase -%}
+    {%- endfor -%}
+    {%- if real and s.show_tags and article.tags.size > 0 -%}
+      <div class="s-art-reading__tags">
+        {%- for tag in article.tags -%}<a class="chip" href="{{ blog.url }}/tagged/{{ tag | handleize }}">{{ tag | escape }}</a>{%- endfor -%}
+      </div>
+    {%- endif -%}
+  </article>
+</div></section>
+
+{% schema %}
+{
+  "name": "Lather article body",
+  "class": "blko-lv3-section-article-reading",
+  "max_blocks": 50,
+  "settings": [
+    { "type": "text", "id": "toc_title", "label": "Contents heading", "default": "In this article" },
+    { "type": "text", "id": "add_label", "label": "Add button", "default": "Add [name]" },
+    { "type": "text", "id": "link_aria", "label": "Product photo link (screen readers)", "default": "Read about [name]" },
+    { "type": "text", "id": "quick_aria", "label": "Product photo quick view (screen readers)", "default": "Read [name] details" },
+    { "type": "checkbox", "id": "show_tags", "label": "Show the article's tags below it", "default": true },
+    { "type": "paragraph", "content": "A real article shows its own content; contents are built from its h2 headings. Product mention blocks show on every article; the other blocks are the demo article, shown only in a fresh install preview." },
+    { "type": "text", "id": "label", "label": "Section label (screen readers)", "default": "Article" },
+    { "type": "text", "id": "demo_label", "label": "Demo article label (screen readers)", "default": "Washing eczema-prone skin" }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product mention",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "text", "id": "key", "label": "Product key", "default": "calm", "info": "Shared with the bag and quick view. Blank uses the product handle." },
+        { "type": "range", "id": "after", "label": "On a real article, place after heading section", "min": 0, "max": 10, "step": 1, "default": 2, "info": "0 places it at the end." },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Fragrance-free body wash with colloidal oat and glycerin. Read every ingredient before choosing." },
+        { "type": "select", "id": "image_action", "label": "Photo opens", "default": "link", "options": [{ "value": "link", "label": "Product page" }, { "value": "quick", "label": "Quick view" }] },
+        { "type": "url", "id": "link", "label": "Demo photo link", "info": "A picked product links to its own page." },
+        { "type": "image_picker", "id": "image", "label": "Photo", "info": "Empty: the product's image." },
+        { "type": "text", "id": "image_alt", "label": "Photo description", "default": "Calm wash, 400 ml" },
+        { "type": "header", "content": "Demo product (no product picked)" },
+        { "type": "text", "id": "name", "label": "Name", "default": "Calm wash" },
+        { "type": "text", "id": "size", "label": "Size", "default": "400 ml" },
+        { "type": "text", "id": "price", "label": "Price in cents", "default": "1800" },
+        { "type": "text", "id": "line", "label": "Quick view line", "default": "Everyday, eczema-prone skin. Colloidal oat and glycerin." },
+        { "type": "text", "id": "labels", "label": "Labels", "default": "best,ff", "info": "Comma list: best, ff, new, sale." }
+      ]
+    },
+    {
+      "type": "heading",
+      "name": "Demo heading",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Start with the water" },
+        { "type": "text", "id": "anchor", "label": "Anchor id", "default": "art-water", "info": "Listed in the contents when set." },
+        { "type": "text", "id": "toc_label", "label": "Contents label", "info": "Empty: the heading." }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Demo text",
+      "settings": [
+        { "type": "richtext", "id": "text", "label": "Text", "default": "<p>A shower can be an ordinary part of the day again, rather than another experiment.</p>" }
+      ]
+    },
+    {
+      "type": "pull",
+      "name": "Demo pull quote",
+      "settings": [
+        { "type": "textarea", "id": "text", "label": "Quote", "default": "Less to decide.\nMore room to listen to your skin." }
+      ]
+    },
+    {
+      "type": "note",
+      "name": "Demo note",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Where Lather fits" },
+        { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Our body care is cosmetic, not an eczema treatment.</p>" }
+      ]
+    },
+    {
+      "type": "checklist",
+      "name": "Demo checklist",
+      "settings": [
+        { "type": "textarea", "id": "items", "label": "Items", "info": "One per line.", "default": "Keep the water warm and the wash short.\nCheck the complete ingredient list, including any known allergens." }
+      ]
+    },
+    {
+      "type": "sources",
+      "name": "Demo sources",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Sources and further reading" },
+        { "type": "richtext", "id": "list", "label": "Sources", "default": "<ol><li>Source name: page title</li></ol>" },
+        { "type": "textarea", "id": "note", "label": "Note", "default": "General information, not a diagnosis or an individual treatment plan." },
+        { "type": "text", "id": "anchor", "label": "Anchor id", "default": "art-sources" },
+        { "type": "text", "id": "toc_label", "label": "Contents label", "default": "Sources" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather article body",
+      "blocks": [
+        { "type": "heading" },
+        { "type": "text" },
+        { "type": "pull" },
+        { "type": "product" },
+        { "type": "note" }
+      ]
+    }
+  ],
+  "enabled_on": { "templates": ["article"] }
+}
+{% endschema %}

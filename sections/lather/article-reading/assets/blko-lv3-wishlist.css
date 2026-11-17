@@ -1,0 +1,77 @@
+/* Lather wishlist (feature 5): heart buttons (site-wide) + the wishlist page (blko-lv3-wishlist). Same rules as
+   home-v3 shared/50-wishlist.html and pages/wishlist/10-saved.html. */
+
+/* heart on a product image: top right, always visible, fills moss when saved. Never moves: colour only. */
+.lv3-heart{position:absolute;top:10px;right:10px;z-index:3;width:40px;height:40px;border-radius:999px;display:grid;place-items:center;background:rgba(247,243,234,.92);color:var(--ink);transition:background-color .25s var(--ease),color .25s var(--ease)}
+.lv3-heart:hover{background:var(--raised);color:var(--moss)}
+.lv3-heart svg{width:20px;height:20px;fill:transparent;stroke:currentColor;stroke-width:1.6;stroke-linejoin:round;transition:fill .25s var(--ease)}
+.lv3-heart[aria-pressed="true"]{color:var(--moss)}
+.lv3-heart[aria-pressed="true"] svg{fill:currentColor}
+.lv3-heart:focus-visible{outline:2px solid var(--moss);outline-offset:2px}
+/* text version (product page, next to the add button) */
+.lv3-heart--text{position:static;width:auto;height:50px;padding:0 18px;gap:8px;display:inline-flex;align-items:center;border-radius:var(--r-btn);background:var(--raised);font:600 15px/1 var(--f-body);white-space:nowrap}
+.lv3-heart--text:hover{background:var(--stone);color:var(--ink)}
+.lv3-heart--text[aria-pressed="true"]{color:var(--deep)}
+.lv3-heart--text[aria-pressed="true"] svg{color:var(--moss)}
+/* header badge: [data-wish-count] reuses .bag-count; hidden at 0 */
+[data-wish-count][hidden]{display:none}
+
+/* ============ Wishlist page ============ */
+.s-wish{background:var(--oat);padding:clamp(56px,7vw,104px) 0 clamp(80px,9vw,128px)}
+.s-wish [hidden]{display:none!important}
+.s-wish__hd{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:44px}
+.s-wish__hd .h1{max-width:14ch}
+.s-wish__status{margin-top:16px;font-size:18px;line-height:1.45}
+.s-wish__note{margin-top:4px}
+.s-wish__list{list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:40px 20px}
+.s-wish__card{display:flex;flex-direction:column;min-width:0}
+.s-wish__media{position:relative;aspect-ratio:4/5;border-radius:var(--r-img);overflow:hidden;background:var(--sage-wash)}
+.s-wish__media img,.s-wish__media .blko-lv3-ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.s-wish__media .labels{position:absolute;top:12px;left:12px;right:60px;z-index:1}
+.s-wish__info{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding-top:14px}
+.s-wish__name{font:600 17px/1.25 var(--f-body);grid-column:1}
+.s-wish__name a,.s-wish__name button{text-decoration:none;text-align:left;transition:color .2s var(--ease)}
+.s-wish__name a:hover,.s-wish__name button:hover{color:var(--moss)}
+.s-wish__name a:focus-visible,.s-wish__name button:focus-visible{outline:2px solid var(--moss);outline-offset:3px}
+.s-wish__size{font-size:14px;color:var(--muted);grid-column:1}
+.s-wish__price{grid-column:2;grid-row:1}
+.s-wish__acts{display:flex;align-items:center;gap:16px;margin-top:16px}
+.s-wish__add{flex:1}
+.s-wish__add:disabled{cursor:default;color:var(--muted)}
+.s-wish__rm{font:500 14px/1 var(--f-body);color:var(--muted);text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px;padding:13px 2px;transition:color .2s var(--ease)}
+.s-wish__rm:hover{color:var(--ink)}
+.s-wish__rm:focus-visible{outline:2px solid var(--moss);outline-offset:2px}
+.s-wish__undo{display:flex;align-items:center;gap:16px;margin-bottom:28px;padding:14px 18px;border-radius:var(--r-btn);background:var(--raised);font-size:15px}
+.s-wish__undo button{font-weight:600;text-decoration:underline;text-underline-offset:4px}
+.s-wish__undo button:focus-visible{outline:2px solid var(--moss);outline-offset:3px}
+/* empty state: a short note on the left, three products to start with on the right */
+.s-wish__empty{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:clamp(32px,5vw,80px);align-items:start}
+.s-wish__start .lead{margin-bottom:28px;max-width:32ch}
+.s-wish__start .h3{margin-bottom:22px}
+.s-wish__empty .s-wish__list{grid-template-columns:repeat(3,minmax(0,1fr))}
+.s-wish__card--sugg .s-wish__add{flex:0 0 auto}
+@media (max-width:1100px){
+  .s-wish__list{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .s-wish__empty{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  .s-wish{padding:40px 0 72px}
+  .s-wish__hd{flex-direction:column;align-items:flex-start;gap:18px;margin-bottom:28px}
+  .s-wish__status{font-size:16px}
+  .s-wish__list{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 12px}
+  .s-wish__info{grid-template-columns:1fr;gap:4px}
+  .s-wish__price{grid-column:1;grid-row:auto;font-size:19px;margin-top:4px}
+  .s-wish__name{font-size:15px}
+  .s-wish__size{font-size:13px}
+  .s-wish__acts{flex-direction:column;align-items:stretch;gap:2px;margin-top:12px}
+  .s-wish__add{flex:0 0 auto;width:100%;padding:0 10px;font-size:13px}
+  .s-wish__rm{padding:12px 0;align-self:center;font-size:13px}
+  .s-wish__media .labels .label--ff{display:none}
+  .lv3-heart{top:8px;right:8px}
+  /* suggestions slide sideways inside their own row; the page never scrolls sideways */
+  .s-wish__empty .s-wish__list{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin-right:calc(-1 * var(--gut));padding-right:var(--gut);scrollbar-width:none}
+  .s-wish__empty .s-wish__list::-webkit-scrollbar{display:none}
+  .s-wish__empty .s-wish__card{flex:0 0 62%;scroll-snap-align:start}
+  .s-wish__card--sugg .s-wish__add{width:100%}
+}
+@media (prefers-reduced-motion:reduce){.lv3-heart,.lv3-heart svg,.s-wish__rm{transition:none}}

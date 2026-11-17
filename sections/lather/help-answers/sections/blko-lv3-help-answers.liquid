@@ -1,0 +1,87 @@
+{%- comment -%}
+  Lather v3, Help: answers (home-v3/pages/help/20-answers.html). Topic buttons (blocks "topic") filter the questions
+  (blocks "question", each tagged with a topic key); the search box of "Lather help support" filters by text.
+  A question can carry an anchor (e.g. #shipping, #returns) and a second anchor on its title (#refund): opening the
+  page with that hash opens the question.
+{%- endcomment -%}
+{{ 'blko-lv3-help-answers.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-help-answers.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+  assign topics = section.blocks | where: 'type', 'topic'
+-%}
+<section class="s-help-answers" id="{{ s.anchor | default: 'answers' | handleize }}" aria-label="{{ s.label | escape }}" data-lv3-help-answers>
+  <div class="wrap s-help-answers__layout">
+    <nav class="s-help-answers__topics" aria-label="{{ s.topics_label | escape }}">
+      {%- if s.all_label != blank -%}<button type="button" data-topic="all" aria-pressed="true">{{ s.all_label | escape }}</button>{%- endif -%}
+      {%- for block in topics -%}
+        <button type="button" data-topic="{{ block.settings.key | handleize }}" aria-pressed="false" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}</button>
+      {%- endfor -%}
+    </nav>
+    <div id="help-faq-list">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'question' -%}
+          {%- assign b = block.settings -%}
+          <details data-help-topic="{{ b.topic | handleize }}"{% if b.anchor != blank %} id="{{ b.anchor | handleize }}"{% endif %}{% if b.open %} open{% endif %} {{ block.shopify_attributes }}>
+            <summary{% if b.title_anchor != blank %} id="{{ b.title_anchor | handleize }}"{% endif %}>{{ b.question | escape }}</summary>
+            {{- b.answer | replace: '<a ', '<a class="link" ' -}}
+          </details>
+        {%- endif -%}
+      {%- endfor -%}
+      <p class="s-help-answers__empty" id="help-empty" hidden>{{ s.empty | escape }}</p>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lather help answers",
+  "class": "blko-lv3-section-help-answers",
+  "max_blocks": 40,
+  "settings": [
+    { "type": "text", "id": "all_label", "label": "All topics button", "default": "All questions" },
+    { "type": "text", "id": "topics_label", "label": "Topic list label (screen readers)", "default": "Question topics" },
+    { "type": "text", "id": "empty", "label": "No results text", "default": "No matching questions yet. Try a simpler search, or use the contact form below." },
+    { "type": "header", "content": "Section" },
+    { "type": "text", "id": "label", "label": "Section label (screen readers)", "default": "Frequently asked questions" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "answers" }
+  ],
+  "blocks": [
+    {
+      "type": "topic",
+      "name": "Topic",
+      "limit": 8,
+      "settings": [
+        { "type": "text", "id": "key", "label": "Key", "default": "choosing", "info": "Questions with the same key belong to this topic." },
+        { "type": "text", "id": "label", "label": "Button label", "default": "Choosing & ingredients" }
+      ]
+    },
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        { "type": "text", "id": "topic", "label": "Topic key", "default": "choosing" },
+        { "type": "text", "id": "question", "label": "Question", "default": "Which formula should I start with?" },
+        { "type": "richtext", "id": "answer", "label": "Answer", "default": "<p>Calm wash is our everyday wash. Rich wash has a thicker feel for very dry skin; Soft wash has a low foam. The Oat bar is the smallest way to start, at $9. <a href=\"/collections/all\">Compare the line</a>.</p>" },
+        { "type": "checkbox", "id": "open", "label": "Open on load", "default": false },
+        { "type": "text", "id": "anchor", "label": "Anchor id", "info": "e.g. shipping: links to /pages/help#shipping open this question." },
+        { "type": "text", "id": "title_anchor", "label": "Second anchor id (on the question)", "info": "e.g. refund." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather help answers",
+      "blocks": [
+        { "type": "topic" },
+        { "type": "topic", "settings": { "key": "shipping", "label": "Shipping & orders" } },
+        { "type": "topic", "settings": { "key": "returns", "label": "Returns & reactions" } },
+        { "type": "question", "settings": { "open": true } },
+        { "type": "question", "settings": { "topic": "shipping", "question": "When is shipping free?", "answer": "<p>Shipping is free on orders of $40 or more. Below that, the shipping charge is calculated at checkout. Tax and delivery options depend on the destination.</p>", "anchor": "shipping" } },
+        { "type": "question", "settings": { "topic": "returns", "question": "What if my skin reacts?", "answer": "<p>Stop using the product. We refund your first bottle of any formula within 30 days, used or not. Send your order number and a photo of the label through customer care; you do not need to send the bottle back.</p>", "anchor": "returns", "title_anchor": "refund" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

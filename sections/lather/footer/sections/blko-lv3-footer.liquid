@@ -1,0 +1,272 @@
+{%- comment -%}
+  Lather footer: refund promise, newsletter ({% form 'customer' %}), menu columns (blocks, each a link_list with demo
+  links while the menu is empty), the big logo mark, country/language ({% form 'localization' %}), payment line, ©.
+{%- endcomment -%}
+{%- liquid
+  assign logo_class = 'logo'
+  assign logo_style = ''
+  if section.settings.logo != blank
+    if section.settings.logo_tint
+      assign logo_style = section.settings.logo | image_url: width: 1600 | prepend: '--lv3-logo:url(' | append: ')'
+    else
+      assign logo_class = 'logo logo--img'
+    endif
+  elsif section.settings.brand_logo == false
+    assign logo_class = 'logo logo--text'
+  endif
+-%}
+<footer class="ftr" id="footer">
+  <div class="wrap">
+    <div class="ftr__top">
+      <div>
+        {%- if section.settings.promise != blank -%}<p class="ftr__promise" data-rv="blur">{{ section.settings.promise }}</p>{%- endif -%}
+        {%- if section.settings.how != blank -%}<p class="ftr__how">{{ section.settings.how }}</p>{%- endif -%}
+      </div>
+      <div class="ftr__news">
+        {%- if section.settings.show_newsletter -%}
+          {%- form 'customer', id: 'ftrForm', class: 'ftr__form', novalidate: 'novalidate' -%}
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            <label class="sr" for="ftrEmail">{{ section.settings.email_label | escape }}</label>
+            <input id="ftrEmail" type="email" name="contact[email]" placeholder="{{ section.settings.email_placeholder | escape }}" autocomplete="email" required>
+            <button class="btn btn--primary" type="submit">{{ section.settings.signup_label | escape }}</button>
+            {%- if form.posted_successfully? -%}<span hidden data-lv3-posted></span>{%- endif -%}
+            {%- if form.errors -%}<span hidden data-lv3-form-error></span>{%- endif -%}
+          {%- endform -%}
+          <p class="ftr__ok" id="ftrOk" aria-live="polite"></p>
+        {%- endif -%}
+        {%- if section.blocks.size > 0 -%}
+          <div class="ftr__cols">
+            {%- for b in section.blocks -%}
+              {%- assign menu = b.settings.menu -%}
+              <nav aria-label="{{ b.settings.title | escape }}" {{ b.shopify_attributes }}>
+                {%- if b.settings.title != blank -%}<h3>{{ b.settings.title | escape }}</h3>{%- endif -%}
+                {%- if menu != blank and menu.links.size > 0 -%}
+                  {%- for link in menu.links -%}<a href="{{ link.url }}">{{ link.title | escape }}</a>{%- endfor -%}
+                {%- else -%}
+                  {%- render 'blko-lv3-demo-links', lines: b.settings.demo_links, routes: routes -%}
+                {%- endif -%}
+              </nav>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+    {%- if section.settings.show_mark -%}
+      <div class="ftr__mark" aria-hidden="true">
+        <span class="{{ logo_class }}"{% if logo_style != blank %} style="{{ logo_style }}"{% endif %}>
+          {%- if section.settings.logo != blank and section.settings.logo_tint == false -%}
+            {{ section.settings.logo | image_url: width: 1600 | image_tag: alt: '', widths: '640, 960, 1320, 1600', sizes: '(min-width: 1400px) 1320px, 100vw', loading: 'lazy' }}
+          {%- elsif section.settings.logo == blank and section.settings.brand_logo == false -%}
+            {{ shop.name | escape }}
+          {%- endif -%}
+        </span>
+      </div>
+    {%- endif -%}
+    <div class="ftr__base">
+      <span>© {{ 'now' | date: '%Y' }} {{ shop.name | escape }}.</span>
+      {%- if section.settings.show_country or section.settings.show_language -%}
+        <div class="ftr__loc">
+          {%- form 'localization', id: 'lv3-loc' -%}
+            {%- if section.settings.show_country and localization.available_countries.size > 0 -%}
+              <label class="sr" for="locCountry">{{ section.settings.country_label | escape }}</label>
+              <select id="locCountry" name="country_code" onchange="this.form.submit()">
+                {%- for c in localization.available_countries -%}
+                  <option value="{{ c.iso_code }}"{% if c.iso_code == localization.country.iso_code %} selected{% endif %}>{{ c.name }} ({{ c.currency.iso_code }} {{ c.currency.symbol }})</option>
+                {%- endfor -%}
+              </select>
+            {%- endif -%}
+            {%- if section.settings.show_language and localization.available_languages.size > 0 -%}
+              <label class="sr" for="locLang">{{ section.settings.language_label | escape }}</label>
+              <select id="locLang" name="language_code" onchange="this.form.submit()">
+                {%- for l in localization.available_languages -%}
+                  <option value="{{ l.iso_code }}"{% if l.iso_code == localization.language.iso_code %} selected{% endif %}>{{ l.endonym_name | capitalize }}</option>
+                {%- endfor -%}
+              </select>
+            {%- endif -%}
+            <noscript><button class="btn btn--light btn--sm" type="submit">{{ section.settings.update_label | escape }}</button></noscript>
+          {%- endform -%}
+        </div>
+      {%- endif -%}
+      {%- if section.settings.payments != blank -%}<span>{{ section.settings.payments | escape }}</span>{%- endif -%}
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Lather footer",
+  "tag": "div",
+  "class": "lv3-ftr-sec",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Promise"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "promise",
+      "label": "Promise (wrap one word in italics for the display type)",
+      "default": "If your skin reacts, we <em>refund</em> it."
+    },
+    {
+      "type": "textarea",
+      "id": "how",
+      "label": "How it works",
+      "default": "First bottle of any formula, within 30 days, used or not. Email a photo of the label; no need to send it back."
+    },
+    {
+      "type": "header",
+      "content": "Newsletter"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_newsletter",
+      "label": "Show newsletter",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "email_label",
+      "label": "Email label (screen readers)",
+      "default": "Email"
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "Email placeholder",
+      "default": "Email for 10% off your first order"
+    },
+    {
+      "type": "text",
+      "id": "signup_label",
+      "label": "Button",
+      "default": "Sign up"
+    },
+    {
+      "type": "paragraph",
+      "content": "Thanks and error messages are set in Lather overlays."
+    },
+    {
+      "type": "header",
+      "content": "Logo mark"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_mark",
+      "label": "Show the big logo mark",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "checkbox",
+      "id": "logo_tint",
+      "label": "Tint the logo with the text colour (needs a transparent PNG or SVG)",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "brand_logo",
+      "label": "No image: use the Lather mark (off = store name as text)",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Bottom line"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_country",
+      "label": "Show country / currency",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_language",
+      "label": "Show language",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "country_label",
+      "label": "Country label (screen readers)",
+      "default": "Country"
+    },
+    {
+      "type": "text",
+      "id": "language_label",
+      "label": "Language label (screen readers)",
+      "default": "Language"
+    },
+    {
+      "type": "text",
+      "id": "update_label",
+      "label": "Update button (no JavaScript)",
+      "default": "Update"
+    },
+    {
+      "type": "text",
+      "id": "payments",
+      "label": "Payment line",
+      "default": "Visa, Mastercard, Amex, PayPal, Apple Pay"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Menu column",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Shop"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu"
+        },
+        {
+          "type": "textarea",
+          "id": "demo_links",
+          "label": "Demo links while no menu is picked (one per line: label | link; [all] [search] [account] [cart] [home] or /pages/help)",
+          "default": "Shop all | [all]\nCalm wash | /products/calm-wash\nBuild a set | [home]#bundle\nSearch | [search]"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Lather footer",
+      "blocks": [
+        {
+          "type": "menu",
+          "settings": {
+            "title": "Shop",
+            "demo_links": "Shop all | [all]\nCalm wash | /products/calm-wash\nBuild a set | [home]#bundle\nSearch | [search]"
+          }
+        },
+        {
+          "type": "menu",
+          "settings": {
+            "title": "Help",
+            "demo_links": "FAQ | /pages/help\nShipping | /pages/help#shipping\nSkin-reaction refund | /pages/help#returns\nContact | /pages/help#contact"
+          }
+        },
+        {
+          "type": "menu",
+          "settings": {
+            "title": "About",
+            "demo_links": "Our story | /pages/about\nJournal | /blogs/journal\nWashing eczema-prone skin | /blogs/journal/a-gentler-shower-for-eczema-prone-skin\nAccount | [account]"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,78 @@
+{%- comment -%}
+  Lather v3, Founder (home-v3/parts/75-founder.html). Full-bleed photo; the story sits on the open side.
+  The crossed-out ingredients are blocks; a line draws through each as the list reveals. Gentle parallax that never crops the face.
+{%- endcomment -%}
+{{ 'blko-lv3-founder.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-founder.js' | asset_url }}" defer></script>
+
+{%- assign s = section.settings -%}
+<section class="s-founder" id="{{ s.anchor | default: 'founder' | handleize }}" aria-label="{{ s.label | escape }}" data-lv3-founder>
+  {%- if s.image != blank -%}
+    {%- assign pos = 'object-position: ' | append: s.image.presentation.focal_point -%}
+    {{ s.image | image_url: width: 2400 | image_tag: widths: '750, 1100, 1500, 2000, 2400', sizes: '100vw', loading: 'lazy', class: 's-founder__img', alt: s.image.alt, style: pos }}
+  {%- else -%}
+    {{ 'lifestyle-1' | placeholder_svg_tag: 'blko-lv3-ph s-founder__img' }}
+  {%- endif -%}
+  <div class="s-founder__shade"></div>
+  <div class="wrap s-founder__in">
+    <div class="s-founder__text">
+      <h2 class="h2" data-rv="line">
+        {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
+        {%- if s.heading_2 != blank -%}<span class="ln"><span>{{ s.heading_2 }}</span></span>{%- endif -%}
+      </h2>
+      {%- if s.story != blank -%}<p class="s-founder__story" data-rv="blur" data-rv-delay="1">{{ s.story | escape }}</p>{%- endif -%}
+      {%- if section.blocks.size > 0 -%}
+        <ul class="s-founder__out" data-rv="blur" data-rv-delay="2" aria-label="{{ s.list_label | escape }}">
+          {%- for block in section.blocks -%}<li {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</li>{%- endfor -%}
+        </ul>
+      {%- endif -%}
+      <div class="s-founder__sig" data-rv="blur" data-rv-delay="3">
+        <p><b>{{ s.name | escape }}</b>{{ s.role | escape }}</p>
+        {%- if s.link_label != blank -%}<a class="link" href="{{ s.link | default: '#founder' }}">{{ s.link_label | escape }}</a>{%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lather founder",
+  "class": "blko-lv3-section-founder",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Photo", "info": "Full width. Keep the face on the left; the text sits on the right." },
+    { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "We kept crossing" },
+    { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "things <em>out.</em>", "info": "Italic text shows in the accent style." },
+    { "type": "textarea", "id": "story", "label": "Story", "default": "Lather began in a hard-water town, where every body wash in the shop left a child's arms red by bedtime. We read the labels, crossed out what hurt, and kept oat, shea, glycerin, sugar cleansers and water." },
+    { "type": "text", "id": "list_label", "label": "Crossed-out list label (screen readers)", "default": "Crossed out of every wash" },
+    { "type": "header", "content": "Signature" },
+    { "type": "text", "id": "name", "label": "Name", "default": "Mara Ellis" },
+    { "type": "text", "id": "role", "label": "Role", "default": ", founder" },
+    { "type": "text", "id": "link_label", "label": "Link label", "default": "Read our story" },
+    { "type": "url", "id": "link", "label": "Link" },
+    { "type": "header", "content": "Section" },
+    { "type": "text", "id": "label", "label": "Section label (screen readers)", "default": "Why we started" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "founder" }
+  ],
+  "blocks": [
+    {
+      "type": "crossed",
+      "name": "Crossed-out word",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Word", "default": "Fragrance" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather founder",
+      "blocks": [
+        { "type": "crossed", "settings": { "text": "Fragrance" } },
+        { "type": "crossed", "settings": { "text": "Dyes" } },
+        { "type": "crossed", "settings": { "text": "SLS" } },
+        { "type": "crossed", "settings": { "text": "Essential oil blend" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

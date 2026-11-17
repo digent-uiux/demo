@@ -1,42 +1,242 @@
 {
   "sections": {
-    "search-blog-article-hero": {
-      "type": "blko-search-blog-article-hero",
+    "article-opening": {
+      "type": "blko-lv3-article-opening",
       "settings": {
-        "reading_time": "5 minutes"
+        "back_label": "\u2190 Back to skin notes",
+        "back_link": "/blogs/journal",
+        "author_prefix": "By",
+        "read_time": "[n] minute read",
+        "progress": true,
+        "image": "shopify://shop_images/u-1604709177225-055f99402ea3.jpg",
+        "image_alt": "A quiet stone bathroom with a bath and simple washbasins",
+        "title_1": "A gentler shower for",
+        "title_2": "eczema-prone <em>skin.</em>",
+        "category": "Everyday routines",
+        "author": "the Lather team",
+        "date": "November 16, 2026",
+        "date_iso": "2026-11-16",
+        "demo_read": "5 minute read",
+        "standfirst": "You do not need a shelf full of products to make washing less complicated. Start with the water, the cleanser and what happens after the towel.",
+        "caption": "A quieter routine starts before you turn on the tap."
       }
     },
-    "search-blog-article-content": {
-      "type": "blko-search-blog-article-content",
+    "article-reading": {
+      "type": "blko-lv3-article-reading",
       "settings": {
-        "products_heading": "Gear mentioned in this guide",
-        "share_label": "Pass it to a buddy",
-        "save_label": "Bookmark",
-        "comments_heading": "Talk back"
-      }
+        "toc_title": "In this article",
+        "add_label": "Add [name]",
+        "link_aria": "Read about [name]",
+        "quick_aria": "Read [name] details",
+        "show_tags": true,
+        "label": "Article",
+        "demo_label": "Washing eczema-prone skin"
+      },
+      "blocks": {
+        "h_water": {
+          "type": "heading",
+          "settings": {
+            "heading": "Start with the water",
+            "anchor": "art-water",
+            "toc_label": "Start with the water"
+          }
+        },
+        "t_water": {
+          "type": "text",
+          "settings": {
+            "text": "<p>A shower can be an ordinary part of the day again, rather than another experiment. Before changing every bottle in the bathroom, notice the basics: how warm the water feels, how long you stay under it and whether you rub your skin dry.</p><p>The American Academy of Dermatology recommends warm water and a short bath or shower, around 5\u201310 minutes. Hotter and longer is not the aim. Keep the towel and your usual moisturiser within reach before you start. <a href=\"https://www.aad.org/news/how-to-treat-eczema-at-home\">Read the AAD\u2019s home-care advice</a>.</p>"
+          }
+        },
+        "pull": {
+          "type": "pull",
+          "settings": {
+            "text": "Less to decide.\nMore room to listen to your skin."
+          }
+        },
+        "h_cleanser": {
+          "type": "heading",
+          "settings": {
+            "heading": "Choose the cleanser, not the scent",
+            "anchor": "art-cleanser",
+            "toc_label": "Choose the cleanser"
+          }
+        },
+        "t_cleanser": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Read the ingredient list, even when the front of a bottle sounds reassuring. The AAD recommends fragrance-free products; \u201cunscented\u201d can still contain ingredients used to mask a smell. A pleasant scent does not tell you how your skin will respond.</p><p>The NHS advises using an emollient soap substitute for dry, itchy skin. These wash products do not need a big foam to clean. If you have diagnosed eczema, ask your pharmacist or clinician which wash fits your existing care plan. <a href=\"https://www.nhs.uk/tests-and-treatments/emollients/\">Read the NHS guide to emollients</a>.</p>"
+          }
+        },
+        "note": {
+          "type": "note",
+          "settings": {
+            "title": "Where Lather fits",
+            "text": "<p>Our body care is cosmetic, not an eczema treatment. Calm wash contains oat; check it against known allergies. A fragrance-free label does not guarantee that a product will suit every skin.</p>"
+          }
+        },
+        "product_calm": {
+          "type": "product",
+          "settings": {
+            "key": "calm",
+            "after": 2,
+            "text": "Fragrance-free body wash with colloidal oat and glycerin. Read every ingredient before choosing.",
+            "image_action": "link",
+            "image": "shopify://shop_images/t-calm.jpg",
+            "image_alt": "Calm wash, 400 ml",
+            "name": "Calm wash",
+            "size": "400 ml",
+            "price": "1800",
+            "line": "Everyday, eczema-prone skin. Colloidal oat and glycerin.",
+            "labels": "best,ff",
+            "link": "/products/calm-wash"
+          }
+        },
+        "h_after": {
+          "type": "heading",
+          "settings": {
+            "heading": "After the shower, keep it gentle",
+            "anchor": "art-after",
+            "toc_label": "After the shower"
+          }
+        },
+        "t_after": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Rinse and pat your skin dry rather than rubbing it. The NHS recommends applying an emollient soon after washing. The AAD also advises moisturising while skin is still damp, and notes that creams or ointments can be more helpful than lighter lotions for eczema-prone skin.</p><p>Use the moisturiser that works for you and follow your clinician\u2019s instructions for prescribed treatments. A new body-care routine should sit alongside that plan, not replace it. <a href=\"https://www.aad.org/news/how-to-treat-eczema-at-home\">More on moisturising from the AAD</a>.</p>"
+          }
+        },
+        "product_cream": {
+          "type": "product",
+          "settings": {
+            "key": "cream",
+            "after": 3,
+            "text": "A thick, fragrance-free body cream with shea butter and oat. Full ingredients are in quick view.",
+            "image_action": "quick",
+            "image": "shopify://shop_images/c-cream.jpg",
+            "image_alt": "Rich cream, 200 ml",
+            "name": "Rich cream",
+            "size": "200 ml",
+            "price": "2400",
+            "line": "Thick cream for shins, elbows and hands.",
+            "labels": "ff"
+          }
+        },
+        "h_change": {
+          "type": "heading",
+          "settings": {
+            "heading": "Make one change at a time",
+            "anchor": "art-change",
+            "toc_label": "One change at a time"
+          }
+        },
+        "t_change": {
+          "type": "text",
+          "settings": {
+            "text": "<p>It is easier to understand a routine when you know what changed. Keep a simple note of what you used and how your skin felt, rather than judging everything from one shower.</p>"
+          }
+        },
+        "checklist": {
+          "type": "checklist",
+          "settings": {
+            "items": "Keep the water warm and the wash short.\nCheck the complete ingredient list, including any known allergens.\nHave a soft towel and your usual moisturiser ready.\nAsk for guidance before replacing prescribed care."
+          }
+        },
+        "t_change_2": {
+          "type": "text",
+          "settings": {
+            "text": "<p>The AAD recommends testing new skin-care products before wider use, because ingredients other than fragrance may also irritate. Follow its testing guidance or the plan your clinician gives you. <a href=\"https://www.aad.org/news/how-to-treat-eczema-at-home\">See the AAD\u2019s advice on trying products</a>.</p>"
+          }
+        },
+        "h_support": {
+          "type": "heading",
+          "settings": {
+            "heading": "When to ask for help",
+            "anchor": "art-support",
+            "toc_label": "When to ask for help"
+          }
+        },
+        "t_support": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Get medical advice if eczema is not improving with your care plan. The NHS advises urgent assessment if skin suddenly worsens, becomes painful, warm or swollen, leaks fluid or develops pus, or if you have a fever or feel unwell. These can be signs of infection. <a href=\"https://www.nhs.uk/conditions/atopic-eczema/\">Read the NHS advice on atopic eczema</a>.</p><p>For a Lather order or ingredient question, <a href=\"/pages/help\">our help page</a> is the place to start. For a diagnosis or a treatment decision, speak to a qualified healthcare professional.</p>"
+          }
+        },
+        "sources": {
+          "type": "sources",
+          "settings": {
+            "heading": "Sources and further reading",
+            "list": "<ol><li><a href=\"https://www.aad.org/news/how-to-treat-eczema-at-home\">American Academy of Dermatology: How to treat eczema at home</a></li><li><a href=\"https://www.nhs.uk/tests-and-treatments/emollients/\">NHS: Emollients</a></li><li><a href=\"https://www.nhs.uk/conditions/atopic-eczema/\">NHS: Atopic eczema</a></li></ol>",
+            "note": "Source links checked November 16, 2026. General information, not a diagnosis or an individual treatment plan.",
+            "anchor": "art-sources",
+            "toc_label": "Sources"
+          }
+        }
+      },
+      "block_order": [
+        "h_water",
+        "t_water",
+        "pull",
+        "h_cleanser",
+        "t_cleanser",
+        "note",
+        "product_calm",
+        "h_after",
+        "t_after",
+        "product_cream",
+        "h_change",
+        "t_change",
+        "checklist",
+        "t_change_2",
+        "h_support",
+        "t_support",
+        "sources"
+      ]
     },
-    "search-blog-related-articles": {
-      "type": "blko-search-blog-related-articles",
+    "article-continue": {
+      "type": "blko-lv3-article-continue",
       "settings": {
-        "eyebrow": "Keep reading",
-        "heading": "More guides to try",
-        "link_label": "Read it"
-      }
-    },
-    "newsletter": {
-      "type": "blko-newsletter",
-      "settings": {
-        "eyebrow": "20% off your first order",
-        "heading": "Join the crew",
-        "message": "Drop dates, secret sales and the odd locker-room joke. Once a week, no spam.",
-        "button_label": "Get my code"
-      }
+        "heading_1": "A few more",
+        "heading_2": "useful <em>notes.</em>",
+        "text": "Keep reading, or take a closer look at the things on your bathroom shelf.",
+        "button_label": "Browse all skin notes",
+        "button_link": "/blogs/journal",
+        "related": true,
+        "related_count": 3,
+        "read_label": "Read the article"
+      },
+      "blocks": {
+        "note_1": {
+          "type": "note",
+          "settings": {
+            "title": "Fragrance-free and unscented",
+            "text": "<p>These words do not always mean the same thing. For eczema-prone skin, the AAD recommends looking specifically for fragrance-free products. <a href=\"https://www.aad.org/news/how-to-treat-eczema-at-home\">Read why</a>, or <a href=\"/blogs/journal#ingredients\">browse ingredient notes</a>.</p>"
+          }
+        },
+        "note_2": {
+          "type": "note",
+          "settings": {
+            "title": "Finding your after-shower texture",
+            "text": "<p>Our range includes a light Body milk, Calm lotion and a thicker Rich cream. Compare the full ingredient lists and choose around the routine you already use. <a href=\"/collections/all\">Explore body care</a>.</p>"
+          }
+        },
+        "note_3": {
+          "type": "note",
+          "settings": {
+            "title": "When a product does not suit you",
+            "text": "<p>Stop using a product that causes a reaction and seek medical advice when needed. For a first Lather bottle, used or not, <a href=\"/pages/help#refund\">read our skin-reaction refund details</a>.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "note_1",
+        "note_2",
+        "note_3"
+      ]
     }
   },
   "order": [
-    "search-blog-article-hero",
-    "search-blog-article-content",
-    "search-blog-related-articles",
-    "newsletter"
+    "article-opening",
+    "article-reading",
+    "article-continue"
   ]
 }

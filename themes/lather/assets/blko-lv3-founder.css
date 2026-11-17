@@ -1,0 +1,35 @@
+/* 75 Founder: full-bleed photo, the text sits on the open wood wall */
+.s-founder{position:relative;overflow:hidden;background:var(--deep);color:var(--raised);height:clamp(640px,64vw,920px)}
+.s-founder__img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;object-position:50% 0;transform-origin:50% 0;will-change:transform}
+.s-founder__shade{position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(270deg,rgba(38,43,34,.66) 0%,rgba(38,43,34,.42) 34%,rgba(38,43,34,0) 58%),
+             linear-gradient(0deg,rgba(38,43,34,.28) 0%,rgba(38,43,34,0) 30%)}
+.s-founder__in{position:relative;height:100%;display:flex;align-items:center;justify-content:flex-end}
+.s-founder__text{width:min(460px,38%);display:flex;flex-direction:column;gap:22px}
+.s-founder__text .h2{max-width:11ch}
+.s-founder__story{font-size:18px;line-height:1.55;color:rgba(247,243,234,.9);max-width:40ch}
+.s-founder__out{list-style:none;display:flex;flex-wrap:wrap;gap:6px 22px;font-size:17px;font-weight:500;color:var(--sage)}
+.s-founder__out li{position:relative}
+.s-founder__out li::after{content:'';position:absolute;left:-3px;right:-3px;top:54%;height:1.5px;background:var(--raised);transform-origin:left center;transition:transform .5s var(--ease)}
+html.motion .s-founder__out:not(.in) li::after{transform:scaleX(0)}
+html.motion .s-founder__out li:nth-child(1)::after{transition-delay:.35s}
+html.motion .s-founder__out li:nth-child(2)::after{transition-delay:.5s}
+html.motion .s-founder__out li:nth-child(3)::after{transition-delay:.65s}
+html.motion .s-founder__out li:nth-child(4)::after{transition-delay:.8s}
+.s-founder__sig{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-top:18px;border-top:1px solid rgba(247,243,234,.24)}
+.s-founder__sig p{font-size:15px;color:rgba(247,243,234,.82)}
+.s-founder__sig b{font-weight:600;color:var(--raised)}
+.s-founder__sig .link{font-size:15px}
+.s-founder__sig .link:hover{color:var(--sage)}
+.s-founder__sig .link:focus-visible{outline-color:var(--sage)}
+@media (max-width:1000px){
+  .s-founder{height:auto;min-height:780px;display:flex;align-items:flex-end}
+  .s-founder__img{object-position:40% 0}
+  .s-founder__shade{background:linear-gradient(0deg,rgba(38,43,34,.86) 0%,rgba(38,43,34,.72) 38%,rgba(38,43,34,0) 64%)}
+  .s-founder__in{height:auto;width:100%;padding-top:400px;padding-bottom:40px;justify-content:flex-start}
+  .s-founder__text{width:100%;max-width:520px;gap:16px}
+  .s-founder__story{font-size:16px}
+  .s-founder__out{font-size:16px;gap:4px 18px}
+}
+/* Liquid port: Shopify placeholder stands in for a blank image */
+.s-founder svg.s-founder__img{background:var(--moss);fill:rgba(238,232,220,.16)}

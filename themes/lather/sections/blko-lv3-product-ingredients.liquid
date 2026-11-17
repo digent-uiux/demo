@@ -1,0 +1,73 @@
+{%- comment -%}
+  Lather v3, product page: ingredients (home-v3/pages/product/20-ingredients.html).
+  Two-line heading and intro; ingredient blocks in a two-column list; a details toggle with the complete list.
+  The complete list is the product's custom.ingredients metafield when it is set, else the "Complete list" setting.
+{%- endcomment -%}
+{{ 'blko-lv3-product-ingredients.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign s = section.settings
+  assign anchor = s.anchor | handleize | default: 'pdp-ingredients'
+  assign full = s.full_list
+  if product != blank and product.metafields.custom.ingredients != blank
+    assign full = product.metafields.custom.ingredients.value | strip_html
+  endif
+-%}
+<section class="s-pdp-ingredients" id="{{ anchor }}" aria-labelledby="{{ anchor }}-title">
+  <div class="wrap s-pdp-ingredients__layout">
+    <div class="s-pdp-ingredients__intro">
+      <h2 class="h2" id="{{ anchor }}-title" data-rv="line">
+        {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
+        {%- if s.heading_2 != blank -%}<span class="ln"><span>{{ s.heading_2 }}</span></span>{%- endif -%}
+      </h2>
+      {%- if s.text != blank -%}<p>{{ s.text | escape }}</p>{%- endif -%}
+    </div>
+    <div class="s-pdp-ingredients__list">
+      {%- for block in section.blocks -%}
+        <article class="s-pdp-ingredients__item" data-rv="blur"{% assign odd = forloop.index0 | modulo: 2 %}{% if odd == 1 %} data-rv-delay="1"{% endif %} {{ block.shopify_attributes }}><h3>{{ block.settings.title | escape }}</h3>{%- if block.settings.text != blank -%}<p>{{ block.settings.text | escape }}</p>{%- endif -%}</article>
+      {%- endfor -%}
+      {%- if s.summary != blank and full != blank -%}
+        <details class="s-pdp-ingredients__full"><summary>{{ s.summary | escape }}</summary><p id="pdp-full-ingredients">{{ full | escape }}</p>{%- if s.note != blank -%}<p>{{ s.note | escape }}</p>{%- endif -%}</details>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lather PDP ingredients",
+  "class": "blko-lv3-section-product-ingredients",
+  "max_blocks": 8,
+  "settings": [
+    { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "A list you" },
+    { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "can <em>read.</em>", "info": "Italic text shows in the accent style." },
+    { "type": "textarea", "id": "text", "label": "Intro", "default": "What goes in matters. So does what we leave out: added fragrance, SLS and colour." },
+    { "type": "header", "content": "Complete list" },
+    { "type": "text", "id": "summary", "label": "Toggle label", "default": "Read the complete ingredient list" },
+    { "type": "textarea", "id": "full_list", "label": "Complete list", "default": "Water, glycerin, coco-glucoside, decyl glucoside, colloidal oat, shea butter, sunflower seed oil, xanthan gum, citric acid, sodium benzoate. pH 5.5.", "info": "A product with the custom.ingredients metafield shows that instead." },
+    { "type": "textarea", "id": "note", "label": "Allergy note", "default": "Contains oat. Check the full list against your known allergies before using." },
+    { "type": "header", "content": "Section" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "pdp-ingredients" }
+  ],
+  "blocks": [
+    {
+      "type": "ingredient",
+      "name": "Ingredient",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Name", "default": "Colloidal oat" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Finely milled oat, in a wash made for everyday dry skin." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather PDP ingredients",
+      "blocks": [
+        { "type": "ingredient", "settings": { "title": "Colloidal oat", "text": "Finely milled oat, in a wash made for everyday dry skin." } },
+        { "type": "ingredient", "settings": { "title": "Glycerin", "text": "A familiar humectant in the formula, for a comfortable wash." } },
+        { "type": "ingredient", "settings": { "title": "Gentle cleansers", "text": "Coco-glucoside and decyl glucoside make the soft foam." } },
+        { "type": "ingredient", "settings": { "title": "No added scent", "text": "Fragrance-free means no perfume or essential oil added to Calm wash." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

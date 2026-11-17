@@ -1,41 +1,69 @@
 {
   "sections": {
-    "cart-checkout-cart-main": {
-      "type": "blko-cart-checkout-cart-main",
-      "settings": {}
+    "bag": {
+      "type": "blko-lv3-cart-bag",
+      "settings": {
+        "heading": "Your <em>bag.</em>",
+        "keep_label": "Keep browsing",
+        "empty_heading": "Room for a softer routine.",
+        "empty_text": "Start with a wash, or keep it small with the Oat bar for face and body.",
+        "empty_button": "Find your formula",
+        "remove_label": "Remove",
+        "undo_label": "Undo",
+        "removed_line": "[name] removed.",
+        "fewer_label": "One fewer [name]",
+        "more_label": "One more [name]",
+        "qty_label": "Quantity",
+        "update_label": "Update bag",
+        "note_label": "Anything we should know?",
+        "note_placeholder": "An order note, if you need one.",
+        "note_hint": "Saved on this device with your bag.",
+        "summary_heading": "Your order",
+        "summary_label": "Order summary",
+        "free_ship": 40,
+        "ship_free_over": "Free shipping over [amount].",
+        "ship_left": "[amount] away from free shipping.",
+        "ship_done": "Free shipping unlocked.",
+        "progress_label": "Progress toward free shipping",
+        "subtotal_label": "Subtotal",
+        "shipping_label": "Shipping",
+        "shipping_calc": "Calculated at checkout",
+        "shipping_free": "Free",
+        "total_label": "Total before shipping & tax",
+        "checkout_label": "Check out, [amount]",
+        "extras": "Skin reacted? Your first bottle of any formula is refundable within 30 days, used or not. <a href=\"/pages/help#refund\">How it works</a>",
+        "st_removed": "[name] removed. You can undo this change.",
+        "st_updated": "[name] quantity updated.",
+        "st_restored": "[name] restored.",
+        "st_thanks": "Thank you. Your order has been placed."
+      }
     },
-    "cart-checkout-service-strip": {
-      "type": "blko-cart-checkout-service-strip",
-      "settings": {},
-      "blocks": {
-        "block-1": {
-          "type": "note",
-          "settings": {}
-        },
-        "block-2": {
-          "type": "note",
-          "settings": {
-            "title": "Easy returns",
-            "text": "within 30 days"
-          }
-        },
-        "block-3": {
-          "type": "note",
-          "settings": {
-            "title": "Need help?",
-            "text": "We’re here for you"
-          }
-        }
-      },
-      "block_order": [
-        "block-1",
-        "block-2",
-        "block-3"
-      ]
+    "finish": {
+      "type": "blko-lv3-cart-finish",
+      "settings": {
+        "heading": "For the sink, too.",
+        "text": "Oat bar for face and body. A simple addition, 120 g.",
+        "button": "Add Oat bar",
+        "sold_out": "Sold out",
+        "key": "bar",
+        "name": "Oat bar",
+        "size": "120 g",
+        "price": "900",
+        "line": "Oat milk soap bar for face and body. Rich lather that rinses soft.",
+        "image": "shopify://shop_images/c-oat-bar.jpg"
+      }
+    },
+    "recent": {
+      "type": "blko-lv3-recent",
+      "settings": {
+        "demo_key": "",
+        "anchor": "cart-recent"
+      }
     }
   },
   "order": [
-    "cart-checkout-cart-main",
-    "cart-checkout-service-strip"
+    "bag",
+    "finish",
+    "recent"
   ]
 }

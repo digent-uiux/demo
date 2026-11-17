@@ -1,35 +1,278 @@
 {
-  "name": "Footer",
   "type": "footer",
+  "name": "Footer group",
   "sections": {
-    "footer": {
-      "type": "blko-chrome-footer",
-      "settings": {},
+    "lv3-footer": {
+      "type": "blko-lv3-footer",
       "blocks": {
-        "block-1": {
-          "type": "column",
-          "settings": {}
-        },
-        "block-2": {
-          "type": "column",
+        "col-1": {
+          "type": "menu",
           "settings": {
-            "title": "Our story",
-            "menu": "footer-about"
+            "title": "Shop",
+            "demo_links": "Shop all | [all]\nCalm wash | /products/calm-wash\nBuild a set | [home]#bundle\nSearch | [search]"
+          }
+        },
+        "col-2": {
+          "type": "menu",
+          "settings": {
+            "title": "Help",
+            "demo_links": "FAQ | /pages/help\nShipping | /pages/help#shipping\nSkin-reaction refund | /pages/help#returns\nContact | /pages/help#contact"
+          }
+        },
+        "col-3": {
+          "type": "menu",
+          "settings": {
+            "title": "About",
+            "demo_links": "Our story | /pages/about\nJournal | /blogs/journal\nWashing eczema-prone skin | /blogs/journal/a-gentler-shower-for-eczema-prone-skin\nAccount | [account]"
           }
         }
       },
       "block_order": [
-        "block-1",
-        "block-2"
-      ]
+        "col-1",
+        "col-2",
+        "col-3"
+      ],
+      "settings": {
+        "logo": "shopify://shop_images/logo-final.png"
+      }
     },
-    "cart-drawer": {
-      "type": "blko-chrome-cart-drawer",
-      "settings": {}
+    "lv3-overlays": {
+      "type": "blko-lv3-overlays",
+      "blocks": {
+        "ing-calm": {
+          "type": "ingredients",
+          "settings": {
+            "key": "calm",
+            "ing": "Water, glycerin, coco-glucoside, decyl glucoside, colloidal oat, shea butter, sunflower seed oil, xanthan gum, citric acid, sodium benzoate. pH 5.5."
+          }
+        },
+        "ing-chamomile": {
+          "type": "ingredients",
+          "settings": {
+            "key": "chamomile",
+            "ing": "Calm wash plus chamomile flower oil (0.2%). Allergens: bisabolol. pH 5.5."
+          }
+        },
+        "ing-soft": {
+          "type": "ingredients",
+          "settings": {
+            "key": "soft",
+            "ing": "Water, glycerin, coco-glucoside, colloidal oat, oat oil, sunflower seed oil, xanthan gum, citric acid, sodium benzoate. Fragrance-free. pH 5.5."
+          }
+        },
+        "ing-rich": {
+          "type": "ingredients",
+          "settings": {
+            "key": "rich",
+            "ing": "Calm wash plus extra shea butter and oat oil. Fragrance-free. pH 5.5."
+          }
+        },
+        "ing-lotion": {
+          "type": "ingredients",
+          "settings": {
+            "key": "lotion",
+            "ing": "Water, glycerin, shea butter, colloidal oat, squalane, ceramide NP, cetearyl alcohol, xanthan gum."
+          }
+        },
+        "ing-cream": {
+          "type": "ingredients",
+          "settings": {
+            "key": "cream",
+            "ing": "Shea butter, glycerin, oat oil, ceramide NP, squalane, beeswax-free."
+          }
+        },
+        "ing-milk": {
+          "type": "ingredients",
+          "settings": {
+            "key": "milk",
+            "ing": "Water, glycerin, colloidal oat, sunflower seed oil, squalane, cetearyl alcohol, xanthan gum, sodium benzoate."
+          }
+        },
+        "ing-little": {
+          "type": "ingredients",
+          "settings": {
+            "key": "little",
+            "ing": "Water, glycerin, colloidal oat, calendula oil, shea butter, cetearyl alcohol, xanthan gum, sodium benzoate."
+          }
+        },
+        "ing-bar": {
+          "type": "ingredients",
+          "settings": {
+            "key": "bar",
+            "ing": "Sodium olivate, sodium cocoate, oat milk, colloidal oat, shea butter, glycerin."
+          }
+        }
+      },
+      "block_order": [
+        "ing-calm",
+        "ing-chamomile",
+        "ing-soft",
+        "ing-rich",
+        "ing-lotion",
+        "ing-cream",
+        "ing-milk",
+        "ing-little",
+        "ing-bar"
+      ],
+      "settings": {
+        "upsell_image": "shopify://shop_images/c-oat-bar.jpg",
+        "view_bag": "View bag"
+      }
+    },
+    "lv3-popup": {
+      "type": "blko-lv3-popup",
+      "settings": {
+        "pop_image": "shopify://shop_images/u-1759216853275-be51b29b6ee1.jpg"
+      }
+    },
+    "lv3-search": {
+      "type": "blko-lv3-search-overlay",
+      "settings": {},
+      "blocks": {
+        "p-calm": {
+          "type": "product",
+          "settings": {
+            "key": "calm",
+            "name": "Calm wash",
+            "size": "400 ml",
+            "price": "1800",
+            "labels": "best,ff",
+            "line": "Everyday, eczema-prone skin. Colloidal oat and glycerin.",
+            "keywords": "wash body wash eczema prone daily dry tight",
+            "image": "shopify://shop_images/t-calm.jpg",
+            "loved": true
+          }
+        },
+        "p-chamomile": {
+          "type": "product",
+          "settings": {
+            "key": "chamomile",
+            "name": "Chamomile wash",
+            "size": "400 ml",
+            "price": "2000",
+            "labels": "",
+            "line": "Our only scented wash: 0.2% chamomile oil, allergens listed.",
+            "keywords": "body wash chamomile scented scent floral sensitive",
+            "image": "shopify://shop_images/t-chamomile.jpg",
+            "loved": false
+          }
+        },
+        "p-soft": {
+          "type": "product",
+          "settings": {
+            "key": "soft",
+            "name": "Soft wash",
+            "size": "400 ml",
+            "price": "1800",
+            "labels": "new,ff",
+            "line": "Our gentlest wash for sensitive skin. Low foam, rinses clean.",
+            "keywords": "body wash gentle sensitive low foam",
+            "image": "shopify://shop_images/c-soft.jpg",
+            "loved": true
+          }
+        },
+        "p-rich": {
+          "type": "product",
+          "settings": {
+            "key": "rich",
+            "name": "Rich wash",
+            "size": "400 ml",
+            "price": "2000",
+            "labels": "ff",
+            "line": "Very dry or winter skin. Thicker, almost a lotion.",
+            "keywords": "body wash winter very dry shea",
+            "image": "shopify://shop_images/c-rich.jpg",
+            "loved": false
+          }
+        },
+        "p-lotion": {
+          "type": "product",
+          "settings": {
+            "key": "lotion",
+            "name": "Calm lotion",
+            "size": "250 ml",
+            "price": "2200",
+            "labels": "ff",
+            "line": "Light lotion for damp skin, straight after the wash.",
+            "keywords": "body lotion moisturiser moisturizer damp skin",
+            "image": "shopify://shop_images/c-lotion.jpg",
+            "loved": false
+          }
+        },
+        "p-cream": {
+          "type": "product",
+          "settings": {
+            "key": "cream",
+            "name": "Rich cream",
+            "size": "200 ml",
+            "price": "2400",
+            "labels": "ff",
+            "line": "Thick cream for shins, elbows and hands.",
+            "keywords": "body cream moisturiser moisturizer very dry hands elbows shins",
+            "image": "shopify://shop_images/c-cream.jpg",
+            "loved": false
+          }
+        },
+        "p-milk": {
+          "type": "product",
+          "settings": {
+            "key": "milk",
+            "name": "Body milk",
+            "size": "300 ml",
+            "price": "2000",
+            "labels": "new,ff",
+            "line": "Light and quick for dry skin. Sinks in fast, never sticky.",
+            "keywords": "body milk light lotion moisturiser moisturizer dry quick",
+            "image": "shopify://shop_images/c-body-milk.jpg",
+            "loved": true
+          }
+        },
+        "p-little": {
+          "type": "product",
+          "settings": {
+            "key": "little",
+            "name": "Little lotion",
+            "size": "150 ml",
+            "price": "1400",
+            "labels": "new,ff",
+            "line": "Soft, light oat lotion for ages 1 and up. Fragrance-free.",
+            "keywords": "baby child children toddler lotion ages 1",
+            "image": "shopify://shop_images/c-little-lotion.jpg",
+            "loved": false
+          }
+        },
+        "p-bar": {
+          "type": "product",
+          "settings": {
+            "key": "bar",
+            "name": "Oat bar",
+            "size": "120 g",
+            "price": "900",
+            "labels": "best,ff",
+            "line": "Oat milk soap bar for face and body. Rich lather that rinses soft.",
+            "keywords": "soap bar face body hands oat milk",
+            "image": "shopify://shop_images/c-oat-bar.jpg",
+            "loved": true
+          }
+        }
+      },
+      "block_order": [
+        "p-calm",
+        "p-chamomile",
+        "p-soft",
+        "p-rich",
+        "p-lotion",
+        "p-cream",
+        "p-milk",
+        "p-little",
+        "p-bar"
+      ]
     }
   },
   "order": [
-    "footer",
-    "cart-drawer"
+    "lv3-footer",
+    "lv3-overlays",
+    "lv3-search",
+    "lv3-popup"
   ]
 }

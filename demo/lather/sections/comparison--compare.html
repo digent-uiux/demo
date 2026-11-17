@@ -1,0 +1,1414 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lather, body wash for skin that itches</title>
+<link rel="icon" href="../img/mark-final.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Antonio:wght@600&family=Urbanist:wght@300;400;500;600;700&family=Yeseva+One&display=swap" rel="stylesheet">
+<script>
+  // motion only when JS runs and the user has not asked for reduced motion
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('motion');
+</script>
+<style>
+/* ============ Lather tokens (brand.md v3) ============ */
+:root{
+  --oat:#EEE8DC; --raised:#F7F3EA; --stone:#D9CFBD; --sage-wash:#DFDDCC;
+  --deep:#2F3A2A; --ink:#262B22; --muted:#5F6354; --moss:#5E6B4E; --sage:#A3AE8E; --line:#D3CAB6;
+  --sale:#8A4B2A; /* price-cut text only, tiny area */
+  --f-display:'Yeseva One', Georgia, serif;
+  --f-body:'Urbanist', system-ui, sans-serif;
+  --f-price:'Antonio', 'Urbanist', sans-serif;
+  --r-img:6px; --r-btn:8px;
+  --gut:48px; --max:1320px;
+  --ease:cubic-bezier(.22,.61,.36,1); --ease-io:cubic-bezier(.65,0,.35,1);
+}
+@media (max-width:760px){ :root{ --gut:16px; } }
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--oat);color:var(--ink);font:400 16px/1.6 var(--f-body);overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+input,select{font:inherit;color:inherit}
+.wrap{max-width:calc(var(--max) + 2*var(--gut));margin:0 auto;padding:0 var(--gut)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ============ Type ============ */
+/* Heading pattern (learned from Eurus): Urbanist 500, exactly one word in <em> = Yeseva One, not italic */
+.h1,.h2,.h3{font-family:var(--f-body);font-weight:500;letter-spacing:-.02em;line-height:1.04;color:inherit}
+.h1{font-size:clamp(38px,5vw,76px)}
+.h2{font-size:clamp(32px,3.6vw,54px)}
+.h3{font-size:clamp(22px,2vw,28px);line-height:1.2}
+.h1 em,.h2 em,.h3 em{font-family:var(--f-display);font-style:normal;font-weight:400;font-size:1.08em;letter-spacing:-.01em}
+.lead{font-size:19px;line-height:1.5;color:var(--muted);max-width:44ch}
+@media (max-width:760px){.lead{font-size:17px}}
+.small{font-size:14px;line-height:1.45;color:var(--muted)}
+.price{font-family:var(--f-price);font-weight:600;font-size:22px;letter-spacing:.01em;line-height:1}
+.price s{color:var(--muted);font-size:.8em;margin-left:.35em;font-weight:600}
+.price .cut{color:var(--sale)}
+
+/* ============ Components ============ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5em;height:50px;padding:0 24px;border-radius:var(--r-btn);
+  font:600 15px/1 var(--f-body);white-space:nowrap;transition:background-color .25s var(--ease),color .25s var(--ease),box-shadow .25s var(--ease);text-decoration:none}
+.btn--primary{background:var(--deep);color:var(--oat)}
+.btn--primary:hover{background:var(--ink)}
+.btn--light{background:var(--raised);color:var(--ink)}
+.btn--light:hover{background:#fff8ee}
+.btn--ghost{background:transparent;color:inherit;box-shadow:inset 0 0 0 1.5px currentColor}
+.btn--ghost:hover{background:rgba(38,43,34,.08)}
+.on-dark .btn--ghost:hover{background:rgba(238,232,220,.12)}
+.btn--sm{height:40px;padding:0 16px;font-size:14px}
+.btn--block{width:100%}
+.btn:focus-visible,.chip:focus-visible,a:focus-visible{outline:2px solid var(--moss);outline-offset:3px}
+.link{font-weight:600;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1.5px}
+.link:hover{color:var(--moss)}
+.chip{display:inline-flex;align-items:center;height:38px;padding:0 16px;border-radius:999px;background:var(--raised);font:500 14px/1 var(--f-body);transition:background-color .25s,color .25s}
+.chip:hover{background:var(--stone)}
+.chip[aria-pressed="true"],.chip[aria-selected="true"]{background:var(--deep);color:var(--oat)}
+/* product labels (store-wide) */
+.label{display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:4px;font:600 13px/1 var(--f-body);white-space:nowrap}
+.label--best{background:var(--deep);color:var(--oat)}
+.label--ff{background:var(--raised);color:var(--moss)}
+.label--new{background:var(--sage);color:var(--ink)}
+.label--sale{background:var(--sale);color:var(--raised)}
+.labels{display:flex;gap:6px;flex-wrap:wrap}
+.stars{color:var(--moss);letter-spacing:1px;font-size:14px}
+.qty{display:inline-flex;align-items:center;height:40px;border-radius:var(--r-btn);background:var(--raised)}
+.qty button{width:38px;height:40px;font-size:18px}
+.qty span{min-width:22px;text-align:center;font-weight:600}
+
+/* ============ Reveal system (4 styles). Final state is the default; html.motion arms them ============ */
+html.motion [data-rv]{transition:opacity .64s var(--ease),transform .64s var(--ease),filter .64s var(--ease)}
+html.motion [data-rv="blur"]:not(.in){opacity:0;transform:translateY(12px);filter:blur(6px)}
+html.motion [data-rv="settle"]:not(.in){opacity:0;transform:scale(.96)}
+html.motion [data-rv="draw"]{transform-origin:left center}
+html.motion [data-rv="draw"]:not(.in){transform:scaleX(0)}
+html.motion [data-rv="line"] .ln{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
+html.motion [data-rv="line"] .ln>span{display:block;transition:transform .9s cubic-bezier(.22,1,.36,1)}
+html.motion [data-rv="line"]:not(.in) .ln>span{transform:translateY(105%)}
+html.motion [data-rv="line"] .ln:nth-child(2)>span{transition-delay:.09s}
+html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
+[data-rv-delay="1"]{transition-delay:.08s!important}[data-rv-delay="2"]{transition-delay:.16s!important}[data-rv-delay="3"]{transition-delay:.24s!important}
+
+/* ============ Announcement (home only) ============ */
+.ann{background:var(--deep);color:var(--oat);font-size:14px;height:40px;display:flex;align-items:center;justify-content:center;gap:14px;position:relative;z-index:31}
+.ann a{font-weight:600}
+.ann__msg{transition:opacity .4s}
+.ann__nav{position:absolute;inset:0 var(--gut);display:flex;justify-content:space-between;align-items:center;pointer-events:none}
+.ann__nav button{pointer-events:auto;width:32px;height:32px;opacity:.7}
+.ann__nav button:hover{opacity:1}
+
+/* ============ Header ============ */
+.hdr{position:sticky;top:0;z-index:30;color:var(--ink);transition:background-color .35s var(--ease),box-shadow .35s var(--ease)}
+.hdr.is-solid{background:var(--raised);box-shadow:0 1px 0 var(--line)}
+.hdr.is-over{color:var(--raised)}
+.hdr.is-over.is-solid{color:var(--ink)}
+.hdr__in{height:72px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:24px}
+.hdr__nav{display:flex;gap:28px;font-weight:500;font-size:15px}
+.hdr__nav a{text-decoration:none;padding:6px 0;background:linear-gradient(currentColor,currentColor) left bottom/0 1.5px no-repeat;transition:background-size .3s var(--ease)}
+.hdr__nav a:hover{background-size:100% 1.5px}
+.logo{display:block;width:118px;height:40px;background:currentColor;-webkit-mask:url(../img/logo-final.png) center/contain no-repeat;mask:url(../img/logo-final.png) center/contain no-repeat}
+.hdr__tools{display:flex;justify-content:flex-end;align-items:center;gap:8px}
+.icon-btn{width:42px;height:42px;display:inline-grid;place-items:center;border-radius:var(--r-btn);transition:background-color .25s}
+.icon-btn:hover{background:rgba(38,43,34,.08)}
+.hdr.is-over:not(.is-solid) .icon-btn:hover{background:rgba(247,243,234,.16)}
+.icon-btn svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.bag-count{min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:var(--deep);color:var(--oat);font:600 12px/20px var(--f-body);text-align:center;margin-left:-14px;margin-top:-18px;transition:background-color .3s}
+.hdr.is-over:not(.is-solid) .bag-count{background:var(--raised);color:var(--ink)}
+.bag-count.bump{background:var(--moss)!important;color:var(--oat)!important}
+.hdr__menu{display:none}
+@media (max-width:900px){
+  .hdr__nav{display:none}.hdr__menu{display:inline-grid}
+  .hdr__in{height:60px;grid-template-columns:auto 1fr auto}
+  .hdr__in .logo{justify-self:center;width:100px}
+  .hdr__tools .hide-m{display:none}
+}
+/* mobile menu sheet */
+.mnav{position:fixed;inset:0;z-index:60;background:var(--raised);padding:20px var(--gut);transform:translateX(-100%);transition:transform .45s var(--ease);display:flex;flex-direction:column;gap:6px}
+.mnav.open{transform:none}
+.mnav a{font:500 26px/1.3 var(--f-body);text-decoration:none;padding:10px 0;border-bottom:1px solid var(--line)}
+.mnav__top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+</style>
+</head>
+<body>
+<div class="ann" role="region" aria-label="Offers">
+  <p class="ann__msg" id="annMsg">New here? Start with the Oat bar, $9. <a href="#shop">Shop the line</a></p>
+  <div class="ann__nav" aria-hidden="false">
+    <button type="button" aria-label="Previous offer" data-ann="-1"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 6l-6 6 6 6"/></svg></button>
+    <button type="button" aria-label="Next offer" data-ann="1"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 6l6 6-6 6"/></svg></button>
+  </div>
+</div>
+<header class="hdr is-over" id="hdr">
+  <div class="wrap hdr__in">
+    <nav class="hdr__nav" aria-label="Main">
+      <a href="../templates/collection.html">Shop all</a><a href="#bundle">Build a set</a><a href="#quiz">Skin quiz</a><a href="../templates/about.html">Our story</a><a href="../templates/blog.html">Journal</a>
+    </nav>
+    <button class="icon-btn hdr__menu" type="button" aria-label="Open menu" id="menuBtn"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <a href="#top" class="logo" aria-label="Lather home"></a>
+    <div class="hdr__tools">
+      <a class="icon-btn" href="../templates/search.html" aria-label="Search" aria-haspopup="dialog" aria-controls="srch" aria-expanded="false" data-search-open><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg></a>
+      <a class="icon-btn hide-m" href="../templates/account.html" aria-label="Account"><svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1.4-3.6 4.2-5.4 7.5-5.4s6.1 1.8 7.5 5.4"/></svg></a>
+      <a class="icon-btn" href="../templates/wishlist.html" aria-label="Wishlist" data-wish-link data-label="Wishlist" data-label-n="Wishlist, [count] saved"><svg viewBox="0 0 24 24"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg></a>
+      <span class="bag-count" data-wish-count aria-hidden="true" hidden>0</span>
+      <button class="icon-btn" type="button" aria-label="Open bag" id="bagBtn"><svg viewBox="0 0 24 24"><path d="M5 8h14l-1.2 12H6.2L5 8z"/><path d="M9 8V6.5a3 3 0 016 0V8"/></svg></button>
+      <span class="bag-count" id="bagCount" aria-live="polite">0</span>
+    </div>
+  </div>
+</header>
+<nav class="mnav" id="mnav" aria-label="Mobile">
+  <div class="mnav__top"><span class="logo" style="color:var(--ink)"></span><button class="icon-btn" type="button" aria-label="Close menu" id="menuClose"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <a href="../templates/collection.html">Shop all</a><a href="#bundle">Build a set</a><a href="#quiz">Skin quiz</a><a href="../templates/about.html">Our story</a><a href="../templates/blog.html">Journal</a><a href="../templates/help.html">Help</a><a href="../templates/wishlist.html">Wishlist</a><a href="../templates/account.html">Account</a>
+</nav>
+<main id="top">
+
+<style>
+/* 60 Which wash: three washes, pick your skin and the right one comes forward */
+.s-cmp{background:var(--raised);padding:120px 0 112px}
+.s-cmp__top{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:28px 48px;margin-bottom:44px}
+.s-cmp__top .h2{max-width:13ch}
+.s-cmp__ask{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end}
+.s-cmp__ask p{font-weight:600;font-size:15px}
+.s-cmp__chips{display:flex;flex-wrap:wrap;gap:8px}
+.s-cmp__chips .chip{background:var(--oat)}
+.s-cmp__chips .chip:hover{background:var(--stone)}
+.s-cmp__chips .chip[aria-pressed="true"]{background:var(--deep);color:var(--oat)}
+
+.s-cmp__row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.s-cmp__card{display:flex;flex-direction:column;border-radius:10px;background:var(--oat);overflow:hidden;transition:opacity .5s var(--ease),background-color .4s var(--ease),color .4s var(--ease)}
+.s-cmp__img{aspect-ratio:4/5;overflow:hidden;background:var(--stone)}
+.s-cmp__img img{width:100%;height:100%;object-fit:cover;object-position:50% 50%}
+.s-cmp__body{padding:20px 20px 22px;display:flex;flex-direction:column;gap:14px;flex:1}
+.s-cmp__name{font:600 20px/1.2 var(--f-body)}
+.s-cmp__for{font-size:16px;line-height:1.45}
+.s-cmp__facts{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:15px;color:var(--muted);margin-top:auto}
+.s-cmp__facts dt{font-weight:600;color:inherit}
+.s-cmp__foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:16px;border-top:1px solid var(--line)}
+.s-cmp__foot .price{font-size:22px}
+.s-cmp__note{margin-top:24px;font-size:15px;color:var(--muted)}
+
+/* picked: the best wash steps forward on deep moss, the others step back */
+.s-cmp__row[data-pick] .s-cmp__card{opacity:.45}
+.s-cmp__row[data-pick] .s-cmp__card.is-pick{opacity:1;background:var(--deep);color:var(--oat)}
+.s-cmp__card.is-pick .s-cmp__facts{color:var(--sage)}
+.s-cmp__card.is-pick .s-cmp__foot{border-color:rgba(238,232,220,.18)}
+
+@media (max-width:900px){
+  .s-cmp__top{grid-template-columns:1fr}
+  .s-cmp__ask{justify-content:flex-start}
+}
+@media (max-width:760px){
+  .s-cmp{padding:72px 0}
+  .s-cmp__top{margin-bottom:24px}
+  .s-cmp__chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 calc(-1 * var(--gut));padding:0 var(--gut);width:calc(100% + 2 * var(--gut))}
+  .s-cmp__chips::-webkit-scrollbar{display:none}
+  .s-cmp__chips .chip{flex:none}
+  .s-cmp__row{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:80%;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;gap:12px;margin-right:calc(-1 * var(--gut));padding-right:var(--gut)}
+  .s-cmp__row::-webkit-scrollbar{display:none}
+  .s-cmp__card{scroll-snap-align:start}
+  .s-cmp__body{padding:18px 18px 20px}
+  .s-cmp__name{font-size:19px}
+}
+</style>
+<section class="s-cmp" id="compare" aria-labelledby="cmpH">
+  <div class="wrap">
+    <div class="s-cmp__top">
+      <h2 class="h2" id="cmpH" data-rv="line"><span class="ln"><span>Which wash for</span></span><span class="ln"><span><em>your</em> skin?</span></span></h2>
+      <div class="s-cmp__ask" data-rv="blur" data-rv-delay="1">
+        <p id="cmpAsk">My skin is</p>
+        <div class="s-cmp__chips" role="group" aria-labelledby="cmpAsk">
+          <button type="button" class="chip" aria-pressed="false" data-pick="calm">Eczema-prone</button>
+          <button type="button" class="chip" aria-pressed="false" data-pick="rich">Very dry</button>
+          <button type="button" class="chip" aria-pressed="false" data-pick="chamomile">Fine with a light scent</button>
+          <button type="button" class="chip" aria-pressed="false" data-pick="soft">Sensitive</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="s-cmp__row" data-rv="blur" data-rv-delay="2">
+      <article class="s-cmp__card" data-c="calm">
+        <div class="s-cmp__img"><img src="../img/t-calm.jpg" alt="Calm wash, clear bottle with a moss pump" loading="lazy"></div>
+        <div class="s-cmp__body">
+          <h3 class="s-cmp__name">Calm wash</h3>
+          <p class="s-cmp__for">Best for eczema-prone skin and everyday showers.</p>
+          <dl class="s-cmp__facts"><dt>Scent</dt><dd>None</dd><dt>Feel</dt><dd>Milky, soft foam</dd></dl>
+          <div class="s-cmp__foot"><span class="price" data-price="calm">$18</span><button type="button" class="btn btn--light btn--sm" data-add="calm" aria-label="Add Calm wash">Add</button></div>
+        </div>
+      </article>
+      <article class="s-cmp__card" data-c="rich">
+        <div class="s-cmp__img"><img src="../img/c-rich.jpg" alt="Rich wash, deep green bottle" loading="lazy"></div>
+        <div class="s-cmp__body">
+          <h3 class="s-cmp__name">Rich wash</h3>
+          <p class="s-cmp__for">Best for very dry or winter skin that feels tight.</p>
+          <dl class="s-cmp__facts"><dt>Scent</dt><dd>None</dd><dt>Feel</dt><dd>Thick, almost a lotion</dd></dl>
+          <div class="s-cmp__foot"><span class="price" data-price="rich">$20</span><button type="button" class="btn btn--light btn--sm" data-add="rich" aria-label="Add Rich wash">Add</button></div>
+        </div>
+      </article>
+      <article class="s-cmp__card" data-c="chamomile">
+        <div class="s-cmp__img"><img src="../img/t-chamomile.jpg" alt="Chamomile wash, clear bottle with an ochre pump" loading="lazy"></div>
+        <div class="s-cmp__body">
+          <h3 class="s-cmp__name">Chamomile wash</h3>
+          <p class="s-cmp__for">Calm wash with a light scent, for skin that's fine with one.</p>
+          <dl class="s-cmp__facts"><dt>Scent</dt><dd>Light chamomile, 0.2%</dd><dt>Feel</dt><dd>Milky, soft foam</dd></dl>
+          <div class="s-cmp__foot"><span class="price" data-price="chamomile">$20</span><button type="button" class="btn btn--light btn--sm" data-add="chamomile" aria-label="Add Chamomile wash">Add</button></div>
+        </div>
+      </article>
+      <article class="s-cmp__card" data-c="soft">
+        <div class="s-cmp__img"><img src="../img/c-soft.jpg" alt="Soft wash, terracotta bottle" loading="lazy"></div>
+        <div class="s-cmp__body">
+          <h3 class="s-cmp__name">Soft wash</h3>
+          <p class="s-cmp__for">Best for sensitive skin that reacts to almost everything.</p>
+          <dl class="s-cmp__facts"><dt>Scent</dt><dd>None</dd><dt>Feel</dt><dd>Light, low foam</dd></dl>
+          <div class="s-cmp__foot"><span class="price" data-price="soft">$18</span><button type="button" class="btn btn--light btn--sm" data-add="soft" aria-label="Add Soft wash">Add</button></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+<script>(() => { document.addEventListener('DOMContentLoaded', () => {
+  const sec = document.querySelector('.s-cmp'); if (!sec) return;
+  const L = window.LATHER;
+  const row = sec.querySelector('.s-cmp__row');
+  const chips = [...sec.querySelectorAll('.s-cmp__chips .chip')];
+  const cards = [...sec.querySelectorAll('.s-cmp__card')];
+  if (L) sec.querySelectorAll('[data-price]').forEach(el => { const p = L.products[el.dataset.price]; if (p) el.textContent = L.fmt(p.price); });
+  function pick(chip) {
+    const on = chip.getAttribute('aria-pressed') !== 'true';
+    chips.forEach(c => c.setAttribute('aria-pressed', String(on && c === chip)));
+    cards.forEach(card => {
+      const best = on && card.dataset.c === chip.dataset.pick;
+      card.classList.toggle('is-pick', best);
+      const b = card.querySelector('[data-add]');
+      b.classList.toggle('btn--primary', false);
+      b.classList.toggle('btn--light', true);
+      if (best && row.scrollWidth > row.clientWidth) row.scrollTo({ left: card.offsetLeft - row.offsetLeft, behavior: document.documentElement.classList.contains('motion') ? 'smooth' : 'auto' });
+    });
+    if (on) row.dataset.pick = chip.dataset.pick; else delete row.dataset.pick;
+  }
+  chips.forEach(c => c.addEventListener('click', () => pick(c)));
+}); })();</script>
+
+<!-- Search overlay with predictive results (feature 1, agent S1). Same CSS/JS as the Liquid assets blko-lv3-search-overlay.css/.js: edit both. -->
+<style>
+/* Lather v3 search overlay (home-v3 shared/10-search.html). Opens from the header search icon through LATHER.openLayer. */
+.srch{position:fixed;z-index:72;top:0;left:0;right:0;max-height:min(780px,100vh);overflow:auto;overscroll-behavior:contain;background:var(--raised);color:var(--ink);
+  border-radius:0 0 12px 12px;box-shadow:0 30px 80px rgba(38,43,34,.2);visibility:hidden;opacity:0;pointer-events:none;
+  transition:opacity .35s var(--ease),transform .45s var(--ease),visibility 0s linear .45s}
+html.motion .srch{transform:translateY(-14px)}
+.srch.open{visibility:visible;opacity:1;pointer-events:auto;transform:none;transition:opacity .35s var(--ease),transform .45s var(--ease),visibility 0s}
+.srch__bar{display:flex;align-items:center;gap:14px;height:96px;box-shadow:inset 0 -1px 0 var(--line);transition:box-shadow .25s var(--ease)}
+.srch__bar:focus-within{box-shadow:inset 0 -2px 0 var(--moss)}
+.srch__form{flex:1;display:flex;align-items:center;gap:14px;min-width:0;height:100%}
+.srch__ico{width:26px;height:26px;flex:none;fill:none;stroke:var(--moss);stroke-width:1.6;stroke-linecap:round}
+.srch__in{flex:1;min-width:0;height:56px;border:0;background:none;font:500 clamp(22px,2.4vw,32px)/1.2 var(--f-body);letter-spacing:-.01em;color:var(--ink);outline:0;-webkit-appearance:none;appearance:none}
+.srch__in::placeholder{color:var(--muted);opacity:.85}
+.srch__in::-webkit-search-cancel-button,.srch__in::-webkit-search-decoration{-webkit-appearance:none}
+.srch__x{flex:none}
+.srch__x:focus-visible{outline:2px solid var(--moss);outline-offset:2px}
+.srch__body{display:grid;grid-template-columns:minmax(200px,1fr) 3fr;gap:56px;padding:32px 0 44px}
+.srch__h{font:600 15px/1.3 var(--f-body);color:var(--ink);margin-bottom:14px}
+.srch__block+.srch__block{margin-top:28px}
+.srch__chips{display:flex;flex-wrap:wrap;gap:8px}
+.srch__chips .chip{background:var(--oat)}
+.srch__chips .chip:hover,.srch__chips .chip:active{background:var(--stone)}
+.srch__sug{list-style:none;display:flex;flex-direction:column}
+.srch__sug a{display:block;padding:7px 0;text-decoration:none;font-size:17px;line-height:1.35;color:var(--muted);border-radius:4px;transition:color .2s var(--ease)}
+.srch__sug a:hover,.srch__sug a:active{color:var(--ink)}
+.srch__sug a:focus-visible{outline:2px solid var(--moss);outline-offset:2px}
+.srch mark{background:none;color:var(--ink);font-weight:700}
+.srch__top{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:14px}
+.srch__top .srch__h{margin:0}
+.srch__status{font-size:14px;color:var(--muted)}
+.srch__list{list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px 20px}
+.srch__card{display:flex;flex-direction:column;gap:12px;text-decoration:none;border-radius:var(--r-img)}
+.srch__card:focus-visible{outline:2px solid var(--moss);outline-offset:4px}
+.srch__img{display:block;aspect-ratio:4/5;border-radius:var(--r-img);overflow:hidden;background:var(--sage-wash)}
+.srch__img img,.srch__img svg{width:100%;height:100%;object-fit:cover;transition:filter .25s var(--ease)}
+.srch__card:hover .srch__img img{filter:brightness(.95)}
+.srch__txt{display:flex;flex-direction:column;gap:6px;min-width:0}
+.srch__name{font:600 16px/1.25 var(--f-body)}
+.srch__name mark{color:var(--moss)}
+.srch__meta{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.srch__meta .small{font-size:14px}
+.srch__meta .price{font-size:19px}
+.srch__meta .price s{font-size:.78em}
+.srch__all{margin-top:28px}
+.srch__empty{padding:8px 0 4px;color:var(--muted);font-size:17px;max-width:46ch}
+.srch [hidden]{display:none!important}
+html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animation-delay:calc(var(--i,0) * 50ms)}
+@keyframes srchIn{from{opacity:0;transform:translateY(8px)}}
+@media (max-width:1100px){.srch__body{gap:40px;grid-template-columns:minmax(180px,1fr) 2.4fr}.srch__list{grid-template-columns:repeat(2,minmax(0,1fr))}.srch__card{flex-direction:row;align-items:center;gap:16px}.srch__img{width:88px;flex:none}.srch__txt{flex:1}}
+@media (max-width:760px){
+  .srch{bottom:0;max-height:none;border-radius:0}
+  .srch__bar{height:64px;gap:8px}
+  .srch__form{gap:10px}
+  .srch__ico{width:22px;height:22px}
+  .srch__in{font-size:20px;height:48px}
+  .srch__body{grid-template-columns:1fr;gap:30px;padding:20px 0 40px}
+  .srch__main{order:-1}
+  .srch__list{grid-template-columns:1fr;gap:0}
+  .srch__card{gap:14px;padding:10px 0;box-shadow:inset 0 -1px 0 var(--line);border-radius:0}
+  .srch__img{width:64px}
+  .srch__name{font-size:16px}
+  .srch__all{width:100%}
+}
+</style>
+<div class="srch" id="srch" role="dialog" aria-modal="true" aria-label="Search the shop" aria-hidden="true">
+  <div class="wrap">
+    <div class="srch__bar">
+      <form class="srch__form" action="search.html" method="get" role="search" data-srch-form>
+        <svg class="srch__ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg>
+        <label class="sr" for="srchInput">Search</label>
+        <input class="srch__in" id="srchInput" type="search" name="q" placeholder="Search washes, lotions or ingredients" maxlength="100" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="search" aria-controls="srchList" aria-describedby="srchStatus" data-srch-input>
+      </form>
+      <button class="icon-btn srch__x" type="button" aria-label="Close search" data-close><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="srch__body">
+      <div class="srch__side" data-srch-side></div>
+      <div class="srch__main">
+        <div class="srch__top"><h2 class="srch__h" data-srch-head>Most loved</h2><p class="srch__status" id="srchStatus" role="status" aria-live="polite" aria-atomic="true" data-srch-status></p></div>
+        <ul class="srch__list" id="srchList" data-srch-list></ul>
+        <p class="srch__empty" hidden data-srch-empty></p>
+        <a class="btn btn--ghost btn--sm srch__all" href="../templates/search.html" hidden data-srch-all>See all results</a>
+      </div>
+    </div>
+  </div>
+  <script type="application/json" data-srch-cfg>
+{
+ "live": false,
+ "suggestUrl": "",
+ "searchUrl": "search.html",
+ "searchParams": "",
+ "types": "product,query",
+ "limit": 4,
+ "fallbackUrl": "collection.html",
+ "pages": {
+  "calm": "product.html"
+ },
+ "extra": {
+  "calm": "wash body wash eczema prone daily dry tight",
+  "chamomile": "body wash chamomile scented scent floral sensitive",
+  "soft": "body wash gentle sensitive low foam",
+  "rich": "body wash winter very dry shea",
+  "lotion": "body lotion moisturiser moisturizer damp skin",
+  "cream": "body cream moisturiser moisturizer very dry hands elbows shins",
+  "milk": "body milk light lotion moisturiser moisturizer dry quick",
+  "little": "baby child children toddler lotion ages 1",
+  "bar": "soap bar face body hands oat milk"
+ },
+ "loved": [
+  "calm",
+  "soft",
+  "milk",
+  "bar"
+ ],
+ "popular": [
+  "Fragrance-free",
+  "Oat",
+  "Dry skin",
+  "Body wash",
+  "Lotion"
+ ],
+ "suggest": [
+  "oat",
+  "oat bar",
+  "fragrance-free",
+  "body wash",
+  "body lotion",
+  "body milk",
+  "dry skin",
+  "eczema-prone skin",
+  "sensitive skin",
+  "winter skin",
+  "chamomile",
+  "soap bar",
+  "baby lotion"
+ ],
+ "strings": {
+  "popular": "Popular searches",
+  "suggest": "Suggestions",
+  "journal": "From the journal",
+  "loved": "Most loved",
+  "results": "Products",
+  "loading": "Searching",
+  "count_one": "[count] product for “[q]”",
+  "count_many": "[count] products for “[q]”",
+  "see_all": "See all results for “[q]”",
+  "empty": "No match for “[q]” yet. Try oat, fragrance-free or lotion."
+ }
+}
+  </script>
+</div>
+<script>
+/* Lather v3 search overlay with predictive results (home-v3 shared/10-search.html, same code in both).
+   Markup: #srch with <script type="application/json" data-srch-cfg>:
+     { live, suggestUrl, searchUrl, searchParams, types, limit, fallbackUrl, pages:{key:url}, extra:{key:'keywords'},
+       loved:[keys], popular:[terms], suggest:[terms], strings:{...} }
+   - Opens from any [data-search-open] (the header icon; its href is the search page, so it works without JS) and "/".
+     On the search page itself the icon focuses that page's field instead.
+   - live + a real storefront (window.Shopify.shop): GET suggestUrl (/search/suggest.json) for products, queries, articles.
+     Otherwise, or when the request fails: filters window.LATHER.products in the browser (demo / preview / HTML).
+   - Enter submits the GET form to the search page; "See all" links there too.
+   - Layers: LATHER.openLayer / closeAll (scrim, Esc, focus return). closeAll only knows the drawer, quick view and
+     popup, so a MutationObserver on #scrim hides this overlay when the scrim closes or another layer opens. */
+(function () {
+  'use strict';
+  function boot() {
+    var el = document.getElementById('srch');
+    if (!el || el.__srch) return;
+    el.__srch = 1;
+    var C = {};
+    try { C = JSON.parse(el.querySelector('script[data-srch-cfg]').textContent) || {}; } catch (e) {}
+    var S = C.strings || {};
+    var q$ = function (s) { return el.querySelector(s); };
+    var form = q$('[data-srch-form]'), input = q$('[data-srch-input]'), list = q$('[data-srch-list]'), head = q$('[data-srch-head]'),
+      status = q$('[data-srch-status]'), side = q$('[data-srch-side]'), all = q$('[data-srch-all]'), empty = q$('[data-srch-empty]');
+    if (!form || !input || !list) return;
+    var scrim = document.getElementById('scrim');
+    var L = function () { return window.LATHER || {}; };
+    var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+    var tpl = function (s, m) { return String(s || '').replace(/\[(\w+)\]/g, function (a, k) { return k in m ? m[k] : a; }); };
+    var norm = function (v) { return String(v || '').toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, ' ').trim(); };
+    var fmt = function (n) { return L().fmt ? L().fmt(n) : '$' + n; };
+    var limit = Math.max(2, Math.min(8, +C.limit || 4));
+    var enc = encodeURIComponent;
+    function searchHref(q) {
+      var u = C.searchUrl || 'search.html';
+      return q ? u + (u.indexOf('?') > -1 ? '&' : '?') + 'q=' + enc(q) + (C.searchParams || '') : u;
+    }
+    function mark(t, q) {
+      var ts = String(q || '').trim().split(/\s+/).filter(Boolean).map(function (x) { return x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); });
+      if (!ts.length) return esc(t);
+      var re = new RegExp('(' + ts.join('|') + ')', 'ig');
+      return String(t).split(re).map(function (s, i) { return i % 2 ? '<mark>' + esc(s) + '</mark>' : esc(s); }).join('');
+    }
+    function ph() { var t = document.getElementById('lv3-ph'); return t ? t.innerHTML : ''; }
+
+    /* ---------- local index (window.LATHER.products) ---------- */
+    function hitOf(k, p) {
+      var url = p.url || (C.pages || {})[k] || '';
+      return { key: k, name: p.name, size: p.size || '', price: +p.price || 0, compare: +p.compare || 0, img: p.img || '', url: url || C.fallbackUrl || '#', quick: !url };
+    }
+    function index() {
+      var P = L().products || {};
+      return Object.keys(P).filter(function (k) { return P[k] && P[k].name; }).map(function (k) {
+        var p = P[k], ff = (p.labels || []).indexOf('ff') > -1;
+        return { k: k, p: p, nm: norm(p.name), words: norm([p.name, p.size, p.line, p.ing, (C.extra || {})[k], ff ? 'fragrance free unscented no scent' : 'scented'].join(' ')) };
+      });
+    }
+    function local(q) {
+      var terms = norm(q).split(' ').filter(Boolean), nq = norm(q);
+      var hits = index().filter(function (x) { return terms.every(function (t) { return x.words.indexOf(t) > -1; }); })
+        .map(function (x) { var s = x.nm.indexOf(nq) === 0 ? 3 : x.nm.indexOf(nq) > -1 ? 2 : terms.some(function (t) { return x.nm.indexOf(t) > -1; }) ? 1 : 0; return { x: x, s: s }; })
+        .sort(function (a, b) { return b.s - a.s; })
+        .map(function (o) { return hitOf(o.x.k, o.x.p); });
+      var queries = (C.suggest || []).filter(function (s) { var n = norm(s); return n !== nq && n.indexOf(nq) > -1; })
+        .sort(function (a, b) { return (norm(b).indexOf(nq) === 0) - (norm(a).indexOf(nq) === 0); })
+        .slice(0, 4).map(function (s) { return { text: s, url: searchHref(s) }; });
+      return { total: hits.length, hits: hits.slice(0, limit), queries: queries, articles: [] };
+    }
+    function loved() {
+      var P = L().products || {};
+      var keys = (C.loved || []).filter(function (k) { return P[k] && P[k].name; });
+      if (!keys.length) keys = Object.keys(P).filter(function (k) { return P[k] && P[k].name; });
+      return keys.slice(0, limit).map(function (k) { return hitOf(k, P[k]); });
+    }
+
+    /* ---------- live (Shopify predictive search) ---------- */
+    var liveOk = !!(C.live && C.suggestUrl && window.fetch && window.Shopify && window.Shopify.shop), ctrl = null;
+    function sized(src) {
+      if (!src) return '';
+      try { var u = new URL(src, location.href); u.searchParams.set('width', '400'); return u.toString(); } catch (e) { return src; }
+    }
+    function live(q) {
+      if (ctrl) ctrl.abort();
+      ctrl = window.AbortController ? new AbortController() : null;
+      var u = C.suggestUrl + '?q=' + enc(q) + '&resources[type]=' + enc(C.types || 'product,query') + '&resources[limit]=' + limit +
+        '&resources[options][unavailable_products]=last&resources[options][fields]=title,product_type,variants.title,vendor,tag,body';
+      return fetch(u, { signal: ctrl ? ctrl.signal : undefined, headers: { Accept: 'application/json' } })
+        .then(function (r) { if (!r.ok) throw new Error('suggest ' + r.status); return r.json(); })
+        .then(function (d) {
+          var R = (d && d.resources && d.resources.results) || {};
+          var hits = (R.products || []).map(function (p) {
+            var img = p.image || (p.featured_image && p.featured_image.url) || '';
+            var price = parseFloat(p.price) || 0, cmp = parseFloat(p.compare_at_price_max) || 0;
+            return { key: '', name: p.title, size: '', price: price, compare: cmp > price ? cmp : 0, img: sized(img), url: p.url, quick: false };
+          });
+          return {
+            total: hits.length, hits: hits,
+            queries: (R.queries || []).filter(function (x) { return norm(x.text) !== norm(q); }).slice(0, 4).map(function (x) { return { text: x.text, url: x.url || searchHref(x.text) }; }),
+            articles: (R.articles || []).slice(0, 2).map(function (a) { return { title: a.title, url: a.url }; })
+          };
+        });
+    }
+
+    /* ---------- render ---------- */
+    function cards(hits, q) {
+      return hits.map(function (h, i) {
+        var img = h.img ? '<img src="' + esc(h.img) + '" alt="" loading="lazy" width="400" height="500">' : ph();
+        var price = esc(fmt(h.price)) + (h.compare ? ' <s>' + esc(fmt(h.compare)) + '</s>' : '');
+        return '<li class="srch__item" style="--i:' + i + '"><a class="srch__card" href="' + esc(h.url) + '" data-srch-item' + (h.quick ? ' data-quick="' + esc(h.key) + '"' : '') + '>' +
+          '<span class="srch__img">' + img + '</span><span class="srch__txt"><span class="srch__name">' + mark(h.name, q) + '</span>' +
+          '<span class="srch__meta"><span class="small">' + esc(h.size) + '</span><span class="price">' + price + '</span></span></span></a></li>';
+      }).join('');
+    }
+    function chips() {
+      var pop = C.popular || [];
+      if (!pop.length) return '';
+      return '<div class="srch__block"><h2 class="srch__h">' + esc(S.popular) + '</h2><div class="srch__chips">' +
+        pop.map(function (t) { return '<button class="chip" type="button" data-srch-term="' + esc(t) + '">' + esc(t) + '</button>'; }).join('') + '</div></div>';
+    }
+    function sideHTML(q, r) {
+      var h = '';
+      if (q && r.queries.length) h += '<div class="srch__block"><h2 class="srch__h">' + esc(S.suggest) + '</h2><ul class="srch__sug">' +
+        r.queries.map(function (x) { return '<li><a href="' + esc(x.url) + '" data-srch-item>' + mark(x.text, q) + '</a></li>'; }).join('') + '</ul></div>';
+      if (q && r.articles.length) h += '<div class="srch__block"><h2 class="srch__h">' + esc(S.journal) + '</h2><ul class="srch__sug">' +
+        r.articles.map(function (x) { return '<li><a href="' + esc(x.url) + '" data-srch-item>' + mark(x.title, q) + '</a></li>'; }).join('') + '</ul></div>';
+      return h + chips();
+    }
+    function paint(q, r) {
+      var hits = q ? r.hits : loved();
+      head.textContent = q ? S.results : S.loved;
+      list.innerHTML = cards(hits, q);
+      list.hidden = !hits.length;
+      if (empty) { empty.hidden = !(q && !hits.length); empty.textContent = tpl(S.empty, { q: q }); }
+      if (status) status.textContent = q ? tpl(r.total === 1 ? S.count_one : S.count_many, { count: r.total, q: q }) : '';
+      if (all) { all.hidden = !q; all.href = searchHref(q); all.textContent = tpl(S.see_all, { q: q }); }
+      if (side) side.innerHTML = sideHTML(q, r);
+    }
+    var seq = 0, timer = 0;
+    function run(raw) {
+      var q = String(raw || '').trim().slice(0, 100), my = ++seq;
+      if (!q) { if (ctrl) ctrl.abort(); paint('', { hits: [], total: 0, queries: [], articles: [] }); return; }
+      if (!liveOk) { paint(q, local(q)); return; }
+      if (status) status.textContent = S.loading || '';
+      live(q).then(function (r) { if (my === seq) paint(q, r); }, function (e) {
+        if (e && e.name === 'AbortError') return;
+        liveOk = false;
+        if (my === seq) paint(q, local(q));
+      });
+    }
+    input.addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(function () { run(input.value); }, 140); });
+    form.addEventListener('submit', function (e) { if (!input.value.trim()) { e.preventDefault(); input.focus(); } });
+    el.addEventListener('click', function (e) {
+      var t = e.target.closest('[data-srch-term]');
+      if (t) { input.value = t.getAttribute('data-srch-term'); clearTimeout(timer); run(input.value); input.focus(); }
+    });
+
+    /* ---------- open / close ---------- */
+    var triggers = function () { return document.querySelectorAll('[data-search-open]'); };
+    function setExpanded(v) { triggers().forEach(function (b) { b.setAttribute('aria-expanded', v ? 'true' : 'false'); }); }
+    function hide() { if (!el.classList.contains('open')) return; el.classList.remove('open'); el.setAttribute('aria-hidden', 'true'); setExpanded(false); }
+    function open() {
+      var lt = L();
+      if (!lt.openLayer) { location.href = searchHref(''); return; }
+      var mnav = document.getElementById('mnav'); if (mnav) mnav.classList.remove('open');
+      lt.openLayer(el);
+      el.setAttribute('aria-hidden', 'false');
+      setExpanded(true);
+      run(input.value);
+      setTimeout(function () { input.focus({ preventScroll: true }); if (input.value) input.select(); }, 80);
+    }
+    function pageField() {
+      var f = document.querySelector('[data-lv3-search-input], #latherSearchQuery');
+      return f && !el.contains(f) ? f : null;
+    }
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-search-open]');
+      if (!b || e.metaKey || e.ctrlKey || e.shiftKey) return;
+      e.preventDefault();
+      var f = pageField();
+      if (f) { f.scrollIntoView({ block: 'center', behavior: 'smooth' }); f.focus({ preventScroll: true }); return; }
+      open();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey || el.classList.contains('open')) return;
+      var a = document.activeElement, tag = a && a.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (a && a.isContentEditable)) return;
+      if (document.querySelector('.drawer.open,.qv.open,.pop.open')) return;
+      e.preventDefault();
+      var f = pageField(); if (f) { f.focus(); return; }
+      open();
+    });
+    if (scrim && window.MutationObserver) {
+      new MutationObserver(function () {
+        if (!el.classList.contains('open')) return;
+        if (!scrim.classList.contains('open') || document.querySelector('.drawer.open,.qv.open,.pop.open')) hide();
+      }).observe(scrim, { attributes: true, attributeFilter: ['class'] });
+    }
+    /* keyboard: Tab stays inside, arrows move between the field and the results */
+    el.addEventListener('keydown', function (e) {
+      if (!el.classList.contains('open')) return;
+      var vis = function (n) { return n.offsetParent !== null || n === input; };
+      if (e.key === 'Tab') {
+        var f = [].slice.call(el.querySelectorAll('a[href], button:not([disabled]), input:not([type="hidden"])')).filter(vis);
+        if (!f.length) return;
+        var first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        var items = [input].concat([].slice.call(list.querySelectorAll('[data-srch-item]')), [].slice.call(side ? side.querySelectorAll('[data-srch-item]') : [])).filter(vis);
+        var i = items.indexOf(document.activeElement);
+        if (i < 0) return;
+        e.preventDefault();
+        var n = items[(i + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length];
+        n.focus();
+      }
+    });
+    paint('', { hits: [], total: 0, queries: [], articles: [] });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+</script>
+
+<script>
+/* Lather v3: recently viewed (port of home-v3 shared/40-recent.html; same code in both).
+   Tracker (any page): remembers products the shopper opened in localStorage 'lather-recent' (newest first, max 12):
+     - the product page: the element [data-recent-current] (a product key, or "entry" = its <script data-recent-entry> JSON)
+     - quick view: any [data-quick="key"] click, and direct window.LATHER.quick(key) calls
+   Entry: {k, name, size, price, img, url, t}. k = the product handle when the url has /products/<handle>, else the key,
+   so one real product opened from different sections is stored once.
+   Row (only where [data-recent] exists): shows up to data-max entries, never the current product, newest first.
+   Nothing to show -> the section stays hidden; with data-recent-demo the static demo cards stay (HTML review);
+   with data-recent-sample (Liquid theme editor) the page's own products fill the row as a sample.
+   Real entries (url /products/<handle>) are refreshed from /products/<handle>.js: current title, price, image;
+   a deleted product (404) is dropped from the history.
+   window.LatherRecent = { list(), track(keyOrEntry), clear() }; fires 'lather:recent' on document with {items}. */
+(function () {
+  'use strict';
+  if (window.LatherRecent) return;
+  var K = 'lather-recent', MAX = 12;
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var handleOf = function (url) { var m = /\/products\/([^\/?#]+)/.exec(url || ''); return m ? decodeURIComponent(m[1]) : ''; };
+
+  function read() {
+    try { var a = JSON.parse(localStorage.getItem(K) || '[]'); return Array.isArray(a) ? a.filter(function (e) { return e && e.k && e.name; }) : []; }
+    catch (e) { return []; }
+  }
+  function emit(a) { try { document.dispatchEvent(new CustomEvent('lather:recent', { detail: { items: a.slice() } })); } catch (e) {} }
+  function write(a) { a = a.slice(0, MAX); try { localStorage.setItem(K, JSON.stringify(a)); } catch (e) {} emit(a); }
+
+  function snap(k) {
+    var L = window.LATHER, p = L && L.products && L.products[k];
+    if (!p || !p.name) return null;
+    return { k: k, name: p.name, size: p.size || '', price: +p.price || 0, img: p.img || '', url: p.url || '' };
+  }
+  function norm(e) {
+    if (!e || !e.name) return null;
+    var h = handleOf(e.url);
+    return { k: String(h || e.k), name: String(e.name), size: e.size || '', price: +e.price || 0, img: e.img || '', url: e.url || '', t: Date.now() };
+  }
+  function track(x) {
+    var e = norm(typeof x === 'string' ? snap(x) : x); if (!e) return;
+    write([e].concat(read().filter(function (o) { return o.k !== e.k && !(e.url && o.url === e.url); })));
+  }
+  function clear() { try { localStorage.removeItem(K); } catch (e) {} emit([]); }
+  window.LatherRecent = { list: read, track: track, clear: clear };
+
+  /* quick view opens: capture phase, so it is recorded whatever the click handler after it does */
+  document.addEventListener('click', function (e) {
+    var q = e.target && e.target.closest && e.target.closest('[data-quick]');
+    if (q && q.dataset.quick) track(q.dataset.quick);
+  }, true);
+  addEventListener('storage', function (e) { if (e.key === K) emit(read()); });
+
+  function start() {
+    var L = window.LATHER;
+    if (L && L.quick && !L.quick.__recent) {
+      var orig = L.quick, w = function (id) { track(id); return orig.apply(this, arguments); };
+      w.__recent = true; L.quick = w;
+    }
+    var cur = document.querySelector('[data-recent-current]'), curKey = '';
+    if (cur) {
+      var raw = cur.getAttribute('data-recent-current') || '', entry = null;
+      if (raw === 'entry') { try { entry = JSON.parse(cur.querySelector('script[data-recent-entry]').textContent); } catch (x) {} } else if (raw) entry = snap(raw);
+      entry = norm(entry);
+      if (entry) { curKey = entry.k; rows(curKey, entry.url); track(entry); }
+    }
+    if (!cur || !curKey) rows('', '');
+  }
+
+  function rows(curKey, curUrl) {
+    document.querySelectorAll('[data-recent]').forEach(function (sec) { row(sec, curKey, curUrl); });
+  }
+
+  function row(sec, curKey, curUrl) {
+    var list = sec.querySelector('[data-recent-list]'), status = sec.querySelector('[data-recent-status]');
+    var S = { cleared: 'Viewing history cleared.', quick: 'Quick view' };
+    try { var sj = sec.querySelector('script[data-recent-strings]'); if (sj) { var o = JSON.parse(sj.textContent); for (var k in o) if (o[k]) S[k] = o[k]; } } catch (e) {}
+    var max = Math.max(1, +sec.getAttribute('data-max') || 4);
+    var demo = sec.hasAttribute('data-recent-demo'), sample = sec.hasAttribute('data-recent-sample');
+    var demoHTML = list ? list.innerHTML : '', cleared = false, sig = null;
+    var fmt = function (n) { var L = window.LATHER; return L && L.fmt ? L.fmt(n) : '$' + (+n || 0); };
+    var thumb = function (src) { if (!src || src.indexOf('/cdn/shop/') < 0 && src.indexOf('cdn.shopify.com') < 0) return src || ''; return /[?&]width=\d+/.test(src) ? src.replace(/([?&])width=\d+/, '$1width=240') : src + (src.indexOf('?') < 0 ? '?' : '&') + 'width=240'; };
+
+    function items() {
+      var a = read().filter(function (e) { return e.k !== curKey && !(curUrl && e.url === curUrl); });
+      if (!a.length && sample && !cleared) {
+        var P = (window.LATHER && window.LATHER.products) || {};
+        a = Object.keys(P).map(snap).filter(Boolean).map(norm).filter(function (e) { return e && e.k !== curKey && !(curUrl && e.url === curUrl); });
+      }
+      return a.slice(0, max);
+    }
+    function card(e) {
+      var L = window.LATHER;
+      /* an entry viewed on another page: hand it to the runtime so its quick view works here */
+      if (!e.url && L && L.products && !L.products[e.k]) L.products[e.k] = { name: e.name, size: e.size, price: e.price, compare: null, img: e.img, hover: '', labels: [], line: '', ing: '', variant: null, available: true, url: '' };
+      var name = e.url
+        ? '<a class="s-pdp-recent__name" href="' + esc(e.url) + '">' + esc(e.name) + '</a>'
+        : '<button class="s-pdp-recent__name" type="button" data-quick="' + esc(e.k) + '" aria-label="' + esc(S.quick + ': ' + e.name) + '">' + esc(e.name) + '</button>';
+      var img = e.img ? '<img src="' + esc(thumb(e.img)) + '" alt="" width="120" height="150" loading="lazy">' : '<span class="blko-lv3-ph" aria-hidden="true"></span>';
+      return '<li class="s-pdp-recent__card">' + img + '<div class="s-pdp-recent__text">' + name + (e.size ? '<span class="small">' + esc(e.size) + '</span>' : '') + '</div><span class="price">' + esc(fmt(e.price)) + '</span></li>';
+    }
+    function render() {
+      if (!list) return;
+      var a = items();
+      /* the same products already shown (e.g. one of them was just opened in quick view): keep the cards, so focus
+         returns to the card when the quick view closes */
+      var nsig = a.map(function (e) { return e.k + '|' + e.price + '|' + e.img + '|' + e.name; }).sort().join(',');
+      if (a.length && nsig === sig) { refresh(a); return; }
+      sig = a.length ? nsig : null;
+      if (a.length) {
+        list.innerHTML = a.map(card).join('');
+        sec.hidden = false; sec.setAttribute('data-state', 'history');
+      } else if (demo && !cleared) {
+        list.innerHTML = demoHTML; sec.hidden = false; sec.setAttribute('data-state', 'demo');
+      } else {
+        sec.hidden = true; sec.setAttribute('data-state', 'empty');
+      }
+      refresh(a);
+    }
+    var asked = {};
+    function refresh(a) {
+      var CFG = window.LATHER_CFG || {}, root = CFG.root || '/';
+      if (root.slice(-1) !== '/') root += '/';
+      if (!window.fetch || location.protocol === 'file:') return;
+      a.forEach(function (e) {
+        var h = handleOf(e.url); if (!h || asked[h]) return; asked[h] = 1;
+        fetch(root + 'products/' + encodeURIComponent(h) + '.js', { headers: { Accept: 'application/json' } }).then(function (r) {
+          if (r.status === 404) return 'gone';
+          return r.ok ? r.json() : null;
+        }).then(function (p) {
+          var all = read(), i = -1;
+          all.forEach(function (o, j) { if (o.k === h) i = j; });
+          if (i < 0 || !p) return;
+          if (p === 'gone') { all.splice(i, 1); write(all); return; }
+          var o = all[i], img = p.featured_image || '';
+          if (img && img.indexOf('//') === 0) img = 'https:' + img;
+          var nx = { name: p.title || o.name, price: typeof p.price === 'number' ? p.price / 100 : o.price, img: img || o.img, url: p.url || o.url };
+          if (nx.name !== o.name || nx.price !== o.price || nx.img !== o.img || nx.url !== o.url) { for (var k in nx) o[k] = nx[k]; write(all); }
+        }).catch(function () {});
+      });
+    }
+    var clr = sec.querySelector('[data-recent-clear]');
+    if (clr) clr.addEventListener('click', function () {
+      cleared = true; clear();
+      if (status) status.textContent = S.cleared;
+      var next = sec.nextElementSibling && sec.nextElementSibling.querySelector('a, button, [tabindex]');
+      if (next) next.focus({ preventScroll: true });
+    });
+    document.addEventListener('lather:recent', render);
+    render();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();
+</script>
+
+<style>
+/* 50 Wishlist (site-wide): heart buttons [data-wish], header badge [data-wish-count]. Page: pages/wishlist/. Same code as the Liquid blko-lv3-wishlist.css/.js */
+/* heart on a product image: top right, always visible, fills moss when saved. Never moves: colour only. */
+.lv3-heart{position:absolute;top:10px;right:10px;z-index:3;width:40px;height:40px;border-radius:999px;display:grid;place-items:center;background:rgba(247,243,234,.92);color:var(--ink);transition:background-color .25s var(--ease),color .25s var(--ease)}
+.lv3-heart:hover{background:var(--raised);color:var(--moss)}
+.lv3-heart svg{width:20px;height:20px;fill:transparent;stroke:currentColor;stroke-width:1.6;stroke-linejoin:round;transition:fill .25s var(--ease)}
+.lv3-heart[aria-pressed="true"]{color:var(--moss)}
+.lv3-heart[aria-pressed="true"] svg{fill:currentColor}
+.lv3-heart:focus-visible{outline:2px solid var(--moss);outline-offset:2px}
+/* text version (product page, next to the add button) */
+.lv3-heart--text{position:static;width:auto;height:50px;padding:0 18px;gap:8px;display:inline-flex;align-items:center;border-radius:var(--r-btn);background:var(--raised);font:600 15px/1 var(--f-body);white-space:nowrap}
+.lv3-heart--text:hover{background:var(--stone);color:var(--ink)}
+.lv3-heart--text[aria-pressed="true"]{color:var(--deep)}
+.lv3-heart--text[aria-pressed="true"] svg{color:var(--moss)}
+/* header badge: [data-wish-count] reuses .bag-count; hidden at 0 */
+[data-wish-count][hidden]{display:none}
+</style>
+<script>
+/* Lather wishlist (feature 5). Same code in the HTML (shared/50-wishlist.html) and the Liquid theme.
+   Saved products live in localStorage 'lather-wish' as snapshots, so the wishlist page can show them on any page.
+   window.LATHER_WISH = { list, has(key), toggle(key), add(key), remove(key), count }; event 'lather:wish' {detail:{list,count}}
+   Markup it drives:
+   - [data-wish="key"] heart buttons (aria-pressed). Optional [data-wish-text] child swaps data-on / data-off text.
+   - [data-wish-count] badge (hidden at 0) and [data-wish-link] (aria-label from data-label / data-label-n "[count]").
+     The link may carry data-saved / data-removed ("[name]") for the screen-reader announcement.
+   - [data-lv3-wishlist] the wishlist page (cards, remove with undo, add to bag, empty state with suggestions).
+   A key is the product id in window.LATHER.products. A real Shopify product is saved by its URL, so the same product
+   shown under two keys is one entry. On the wishlist page, real entries refresh price and stock from /products/<handle>.js. */
+(function () {
+  'use strict';
+  if (window.LATHER_WISH) return;
+  var SK = 'lather-wish';
+  var S = { saved: 'Saved [name] to your wishlist.', removed: 'Removed [name] from your wishlist.', label: 'Wishlist', label_n: 'Wishlist, [count] saved' };
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var tpl = function (s, m) { return String(s || '').replace(/\[(\w+)\]/g, function (a, k) { return m && k in m ? m[k] : a; }); };
+  var L = function () { return window.LATHER || { products: {} }; };
+  var fmt = function (n) { var l = L(); return l.fmt ? l.fmt(n) : '$' + (+n || 0); };
+
+  function load() {
+    try { var a = JSON.parse(localStorage.getItem(SK) || '[]'); return Array.isArray(a) ? a.filter(function (e) { return e && e.id && e.key; }) : []; } catch (e) { return []; }
+  }
+  var list = load();
+  function store() { try { localStorage.setItem(SK, JSON.stringify(list)); } catch (e) {} }
+
+  function idFor(key) { var p = L().products[key]; return p && p.url ? String(p.url).split('?')[0] : String(key); }
+  function indexOf(key) { var id = idFor(key); for (var i = 0; i < list.length; i++) if (list[i].id === id) return i; return -1; }
+  function indexOfId(id) { for (var i = 0; i < list.length; i++) if (list[i].id === id) return i; return -1; }
+  function has(key) { return indexOf(key) > -1; }
+  function snap(key) {
+    var p = L().products[key] || {};
+    return {
+      id: idFor(key), key: String(key), name: p.name || String(key), size: p.size || '', price: +p.price || 0, compare: +p.compare || 0,
+      img: p.img || '', hover: p.hover || '', labels: Array.isArray(p.labels) ? p.labels.slice() : [], line: p.line || '', ing: p.ing || '',
+      variant: p.variant || null, available: p.available !== false, url: p.url || '', t: Date.now()
+    };
+  }
+
+  /* screen-reader announcement (one polite live region for the whole site) */
+  var live = null;
+  function announce(msg) {
+    if (!live) { live = document.createElement('p'); live.className = 'sr'; live.setAttribute('aria-live', 'polite'); live.setAttribute('role', 'status'); document.body.appendChild(live); }
+    live.textContent = ''; setTimeout(function () { live.textContent = msg; }, 40);
+  }
+  function strings() {
+    var a = document.querySelector('[data-wish-link]'), o = {};
+    for (var k in S) o[k] = S[k];
+    if (a) { if (a.dataset.saved) o.saved = a.dataset.saved; if (a.dataset.removed) o.removed = a.dataset.removed; if (a.dataset.label) o.label = a.dataset.label; if (a.dataset.labelN) o.label_n = a.dataset.labelN; }
+    return o;
+  }
+
+  function commit(kind, e, quiet) {
+    store(); sync();
+    if (!quiet && e) announce(tpl(kind === 'add' ? strings().saved : strings().removed, { name: e.name }));
+    if (kind === 'add') document.querySelectorAll('[data-wish-count]').forEach(function (c) { c.classList.add('bump'); setTimeout(function () { c.classList.remove('bump'); }, 700); });
+    document.dispatchEvent(new CustomEvent('lather:wish', { detail: { list: list.slice(), count: list.length, kind: kind, entry: e } }));
+  }
+  function add(key) { if (has(key)) return; var e = snap(key); list.unshift(e); commit('add', e); }
+  function removeAt(i, quiet) { if (i < 0) return null; var e = list.splice(i, 1)[0]; commit('remove', e, quiet); return e; }
+  function remove(key) { return removeAt(indexOf(key)); }
+  function toggle(key) { if (has(key)) remove(key); else add(key); return has(key); }
+
+  /* every heart, badge and link on the page */
+  function sync() {
+    var n = list.length, st = strings();
+    document.querySelectorAll('[data-wish]').forEach(function (b) {
+      var on = has(b.getAttribute('data-wish'));
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      var t = b.querySelector('[data-wish-text]');
+      if (t) { var v = on ? t.getAttribute('data-on') : t.getAttribute('data-off'); if (v && t.textContent !== v) t.textContent = v; }
+    });
+    document.querySelectorAll('[data-wish-count]').forEach(function (c) { c.textContent = n; c.hidden = !n; });
+    document.querySelectorAll('[data-wish-link]').forEach(function (a) { a.setAttribute('aria-label', n ? tpl(st.label_n, { count: n }) : st.label); });
+  }
+
+  document.addEventListener('click', function (ev) {
+    var b = ev.target.closest('[data-wish]');
+    if (!b) return;
+    ev.preventDefault();
+    toggle(b.getAttribute('data-wish'));
+  });
+  window.addEventListener('storage', function (ev) { if (ev.key === SK) { list = load(); sync(); document.dispatchEvent(new CustomEvent('lather:wish', { detail: { list: list.slice(), count: list.length, kind: 'sync' } })); } });
+
+  /* cards rendered later by section scripts (featured tabs, search, recently viewed) get their state too */
+  var queued = 0;
+  function later() { if (queued) return; queued = requestAnimationFrame(function () { queued = 0; sync(); }); }
+  function watch() {
+    if (!window.MutationObserver) return;
+    new MutationObserver(function (ms) {
+      for (var i = 0; i < ms.length; i++) for (var j = 0; j < ms[i].addedNodes.length; j++) {
+        var nd = ms[i].addedNodes[j];
+        if (nd.nodeType === 1 && (nd.hasAttribute('data-wish') || nd.querySelector('[data-wish]'))) { later(); return; }
+      }
+    }).observe(document.body, { childList: true, subtree: true });
+  }
+
+  /* ---------- wishlist page ---------- */
+  function page(root) {
+    var d = root.dataset;
+    var T = {
+      one: d.countOne || '1 saved product.', many: d.countMany || '[count] saved products.', zero: d.countZero || '',
+      add: d.addLabel || 'Add to bag', add_aria: d.addAria || 'Add [name] to bag', rm: d.removeLabel || 'Remove',
+      rm_aria: d.removeAria || 'Remove [name] from wishlist', sold: d.soldLabel || 'Sold out', removed: d.removedLabel || 'Removed [name].',
+      undo: d.undoLabel || 'Undo', save_aria: d.saveAria || 'Save [name]'
+    };
+    var ul = root.querySelector('[data-wish-list]'), empty = root.querySelector('[data-wish-empty]'), status = root.querySelector('[data-wish-status]');
+    var undoBox = root.querySelector('[data-wish-undo]'), sugg = root.querySelector('[data-wish-suggest]');
+    var phT = root.querySelector('template[data-wish-ph]');
+    var ph = phT ? phT.innerHTML : '<span class="blko-lv3-ph"></span>';
+    var lastRemoved = null, lastAt = 0, undoT = 0;
+
+    /* the bag adds by product key: use the page's own product when it is the same one, else register the snapshot */
+    function bagKey(e) {
+      var P = L().products;
+      if (P[e.key] && idFor(e.key) === e.id) return e.key;
+      var k = 'wish:' + e.id;
+      P[k] = { name: e.name, size: e.size, price: e.price, compare: e.compare, img: e.img, hover: e.hover, labels: e.labels || [], line: e.line, ing: e.ing, variant: e.variant, available: e.available, url: e.url, key: k };
+      return k;
+    }
+    function media(src, alt) { return src ? '<img src="' + esc(src) + '" alt="' + esc(alt) + '" loading="lazy">' : ph; }
+    function labels(ids) { var l = L(); return l.labelsHTML ? l.labelsHTML(ids || []) : ''; }
+    function nameHTML(e, key) {
+      if (e.url) return '<a href="' + esc(e.url) + '">' + esc(e.name) + '</a>';
+      if (L().products[key]) return '<button type="button" data-quick="' + esc(key) + '">' + esc(e.name) + '</button>';
+      return esc(e.name);
+    }
+    function priceHTML(e) { return esc(fmt(e.price)) + (e.compare > e.price ? ' <s>' + esc(fmt(e.compare)) + '</s>' : ''); }
+    function card(e) {
+      var alt = e.size ? e.name + ', ' + e.size : e.name;
+      var buy = e.available === false
+        ? '<button class="btn btn--light btn--sm s-wish__add" type="button" disabled>' + esc(T.sold) + '</button>'
+        : '<button class="btn btn--primary btn--sm s-wish__add" type="button" data-wish-add="' + esc(e.id) + '" aria-label="' + esc(tpl(T.add_aria, { name: e.name })) + '">' + esc(T.add) + '</button>';
+      return '<li class="s-wish__card">' +
+        '<div class="s-wish__media">' + media(e.img, alt) + '<div class="labels">' + labels(e.labels) + '</div></div>' +
+        '<div class="s-wish__info"><h2 class="s-wish__name">' + nameHTML(e, e.key) + '</h2>' +
+        (e.size ? '<p class="s-wish__size">' + esc(e.size) + '</p>' : '') +
+        '<p class="price s-wish__price">' + priceHTML(e) + '</p></div>' +
+        '<div class="s-wish__acts">' + buy +
+        '<button class="s-wish__rm" type="button" data-wish-rm="' + esc(e.id) + '" aria-label="' + esc(tpl(T.rm_aria, { name: e.name })) + '">' + esc(T.rm) + '</button></div>' +
+        '</li>';
+    }
+    function suggestion(key) {
+      var p = L().products[key]; if (!p) return '';
+      var alt = p.size ? p.name + ', ' + p.size : p.name;
+      return '<li class="s-wish__card s-wish__card--sugg">' +
+        '<div class="s-wish__media">' + media(p.img, alt) + '<div class="labels">' + labels(p.labels) + '</div>' +
+        '<button class="lv3-heart" type="button" data-wish="' + esc(key) + '" aria-pressed="false" aria-label="' + esc(tpl(T.save_aria, { name: p.name })) + '">' + heartSVG + '</button></div>' +
+        '<div class="s-wish__info"><h3 class="s-wish__name"><button type="button" data-quick="' + esc(key) + '">' + esc(p.name) + '</button></h3>' +
+        (p.size ? '<p class="s-wish__size">' + esc(p.size) + '</p>' : '') +
+        '<p class="price s-wish__price">' + priceHTML({ price: +p.price || 0, compare: +p.compare || 0 }) + '</p></div>' +
+        '<div class="s-wish__acts"><button class="btn btn--ghost btn--sm s-wish__add" type="button" data-add="' + esc(key) + '" aria-label="' + esc(tpl(T.add_aria, { name: p.name })) + '">' + esc(T.add) + '</button></div>' +
+        '</li>';
+    }
+    function render() {
+      var n = list.length;
+      ul.innerHTML = list.map(card).join('');
+      ul.hidden = !n;
+      if (status) status.textContent = n === 1 ? T.one : n ? tpl(T.many, { count: n }) : T.zero;
+      if (empty) empty.hidden = !!n;
+      root.querySelectorAll('[data-wish-full]').forEach(function (el) { el.hidden = !n; });
+      if (!n && sugg) {
+        var keys = (sugg.getAttribute('data-keys') || '').split(',').map(function (k) { return k.trim(); }).filter(function (k) { return k && L().products[k]; });
+        sugg.innerHTML = keys.slice(0, 4).map(suggestion).join('');
+      }
+      if (undoBox) {
+        undoBox.hidden = !lastRemoved;
+        undoBox.innerHTML = lastRemoved ? '<span>' + esc(tpl(T.removed, { name: lastRemoved.name })) + '</span><button type="button" data-wish-undo-btn>' + esc(T.undo) + '</button>' : '';
+      }
+      sync();
+    }
+    root.addEventListener('click', function (ev) {
+      var a = ev.target.closest('[data-wish-add]'), r = ev.target.closest('[data-wish-rm]'), u = ev.target.closest('[data-wish-undo-btn]');
+      if (a) { var i = indexOfId(a.getAttribute('data-wish-add')); if (i > -1 && L().add) L().add(bagKey(list[i]), 1); return; }
+      if (r) {
+        var at = indexOfId(r.getAttribute('data-wish-rm'));
+        lastRemoved = removeAt(at, true); lastAt = at;
+        clearTimeout(undoT); undoT = setTimeout(function () { lastRemoved = null; render(); }, 6000);
+        render();
+        var ub = root.querySelector('[data-wish-undo-btn]'); if (ub) ub.focus({ preventScroll: true });
+        return;
+      }
+      if (u && lastRemoved) {
+        var e = lastRemoved; lastRemoved = null; clearTimeout(undoT);
+        if (indexOfId(e.id) < 0) { list.splice(Math.min(lastAt, list.length), 0, e); commit('add', e, true); }
+        render();
+        var btn = root.querySelector('[data-wish-rm="' + (window.CSS && CSS.escape ? CSS.escape(e.id) : e.id) + '"]'); if (btn) btn.focus({ preventScroll: true });
+      }
+    });
+    document.addEventListener('lather:wish', function (ev) { if (!ev.detail || ev.detail.kind !== 'page') render(); });
+
+    /* real products: fresh price, stock and variant from Shopify (fails quietly in the static demo) */
+    var real = list.filter(function (e) { return e.url && /\/products\//.test(e.url); });
+    if (real.length && window.fetch) {
+      Promise.all(real.map(function (e) {
+        return fetch(e.url.split('?')[0].replace(/\/$/, '') + '.js', { headers: { Accept: 'application/json' } })
+          .then(function (r) { if (!r.ok) throw r; return r.json(); })
+          .then(function (p) {
+            var vs = p.variants || [], v = vs.filter(function (x) { return x.available; })[0] || vs[0];
+            if (!v) return;
+            e.name = p.title || e.name; e.price = v.price / 100; e.compare = v.compare_at_price > v.price ? v.compare_at_price / 100 : 0;
+            e.variant = v.id; e.available = !!p.available;
+            if (!e.img && p.featured_image) e.img = (String(p.featured_image).indexOf('//') === 0 ? 'https:' : '') + p.featured_image;
+          })
+          .catch(function () {});
+      })).then(function () { store(); render(); });
+    }
+    render();
+  }
+
+  var heartSVG = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg>';
+
+  function init() {
+    sync(); watch();
+    document.querySelectorAll('[data-lv3-wishlist]').forEach(page);
+  }
+  window.LATHER_WISH = { list: function () { return list.slice(); }, has: has, add: add, remove: remove, toggle: toggle, count: function () { return list.length; }, sync: sync, heart: heartSVG };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+  /* theme editor: a reloaded section gets its hearts and page back */
+  document.addEventListener('shopify:section:load', function (ev) { sync(); if (ev.target && ev.target.querySelectorAll) ev.target.querySelectorAll('[data-lv3-wishlist]').forEach(page); });
+})();
+</script>
+
+</main>
+
+<!-- ============ Footer ============ -->
+<style>
+.ftr{background:var(--stone);padding:96px 0 28px;position:relative}
+.ftr__top{display:grid;grid-template-columns:1.25fr 1fr;gap:64px;align-items:start}
+.ftr__promise{font:400 clamp(30px,3.2vw,46px)/1.08 var(--f-body);font-weight:500;letter-spacing:-.02em;max-width:15ch}
+.ftr__promise em{font-family:var(--f-display);font-style:normal;font-weight:400}
+.ftr__how{margin-top:16px;max-width:42ch;color:var(--muted)}
+.ftr__news label{font-weight:600;display:block;margin-bottom:10px}
+.ftr__form{display:flex;gap:8px}
+.ftr__form input{flex:1;height:50px;border-radius:var(--r-btn);border:1.5px solid var(--line);background:var(--raised);padding:0 16px;min-width:0}
+.ftr__form input:focus{outline:2px solid var(--moss);outline-offset:1px}
+.ftr__ok{margin-top:10px;font-size:14px;color:var(--moss);min-height:20px}
+.ftr__cols{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:44px}
+.ftr__cols h3{font:600 15px/1.2 var(--f-body);margin-bottom:12px}
+.ftr__cols a{display:block;text-decoration:none;color:var(--muted);padding:5px 0;font-size:15px}
+.ftr__cols a:hover{color:var(--ink)}
+.ftr__mark{margin-top:80px;color:var(--ink);opacity:.92}
+.ftr__mark .logo{width:min(100%,1320px);height:auto;aspect-ratio:3.2/1;max-height:300px}
+.ftr__base{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-top:28px;padding-top:20px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+.ftr__loc{display:flex;gap:8px}
+.ftr__loc select{height:38px;border-radius:var(--r-btn);border:0;background:var(--raised);padding:0 12px;font-size:14px}
+@media (max-width:760px){
+  .ftr{padding:64px 0 24px}
+  .ftr__top{grid-template-columns:1fr;gap:40px}
+  .ftr__form{flex-direction:column}
+  .ftr__cols{grid-template-columns:1fr 1fr}
+  .ftr__mark{margin-top:48px}
+}
+</style>
+<footer class="ftr" id="footer">
+  <div class="wrap">
+    <div class="ftr__top">
+      <div>
+        <p class="ftr__promise" data-rv="blur">If your skin reacts, we <em>refund</em> it.</p>
+        <p class="ftr__how">First bottle of any formula, within 30 days, used or not. Email a photo of the label; no need to send it back.</p>
+      </div>
+      <div class="ftr__news">
+        <form class="ftr__form" id="ftrForm" novalidate>
+          <label class="sr" for="ftrEmail">Email</label>
+          <input id="ftrEmail" type="email" placeholder="Email for 10% off your first order" autocomplete="email" required>
+          <button class="btn btn--primary" type="submit">Sign up</button>
+        </form>
+        <p class="ftr__ok" id="ftrOk" aria-live="polite"></p>
+        <div class="ftr__cols">
+          <nav aria-label="Shop"><h3>Shop</h3><a href="../templates/collection.html">Shop all</a><a href="../templates/product.html">Calm wash</a><a href="../templates/home.html#bundle">Build a set</a><a href="../templates/search.html">Search</a></nav>
+          <nav aria-label="Help"><h3>Help</h3><a href="../templates/help.html">FAQ</a><a href="../templates/help.html#shipping">Shipping</a><a href="../templates/help.html#returns">Skin-reaction refund</a><a href="../templates/help.html#contact">Contact</a></nav>
+          <nav aria-label="About"><h3>About</h3><a href="../templates/about.html">Our story</a><a href="../templates/blog.html">Journal</a><a href="../templates/article.html">Washing eczema-prone skin</a><a href="../templates/account.html">Account</a></nav>
+        </div>
+      </div>
+    </div>
+    <div class="ftr__mark" aria-hidden="true"><span class="logo"></span></div>
+    <div class="ftr__base">
+      <span>© 2026 Lather.</span>
+      <div class="ftr__loc">
+        <label class="sr" for="locCountry">Country</label>
+        <select id="locCountry"><option>United States (USD $)</option><option>Canada (CAD $)</option><option>United Kingdom (GBP £)</option></select>
+        <label class="sr" for="locLang">Language</label>
+        <select id="locLang"><option>English</option><option>Español</option></select>
+      </div>
+      <span>Visa, Mastercard, Amex, PayPal, Apple Pay</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ Cart drawer / Quick view / Popup / Cookie ============ -->
+<style>
+.scrim{position:fixed;inset:0;z-index:70;background:rgba(38,43,34,.38);opacity:0;pointer-events:none;transition:opacity .4s var(--ease)}
+.scrim.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;z-index:71;width:min(440px,100%);background:var(--raised);display:flex;flex-direction:column;transform:translateX(102%);transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
+.drawer.open{transform:none;box-shadow:-20px 0 60px rgba(38,43,34,.18)}
+.drawer__hd{display:flex;justify-content:space-between;align-items:center;padding:20px 24px}
+.drawer__hd h2{font:500 22px/1 var(--f-body)}
+.ship{padding:0 24px 18px}
+/* combined progress: free shipping + free gift on one calm bar (drawer and cart page) */
+.ship__msg{font-size:14px;line-height:1.45;margin-bottom:10px;min-height:20px}
+.ship__bar{position:relative;height:6px;border-radius:3px;background:var(--stone);overflow:hidden}
+.ship__bar i{display:block;height:100%;background:var(--moss);transform-origin:left;transform:scaleX(0);transition:transform .6s var(--ease)}
+.ship__bar b{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;background:var(--raised)}
+.ship__steps{display:flex;margin-top:8px;font-size:13px;line-height:1.3;color:var(--muted)}
+.ship__steps span{display:flex;justify-content:flex-end;align-items:center;gap:4px;padding-left:8px;text-align:right;transition:color .4s var(--ease)}
+.ship__steps span.is-done{color:var(--moss);font-weight:600}
+.ship__steps svg{width:14px;height:14px;flex:none;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.ship__steps span:not(.is-done) svg{display:none}
+.ship__add{margin-top:10px;font-size:14px}
+.ship__add[hidden]{display:none}
+.ship__add button{color:var(--ink)}
+.ship__add button:focus-visible{outline:2px solid var(--moss);outline-offset:3px}
+.line--gift .price{color:var(--moss)}
+.line--gift.is-new,.s-cart-bag__line--gift.is-new{animation:giftIn 1.8s var(--ease)}
+@keyframes giftIn{from{background:var(--sage-wash)}to{background:transparent}}
+@media (prefers-reduced-motion:reduce){.ship__bar i{transition:none}.line--gift.is-new,.s-cart-bag__line--gift.is-new{animation:none}}
+.drawer__list{flex:1;overflow:auto;padding:4px 24px}
+.line{display:grid;grid-template-columns:72px 1fr auto;gap:14px;padding:14px 0;border-top:1px solid var(--line);align-items:center}
+.line img{width:72px;height:88px;object-fit:cover;border-radius:var(--r-img);background:var(--oat)}
+.line h3{font:600 15px/1.25 var(--f-body)}
+.line .small{margin:2px 0 8px}
+.line .rm{font-size:13px;text-decoration:underline;color:var(--muted)}
+.undo{display:flex;justify-content:space-between;align-items:center;background:var(--oat);border-radius:var(--r-btn);padding:12px 14px;font-size:14px;margin:8px 0}
+.undo button{font-weight:600;text-decoration:underline}
+.drawer__empty{padding:40px 0;text-align:center;color:var(--muted)}
+.drawer__up{margin:10px 0 4px;background:var(--oat);border-radius:var(--r-btn);padding:14px;display:flex;gap:12px;align-items:center;font-size:14px}
+.drawer__up img{width:48px;height:48px;object-fit:cover;border-radius:4px}
+.drawer__ft{padding:18px 24px 24px;box-shadow:0 -1px 0 var(--line)}
+.drawer__ft .small{margin-top:10px;text-align:center}
+
+.qv{position:fixed;z-index:72;left:50%;top:50%;width:min(920px,calc(100% - 32px));max-height:calc(100% - 48px);overflow:auto;background:var(--raised);border-radius:10px;display:grid;grid-template-columns:1fr 1fr;
+  transform:translate(-50%,-46%);opacity:0;pointer-events:none;transition:opacity .4s var(--ease),transform .5s var(--ease);box-shadow:0 30px 80px rgba(38,43,34,.25)}
+.qv.open{opacity:1;transform:translate(-50%,-50%);pointer-events:auto}
+.qv__img{background:var(--oat);min-height:420px}
+.qv__img img{width:100%;height:100%;object-fit:cover}
+.qv__body{padding:32px;display:flex;flex-direction:column;gap:14px}
+.qv__x{position:absolute;top:10px;right:10px;background:var(--raised)}
+.qv__ing{font-size:14px;color:var(--muted);line-height:1.55}
+.qv__row{display:flex;gap:10px;align-items:center;margin-top:auto}
+@media (max-width:760px){.qv{grid-template-columns:1fr;top:auto;bottom:0;left:0;width:100%;transform:translateY(100%);border-radius:12px 12px 0 0;max-height:88vh}.qv.open{transform:none}.qv__img{min-height:0;aspect-ratio:4/3}.qv__body{padding:22px 16px 24px}}
+
+.pop{position:fixed;z-index:72;left:50%;top:50%;width:min(760px,calc(100% - 32px));background:var(--raised);border-radius:10px;overflow:hidden;display:grid;grid-template-columns:1fr 1.1fr;
+  transform:translate(-50%,-46%);opacity:0;pointer-events:none;transition:opacity .45s var(--ease),transform .55s var(--ease);box-shadow:0 30px 80px rgba(38,43,34,.25)}
+.pop.open{opacity:1;transform:translate(-50%,-50%);pointer-events:auto}
+.pop img{width:100%;height:100%;object-fit:cover;min-height:380px}
+.pop__body{padding:40px 36px;display:flex;flex-direction:column;justify-content:center;gap:14px}
+.pop__body input{height:50px;border-radius:var(--r-btn);border:1.5px solid var(--line);background:var(--oat);padding:0 16px}
+.pop__x{position:absolute;top:10px;right:10px;background:var(--raised)}
+.pop__no{font-size:14px;color:var(--muted);text-decoration:underline;align-self:flex-start}
+@media (max-width:760px){.pop{grid-template-columns:1fr}.pop img{min-height:0;aspect-ratio:16/9}.pop__body{padding:22px 18px 24px}}
+
+.cookie{position:fixed;z-index:65;left:var(--gut);bottom:20px;width:min(400px,calc(100% - 2*var(--gut)));background:var(--ink);color:var(--oat);border-radius:10px;padding:18px 20px;font-size:14px;line-height:1.5;
+  transform:translateY(16px);opacity:0;pointer-events:none;transition:opacity .4s var(--ease),transform .4s var(--ease)}
+.cookie.open{transform:none;opacity:1;pointer-events:auto}
+.cookie__row{display:flex;gap:8px;margin-top:12px}
+.cookie .btn--light{height:40px}
+.cookie .btn--ghost{height:40px;color:var(--oat)}
+</style>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Bag" aria-hidden="true">
+  <div class="drawer__hd"><h2 id="drawerTitle">Your bag</h2><button class="icon-btn" type="button" aria-label="Close bag" data-close><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="ship" id="shipBox" data-progress></div>
+  <div class="drawer__list" id="drawerList"></div>
+  <div class="drawer__ft"><button class="btn btn--primary btn--block" type="button" id="checkoutBtn">Check out</button><p class="small"><a class="link" href="../templates/cart.html">View bag</a>. Skin reacted? Refund on your first bottle, used or not.</p></div>
+</aside>
+
+<div class="qv" id="qv" role="dialog" aria-modal="true" aria-labelledby="qvName" aria-hidden="true">
+  <button class="icon-btn qv__x" type="button" aria-label="Close" data-close><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <div class="qv__img"><img id="qvImg" alt=""></div>
+  <div class="qv__body">
+    <div class="labels" id="qvLabels"></div>
+    <h2 class="h3" id="qvName"></h2>
+    <p class="price" id="qvPrice"></p>
+    <p id="qvLine"></p>
+    <p class="qv__ing" id="qvIng"></p>
+    <div class="qv__row"><div class="qty"><button type="button" aria-label="Less" id="qvMinus">−</button><span id="qvQty">1</span><button type="button" aria-label="More" id="qvPlus">+</button></div><button class="btn btn--primary" type="button" id="qvAdd" style="flex:1">Add to bag</button></div>
+    <p class="small">Not sure? <a href="#" class="link" data-add="bar">Start with the Oat bar, $9</a>.</p>
+  </div>
+</div>
+
+<div class="pop" id="pop" role="dialog" aria-modal="true" aria-labelledby="popTitle" aria-hidden="true">
+  <button class="icon-btn pop__x" type="button" aria-label="Close" data-close><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <img src="https://images.unsplash.com/photo-1759216853275-be51b29b6ee1?w=900&q=70&auto=format&fit=crop" alt="Wet shoulder wrapped in a towel after a shower">
+  <form class="pop__body" id="popForm" novalidate>
+    <h2 class="h2" id="popTitle" style="font-size:36px">10% off your <em>first</em> bottle.</h2>
+    <p class="small">Skin notes twice a month. No daily emails.</p>
+    <label class="sr" for="popEmail">Email</label>
+    <input id="popEmail" type="email" placeholder="Email" autocomplete="email" required>
+    <button class="btn btn--primary" type="submit">Get my 10%</button>
+    <button class="pop__no" type="button" data-close>No thanks</button>
+  </form>
+</div>
+
+<div class="cookie" id="cookie" role="region" aria-label="Cookies">
+  We use cookies to keep your bag and see what helps. Nothing is sold.
+  <div class="cookie__row"><button class="btn btn--light btn--sm" type="button" data-cookie="yes">Accept</button><button class="btn btn--ghost btn--sm" type="button" data-cookie="no">Only needed ones</button></div>
+</div>
+
+<script>
+/* ============ Shared store runtime (window.LATHER) ============ */
+(function(){
+  const U=(id,w=1200)=>`https://images.unsplash.com/${id}?w=${w}&q=72&auto=format&fit=crop`;
+  const products={
+    calm:{name:'Calm wash',size:'400 ml',price:18,img:'../img/t-calm.jpg',hover:'../img/h-calm.jpg',labels:['best','ff'],line:'Everyday, eczema-prone skin. Colloidal oat and glycerin.',ing:'Water, glycerin, coco-glucoside, decyl glucoside, colloidal oat, shea butter, sunflower seed oil, xanthan gum, citric acid, sodium benzoate. pH 5.5.'},
+    chamomile:{name:'Chamomile wash',size:'400 ml',price:20,img:'../img/t-chamomile.jpg',hover:'../img/h-chamomile.jpg',labels:[],line:'Our only scented wash: 0.2% chamomile oil, allergens listed.',ing:'Calm wash plus chamomile flower oil (0.2%). Allergens: bisabolol. pH 5.5.'},
+    soft:{name:'Soft wash',size:'400 ml',price:18,img:'../img/c-soft.jpg',hover:'../img/h-soft.jpg',labels:['new','ff'],line:'Our gentlest wash for sensitive skin. Low foam, rinses clean.',ing:'Water, glycerin, coco-glucoside, colloidal oat, oat oil, sunflower seed oil, xanthan gum, citric acid, sodium benzoate. Fragrance-free. pH 5.5.'},
+    rich:{name:'Rich wash',size:'400 ml',price:20,img:'../img/c-rich.jpg',hover:'../img/h-rich.jpg',labels:['ff'],line:'Very dry or winter skin. Thicker, almost a lotion.',ing:'Calm wash plus extra shea butter and oat oil. Fragrance-free. pH 5.5.'},
+    lotion:{name:'Calm lotion',size:'250 ml',price:22,img:'../img/c-lotion.jpg',labels:['ff'],line:'Light lotion for damp skin, straight after the wash.',ing:'Water, glycerin, shea butter, colloidal oat, squalane, ceramide NP, cetearyl alcohol, xanthan gum.'},
+    cream:{name:'Rich cream',size:'200 ml',price:24,img:'../img/c-cream.jpg',labels:['ff'],line:'Thick cream for shins, elbows and hands.',ing:'Shea butter, glycerin, oat oil, ceramide NP, squalane, beeswax-free.'},
+    milk:{name:'Body milk',size:'300 ml',price:20,img:'../img/c-body-milk.jpg',hover:'../img/h-milk.jpg',labels:['new','ff'],line:'Light and quick for dry skin. Sinks in fast, never sticky.',ing:'Water, glycerin, colloidal oat, sunflower seed oil, squalane, cetearyl alcohol, xanthan gum, sodium benzoate.'},
+    little:{name:'Little lotion',size:'150 ml',price:14,img:'../img/c-little-lotion.jpg',hover:'../img/h-little.jpg',labels:['new','ff'],line:'Soft, light oat lotion for ages 1 and up. Fragrance-free.',ing:'Water, glycerin, colloidal oat, calendula oil, shea butter, cetearyl alcohol, xanthan gum, sodium benzoate.'},
+    bar:{name:'Oat bar',size:'120 g',price:9,img:'../img/c-oat-bar.jpg',hover:'../img/h-bar.jpg',labels:['best','ff'],line:'Oat milk soap bar for face and body. Rich lather that rinses soft.',ing:'Sodium olivate, sodium cocoate, oat milk, colloidal oat, shea butter, glycerin.'}
+  };
+  const LBL={best:['label--best','Best seller'],ff:['label--ff','Fragrance-free'],new:['label--new','New'],sale:['label--sale','Sale']};
+  const fmt=n=>'$'+(Math.round(n*100)/100).toFixed(n%1?2:0);
+  const labelsHTML=ids=>ids.map(k=>`<span class="label ${LBL[k][0]}">${LBL[k][1]}</span>`).join('');
+  const $=s=>document.querySelector(s);
+  const CK='lather-cart';
+  let cart=[]; try{cart=JSON.parse(localStorage.getItem(CK)||'[]').filter(l=>l&&l.qty>0&&l.name&&isFinite(l.price))}catch(e){cart=[]}
+  let removed=null, undoT=0;
+  function save(){try{localStorage.setItem(CK,JSON.stringify(cart))}catch(e){}}
+  /* free shipping + free gift: one combined progress block. The gift is a real line at price 0 (key 'gift'), added
+     when the bag (gift excluded) reaches GIFT.at, taken out when it drops below. Removing it is remembered
+     (lather-gift-off) until the bag drops below the threshold again; "Add my free Oat bar" brings it back. */
+  const FREE=40, GIFT={id:'bar',at:60,value:9}, GK='lather-gift-off';
+  let giftOff=false, giftNew=false; try{giftOff=localStorage.getItem(GK)==='1'}catch(e){}
+  function setGiftOff(v){giftOff=v;try{v?localStorage.setItem(GK,'1'):localStorage.removeItem(GK)}catch(e){}}
+  addEventListener('storage',e=>{if(e.key===CK){try{cart=JSON.parse(e.newValue||'[]')}catch(x){cart=[]}render()}});
+  const scrim=$('#scrim'), drawer=$('#drawer'), qv=$('#qv'), pop=$('#pop');
+  let lastFocus=null;
+  function openLayer(el){lastFocus=document.activeElement;closeAll(true);el.classList.add('open');el.setAttribute('aria-hidden','false');scrim.classList.add('open');document.body.style.overflow='hidden';setTimeout(()=>{const f=el.querySelector('[data-close], button, input');f&&f.focus({preventScroll:true})},60)}
+  function closeAll(keepFocus){[drawer,qv,pop].forEach(e=>{e.classList.remove('open');e.setAttribute('aria-hidden','true')});scrim.classList.remove('open');document.body.style.overflow='';if(!keepFocus&&lastFocus)lastFocus.focus({preventScroll:true})}
+  scrim.addEventListener('click',()=>closeAll());
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll()});
+  document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>closeAll()));
+  function count(){return cart.reduce((a,l)=>a+l.qty,0)}
+  function subtotal(){return cart.reduce((a,l)=>a+l.qty*l.price,0)}
+  function base(){return cart.reduce((a,l)=>a+(l.gift?0:l.qty*l.price),0)}
+  function syncGift(){
+    const b=base(), g=cart.find(l=>l.gift);
+    if(b>=GIFT.at){
+      if(g){g.qty=1;if(cart[cart.length-1]!==g){cart.splice(cart.indexOf(g),1);cart.push(g)}}
+      else if(!giftOff){const p=products[GIFT.id];cart.push({key:'gift',id:GIFT.id,qty:1,name:p.name,size:p.size,price:0,img:p.img,note:`Free gift, ${fmt(GIFT.value)} value`,gift:true});giftNew=true}
+    } else { if(g) cart.splice(cart.indexOf(g),1); if(giftOff) setGiftOff(false) }
+  }
+  /* drop(i): remove a line; a paid line gets the undo row, the gift is remembered as declined instead */
+  function drop(i){const l=cart.splice(i,1)[0]; if(!l)return; if(l.gift) setGiftOff(true); else {removed=l;armUndo()}}
+  const CHECK='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7"/></svg>';
+  function progress(){
+    const st=base(), name=products[GIFT.id].name;
+    const steps=[{k:'ship',at:FREE,label:`Free shipping, ${fmt(FREE)}`},{k:'gift',at:GIFT.at,label:`${name}, ${fmt(GIFT.at)}`}].filter(s=>s.at>0).sort((a,b)=>a.at-b.at);
+    const max=steps.length?steps[steps.length-1].at:0, shipDone=st>=FREE, inBag=cart.some(l=>l.gift);
+    const next=steps.find(s=>st<s.at); let msg;
+    if(!st) msg=`Free shipping over ${fmt(FREE)}, and a free ${name} over ${fmt(GIFT.at)}.`;
+    else if(next&&next.k==='ship') msg=`${fmt(FREE-st)} away from free shipping.`;
+    else if(next) msg=(shipDone?'Free shipping unlocked. ':'')+`${fmt(GIFT.at-st)} more for a free ${name}.`;
+    else msg='Free shipping unlocked. '+(inBag?`Your free ${name} (${fmt(GIFT.value)} value) is in your bag.`:`Your free ${name} is still yours to take.`);
+    return {st,max,steps:steps.map(s=>({...s,done:st>=s.at})),msg,offer:!next&&!inBag,name};
+  }
+  /* paints every [data-progress] box (drawer, cart page): structure once, then only what changed */
+  function paintProgress(){
+    const P=progress();
+    document.querySelectorAll('[data-progress]').forEach(el=>{
+      if(!el.querySelector('.ship__bar')){
+        let prev=0; const marks=P.steps.slice(0,-1).map(s=>`<b style="left:${s.at/P.max*100}%"></b>`).join('');
+        const lbl=P.steps.map(s=>{const w=(s.at-prev)/P.max*100;prev=s.at;return `<span data-step="${s.k}" style="width:${w}%">${CHECK}${s.label}</span>`}).join('');
+        el.innerHTML=`<p class="ship__msg" aria-live="polite"></p><div class="ship__bar" role="progressbar" aria-label="Progress toward free shipping and a free gift" aria-valuemin="0" aria-valuemax="${P.max}"><i></i>${marks}</div><div class="ship__steps" aria-hidden="true">${lbl}</div><p class="ship__add" hidden><button class="link" type="button" data-gift-add>Add my free ${P.name}</button></p>`;
+      }
+      const m=el.querySelector('.ship__msg'); if(m.textContent!==P.msg) m.textContent=P.msg;
+      const bar=el.querySelector('.ship__bar'); bar.setAttribute('aria-valuenow',Math.min(P.max,P.st)); bar.setAttribute('aria-valuetext',P.msg);
+      bar.querySelector('i').style.transform=`scaleX(${P.max?Math.min(1,P.st/P.max):0})`;
+      P.steps.forEach(s=>{const x=el.querySelector(`[data-step="${s.k}"]`); x&&x.classList.toggle('is-done',s.done)});
+      el.querySelector('.ship__add').hidden=!P.offer;
+    });
+  }
+  function render(){
+    syncGift(); save();
+    const n=count(), st=subtotal();
+    const bc=$('#bagCount'); bc.textContent=n;
+    $('#drawerTitle').textContent=n?`Your bag (${n})`:'Your bag';
+    paintProgress();
+    const fresh=giftNew; giftNew=false;
+    const list=$('#drawerList'); let h='';
+    if(removed) h+=`<div class="undo"><span>Removed ${removed.name}.</span><button type="button" id="undoBtn">Undo</button></div>`;
+    if(!cart.length && !removed) h+=`<p class="drawer__empty">Nothing here yet. Most people start with the Oat bar, $9.</p>`;
+    cart.forEach((l,i)=>{if(l.gift){h+=`<div class="line line--gift${fresh?' is-new':''}"><img src="${l.img}" alt=""><div><h3>${l.name}</h3><p class="small">${l.note}</p></div><div style="text-align:right"><p class="price" style="font-size:18px">Free</p><button class="rm" type="button" data-rm="${i}" aria-label="Remove free ${l.name}">Remove</button></div></div>`;return}
+      h+=`<div class="line"><img src="${l.img}" alt=""><div><h3>${l.name}</h3><p class="small">${l.note||l.size}</p><div class="qty"><button type="button" aria-label="Less" data-q="${i}" data-d="-1">−</button><span>${l.qty}</span><button type="button" aria-label="More" data-q="${i}" data-d="1">+</button></div></div><div style="text-align:right"><p class="price" style="font-size:18px">${fmt(l.qty*l.price)}</p><button class="rm" type="button" data-rm="${i}">Remove</button></div></div>`});
+    if(cart.length && !cart.some(l=>l.id==='bar')) h+=`<div class="drawer__up"><img src="${products.bar.img}" alt=""><span style="flex:1">Add the Oat bar for face and hands, $9.</span><button class="btn btn--light btn--sm" type="button" data-add="bar">Add</button></div>`;
+    list.innerHTML=h;
+    $('#checkoutBtn').textContent= st?`Check out, ${fmt(st)}`:'Check out';
+    $('#checkoutBtn').disabled=!st;
+    document.dispatchEvent(new CustomEvent('lather:cart',{detail:{lines:cart.slice(),count:n,subtotal:st,giftNew:fresh}}));
+  }
+  $('#drawerList').addEventListener('click',e=>{
+    const q=e.target.closest('[data-q]'), rm=e.target.closest('[data-rm]'), u=e.target.closest('#undoBtn');
+    if(q){const l=cart[+q.dataset.q]; if(l.gift)return; l.qty+= +q.dataset.d; if(l.qty<1) drop(+q.dataset.q); render()}
+    if(rm){drop(+rm.dataset.rm);render()}
+    if(u){cart.push(removed);removed=null;render()}
+  });
+  function armUndo(){clearTimeout(undoT);undoT=setTimeout(()=>{removed=null;render()},6000)}
+  /* add(id, qty, {price, name, note, img, key, properties, selling_plan, discount})
+     custom lines (bundles) pass their own price/name. Subscriptions: o.selling_plan (any id, e.g. 'every-6') makes a
+     separate line (key id@plan); o.note is shown on the line ("Every 6 weeks, 10% off"); o.price, or o.discount
+     (percent off the product price), sets the discounted price. The Liquid runtime sends selling_plan to /cart/add.js. */
+  function put(id,qty,o){
+    const p=products[id]||{}; const key=o.key||(o.selling_plan?id+'@'+o.selling_plan:id);
+    const price=o.price??(o.discount?Math.round(p.price*(100-o.discount))/100:p.price);
+    const ex=cart.find(l=>l.key===key&&!l.gift);
+    if(ex) ex.qty+=qty; else cart.push({key,id,qty,name:o.name||p.name,size:p.size,price,img:o.img||p.img,note:o.note,selling_plan:o.selling_plan||null,properties:o.properties||null});
+    removed=null;
+  }
+  function add(id,qty=1,o={}){
+    put(id,qty,o); render();
+    const bc=$('#bagCount'); bc.classList.add('bump'); setTimeout(()=>bc.classList.remove('bump'),700);
+    openLayer(drawer);
+  }
+  let qvId=null,qvQty=1;
+  function quick(id){const p=products[id];if(!p)return;qvId=id;qvQty=1;$('#qvQty').textContent=1;
+    $('#qvImg').src=p.img;$('#qvImg').alt=p.name;$('#qvName').textContent=p.name;$('#qvPrice').innerHTML=fmt(p.price)+` <span class="small" style="font-family:var(--f-body)">${p.size}</span>`;
+    $('#qvLine').textContent=p.line;$('#qvIng').textContent=p.ing;$('#qvLabels').innerHTML=labelsHTML(p.labels);openLayer(qv)}
+  $('#qvMinus').onclick=()=>{qvQty=Math.max(1,qvQty-1);$('#qvQty').textContent=qvQty};
+  $('#qvPlus').onclick=()=>{qvQty++;$('#qvQty').textContent=qvQty};
+  $('#qvAdd').onclick=()=>add(qvId,qvQty);
+  $('#bagBtn').onclick=()=>{render();openLayer(drawer)};
+  // global delegation: [data-add="id"], [data-quick="id"]
+  document.addEventListener('click',e=>{
+    const a=e.target.closest('[data-add]'); if(a){e.preventDefault();add(a.dataset.add,+(a.dataset.qty||1));return}
+    const q=e.target.closest('[data-quick]'); if(q){e.preventDefault();quick(q.dataset.quick)}
+    const g=e.target.closest('[data-gift-add]'); if(g){e.preventDefault();setGiftOff(false);render()}
+  });
+  /* cart API for the bag page: lines() copies, setQty(i,q) (0 removes, with undo), remove(i), undo(), clear() */
+  const cartApi={
+    lines:()=>cart.map(l=>({...l})), count, subtotal, freeShip:40,
+    setQty(i,q){const l=cart[i];if(!l)return;if(q<1)drop(i);else if(!l.gift)l.qty=Math.min(99,q);render()},
+    remove(i){if(!cart[i])return;drop(i);render()},
+    removed:()=>removed, undo(){if(removed){cart.push(removed);removed=null;render()}},
+    clear(){cart=[];removed=null;setGiftOff(false);render()},
+    addQuiet(id,qty=1,o={}){put(id,qty,o);render()},
+    /* free gift: settings, live state, and bring a declined gift back */
+    gift:{...GIFT,state:()=>progress()}, addGift(){setGiftOff(false);render()}
+  };
+  window.LATHER={products,add,quick,fmt,labelsHTML,U,openLayer,closeAll,cart:cartApi};
+  render();
+
+  /* header: over the hero until scrolled */
+  const hdr=$('#hdr'); const onS=()=>hdr.classList.toggle('is-solid',scrollY>40||hdr.classList.contains('is-inner')); onS(); addEventListener('scroll',onS,{passive:true});
+  $('#menuBtn').onclick=()=>$('#mnav').classList.add('open');
+  $('#menuClose').onclick=()=>$('#mnav').classList.remove('open');
+  document.querySelectorAll('#mnav a').forEach(a=>a.addEventListener('click',()=>$('#mnav').classList.remove('open')));
+  /* announcement rotator */
+  const msgs=['New here? Start with the Oat bar, $9. <a href="#shop">Shop the line</a>','Free shipping over $40. Free Oat bar over $60.','Skin reacted? We refund your first bottle, used or not.'];
+  let ai=0; const am=$('#annMsg');
+  function showAnn(d){ai=(ai+d+msgs.length)%msgs.length;am.style.opacity=0;setTimeout(()=>{am.innerHTML=msgs[ai];am.style.opacity=1},250)}
+  document.querySelectorAll('[data-ann]').forEach(b=>b.onclick=()=>showAnn(+b.dataset.ann));
+  if(am) setInterval(()=>{if(!document.hidden)showAnn(1)},6000);
+  /* footer + popup forms */
+  $('#ftrForm').addEventListener('submit',e=>{e.preventDefault();const v=$('#ftrEmail').value;$('#ftrOk').textContent=/\S+@\S+\.\S+/.test(v)?'Thanks. Your 10% code is on its way.':'Please enter a valid email.'});
+  $('#popForm').addEventListener('submit',e=>{e.preventDefault();const v=$('#popEmail').value;if(!/\S+@\S+\.\S+/.test(v)){$('#popEmail').focus();return}
+    $('#popForm').innerHTML='<h2 class="h2" style="font-size:34px">Check your <em>inbox.</em></h2><p class="small">Your code works on any bottle or set.</p><button class="btn btn--primary" type="button" data-close>Keep browsing</button>';
+    $('#popForm [data-close]').onclick=()=>closeAll()});
+  const ss={get(k){try{return sessionStorage.getItem(k)}catch(e){return null}},set(k,v){try{sessionStorage.setItem(k,v)}catch(e){}}};
+  const ls={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+  const noPop=/[?&]nopop/.test(location.search);
+  if(!noPop && !ss.get('lather-pop')){setTimeout(()=>{if(!document.querySelector('.drawer.open,.qv.open')){ss.set('lather-pop','1');openLayer(pop)}},12000)}
+  const ck=$('#cookie'); if(!noPop && !ls.get('lather-cookie')) setTimeout(()=>ck.classList.add('open'),1800);
+  document.querySelectorAll('[data-cookie]').forEach(b=>b.onclick=()=>{ls.set('lather-cookie',b.dataset.cookie);ck.classList.remove('open')});
+
+  /* reveal system: [data-rv] gets .in when it enters */
+  const io=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target)}}),{rootMargin:'0px 0px -8% 0px',threshold:.12});
+  document.querySelectorAll('[data-rv]').forEach(el=>io.observe(el));
+  window.LATHER.reveal=root=>root.querySelectorAll('[data-rv]').forEach(el=>io.observe(el));
+})();
+</script>
+</body>
+</html>

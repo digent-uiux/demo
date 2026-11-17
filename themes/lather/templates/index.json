@@ -1,499 +1,1697 @@
 {
   "sections": {
-    "home-collection-mega-menu": {
-      "type": "blko-home-collection-mega-menu",
+    "hero": {
+      "type": "blko-lv3-hero",
       "settings": {
-        "eyebrow": "Shop by aisle",
-        "heading": "Pick a lane and go."
+        "label": "Lather body wash",
+        "h1": "Lather, a moisturising body wash for dry, reactive skin",
+        "lead": "A moisturising body wash for dry, reactive skin.",
+        "cta1_label": "Shop body wash",
+        "cta2_label": "Try the Oat bar, $9",
+        "anchor": "hero",
+        "p_key": "bar",
+        "p_name": "Oat bar",
+        "p_size": "120 g",
+        "p_price": "900",
+        "p_line": "Oat milk soap bar for face and body. Rich lather that rinses soft.",
+        "p_labels": "best,ff",
+        "p_ing": "Sodium olivate, sodium cocoate, oat milk, colloidal oat, shea butter, glycerin.",
+        "p_image": "shopify://shop_images/c-oat-bar.jpg"
       },
       "blocks": {
-        "block-1": {
-          "type": "link",
+        "slide_1": {
+          "type": "slide",
           "settings": {
-            "url": "#bar-soap"
+            "line_1": "Ten ingredients.",
+            "line_2": "Nothing that <em>itches.</em>",
+            "image": "shopify://shop_images/u-1709315610156-fda8311ee3e4.jpg"
           }
         },
-        "block-2": {
-          "type": "link",
+        "slide_2": {
+          "type": "slide",
           "settings": {
-            "label": "Body wash",
-            "url": "#body-wash"
+            "line_1": "Soft foam,",
+            "line_2": "on <em>purpose.</em>",
+            "image": "shopify://shop_images/u-1787724778340-4e0aa6269523.jpg"
           }
         },
-        "block-3": {
-          "type": "link",
+        "slide_3": {
+          "type": "slide",
           "settings": {
-            "label": "Deodorant",
-            "url": "#deodorant"
+            "line_1": "Made for skin",
+            "line_2": "that <em>flares.</em>",
+            "image": "shopify://shop_images/u-1709315610148-f4b341aed9d4.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "slide_1",
+        "slide_2",
+        "slide_3"
+      ]
+    },
+    "highlight": {
+      "type": "blko-lv3-highlight",
+      "settings": {
+        "label": "What's in the wash",
+        "text": "Oat [1], shea and glycerin wash you clean [2] and leave skin soft [3], not tight [4].",
+        "side_text": "The other seven: two sugar cleansers, sunflower oil, xanthan gum, citric acid, a preservative and water.",
+        "link_label": "See every ingredient",
+        "anchor": "highlight"
+      },
+      "blocks": {
+        "pill_1": {
+          "type": "pill",
+          "settings": {
+            "image": "shopify://shop_images/u-1586810504230-09dab6b8e01b.jpg"
           }
         },
-        "block-4": {
-          "type": "link",
+        "pill_2": {
+          "type": "pill",
           "settings": {
-            "label": "Hair care",
-            "url": "#hair"
+            "image": "shopify://shop_images/u-1508759073847-9ca702cec7d2.jpg"
           }
         },
-        "block-5": {
-          "type": "link",
+        "pill_3": {
+          "type": "pill",
           "settings": {
-            "label": "Shave",
-            "url": "#shave"
+            "image": "shopify://shop_images/u-1732993486279-9d0f3b91adb2.jpg"
           }
         },
-        "block-6": {
-          "type": "link",
+        "pill_4": {
+          "type": "pill",
           "settings": {
-            "label": "Cologne",
-            "url": "#cologne"
+            "image": "shopify://shop_images/u-1723540634462-528708cc17aa.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "pill_1",
+        "pill_2",
+        "pill_3",
+        "pill_4"
+      ]
+    },
+    "featured": {
+      "type": "blko-lv3-featured",
+      "settings": {
+        "heading": "Our <em>favourites.</em>",
+        "sub": "Fragrance-free unless the label says otherwise.",
+        "anchor": "shop",
+        "t_kicker": "New here?",
+        "t_title": "Start with the Oat bar, $9",
+        "t_text": "Oat milk soap for face and body. A rich lather that rinses soft, and no fragrance.",
+        "t_button": "Add the Oat bar, $9",
+        "t_key": "bar",
+        "t_name": "Oat bar",
+        "t_size": "120 g",
+        "t_price": "900",
+        "t_line": "Oat milk soap bar for face and body. Rich lather that rinses soft.",
+        "t_labels": "best,ff",
+        "t_ing": "Sodium olivate, sodium cocoate, oat milk, colloidal oat, shea butter, glycerin.",
+        "qv_label": "Quick view",
+        "add_label": "Add",
+        "tabs_label": "Product type",
+        "rail_label": "Products",
+        "label_best": "Best seller",
+        "label_ff": "Fragrance-free",
+        "label_new": "New",
+        "label_sale": "Sale",
+        "t_image": "shopify://shop_images/u-1599847954335-d7c7ca35f6a7.jpg",
+        "t_pimage": "shopify://shop_images/c-oat-bar.jpg"
+      },
+      "blocks": {
+        "tab_1": {
+          "type": "tab",
+          "settings": {
+            "label": "Body wash"
           }
         },
-        "block-7": {
-          "type": "link",
+        "product_1": {
+          "type": "product",
           "settings": {
-            "label": "Bundles",
-            "url": "#bundles"
+            "name": "Calm wash",
+            "size": "400 ml",
+            "price": "1800",
+            "line": "Everyday, eczema-prone skin. Colloidal oat and glycerin.",
+            "key": "calm",
+            "labels": "best,ff",
+            "ing": "Water, glycerin, coco-glucoside, decyl glucoside, colloidal oat, shea butter, sunflower seed oil, xanthan gum, citric acid, sodium benzoate. pH 5.5.",
+            "image": "shopify://shop_images/t-calm.jpg",
+            "hover": "shopify://shop_images/h-calm.jpg"
           }
         },
-        "block-8": {
-          "type": "link",
+        "product_2": {
+          "type": "product",
           "settings": {
-            "label": "Accessories",
-            "url": "#accessories"
+            "name": "Rich wash",
+            "size": "400 ml",
+            "price": "2000",
+            "line": "Very dry or winter skin. Thicker, almost a lotion.",
+            "key": "rich",
+            "labels": "ff",
+            "ing": "Calm wash plus extra shea butter and oat oil. Fragrance-free. pH 5.5.",
+            "image": "shopify://shop_images/c-rich.jpg",
+            "hover": "shopify://shop_images/h-rich.jpg"
           }
         },
-        "block-9": {
+        "product_3": {
+          "type": "product",
+          "settings": {
+            "name": "Chamomile wash",
+            "size": "400 ml",
+            "price": "2000",
+            "line": "Our only scented wash: 0.2% chamomile oil, allergens listed.",
+            "key": "chamomile",
+            "labels": "",
+            "ing": "Calm wash plus chamomile flower oil (0.2%). Allergens: bisabolol. pH 5.5.",
+            "image": "shopify://shop_images/t-chamomile.jpg",
+            "hover": "shopify://shop_images/h-chamomile.jpg"
+          }
+        },
+        "tab_2": {
+          "type": "tab",
+          "settings": {
+            "label": "Lotion & cream"
+          }
+        },
+        "product_4": {
+          "type": "product",
+          "settings": {
+            "name": "Calm lotion",
+            "size": "250 ml",
+            "price": "2200",
+            "line": "Light lotion for damp skin, straight after the wash.",
+            "key": "lotion",
+            "labels": "ff",
+            "ing": "Water, glycerin, shea butter, colloidal oat, squalane, ceramide NP, cetearyl alcohol, xanthan gum.",
+            "image": "shopify://shop_images/c-lotion.jpg"
+          }
+        },
+        "product_5": {
+          "type": "product",
+          "settings": {
+            "name": "Body milk",
+            "size": "300 ml",
+            "price": "2000",
+            "line": "Light and quick for dry skin. Sinks in fast, never sticky.",
+            "key": "milk",
+            "labels": "new,ff",
+            "ing": "Water, glycerin, colloidal oat, sunflower seed oil, squalane, cetearyl alcohol, xanthan gum, sodium benzoate.",
+            "image": "shopify://shop_images/c-body-milk.jpg",
+            "hover": "shopify://shop_images/h-milk.jpg"
+          }
+        },
+        "product_6": {
+          "type": "product",
+          "settings": {
+            "name": "Rich cream",
+            "size": "200 ml",
+            "price": "2400",
+            "line": "Thick cream for shins, elbows and hands.",
+            "key": "cream",
+            "labels": "ff",
+            "ing": "Shea butter, glycerin, oat oil, ceramide NP, squalane, beeswax-free.",
+            "image": "shopify://shop_images/c-cream.jpg"
+          }
+        },
+        "tab_3": {
+          "type": "tab",
+          "settings": {
+            "label": "Little ones"
+          }
+        },
+        "product_7": {
+          "type": "product",
+          "settings": {
+            "name": "Little lotion",
+            "size": "150 ml",
+            "price": "1400",
+            "line": "Soft, light oat lotion for ages 1 and up. Fragrance-free.",
+            "key": "little",
+            "labels": "new,ff",
+            "ing": "Water, glycerin, colloidal oat, calendula oil, shea butter, cetearyl alcohol, xanthan gum, sodium benzoate.",
+            "image": "shopify://shop_images/c-little-lotion.jpg",
+            "hover": "shopify://shop_images/h-little.jpg"
+          }
+        },
+        "product_8": {
+          "type": "product",
+          "settings": {
+            "name": "Oat bar",
+            "size": "120 g",
+            "price": "900",
+            "line": "Oat milk soap bar for face and body. Rich lather that rinses soft.",
+            "key": "bar",
+            "labels": "best,ff",
+            "ing": "Sodium olivate, sodium cocoate, oat milk, colloidal oat, shea butter, glycerin.",
+            "image": "shopify://shop_images/c-oat-bar.jpg",
+            "hover": "shopify://shop_images/h-bar.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "tab_1",
+        "product_1",
+        "product_2",
+        "product_3",
+        "tab_2",
+        "product_4",
+        "product_5",
+        "product_6",
+        "tab_3",
+        "product_7",
+        "product_8"
+      ]
+    },
+    "quiz": {
+      "type": "blko-lv3-quiz",
+      "settings": {
+        "heading": "Find <em>your</em> match.",
+        "sub": "Two questions, one straight answer.",
+        "q1": "How does your skin feel ten minutes after a shower?",
+        "q2": "Who is it for?",
+        "who_me": "Me",
+        "who_kid": "My kid",
+        "who_both": "Both",
+        "back_label": "Back",
+        "anchor": "quiz",
+        "pre_me": "For you",
+        "pre_kid": "For your kid",
+        "pre_both": "For you both",
+        "add_label": "Add",
+        "add_both_label": "Add both",
+        "again_label": "Start over",
+        "kid_line": "Soft, light oat lotion for ages 1 and up, after the bath. Fragrance-free, with calendula oil.",
+        "k_key": "little",
+        "k_name": "Little lotion",
+        "k_size": "150 ml",
+        "k_price": "1400",
+        "k_pline": "Soft, light oat lotion for ages 1 and up. Fragrance-free.",
+        "k_labels": "new,ff",
+        "k_ing": "Water, glycerin, colloidal oat, calendula oil, shea butter, cetearyl alcohol, xanthan gum, sodium benzoate.",
+        "foot_note": "Not medical advice. Patch test on your inner arm for 48 hours.",
+        "foot_link": "Take the full skin quiz",
+        "image": "shopify://shop_images/u-1592179872817-1b1df963ff67.jpg",
+        "k_image": "shopify://shop_images/c-little-lotion.jpg"
+      },
+      "blocks": {
+        "answer_1": {
+          "type": "answer",
+          "settings": {
+            "label": "Tight",
+            "why": "Extra shea, thick as a lotion, for skin that feels tight after a shower.",
+            "both": "Rich wash for you, Little lotion for them. Both fragrance-free.",
+            "name": "Rich wash",
+            "size": "400 ml",
+            "price": "2000",
+            "line": "Very dry or winter skin. Thicker, almost a lotion.",
+            "key": "rich",
+            "labels": "ff",
+            "ing": "Calm wash plus extra shea butter and oat oil. Fragrance-free. pH 5.5.",
+            "image": "shopify://shop_images/c-rich.jpg"
+          }
+        },
+        "answer_2": {
+          "type": "answer",
+          "settings": {
+            "label": "Itchy",
+            "why": "Fragrance-free with colloidal oat, for itchy and eczema-prone skin.",
+            "both": "Calm wash for you, Little lotion for them. Both fragrance-free.",
+            "name": "Calm wash",
+            "size": "400 ml",
+            "price": "1800",
+            "line": "Everyday, eczema-prone skin. Colloidal oat and glycerin.",
+            "key": "calm",
+            "labels": "best,ff",
+            "ing": "Water, glycerin, coco-glucoside, decyl glucoside, colloidal oat, shea butter, sunflower seed oil, xanthan gum, citric acid, sodium benzoate. pH 5.5.",
+            "image": "shopify://shop_images/t-calm.jpg"
+          }
+        },
+        "answer_3": {
+          "type": "answer",
+          "settings": {
+            "label": "Fine",
+            "why": "Our one light scent, allergens listed. Pick Calm if scent ever bothers you.",
+            "both": "Chamomile wash for you, Little lotion for them. Both fragrance-free apart from the chamomile.",
+            "name": "Chamomile wash",
+            "size": "400 ml",
+            "price": "2000",
+            "line": "Our only scented wash: 0.2% chamomile oil, allergens listed.",
+            "key": "chamomile",
+            "labels": "",
+            "ing": "Calm wash plus chamomile flower oil (0.2%). Allergens: bisabolol. pH 5.5.",
+            "image": "shopify://shop_images/t-chamomile.jpg"
+          }
+        },
+        "answer_4": {
+          "type": "answer",
+          "settings": {
+            "label": "It depends on the season",
+            "why": "Oat milk soap for face and body, fragrance-free. An easy $9 start while your skin changes with the weather.",
+            "both": "Oat bar for you, Little lotion for them. Both fragrance-free.",
+            "name": "Oat bar",
+            "size": "120 g",
+            "price": "900",
+            "line": "Oat milk soap bar for face and body. Rich lather that rinses soft.",
+            "key": "bar",
+            "labels": "best,ff",
+            "ing": "Sodium olivate, sodium cocoate, oat milk, colloidal oat, shea butter, glycerin.",
+            "image": "shopify://shop_images/c-oat-bar.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "answer_1",
+        "answer_2",
+        "answer_3",
+        "answer_4"
+      ]
+    },
+    "marquee": {
+      "type": "blko-lv3-marquee",
+      "settings": {
+        "label": "What we promise",
+        "anchor": "commitments",
+        "duration": 48
+      },
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "icon": "fragrance",
+            "text": "Fragrance-free"
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "icon": "ph",
+            "text": "pH 5.5"
+          }
+        },
+        "item_3": {
+          "type": "item",
+          "settings": {
+            "icon": "derm",
+            "text": "Dermatologist tested"
+          }
+        },
+        "item_4": {
+          "type": "item",
+          "settings": {
+            "icon": "vegan",
+            "text": "Vegan"
+          }
+        },
+        "item_5": {
+          "type": "item",
+          "settings": {
+            "icon": "no-sls",
+            "text": "No SLS"
+          }
+        },
+        "item_6": {
+          "type": "item",
+          "settings": {
+            "icon": "no-dyes",
+            "text": "No dyes"
+          }
+        },
+        "item_7": {
+          "type": "item",
+          "settings": {
+            "icon": "recycled",
+            "text": "Recycled bottle"
+          }
+        },
+        "item_8": {
+          "type": "item",
+          "settings": {
+            "icon": "cruelty-free",
+            "text": "Cruelty-free"
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2",
+        "item_3",
+        "item_4",
+        "item_5",
+        "item_6",
+        "item_7",
+        "item_8"
+      ]
+    },
+    "bundle": {
+      "type": "blko-lv3-bundle",
+      "settings": {
+        "heading_1": "Build your <em>shower</em>",
+        "heading_2": "set.",
+        "tiers_text": "Take a full set for 15% off, or mix any two or more. The more you add, the more comes off.",
+        "anchor": "bundle",
+        "tier_2": 5,
+        "tier_3": 10,
+        "tier_4": 15,
+        "set_pct": 15,
+        "panel_title": "Your set",
+        "slots_label": "Items in your set",
+        "stops_label": "Discount tiers",
+        "stop_label": "[pct]% off",
+        "item_one": "[n] item",
+        "item_many": "[n] items",
+        "total_label": "Total",
+        "save": "You save [amount]",
+        "no_discount": "No discount yet",
+        "cta_pick": "Pick 2 to make a set",
+        "cta_add": "Add set, [amount]",
+        "msg_set": "[set] complete: [pct]% off.",
+        "msg_empty": "Pick a set, or any 2 items to get [next]% off.",
+        "msg_one": "Add 1 more to get [next]% off.",
+        "msg_mid": "[pct]% off. Add 1 more to get [next]% off.",
+        "msg_max": "[pct]% off, the best price on any set.",
+        "set_name": "[set] set",
+        "mix_name": "Your shower set",
+        "note": "[n] items, [pct]% off: [list]",
+        "less_aria": "One less [name]",
+        "more_aria": "One more [name]"
+      },
+      "blocks": {
+        "set_1": {
+          "type": "set",
+          "settings": {
+            "name": "Calm routine",
+            "note": "For everyday, eczema-prone skin.",
+            "pick_label": "Pick both",
+            "start": true,
+            "scene_alt": "Calm wash and Calm lotion on dark wet leaves",
+            "key_1": "calm",
+            "name_1": "Calm wash",
+            "note_1": "Fragrance-free, colloidal oat. 400 ml.",
+            "size_1": "400 ml",
+            "price_1": "1800",
+            "labels_1": "best,ff",
+            "pump_1": "moss",
+            "key_2": "lotion",
+            "name_2": "Calm lotion",
+            "note_2": "Light, on damp skin after the wash. 250 ml.",
+            "size_2": "250 ml",
+            "price_2": "2200",
+            "labels_2": "ff",
+            "pump_2": "none",
+            "scene": "shopify://shop_images/s-calm-set.jpg",
+            "image_1": "shopify://shop_images/t-calm.jpg",
+            "image_2": "shopify://shop_images/c-lotion.jpg"
+          }
+        },
+        "set_2": {
+          "type": "set",
+          "settings": {
+            "name": "Very dry skin",
+            "note": "For tight, winter skin.",
+            "pick_label": "Pick all three",
+            "start": false,
+            "scene_alt": "Rich wash, Rich cream and Body milk on wet travertine",
+            "key_1": "rich",
+            "name_1": "Rich wash",
+            "note_1": "Thicker, almost a lotion. 400 ml.",
+            "size_1": "400 ml",
+            "price_1": "2000",
+            "labels_1": "ff",
+            "pump_1": "deep",
+            "key_2": "cream",
+            "name_2": "Rich cream",
+            "note_2": "For shins, elbows and hands. 200 ml.",
+            "size_2": "200 ml",
+            "price_2": "2400",
+            "labels_2": "ff",
+            "pump_2": "none",
+            "key_3": "milk",
+            "name_3": "Body milk",
+            "note_3": "Light and quick, never sticky. 300 ml.",
+            "size_3": "300 ml",
+            "price_3": "2000",
+            "labels_3": "new,ff",
+            "scene": "shopify://shop_images/b-very-dry-45.jpg",
+            "image_1": "shopify://shop_images/c-rich.jpg",
+            "image_2": "shopify://shop_images/c-cream.jpg",
+            "image_3": "shopify://shop_images/c-body-milk.jpg"
+          }
+        },
+        "set_3": {
+          "type": "set",
+          "settings": {
+            "name": "Little ones",
+            "note": "Ages 1 and up, fragrance-free.",
+            "pick_label": "Pick both",
+            "start": false,
+            "scene_alt": "Little lotion and Oat bar on stone and linen",
+            "key_1": "little",
+            "name_1": "Little lotion",
+            "note_1": "Soft oat lotion for after the bath. 150 ml.",
+            "size_1": "150 ml",
+            "price_1": "1400",
+            "labels_1": "new,ff",
+            "pump_1": "none",
+            "key_2": "bar",
+            "name_2": "Oat bar",
+            "note_2": "Oat milk soap for face and body. 120 g.",
+            "size_2": "120 g",
+            "price_2": "900",
+            "labels_2": "best,ff",
+            "pump_2": "none",
+            "scene": "shopify://shop_images/s-little-set.jpg",
+            "image_1": "shopify://shop_images/c-little-lotion.jpg",
+            "image_2": "shopify://shop_images/c-oat-bar.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "set_1",
+        "set_2",
+        "set_3"
+      ]
+    },
+    "scrolltext": {
+      "type": "blko-lv3-scrolltext",
+      "settings": {
+        "label": "What every bottle promises",
+        "sr_text": "Fragrance-free. Ten ingredients. Soft foam. pH 5.5. Made with oat.",
+        "link_label": "Read all ten ingredients",
+        "speed": 42,
+        "row1_dir": "-1",
+        "row2_dir": "1",
+        "chip_a": "shopify://shop_images/u-1508759073847-9ca702cec7d2.jpg",
+        "chip_b": "shopify://shop_images/u-1586810504230-09dab6b8e01b.jpg"
+      },
+      "blocks": {
+        "word_1": {
+          "type": "word",
+          "settings": {
+            "text": "Fragrance-free",
+            "row": "1",
+            "style": "solid",
+            "chip": true
+          }
+        },
+        "word_2": {
+          "type": "word",
+          "settings": {
+            "text": "Ten ingredients",
+            "row": "1",
+            "style": "line",
+            "chip": true
+          }
+        },
+        "word_3": {
+          "type": "word",
+          "settings": {
+            "text": "Soft foam",
+            "row": "1",
+            "style": "solid",
+            "chip": true
+          }
+        },
+        "word_4": {
+          "type": "word",
+          "settings": {
+            "text": "pH 5.5",
+            "row": "2",
+            "style": "line",
+            "chip": true
+          }
+        },
+        "word_5": {
+          "type": "word",
+          "settings": {
+            "text": "Made with oat",
+            "row": "2",
+            "style": "solid",
+            "chip": true
+          }
+        },
+        "word_6": {
+          "type": "word",
+          "settings": {
+            "text": "Fragrance-free",
+            "row": "2",
+            "style": "line",
+            "chip": true
+          }
+        }
+      },
+      "block_order": [
+        "word_1",
+        "word_2",
+        "word_3",
+        "word_4",
+        "word_5",
+        "word_6"
+      ]
+    },
+    "grid": {
+      "type": "blko-lv3-grid",
+      "settings": {
+        "heading_1": "Eight products, one",
+        "heading_2": "<em>short</em> list.",
+        "anchor": "all",
+        "filter_label": "Filter products",
+        "all_label": "All",
+        "count_one": "[n] product",
+        "count_many": "[n] products",
+        "quick_label": "Quick view",
+        "add_feature": "Add, [price]",
+        "add_aria": "Add [name]",
+        "label_best": "Best seller",
+        "label_ff": "Fragrance-free",
+        "label_new": "New",
+        "label_sale": "Sale"
+      },
+      "blocks": {
+        "filter_ff": {
+          "type": "filter",
+          "settings": {
+            "label": "Fragrance-free",
+            "tag": "ff"
+          }
+        },
+        "filter_kids": {
+          "type": "filter",
+          "settings": {
+            "label": "Kids",
+            "tag": "kids"
+          }
+        },
+        "filter_dry": {
+          "type": "filter",
+          "settings": {
+            "label": "Very dry",
+            "tag": "dry"
+          }
+        },
+        "product_calm": {
+          "type": "product",
+          "settings": {
+            "key": "calm",
+            "card": "feat",
+            "tags": "ff",
+            "labels": "best,ff",
+            "line": "Fragrance-free. 10 ingredients. For everyday, eczema-prone skin.",
+            "image_alt": "Calm wash, 400 ml clear bottle with a moss pump",
+            "hover_zoom": false,
+            "hover_focus": "50% 50%",
+            "name": "Calm wash",
+            "size": "400 ml",
+            "price": "1800",
+            "quick_line": "Everyday, eczema-prone skin. Colloidal oat and glycerin.",
+            "ingredients": "Water, glycerin, coco-glucoside, decyl glucoside, colloidal oat, shea butter, sunflower seed oil, xanthan gum, citric acid, sodium benzoate. pH 5.5.",
+            "image": "shopify://shop_images/t-calm.jpg",
+            "hover_image": "shopify://shop_images/h-calm.jpg"
+          }
+        },
+        "product_rich": {
+          "type": "product",
+          "settings": {
+            "key": "rich",
+            "card": "regular",
+            "tags": "ff dry",
+            "labels": "ff",
+            "line": "Very dry or winter skin.",
+            "image_alt": "Rich wash, 400 ml deep green bottle",
+            "hover_zoom": false,
+            "hover_focus": "50% 50%",
+            "name": "Rich wash",
+            "size": "400 ml",
+            "price": "2000",
+            "quick_line": "Very dry or winter skin. Thicker, almost a lotion.",
+            "ingredients": "Calm wash plus extra shea butter and oat oil. Fragrance-free. pH 5.5.",
+            "image": "shopify://shop_images/c-rich.jpg",
+            "hover_image": "shopify://shop_images/h-rich.jpg"
+          }
+        },
+        "product_chamomile": {
+          "type": "product",
+          "settings": {
+            "key": "chamomile",
+            "card": "regular",
+            "tags": "",
+            "labels": "",
+            "line": "Our only scent: 0.2% chamomile oil.",
+            "image_alt": "Chamomile wash, 400 ml clear bottle with an ochre pump",
+            "hover_zoom": false,
+            "hover_focus": "50% 50%",
+            "name": "Chamomile wash",
+            "size": "400 ml",
+            "price": "2000",
+            "quick_line": "Our only scented wash: 0.2% chamomile oil, allergens listed.",
+            "ingredients": "Calm wash plus chamomile flower oil (0.2%). Allergens: bisabolol. pH 5.5.",
+            "image": "shopify://shop_images/t-chamomile.jpg",
+            "hover_image": "shopify://shop_images/h-chamomile.jpg"
+          }
+        },
+        "product_lotion": {
+          "type": "product",
+          "settings": {
+            "key": "lotion",
+            "card": "regular",
+            "tags": "ff",
+            "labels": "ff",
+            "line": "Light lotion for damp skin.",
+            "image_alt": "Calm lotion, 250 ml oat bottle with a moss pump",
+            "hover_zoom": false,
+            "hover_focus": "50% 50%",
+            "name": "Calm lotion",
+            "size": "250 ml",
+            "price": "2200",
+            "quick_line": "Light lotion for damp skin, straight after the wash.",
+            "ingredients": "Water, glycerin, shea butter, colloidal oat, squalane, ceramide NP, cetearyl alcohol, xanthan gum.",
+            "image": "shopify://shop_images/c-lotion.jpg",
+            "hover_image": "shopify://shop_images/u-1603401712778-ab0575182f12.jpg"
+          }
+        },
+        "product_cream": {
+          "type": "product",
+          "settings": {
+            "key": "cream",
+            "card": "regular",
+            "tags": "ff dry",
+            "labels": "ff",
+            "line": "For shins, elbows and hands.",
+            "image_alt": "Rich cream, 200 ml oat jar with a moss lid",
+            "hover_zoom": true,
+            "hover_focus": "62% 42%",
+            "name": "Rich cream",
+            "size": "200 ml",
+            "price": "2400",
+            "quick_line": "Thick cream for shins, elbows and hands.",
+            "ingredients": "Shea butter, glycerin, oat oil, ceramide NP, squalane, beeswax-free.",
+            "image": "shopify://shop_images/c-cream.jpg",
+            "hover_image": "shopify://shop_images/u-1693004926638-d2e47d705229.jpg"
+          }
+        },
+        "product_milk": {
+          "type": "product",
+          "settings": {
+            "key": "milk",
+            "card": "regular",
+            "tags": "ff dry",
+            "labels": "new,ff",
+            "line": "Light and quick for dry skin.",
+            "image_alt": "Body milk, 300 ml stone bottle with a moss cap",
+            "hover_zoom": false,
+            "hover_focus": "50% 50%",
+            "name": "Body milk",
+            "size": "300 ml",
+            "price": "2000",
+            "quick_line": "Light and quick for dry skin. Sinks in fast, never sticky.",
+            "ingredients": "Water, glycerin, colloidal oat, sunflower seed oil, squalane, cetearyl alcohol, xanthan gum, sodium benzoate.",
+            "image": "shopify://shop_images/c-body-milk.jpg",
+            "hover_image": "shopify://shop_images/h-milk.jpg"
+          }
+        },
+        "product_little": {
+          "type": "product",
+          "settings": {
+            "key": "little",
+            "card": "regular",
+            "tags": "ff kids",
+            "labels": "new,ff",
+            "line": "Oat lotion for ages 1 and up.",
+            "image_alt": "Little lotion, 150 ml sage squeeze tube",
+            "hover_zoom": false,
+            "hover_focus": "50% 50%",
+            "name": "Little lotion",
+            "size": "150 ml",
+            "price": "1400",
+            "quick_line": "Soft, light oat lotion for ages 1 and up. Fragrance-free.",
+            "ingredients": "Water, glycerin, colloidal oat, calendula oil, shea butter, cetearyl alcohol, xanthan gum, sodium benzoate.",
+            "image": "shopify://shop_images/c-little-lotion.jpg",
+            "hover_image": "shopify://shop_images/h-little.jpg"
+          }
+        },
+        "product_bar": {
+          "type": "product",
+          "settings": {
+            "key": "bar",
+            "card": "wide",
+            "tags": "ff kids",
+            "labels": "best,ff",
+            "line": "Oat milk soap for face and body. Rich lather that rinses soft. The easiest way to start.",
+            "image_alt": "Oat bar, 120 g soap with its moss carton",
+            "hover_zoom": false,
+            "hover_focus": "50% 50%",
+            "name": "Oat bar",
+            "size": "120 g",
+            "price": "900",
+            "quick_line": "Oat milk soap bar for face and body. Rich lather that rinses soft.",
+            "ingredients": "Sodium olivate, sodium cocoate, oat milk, colloidal oat, shea butter, glycerin.",
+            "image": "shopify://shop_images/c-oat-bar-wide.jpg",
+            "hover_image": "shopify://shop_images/h-bar.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "filter_ff",
+        "filter_kids",
+        "filter_dry",
+        "product_calm",
+        "product_rich",
+        "product_chamomile",
+        "product_lotion",
+        "product_cream",
+        "product_milk",
+        "product_little",
+        "product_bar"
+      ]
+    },
+    "routine": {
+      "type": "blko-lv3-routine",
+      "settings": {
+        "anchor": "routine",
+        "heading_1": "The after-shower",
+        "heading_2": "<em>routine.</em>",
+        "lead": "Wash, pat dry, then lotion while skin is still damp.",
+        "steps_label": "Routine steps",
+        "discount": 20,
+        "save_text": "Save [discount]%",
+        "total_label": "Total",
+        "button_label": "Add all to bag",
+        "fine_text": "[count] items at the set price, each its own line in your bag.",
+        "note_text": "Routine price, [discount]% off [price]",
+        "photo_alt": "A woman in a towel turban smoothing lotion onto her shoulder after a shower",
+        "countdown_mode": "weekly",
+        "countdown_text": "Set price ends Sunday, 11:59 pm",
+        "end_weekday": "0",
+        "end_hour": 23,
+        "end_minute": 59,
+        "unit_days": "days",
+        "unit_hours": "hours",
+        "unit_min": "min",
+        "unit_sec": "sec",
+        "photo": "shopify://shop_images/u-1702312687180-617eeeea9228.jpg"
+      },
+      "blocks": {
+        "step-wash": {
+          "type": "step",
+          "settings": {
+            "title": "Wash",
+            "text": "Cleans without the tight, squeaky feel.",
+            "mode": "choose",
+            "select_label": "Choose your wash",
+            "addon_label": "Add the Oat bar, 120 g",
+            "addon_checked": false,
+            "o1_key": "calm",
+            "o1_label": "Calm wash, 400 ml",
+            "o1_name": "Calm wash",
+            "o1_size": "400 ml",
+            "o1_price": "1800",
+            "o1_line": "Everyday, eczema-prone skin. Colloidal oat and glycerin.",
+            "o1_labels": "best,ff",
+            "o2_key": "rich",
+            "o2_label": "Rich wash, 400 ml",
+            "o2_name": "Rich wash",
+            "o2_size": "400 ml",
+            "o2_price": "2000",
+            "o2_line": "Very dry or winter skin. Thicker, almost a lotion.",
+            "o2_labels": "ff",
+            "o3_key": "chamomile",
+            "o3_label": "Chamomile wash, 400 ml",
+            "o3_name": "Chamomile wash",
+            "o3_size": "400 ml",
+            "o3_price": "2000",
+            "o3_line": "Our only scented wash: 0.2% chamomile oil, allergens listed.",
+            "o1_image": "shopify://shop_images/t-calm.jpg",
+            "o2_image": "shopify://shop_images/c-rich.jpg",
+            "o3_image": "shopify://shop_images/t-chamomile.jpg"
+          }
+        },
+        "step-moist": {
+          "type": "step",
+          "settings": {
+            "title": "Moisturise",
+            "text": "Holds water in while skin is damp.",
+            "mode": "choose",
+            "select_label": "Choose your moisturiser",
+            "addon_label": "Add the Oat bar, 120 g",
+            "addon_checked": false,
+            "o1_key": "lotion",
+            "o1_label": "Calm lotion, 250 ml",
+            "o1_name": "Calm lotion",
+            "o1_size": "250 ml",
+            "o1_price": "2200",
+            "o1_line": "Light lotion for damp skin, straight after the wash.",
+            "o1_labels": "ff",
+            "o2_key": "milk",
+            "o2_label": "Body milk, 300 ml",
+            "o2_name": "Body milk",
+            "o2_size": "300 ml",
+            "o2_price": "2000",
+            "o2_line": "Light and quick for dry skin. Sinks in fast, never sticky.",
+            "o2_labels": "new,ff",
+            "o3_key": "cream",
+            "o3_label": "Rich cream, 200 ml",
+            "o3_name": "Rich cream",
+            "o3_size": "200 ml",
+            "o3_price": "2400",
+            "o3_line": "Thick cream for shins, elbows and hands.",
+            "o3_labels": "ff",
+            "o1_image": "shopify://shop_images/c-lotion.jpg",
+            "o2_image": "shopify://shop_images/c-body-milk.jpg",
+            "o3_image": "shopify://shop_images/c-cream.jpg"
+          }
+        },
+        "step-top": {
+          "type": "step",
+          "settings": {
+            "title": "Face and hands",
+            "text": "An oat milk soap bar for the sink, rinses soft.",
+            "mode": "addon",
+            "select_label": "Choose your wash",
+            "addon_label": "Add the Oat bar, 120 g",
+            "addon_checked": false,
+            "o1_key": "bar",
+            "o1_label": "Oat bar, 120 g",
+            "o1_name": "Oat bar",
+            "o1_size": "120 g",
+            "o1_price": "900",
+            "o1_line": "Oat milk soap bar for face and body. Rich lather that rinses soft.",
+            "o1_labels": "best,ff",
+            "o2_key": "rich",
+            "o2_label": "Rich wash, 400 ml",
+            "o2_name": "Rich wash",
+            "o2_size": "400 ml",
+            "o2_price": "2000",
+            "o2_line": "Very dry or winter skin. Thicker, almost a lotion.",
+            "o2_labels": "ff",
+            "o3_key": "chamomile",
+            "o3_label": "Chamomile wash, 400 ml",
+            "o3_name": "Chamomile wash",
+            "o3_size": "400 ml",
+            "o3_price": "2000",
+            "o3_line": "Our only scented wash: 0.2% chamomile oil, allergens listed.",
+            "o1_image": "shopify://shop_images/c-oat-bar.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "step-wash",
+        "step-moist",
+        "step-top"
+      ]
+    },
+    "hotspots": {
+      "type": "blko-lv3-hotspots",
+      "settings": {
+        "anchor": "after-shower",
+        "label": "Shop the after-shower routine from a photo",
+        "image_alt": "Sitting on the bed after a shower, pouring lotion into an open palm",
+        "heading_1": "Shop the",
+        "heading_2": "<em>after.</em>",
+        "text": "Wash, pat dry, then moisturise while skin is still damp.",
+        "panel_title": "In this routine",
+        "panel_label": "Products in this photo",
+        "track_label": "Product slider",
+        "prev_label": "Previous product",
+        "next_label": "Next product",
+        "add_label": "Add",
+        "add_aria": "Add [name]",
+        "quick_aria": "Quick view [name]",
+        "pin_aria": "[name]: show in the list",
+        "image": "shopify://shop_images/u-1633526543913-d30e3c230d1f.jpg"
+      },
+      "blocks": {
+        "pin-rich": {
+          "type": "pin",
+          "settings": {
+            "x": 57,
+            "y": 78,
+            "side": "right",
+            "key": "rich",
+            "desc": "Thicker, for very dry skin.",
+            "size": "400 ml",
+            "name": "Rich wash",
+            "price": "2000",
+            "line": "Very dry or winter skin. Thicker, almost a lotion.",
+            "labels": "ff",
+            "image": "shopify://shop_images/c-rich.jpg"
+          }
+        },
+        "pin-lotion": {
+          "type": "pin",
+          "settings": {
+            "x": 54,
+            "y": 17,
+            "side": "right",
+            "key": "lotion",
+            "desc": "Light, for damp skin.",
+            "size": "250 ml",
+            "name": "Calm lotion",
+            "price": "2200",
+            "line": "Light lotion for damp skin, straight after the wash.",
+            "labels": "ff",
+            "image": "shopify://shop_images/c-lotion.jpg"
+          }
+        },
+        "pin-cream": {
+          "type": "pin",
+          "settings": {
+            "x": 28,
+            "y": 50,
+            "side": "left",
+            "key": "cream",
+            "desc": "For shins, elbows and hands.",
+            "size": "200 ml",
+            "name": "Rich cream",
+            "price": "2400",
+            "line": "Thick cream for shins, elbows and hands.",
+            "labels": "ff",
+            "image": "shopify://shop_images/c-cream.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "pin-rich",
+        "pin-lotion",
+        "pin-cream"
+      ]
+    },
+    "compare": {
+      "type": "blko-lv3-compare",
+      "settings": {
+        "anchor": "compare",
+        "heading_1": "Which wash for",
+        "heading_2": "<em>your</em> skin?",
+        "ask": "My skin is",
+        "scent_label": "Scent",
+        "feel_label": "Feel",
+        "add_label": "Add",
+        "add_aria": "Add [name]"
+      },
+      "blocks": {
+        "card-calm": {
+          "type": "card",
+          "settings": {
+            "key": "calm",
+            "chip": "Eczema-prone",
+            "best_for": "Best for eczema-prone skin and everyday showers.",
+            "scent": "None",
+            "feel": "Milky, soft foam",
+            "image_alt": "Calm wash, clear bottle with a moss pump",
+            "name": "Calm wash",
+            "size": "400 ml",
+            "price": "1800",
+            "line": "Everyday, eczema-prone skin. Colloidal oat and glycerin.",
+            "labels": "best,ff",
+            "image": "shopify://shop_images/t-calm.jpg"
+          }
+        },
+        "card-rich": {
+          "type": "card",
+          "settings": {
+            "key": "rich",
+            "chip": "Very dry",
+            "best_for": "Best for very dry or winter skin that feels tight.",
+            "scent": "None",
+            "feel": "Thick, almost a lotion",
+            "image_alt": "Rich wash, deep green bottle",
+            "name": "Rich wash",
+            "size": "400 ml",
+            "price": "2000",
+            "line": "Very dry or winter skin. Thicker, almost a lotion.",
+            "labels": "ff",
+            "image": "shopify://shop_images/c-rich.jpg"
+          }
+        },
+        "card-chamomile": {
+          "type": "card",
+          "settings": {
+            "key": "chamomile",
+            "chip": "Fine with a light scent",
+            "best_for": "Calm wash with a light scent, for skin that's fine with one.",
+            "scent": "Light chamomile, 0.2%",
+            "feel": "Milky, soft foam",
+            "image_alt": "Chamomile wash, clear bottle with an ochre pump",
+            "name": "Chamomile wash",
+            "size": "400 ml",
+            "price": "2000",
+            "line": "Our only scented wash: 0.2% chamomile oil, allergens listed.",
+            "labels": "",
+            "image": "shopify://shop_images/t-chamomile.jpg"
+          }
+        },
+        "card-soft": {
+          "type": "card",
+          "settings": {
+            "key": "soft",
+            "chip": "Sensitive",
+            "best_for": "Best for sensitive skin that reacts to almost everything.",
+            "scent": "None",
+            "feel": "Light, low foam",
+            "image_alt": "Soft wash, terracotta bottle",
+            "name": "Soft wash",
+            "size": "400 ml",
+            "price": "1800",
+            "line": "Our gentlest wash for sensitive skin. Low foam, rinses clean.",
+            "labels": "new,ff",
+            "image": "shopify://shop_images/c-soft.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "card-calm",
+        "card-rich",
+        "card-chamomile",
+        "card-soft"
+      ]
+    },
+    "collage": {
+      "type": "blko-lv3-collage",
+      "settings": {
+        "anchor": "by-skin",
+        "label": "Shop by skin",
+        "heading_1": "Pick by the skin,",
+        "heading_2": "not the <em>scent.</em>",
+        "note": "Everything is fragrance-free except Chamomile wash, and that one says so on the front.",
+        "note_link_label": "Compare all four",
+        "fallback_anchor": "compare"
+      },
+      "blocks": {
+        "tile-little": {
           "type": "tile",
           "settings": {
-            "url": "#bundles",
-            "image_alt": "Six bars of soap lined up on a wooden shelf",
-            "label": "Bundles"
+            "image_alt": "A toddler sitting in a kitchen sink bath, reaching for the tap",
+            "title": "Little lotion, ages 1 and up",
+            "link_label": "Shop Little lotion",
+            "quick_view": true,
+            "key": "little",
+            "name": "Little lotion",
+            "size": "150 ml",
+            "price": "1400",
+            "line": "Soft, light oat lotion for ages 1 and up. Fragrance-free.",
+            "labels": "new,ff",
+            "image": "shopify://shop_images/u-1609220361664-a5cd02bc7345.jpg"
           }
         },
-        "block-10": {
+        "tile-calm": {
           "type": "tile",
           "settings": {
-            "url": "#bar-soap",
-            "image_alt": "A stack of plain bar soaps"
+            "image_alt": "Fingertips resting on bare neck and collarbone",
+            "title": "For skin that flares",
+            "link_label": "Shop Calm wash",
+            "quick_view": true,
+            "key": "calm",
+            "name": "Calm wash",
+            "size": "400 ml",
+            "price": "1800",
+            "line": "Everyday, eczema-prone skin. Colloidal oat and glycerin.",
+            "labels": "best,ff",
+            "image": "shopify://shop_images/u-1561228987-8e7379dde477.jpg"
+          }
+        },
+        "tile-rich": {
+          "type": "tile",
+          "settings": {
+            "image_alt": "Two feet resting on the rim of a bath full of soft foam",
+            "title": "Winter-dry shins",
+            "link_label": "Shop Rich wash",
+            "quick_view": true,
+            "key": "rich",
+            "name": "Rich wash",
+            "size": "400 ml",
+            "price": "2000",
+            "line": "Very dry or winter skin. Thicker, almost a lotion.",
+            "labels": "ff",
+            "image": "shopify://shop_images/u-1620898701302-d4e8a9fd22e0.jpg"
           }
         }
       },
       "block_order": [
-        "block-1",
-        "block-2",
-        "block-3",
-        "block-4",
-        "block-5",
-        "block-6",
-        "block-7",
-        "block-8",
-        "block-9",
-        "block-10"
+        "tile-little",
+        "tile-calm",
+        "tile-rich"
       ]
     },
-    "hero-campaign": {
-      "type": "blko-hero-campaign",
+    "reels": {
+      "type": "blko-lv3-reels",
       "settings": {
-        "image_alt": "A hiker on a ridge at sunrise with a pack on his back",
-        "eyebrow": "Limited drop",
-        "heading": "Harvest Smoke is back.",
-        "text": "Charred maple, tobacco leaf and a dash of cinnamon, pressed into a bar that will not be around next spring.",
-        "button_label": "Grab the bar"
-      }
-    },
-    "tabbed-product-grid": {
-      "type": "blko-tabbed-product-grid",
-      "settings": {
-        "eyebrow": "What's hot",
-        "heading": "The bars everyone grabs first"
+        "heading_1": "Real showers,",
+        "heading_2": "<em>real</em> skin.",
+        "text": "How people use it, in under a minute. Tap a product to see what's in it.",
+        "start": 2,
+        "quick_label": "Quick view",
+        "prev_label": "Previous clip",
+        "next_label": "Next clip",
+        "label": "Customer clips",
+        "rail_label": "Clips",
+        "anchor": "reels"
       },
       "blocks": {
-        "block-1": {
-          "type": "tab",
-          "settings": {}
-        },
-        "block-2": {
-          "type": "tab",
+        "reels_reel_1": {
+          "type": "reel",
           "settings": {
-            "key": "new",
-            "label": "Limited drops"
+            "warm": false,
+            "caption": "Robe on, skin still damp",
+            "key": "rich",
+            "name": "Rich wash",
+            "size": "400 ml",
+            "price": "2000",
+            "line": "Very dry or winter skin. Thicker, almost a lotion.",
+            "labels": "ff",
+            "poster": "shopify://shop_images/reel-1.jpg",
+            "video_src": "reel-1.mp4",
+            "thumb": "shopify://shop_images/c-rich.jpg"
+          }
+        },
+        "reels_reel_2": {
+          "type": "reel",
+          "settings": {
+            "warm": true,
+            "caption": "Soft foam, rinsed in seconds",
+            "key": "calm",
+            "name": "Calm wash",
+            "size": "400 ml",
+            "price": "1800",
+            "line": "Everyday, eczema-prone skin. Colloidal oat and glycerin.",
+            "labels": "best,ff",
+            "poster": "shopify://shop_images/reel-2.jpg",
+            "video_src": "reel-2.mp4",
+            "thumb": "shopify://shop_images/t-calm.jpg"
+          }
+        },
+        "reels_reel_3": {
+          "type": "reel",
+          "settings": {
+            "warm": false,
+            "caption": "Pat dry, then moisturise",
+            "key": "cream",
+            "name": "Rich cream",
+            "size": "200 ml",
+            "price": "2400",
+            "line": "Thick cream for shins, elbows and hands.",
+            "labels": "ff",
+            "poster": "shopify://shop_images/reel-3.jpg",
+            "video_src": "reel-3.mp4",
+            "thumb": "shopify://shop_images/c-cream.jpg"
+          }
+        },
+        "reels_reel_4": {
+          "type": "reel",
+          "settings": {
+            "warm": false,
+            "caption": "Lotion between damp hands",
+            "key": "lotion",
+            "name": "Calm lotion",
+            "size": "250 ml",
+            "price": "2200",
+            "line": "Light lotion for damp skin, straight after the wash.",
+            "labels": "ff",
+            "poster": "shopify://shop_images/reel-4.jpg",
+            "video_src": "reel-4.mp4",
+            "thumb": "shopify://shop_images/c-lotion.jpg"
           }
         }
       },
       "block_order": [
-        "block-1",
-        "block-2"
+        "reels_reel_1",
+        "reels_reel_2",
+        "reels_reel_3",
+        "reels_reel_4"
       ]
     },
-    "feature-driver": {
-      "type": "blko-feature-driver",
+    "founder": {
+      "type": "blko-lv3-founder",
       "settings": {
-        "image_alt": "A bearded man laughing in a locker room",
-        "eyebrow": "Nine-week challenge",
-        "heading": "Clean streak: win cash for showing up.",
-        "text": "Join a weekly run of silly, sweaty, shower-friendly challenges. Post your entry, rack up points and chase a shared prize pool.",
-        "button_label": "Count me in"
-      }
-    },
-    "lather-scent-lineup": {
-      "type": "blko-lather-scent-lineup",
-      "settings": {
-        "eyebrow": "Five families, one for every nose",
-        "heading": "Find your vibe",
-        "all_label": "Every scent"
+        "heading_1": "We kept crossing",
+        "heading_2": "things <em>out.</em>",
+        "story": "Lather began in a hard-water town, where every body wash in the shop left a child's arms red by bedtime. We read the labels, crossed out what hurt, and kept oat, shea, glycerin, sugar cleansers and water.",
+        "list_label": "Crossed out of every wash",
+        "name": "Mara Ellis",
+        "role": ", founder",
+        "link_label": "Read our story",
+        "label": "Why we started",
+        "anchor": "founder",
+        "image": "shopify://shop_images/u-1770294759101-fae1377d4d34.jpg"
       },
       "blocks": {
-        "block-1": {
-          "type": "family",
-          "settings": {}
-        },
-        "block-2": {
-          "type": "family",
+        "founder_crossed_1": {
+          "type": "crossed",
           "settings": {
-            "label": "Fresh & Clean"
+            "text": "Fragrance"
           }
         },
-        "block-3": {
-          "type": "family",
+        "founder_crossed_2": {
+          "type": "crossed",
           "settings": {
-            "label": "Warm & Rich"
+            "text": "Dyes"
           }
         },
-        "block-4": {
-          "type": "family",
+        "founder_crossed_3": {
+          "type": "crossed",
           "settings": {
-            "label": "Tropical & Fruity"
+            "text": "SLS"
           }
         },
-        "block-5": {
-          "type": "family",
+        "founder_crossed_4": {
+          "type": "crossed",
           "settings": {
-            "label": "Green & Aromatic"
-          }
-        },
-        "block-6": {
-          "type": "scent",
-          "settings": {
-            "note": "Cedar, suede, soft musk",
-            "price": "$7.00",
-            "url": "#bar-soap"
-          }
-        },
-        "block-7": {
-          "type": "scent",
-          "settings": {
-            "name": "Birch & Leather",
-            "note": "Birch bark, saddle leather",
-            "price": "$7.00",
-            "url": "#bar-soap"
-          }
-        },
-        "block-8": {
-          "type": "scent",
-          "settings": {
-            "family": "Fresh & Clean",
-            "name": "Glacier Mint",
-            "note": "Mint, sea salt, cold rain",
-            "price": "$7.00",
-            "url": "#bar-soap"
-          }
-        },
-        "block-9": {
-          "type": "scent",
-          "settings": {
-            "family": "Fresh & Clean",
-            "name": "Citrus Sprint",
-            "note": "Grapefruit zest, lime, mint",
-            "price": "$7.00",
-            "url": "#bar-soap"
-          }
-        },
-        "block-10": {
-          "type": "scent",
-          "settings": {
-            "family": "Warm & Rich",
-            "name": "Campfire Amber",
-            "note": "Amber, vanilla bean, charred oak",
-            "price": "$7.00",
-            "url": "#bar-soap"
-          }
-        },
-        "block-11": {
-          "type": "scent",
-          "settings": {
-            "family": "Warm & Rich",
-            "name": "Toasted Oak",
-            "note": "Barrel char, caramel, clove",
-            "price": "$7.00",
-            "url": "#bar-soap"
-          }
-        },
-        "block-12": {
-          "type": "scent",
-          "settings": {
-            "family": "Tropical & Fruity",
-            "name": "Mango Sunrise",
-            "note": "Ripe mango, papaya, coconut milk",
-            "price": "$7.00",
-            "url": "#bar-soap"
-          }
-        },
-        "block-13": {
-          "type": "scent",
-          "settings": {
-            "family": "Tropical & Fruity",
-            "name": "Coconut Surf",
-            "note": "Coconut water, driftwood, lime",
-            "price": "$7.00",
-            "url": "#bar-soap"
-          }
-        },
-        "block-14": {
-          "type": "scent",
-          "settings": {
-            "family": "Green & Aromatic",
-            "name": "Pine Ridge",
-            "note": "Pine needle, basil, moss",
-            "price": "$7.00",
-            "url": "#bar-soap"
-          }
-        },
-        "block-15": {
-          "type": "scent",
-          "settings": {
-            "family": "Green & Aromatic",
-            "name": "Sage & Basil",
-            "note": "Dry sage, basil leaf, juniper",
-            "price": "$7.00",
-            "url": "#bar-soap"
+            "text": "Essential oil blend"
           }
         }
       },
       "block_order": [
-        "block-1",
-        "block-2",
-        "block-3",
-        "block-4",
-        "block-5",
-        "block-6",
-        "block-7",
-        "block-8",
-        "block-9",
-        "block-10",
-        "block-11",
-        "block-12",
-        "block-13",
-        "block-14",
-        "block-15"
+        "founder_crossed_1",
+        "founder_crossed_2",
+        "founder_crossed_3",
+        "founder_crossed_4"
       ]
     },
-    "lather-quiz-banner": {
-      "type": "blko-lather-quiz-banner",
+    "reviews": {
+      "type": "blko-lv3-reviews",
       "settings": {
-        "eyebrow": "Five questions, no judgment",
-        "heading": "Cheaper than therapy, and it tells you what you smell like.",
-        "text": "Answer a few questions about how you spend your weekends and we will match you to a scent family and a starter bundle, with 20% off.",
-        "button_label": "Start the quiz"
-      }
-    },
-    "lather-benefit-trio": {
-      "type": "blko-lather-benefit-trio",
-      "settings": {
-        "eyebrow": "What is in the bar",
-        "heading": "Three rules we do not bend"
+        "heading_1": "From skin",
+        "heading_2": "like <em>yours.</em>",
+        "rating": "4.7",
+        "count_text": "from 1,240 reviews",
+        "add_label": "Add",
+        "stars_label": "[n] out of 5 stars",
+        "tabs_label": "Choose a review",
+        "prev_label": "Previous review",
+        "next_label": "Next review",
+        "label": "Reviews",
+        "anchor": "reviews"
       },
       "blocks": {
-        "block-1": {
-          "type": "benefit",
+        "reviews_review_1": {
+          "type": "review",
           "settings": {
-            "title": "Natural origin",
-            "text": "Nearly every ingredient comes from plants and minerals, measured against an international naturalness standard."
+            "stars": 5,
+            "text": "First wash that doesn't leave my arms tight. No smell at all, which is the whole point.",
+            "name": "Hannah K.",
+            "detail": "Eczema-prone skin, using it for 6 months",
+            "tab_label": "Hannah K., eczema-prone skin",
+            "key": "calm",
+            "name_product": "Calm wash",
+            "size": "400 ml",
+            "price": "1800",
+            "line": "Everyday, eczema-prone skin. Colloidal oat and glycerin.",
+            "labels": "best,ff",
+            "photo": "shopify://shop_images/u-1609357912334-e96886c0212b.jpg",
+            "thumb": "shopify://shop_images/t-calm.jpg"
           }
         },
-        "block-2": {
-          "type": "benefit",
+        "reviews_review_2": {
+          "type": "review",
           "settings": {
-            "icon": "flame",
-            "title": "A short no-go list",
-            "text": "A dozen ingredients never go in, from aluminum salts to synthetic dyes, and we publish every one."
+            "stars": 5,
+            "text": "My shins stopped itching by the second week. I put it on while I'm still damp.",
+            "name": "Nia R.",
+            "detail": "Very dry skin, using it for 3 months",
+            "tab_label": "Nia R., very dry skin",
+            "key": "cream",
+            "name_product": "Rich cream",
+            "size": "200 ml",
+            "price": "2400",
+            "line": "Thick cream for shins, elbows and hands.",
+            "labels": "ff",
+            "photo": "shopify://shop_images/u-1648203276014-20f97ba1f817.jpg",
+            "thumb": "shopify://shop_images/c-cream.jpg"
           }
         },
-        "block-3": {
-          "type": "benefit",
+        "reviews_review_3": {
+          "type": "review",
           "settings": {
-            "icon": "peak",
-            "title": "Built for guys",
-            "text": "Bigger bars, rougher grit, bolder scent and formulas tested on beards, chests and gym-bag hands."
+            "stars": 5,
+            "text": "Bath time used to end with red arms and crying. Now it's a little lotion after, and that's it.",
+            "name": "Dan P., parent of a 1-year-old",
+            "detail": "Dry skin, using it for 5 months",
+            "tab_label": "Dan P., parent",
+            "key": "little",
+            "name_product": "Little lotion",
+            "size": "150 ml",
+            "price": "1400",
+            "line": "Soft, light oat lotion for ages 1 and up. Fragrance-free.",
+            "labels": "new,ff",
+            "photo": "shopify://shop_images/u-1780329927263-b544c4c415fc.jpg",
+            "thumb": "shopify://shop_images/c-little-lotion.jpg"
+          }
+        },
+        "reviews_review_4": {
+          "type": "review",
+          "settings": {
+            "stars": 4,
+            "text": "I wanted a little scent without a flare. The chamomile is faint, and my skin stayed calm.",
+            "name": "Ama O.",
+            "detail": "Reactive skin, using it for 2 months",
+            "tab_label": "Ama O., reactive skin",
+            "key": "chamomile",
+            "name_product": "Chamomile wash",
+            "size": "400 ml",
+            "price": "2000",
+            "line": "Our only scented wash: 0.2% chamomile oil, allergens listed.",
+            "labels": "",
+            "photo": "shopify://shop_images/u-1609535895148-cf9f5c446290.jpg",
+            "thumb": "shopify://shop_images/t-chamomile.jpg"
           }
         }
       },
       "block_order": [
-        "block-1",
-        "block-2",
-        "block-3"
+        "reviews_review_1",
+        "reviews_review_2",
+        "reviews_review_3",
+        "reviews_review_4"
       ]
     },
-    "home-clips": {
-      "type": "blko-home-clips",
+    "faq": {
+      "type": "blko-lv3-faq",
       "settings": {
-        "heading": "The crowd has opinions"
+        "heading_1": "Questions, <em>answered.</em>",
+        "open_first": true,
+        "tip": "Pat dry, then moisturise within three minutes, while skin is still damp.",
+        "button_label": "Find your match",
+        "more_text": "Still unsure?",
+        "email_label": "Email us",
+        "email": "help@example.com",
+        "more_after": ", a person replies within a day.",
+        "label": "Questions",
+        "anchor": "faq",
+        "image": "shopify://shop_images/u-1616663717839-2fea42e1a1f6.jpg"
       },
       "blocks": {
-        "block-1": {
-          "type": "category",
+        "faq_question_1": {
+          "type": "question",
           "settings": {
-            "title": "Gym bag stress test",
-            "url": "#reviews"
+            "question": "Is it really fragrance-free?",
+            "answer": "<p>Everything except Chamomile wash has no fragrance and no masking scent. Chamomile wash has a light scent, and it says so on the front.</p>"
           }
         },
-        "block-2": {
-          "type": "category",
+        "faq_question_2": {
+          "type": "question",
           "settings": {
-            "title": "Camp shower review",
-            "url": "#reviews"
+            "question": "Can I use it on eczema-prone skin?",
+            "answer": "<p>Many people with eczema-prone skin use Calm wash every day. It's gentle, not a treatment: patch test on your inner arm for 48 hours first.</p>"
           }
         },
-        "block-3": {
-          "type": "category",
+        "faq_question_3": {
+          "type": "question",
           "settings": {
-            "title": "Beard day routine",
-            "url": "#reviews"
+            "question": "Is Little lotion OK under age 1?",
+            "answer": "<p>We made it for ages 1 and up. For a younger baby, ask your doctor first.</p>"
           }
         },
-        "block-4": {
-          "type": "category",
+        "faq_question_4": {
+          "type": "question",
           "settings": {
-            "title": "Unboxing the 10-pack",
-            "url": "#reviews"
+            "question": "How long does a bottle last?",
+            "answer": "<p>About 8 weeks of daily showers for one person (400 ml).</p>"
           }
         },
-        "block-5": {
-          "type": "category",
+        "faq_question_5": {
+          "type": "question",
           "settings": {
-            "title": "Swapping out the grocery-store bar",
-            "url": "#reviews"
+            "question": "Where should I start?",
+            "answer": "<p>Not sure where to start? Try the Oat bar, $9. It works on face and body and has no fragrance. If your skin likes it, move on to Calm wash.</p>"
+          }
+        },
+        "faq_question_6": {
+          "type": "question",
+          "settings": {
+            "question": "What if my skin reacts?",
+            "answer": "<p>Stop using it and email us a photo of the label. We refund your first bottle of any formula within 30 days, used or not.</p>"
           }
         }
       },
       "block_order": [
-        "block-1",
-        "block-2",
-        "block-3",
-        "block-4",
-        "block-5"
+        "faq_question_1",
+        "faq_question_2",
+        "faq_question_3",
+        "faq_question_4",
+        "faq_question_5",
+        "faq_question_6"
       ]
     },
-    "lather-subscribe-explainer": {
-      "type": "blko-lather-subscribe-explainer",
+    "social": {
+      "type": "blko-lv3-social",
       "settings": {
-        "eyebrow": "A habit, not a discount",
-        "heading": "Subscribe, save and stop thinking about it",
-        "button_label": "Build my box"
+        "heading_1": "Shared by <em>you.</em>",
+        "handle": "@lather.skin",
+        "tagline": "Tag us to be featured",
+        "button_label": "Follow",
+        "quick_label": "Quick view",
+        "label": "Customer photos",
+        "anchor": "social"
       },
       "blocks": {
-        "block-1": {
-          "type": "step",
+        "social_tile_1": {
+          "type": "tile",
           "settings": {
-            "title": "Every three months",
-            "text": "Your box ships on a quarterly rhythm. Edit the items or snooze it from your account whenever you like."
+            "width": 340,
+            "height": 250,
+            "key": "milk",
+            "name": "Body milk",
+            "size": "300 ml",
+            "price": "2000",
+            "line": "Light and quick for dry skin. Sinks in fast, never sticky.",
+            "labels": "new,ff",
+            "image": "shopify://shop_images/u-1760722974657-f64bce2f9cc5.jpg",
+            "thumb": "shopify://shop_images/c-body-milk.jpg"
           }
         },
-        "block-2": {
-          "type": "step",
+        "social_tile_2": {
+          "type": "tile",
           "settings": {
-            "number": "02",
-            "title": "Shipping is on us",
-            "text": "Every subscription order travels free, with no minimum to hit."
+            "width": 250,
+            "height": 360,
+            "key": "chamomile",
+            "name": "Chamomile wash",
+            "size": "400 ml",
+            "price": "2000",
+            "line": "Our only scented wash: 0.2% chamomile oil, allergens listed.",
+            "labels": "",
+            "image": "shopify://shop_images/u-1566446896748-6075a87760c1.jpg",
+            "thumb": "shopify://shop_images/t-chamomile.jpg"
           }
         },
-        "block-3": {
-          "type": "step",
+        "social_tile_3": {
+          "type": "tile",
           "settings": {
-            "number": "03",
-            "title": "First in line",
-            "text": "Subscribers hear about limited bars before anyone else and earn bonus points on their first renewal."
+            "width": 230,
+            "height": 290,
+            "key": "bar",
+            "name": "Oat bar",
+            "size": "120 g",
+            "price": "900",
+            "line": "Oat milk soap bar for face and body. Rich lather that rinses soft.",
+            "labels": "best,ff",
+            "image": "shopify://shop_images/u-1614373532018-92a75430a0da.jpg",
+            "thumb": "shopify://shop_images/c-oat-bar.jpg"
+          }
+        },
+        "social_tile_4": {
+          "type": "tile",
+          "settings": {
+            "width": 290,
+            "height": 400,
+            "key": "rich",
+            "name": "Rich wash",
+            "size": "400 ml",
+            "price": "2000",
+            "line": "Very dry or winter skin. Thicker, almost a lotion.",
+            "labels": "ff",
+            "image": "shopify://shop_images/u-1654781350550-0dc72ecb6fae.jpg",
+            "thumb": "shopify://shop_images/c-rich.jpg"
+          }
+        },
+        "social_tile_5": {
+          "type": "tile",
+          "settings": {
+            "width": 330,
+            "height": 230,
+            "key": "little",
+            "name": "Little lotion",
+            "size": "150 ml",
+            "price": "1400",
+            "line": "Soft, light oat lotion for ages 1 and up. Fragrance-free.",
+            "labels": "new,ff",
+            "image": "shopify://shop_images/u-1574421233376-06f2ccf017f7.jpg",
+            "thumb": "shopify://shop_images/c-little-lotion.jpg"
+          }
+        },
+        "social_tile_6": {
+          "type": "tile",
+          "settings": {
+            "width": 360,
+            "height": 270,
+            "key": "cream",
+            "name": "Rich cream",
+            "size": "200 ml",
+            "price": "2400",
+            "line": "Thick cream for shins, elbows and hands.",
+            "labels": "ff",
+            "image": "shopify://shop_images/u-1601065732058-029db52c86b4.jpg",
+            "thumb": "shopify://shop_images/c-cream.jpg"
+          }
+        },
+        "social_tile_7": {
+          "type": "tile",
+          "settings": {
+            "width": 250,
+            "height": 340,
+            "key": "lotion",
+            "name": "Calm lotion",
+            "size": "250 ml",
+            "price": "2200",
+            "line": "Light lotion for damp skin, straight after the wash.",
+            "labels": "ff",
+            "image": "shopify://shop_images/u-1561228987-8e7379dde477.jpg",
+            "thumb": "shopify://shop_images/c-lotion.jpg"
+          }
+        },
+        "social_tile_8": {
+          "type": "tile",
+          "settings": {
+            "width": 310,
+            "height": 300,
+            "key": "calm",
+            "name": "Calm wash",
+            "size": "400 ml",
+            "price": "1800",
+            "line": "Everyday, eczema-prone skin. Colloidal oat and glycerin.",
+            "labels": "best,ff",
+            "image": "shopify://shop_images/u-1581182800629-7d90925ad072.jpg",
+            "thumb": "shopify://shop_images/t-calm.jpg"
           }
         }
       },
       "block_order": [
-        "block-1",
-        "block-2",
-        "block-3"
+        "social_tile_1",
+        "social_tile_2",
+        "social_tile_3",
+        "social_tile_4",
+        "social_tile_5",
+        "social_tile_6",
+        "social_tile_7",
+        "social_tile_8"
       ]
-    },
-    "home-reviews": {
-      "type": "blko-home-reviews",
-      "settings": {
-        "kicker": "100,000+ five-star reviews",
-        "quote": "“I switched from the drugstore stuff and my wife asked what changed.”",
-        "author": "— Verified customer"
-      },
-      "blocks": {
-        "block-1": {
-          "type": "point",
-          "settings": {
-            "title": "Finally smells like a decision",
-            "text": "Cabin Cedar lasts longer than my coffee habit. — Marcus T."
-          }
-        },
-        "block-2": {
-          "type": "point",
-          "settings": {
-            "title": "Lather for days",
-            "text": "One bar, three weeks of daily use, zero soap scum. — Eli R."
-          }
-        },
-        "block-3": {
-          "type": "point",
-          "settings": {
-            "title": "Deodorant that behaves",
-            "text": "No white marks and no sting after shaving. — Dev P."
-          }
-        }
-      },
-      "block_order": [
-        "block-1",
-        "block-2",
-        "block-3"
-      ]
-    },
-    "commitments": {
-      "type": "blko-commitments",
-      "settings": {
-        "image_alt": "A hand holding a bar of soap over a sink",
-        "eyebrow": "The difference",
-        "heading": "Soap that earns its spot in the shower.",
-        "text": "We started in a garage with a pot, some oils and an itch to make something better than the stuff on the grocery shelf. The recipe is still short and the standards are still stubborn.",
-        "button_label": "Read our story"
-      }
-    },
-    "newsletter": {
-      "type": "blko-newsletter",
-      "settings": {
-        "eyebrow": "20% off your first order",
-        "heading": "Join the crew",
-        "message": "Drop dates, secret sales and the odd locker-room joke. Once a week, no spam.",
-        "button_label": "Get my code"
-      }
-    },
-    "home-collection-quick-view-modal": {
-      "type": "blko-home-collection-quick-view-modal",
-      "settings": {}
     }
   },
   "order": [
-    "home-collection-mega-menu",
-    "hero-campaign",
-    "tabbed-product-grid",
-    "feature-driver",
-    "lather-scent-lineup",
-    "lather-quiz-banner",
-    "lather-benefit-trio",
-    "home-clips",
-    "lather-subscribe-explainer",
-    "home-reviews",
-    "commitments",
-    "newsletter",
-    "home-collection-quick-view-modal"
+    "hero",
+    "highlight",
+    "featured",
+    "quiz",
+    "marquee",
+    "bundle",
+    "scrolltext",
+    "grid",
+    "routine",
+    "hotspots",
+    "compare",
+    "collage",
+    "reels",
+    "founder",
+    "reviews",
+    "faq",
+    "social"
   ]
 }

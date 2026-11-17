@@ -1,0 +1,25 @@
+/* Lather v3, 25 Commitments marquee: line icons instead of logos or dots; a static wrapped list without motion */
+.s-cmt{background:var(--raised);padding:34px 0 26px;overflow:hidden}
+.s-cmt .s-cmt__view{position:relative}
+.s-cmt .s-cmt__track{display:flex;flex-wrap:wrap;justify-content:center;gap:14px 40px;padding:0 var(--gut)}
+.s-cmt .s-cmt__list{display:contents;list-style:none;margin:0;padding:0}
+.s-cmt .s-cmt__list[aria-hidden="true"]{display:none}
+.s-cmt .s-cmt__item{display:inline-flex;align-items:center;gap:12px;font:500 clamp(17px,1.5vw,21px)/1 var(--f-body);letter-spacing:-.01em;color:var(--ink);white-space:nowrap}
+.s-cmt .s-cmt__item svg{width:28px;height:28px;flex:none;fill:none;stroke:var(--moss);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+html.motion .s-cmt .s-cmt__view{-webkit-mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+html.motion .s-cmt .s-cmt__track{flex-wrap:nowrap;justify-content:flex-start;width:max-content;gap:0;padding:0;animation:s-cmt-run var(--s-cmt-dur,48s) linear infinite}
+html.motion .s-cmt .s-cmt__list{display:flex;gap:56px;padding-right:56px}
+html.motion .s-cmt .s-cmt__view:hover .s-cmt__track,html.motion .s-cmt .s-cmt__view:focus-within .s-cmt__track{animation-play-state:paused}
+@keyframes s-cmt-run{to{transform:translateX(-50%)}}
+@media (max-width:760px){
+  .s-cmt{padding:26px 0 20px}
+  .s-cmt .s-cmt__track{justify-content:flex-start;gap:12px 24px}
+  html.motion .s-cmt .s-cmt__list{gap:36px;padding-right:36px}
+  html.motion .s-cmt .s-cmt__track{animation-duration:calc(var(--s-cmt-dur,48s) * .75)}
+}
+@media (prefers-reduced-motion:reduce){
+  html.motion .s-cmt .s-cmt__track{animation:none;flex-wrap:wrap;justify-content:center;width:auto;gap:14px 40px;padding:0 var(--gut)}
+  html.motion .s-cmt .s-cmt__list{display:contents}
+  html.motion .s-cmt .s-cmt__list[aria-hidden="true"]{display:none!important}
+  html.motion .s-cmt .s-cmt__view{-webkit-mask:none;mask:none}
+}

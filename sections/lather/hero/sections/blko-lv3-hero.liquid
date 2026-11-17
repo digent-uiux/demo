@@ -1,0 +1,148 @@
+{%- comment -%}
+  Lather v3, hero slideshow (parts/05-hero.html). Full-bleed photo slides that blur-cross-fade, one two-line headline
+  per slide, progress lines that drive a 7s autoplay (paused on hover, focus or a hidden tab), prev/next arrows.
+  The second button adds a product through window.LATHER (data-add). Slides are blocks.
+{%- endcomment -%}
+{{ 'blko-lv3-hero.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-hero.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+  assign slides = section.blocks | where: 'type', 'slide'
+  assign n = slides.size
+
+  if s.product != blank
+    assign p_key = s.product.handle
+    assign p_price = s.product.selected_or_first_available_variant.price
+  else
+    assign p_key = s.p_key | default: 'bar'
+    assign p_price = s.p_price | plus: 0
+  endif
+  assign p_money = p_price | money_without_trailing_zeros
+  assign cta2 = s.cta2_label | replace: '[price]', p_money
+  assign anchor = s.anchor | default: 'hero' | handleize
+-%}
+
+{%- render 'blko-lv3-product-data',
+  key: p_key,
+  product: s.product,
+  name: s.p_name,
+  size: s.p_size,
+  price: s.p_price,
+  line: s.p_line,
+  labels: s.p_labels,
+  ing: s.p_ing,
+  img: s.p_image
+-%}
+
+<section class="s-hero" id="{{ anchor }}" aria-roledescription="carousel" aria-label="{{ s.label | escape }}" data-lv3-hero>
+  <div class="s-hero__slides">
+    {%- for block in slides -%}
+      {%- assign b = block.settings -%}
+      {%- assign i = forloop.index0 -%}
+      <figure class="s-hero__slide{% if forloop.first %} is-on{% endif %}" data-i="{{ i }}" aria-roledescription="slide" aria-label="{{ forloop.index }} of {{ n }}"{% unless forloop.first %} aria-hidden="true"{% endunless %} {{ block.shopify_attributes }}>
+        {%- if b.image != blank -%}
+          {%- if forloop.first -%}
+            {{ b.image | image_url: width: 2400 | image_tag: widths: '750, 1100, 1500, 2000, 2400', sizes: '100vw', fetchpriority: 'high', alt: b.image.alt }}
+          {%- else -%}
+            {{ b.image | image_url: width: 2400 | image_tag: widths: '750, 1100, 1500, 2000, 2400', sizes: '100vw', loading: 'lazy', decoding: 'async', alt: b.image.alt }}
+          {%- endif -%}
+        {%- else -%}
+          {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph' }}
+        {%- endif -%}
+      </figure>
+    {%- endfor -%}
+  </div>
+  <div class="s-hero__veil"></div>
+  <div class="s-hero__fg">
+    <div class="wrap s-hero__grid">
+      <div class="s-hero__copy">
+        {%- if s.h1 != blank -%}<h1 class="sr">{{ s.h1 | escape }}</h1>{%- endif -%}
+        <div class="s-hero__heads">
+          {%- for block in slides -%}
+            {%- assign b = block.settings -%}
+            <p class="s-hero__h{% if forloop.first %} is-on{% endif %}" data-i="{{ forloop.index0 }}"{% unless forloop.first %} aria-hidden="true"{% endunless %}>
+              {%- if b.line_1 != blank -%}<span class="ln"><span>{{ b.line_1 }}</span></span>{%- endif -%}
+              {%- if b.line_2 != blank -%}<span class="ln"><span>{{ b.line_2 }}</span></span>{%- endif -%}
+            </p>
+          {%- endfor -%}
+        </div>
+        {%- if s.lead != blank -%}<p class="s-hero__lead">{{ s.lead | escape }}</p>{%- endif -%}
+        <div class="s-hero__cta">
+          {%- if s.cta1_label != blank -%}
+            <a class="btn btn--light" href="{{ s.cta1_url | default: '#shop' }}">{{ s.cta1_label | escape }}</a>
+          {%- endif -%}
+          {%- if cta2 != blank -%}
+            <button class="btn btn--ghost" type="button" data-add="{{ p_key | escape }}">{{ cta2 | escape }}</button>
+          {%- endif -%}
+        </div>
+      </div>
+      {%- if n > 1 -%}
+        <div class="s-hero__ctrl">
+          <div class="s-hero__bars" role="group" aria-label="Choose slide">
+            {%- for block in slides -%}
+              <button class="s-hero__bar" type="button" data-go="{{ forloop.index0 }}" aria-label="Show slide {{ forloop.index }}"{% if forloop.first %} aria-current="true"{% endif %}><i><b></b></i></button>
+            {%- endfor -%}
+          </div>
+          <div class="s-hero__arrows">
+            <button type="button" data-step="-1" aria-label="Previous slide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+            <button type="button" data-step="1" aria-label="Next slide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+{%- comment -%} Intro gate before first paint: hide the first slide's scale/heading so the script can lift it. {%- endcomment -%}
+<script>(function(){var r=document.getElementById({{ anchor | json }});if(r&&document.documentElement.classList.contains('motion'))r.classList.add('is-intro');})();</script>
+
+{% schema %}
+{
+  "name": "Lather hero",
+  "tag": "div",
+  "class": "blko-lv3-section-hero",
+  "settings": [
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "label", "label": "Carousel label (screen readers)", "default": "Lather body wash" },
+    { "type": "text", "id": "h1", "label": "Page heading (screen readers)", "default": "Lather, a moisturising body wash for dry, reactive skin" },
+    { "type": "text", "id": "lead", "label": "Lead", "default": "A moisturising body wash for dry, reactive skin." },
+    { "type": "text", "id": "cta1_label", "label": "First button", "default": "Shop body wash" },
+    { "type": "url", "id": "cta1_url", "label": "First button link", "info": "Empty: jumps to the featured products section." },
+    { "type": "text", "id": "cta2_label", "label": "Second button (adds the product)", "default": "Try the Oat bar, $9", "info": "Write [price] to show the product's current price." },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "hero" },
+    { "type": "header", "content": "Second button product" },
+    { "type": "product", "id": "product", "label": "Product" },
+    { "type": "paragraph", "content": "When no product is picked, the demo fields below are used." },
+    { "type": "text", "id": "p_key", "label": "Demo key", "default": "bar" },
+    { "type": "text", "id": "p_name", "label": "Demo name", "default": "Oat bar" },
+    { "type": "text", "id": "p_size", "label": "Size", "default": "120 g" },
+    { "type": "text", "id": "p_price", "label": "Demo price in cents", "default": "900" },
+    { "type": "text", "id": "p_line", "label": "Short line", "default": "Oat milk soap bar for face and body. Rich lather that rinses soft." },
+    { "type": "text", "id": "p_labels", "label": "Labels", "default": "best,ff", "info": "Comma list of best, ff, new, sale." },
+    { "type": "textarea", "id": "p_ing", "label": "Ingredients", "default": "Sodium olivate, sodium cocoate, oat milk, colloidal oat, shea butter, glycerin." },
+    { "type": "image_picker", "id": "p_image", "label": "Demo image" }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "limit": 6,
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Photo", "info": "Set the focal point on the image to frame it." },
+        { "type": "inline_richtext", "id": "line_1", "label": "Headline, line 1", "default": "Ten ingredients." },
+        { "type": "inline_richtext", "id": "line_2", "label": "Headline, line 2", "default": "Nothing that <em>itches.</em>", "info": "Italic text shows in the display font." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather hero",
+      "blocks": [
+        { "type": "slide", "settings": { "line_1": "Ten ingredients.", "line_2": "Nothing that <em>itches.</em>" } },
+        { "type": "slide", "settings": { "line_1": "Soft foam,", "line_2": "on <em>purpose.</em>" } },
+        { "type": "slide", "settings": { "line_1": "Made for skin", "line_2": "that <em>flares.</em>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

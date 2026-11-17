@@ -1,0 +1,64 @@
+{%- comment -%}
+  Lather v3, About: story (home-v3/pages/about/10-story.html). Two-line page heading, the founder's letter and an
+  arched portrait. The letter is the page's own content (Online Store > Pages) when "Use page content" is on and the
+  page has content; otherwise the "Letter" setting carries the demo copy.
+{%- endcomment -%}
+{{ 'blko-lv3-about-story.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+  assign uid = 'aboutStoryTitle-' | append: section.id
+  assign letter = s.letter
+  if s.use_page_content and page != blank and page.content != blank
+    assign letter = page.content
+  endif
+-%}
+<section class="s-about-story" id="{{ s.anchor | default: 'story' | handleize }}" aria-labelledby="{{ uid }}">
+  <div class="wrap">
+    <h1 class="h1 s-about-story__title" id="{{ uid }}" data-rv="line">
+      {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
+      {%- if s.heading_2 != blank -%}<span class="ln"><span>{{ s.heading_2 }}</span></span>{%- endif -%}
+    </h1>
+    <div class="s-about-story__body">
+      <div class="s-about-story__letter" data-rv="blur">
+        {{- letter -}}
+        {%- if s.sign_name != blank or s.sign_role != blank -%}
+          <span class="s-about-story__sign">
+            {%- if s.sign_name != blank -%}<strong>{{ s.sign_name | escape }}</strong>{%- endif -%}
+            {{- s.sign_role | escape -}}
+          </span>
+        {%- endif -%}
+      </div>
+      <figure class="s-about-story__portrait" data-rv="settle">
+        {%- if s.image != blank -%}
+          {{ s.image | image_url: width: 1400 | image_tag: widths: '450, 700, 900, 1200, 1400', sizes: '(max-width: 760px) 82vw, 40vw', loading: 'lazy', alt: s.image_alt | default: s.image.alt }}
+        {%- else -%}
+          {{ 'lifestyle-2' | placeholder_svg_tag: 'blko-lv3-ph' }}
+        {%- endif -%}
+        {%- if s.caption != blank -%}<figcaption>{{ s.caption | escape }}</figcaption>{%- endif -%}
+      </figure>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lather about story",
+  "class": "blko-lv3-section-about-story",
+  "settings": [
+    { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "It began after" },
+    { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "the <em>shower.</em>", "info": "Italic text shows in the accent style." },
+    { "type": "checkbox", "id": "use_page_content", "label": "Use page content as the letter", "default": true, "info": "When the page has content (Online Store > Pages), it replaces the letter below." },
+    { "type": "richtext", "id": "letter", "label": "Letter", "info": "The first paragraph shows larger.", "default": "<p>The water was off. The towel was back on its hook. But the tight, itchy feeling stayed.</p><p>Lather started in a hard-water town, with a child's arms red by bedtime and a bathroom shelf full of washes that weren't working for us.</p><p>Mara Ellis began with the labels. Fragrance, dyes, harsh foaming agents: one by one, things came off the list. Oat, shea, glycerin and gentle sugar cleansers stayed.</p><p>That question still guides the line today: what does this product need to do, and what can we leave out?</p>" },
+    { "type": "text", "id": "sign_name", "label": "Signature name", "default": "Mara Ellis" },
+    { "type": "text", "id": "sign_role", "label": "Signature role", "default": "Founder, Lather" },
+    { "type": "header", "content": "Portrait" },
+    { "type": "image_picker", "id": "image", "label": "Image", "info": "Shown in an arch. Keep the subject in the upper middle." },
+    { "type": "text", "id": "image_alt", "label": "Image description (alt)", "default": "A warm stone bathroom with a freestanding bath, towels and a leafy plant" },
+    { "type": "text", "id": "caption", "label": "Caption", "default": "A quieter approach to everyday body care." },
+    { "type": "header", "content": "Section" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "story" }
+  ],
+  "presets": [{ "name": "Lather about story" }]
+}
+{% endschema %}

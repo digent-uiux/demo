@@ -1,0 +1,46 @@
+{%- comment -%}
+  Lather v3, Help: support (home-v3/pages/help/10-support.html). Page heading and a search box that filters the
+  questions in the "Lather help answers" section on the same page (blko-lv3-help-answers.js reads #help-query).
+  Without that section the box submits to the store search.
+{%- endcomment -%}
+{{ 'blko-lv3-help-support.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+  assign uid = 'help-title-' | append: section.id
+-%}
+<section class="s-help-support" id="{{ s.anchor | default: 'help' | handleize }}" aria-labelledby="{{ uid }}">
+  <div class="wrap s-help-support__row">
+    <div>
+      {%- if s.kicker != blank -%}<p class="small">{{ s.kicker | escape }}</p>{%- endif -%}
+      <h1 class="h1" id="{{ uid }}" data-rv="line"><span class="ln"><span>{{ s.heading }}</span></span></h1>
+      {%- if s.text != blank -%}<p>{{ s.text | escape }}</p>{%- endif -%}
+    </div>
+    <form class="s-help-support__search" id="help-search-form" role="search" action="{{ routes.search_url }}" method="get">
+      <label for="help-query">{{ s.search_label | escape }}</label>
+      <input id="help-query" name="q" type="search" maxlength="120" placeholder="{{ s.placeholder | escape }}" autocomplete="off" aria-controls="help-faq-list">
+      <p class="small" id="help-results" role="status" data-one="{{ s.result_one | escape }}" data-many="{{ s.result_many | escape }}">{{ s.results | escape }}</p>
+    </form>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lather help support",
+  "class": "blko-lv3-section-help-support",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Small text above the heading", "default": "Customer care" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "A little <em>help.</em>", "info": "Italic text shows in the accent style." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Choosing a formula, checking a delivery, or asking about a reaction. Start here." },
+    { "type": "header", "content": "Search" },
+    { "type": "text", "id": "search_label", "label": "Search label", "default": "What can we help with?" },
+    { "type": "text", "id": "placeholder", "label": "Placeholder", "default": "Try shipping, fragrance or returns" },
+    { "type": "text", "id": "results", "label": "Hint before searching", "default": "Browse questions by topic below." },
+    { "type": "text", "id": "result_one", "label": "Result count, one ([n])", "default": "[n] matching question" },
+    { "type": "text", "id": "result_many", "label": "Result count, many ([n])", "default": "[n] matching questions" },
+    { "type": "header", "content": "Section" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "help" }
+  ],
+  "presets": [{ "name": "Lather help support" }]
+}
+{% endschema %}

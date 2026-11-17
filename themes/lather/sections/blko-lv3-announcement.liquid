@@ -1,0 +1,59 @@
+{%- comment -%} Announcement bar (home only by default): message blocks, arrows and a timed rotator (blko-lv3-store.js). {%- endcomment -%}
+{%- liquid
+  assign show = true
+  if section.settings.home_only and request.page_type != 'index'
+    assign show = false
+  endif
+  assign msgs = section.blocks | where: 'type', 'message'
+-%}
+{%- if show and msgs.size > 0 -%}
+  <div class="ann" role="region" aria-label="{{ section.settings.region_label | escape }}">
+    {%- for b in msgs -%}
+      {%- capture msg -%}{{ b.settings.text }}{%- if b.settings.link_label != blank %} <a href="{{ b.settings.link | default: '#shop' }}">{{ b.settings.link_label | escape }}</a>{%- endif -%}{%- endcapture -%}
+      {%- if forloop.first -%}<p class="ann__msg" id="annMsg" {{ b.shopify_attributes }}>{{ msg }}</p>{%- endif -%}
+      <template data-ann-msg>{{ msg }}</template>
+    {%- endfor -%}
+    {%- if msgs.size > 1 -%}
+      <div class="ann__nav">
+        <button type="button" aria-label="{{ section.settings.prev_label | escape }}" data-ann="-1"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <button type="button" aria-label="{{ section.settings.next_label | escape }}" data-ann="1"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+      </div>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Lather announcement",
+  "tag": "div",
+  "class": "lv3-ann-sec",
+  "settings": [
+    { "type": "checkbox", "id": "home_only", "label": "Show on the home page only", "default": true },
+    { "type": "text", "id": "region_label", "label": "Region label (screen readers)", "default": "Offers" },
+    { "type": "text", "id": "prev_label", "label": "Previous button label", "default": "Previous offer" },
+    { "type": "text", "id": "next_label", "label": "Next button label", "default": "Next offer" }
+  ],
+  "blocks": [
+    {
+      "type": "message",
+      "name": "Message",
+      "settings": [
+        { "type": "inline_richtext", "id": "text", "label": "Text", "default": "New here? Start with the Oat bar, $9." },
+        { "type": "text", "id": "link_label", "label": "Link label" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Lather announcement",
+      "blocks": [
+        { "type": "message", "settings": { "text": "New here? Start with the Oat bar, $9.", "link_label": "Shop the line" } },
+        { "type": "message", "settings": { "text": "Free shipping over $40. Free Oat bar over $60." } },
+        { "type": "message", "settings": { "text": "Skin reacted? We refund your first bottle, used or not." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

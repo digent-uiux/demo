@@ -1,0 +1,80 @@
+{%- comment -%}
+  Lather v3, 25 Commitments marquee (home-v3/parts/25-marquee.html).
+  A row of line icons and promises. With html.motion the list is copied once and loops sideways (paused on hover or
+  focus); without motion it sits as a static, wrapped list. Each promise is a block.
+{%- endcomment -%}
+{{ 'blko-lv3-marquee.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-marquee.js' | asset_url }}" defer></script>
+{%- liquid
+  assign s = section.settings
+  assign anchor = s.anchor | handleize
+  if anchor == blank
+    assign anchor = 'commitments-' | append: section.id
+  endif
+-%}
+<section class="s-cmt" id="{{ anchor }}" aria-label="{{ s.label | escape }}" style="--s-cmt-dur: {{ s.duration }}s;">
+  <div class="s-cmt__view">
+    <div class="s-cmt__track">
+      <ul class="s-cmt__list" data-cmt-list role="list">
+        {%- for block in section.blocks -%}
+          <li class="s-cmt__item" {{ block.shopify_attributes }}>
+            {%- render 'blko-lv3-marquee-icon', name: block.settings.icon -%}
+            {{- block.settings.text | escape -}}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lather v3 marquee",
+  "tag": "div",
+  "class": "blko-lv3-marquee",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Section label (screen readers)", "default": "What we promise" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "info": "Used for in-page links, e.g. #commitments.", "default": "commitments" },
+    { "type": "range", "id": "duration", "label": "Loop time", "min": 20, "max": 90, "step": 2, "unit": "s", "default": 48 }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Promise",
+      "limit": 12,
+      "settings": [
+        {
+          "type": "select", "id": "icon", "label": "Icon", "default": "fragrance",
+          "options": [
+            { "value": "fragrance", "label": "Fragrance-free" },
+            { "value": "ph", "label": "pH strip" },
+            { "value": "derm", "label": "Hand (tested)" },
+            { "value": "vegan", "label": "Leaf (vegan)" },
+            { "value": "no-sls", "label": "No bubbles (no SLS)" },
+            { "value": "no-dyes", "label": "No palette (no dyes)" },
+            { "value": "recycled", "label": "Recycled bottle" },
+            { "value": "cruelty-free", "label": "Rabbit (cruelty-free)" },
+            { "value": "check", "label": "Check" }
+          ]
+        },
+        { "type": "text", "id": "text", "label": "Text", "default": "Fragrance-free" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather v3 marquee",
+      "blocks": [
+        { "type": "item", "settings": { "icon": "fragrance", "text": "Fragrance-free" } },
+        { "type": "item", "settings": { "icon": "ph", "text": "pH 5.5" } },
+        { "type": "item", "settings": { "icon": "derm", "text": "Dermatologist tested" } },
+        { "type": "item", "settings": { "icon": "vegan", "text": "Vegan" } },
+        { "type": "item", "settings": { "icon": "no-sls", "text": "No SLS" } },
+        { "type": "item", "settings": { "icon": "no-dyes", "text": "No dyes" } },
+        { "type": "item", "settings": { "icon": "recycled", "text": "Recycled bottle" } },
+        { "type": "item", "settings": { "icon": "cruelty-free", "text": "Cruelty-free" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

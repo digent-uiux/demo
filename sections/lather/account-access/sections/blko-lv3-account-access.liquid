@@ -1,0 +1,162 @@
+{%- comment -%}
+  Lather v3, account access (home-v3/pages/account/10-account.html) for customers/login, customers/register,
+  customers/reset_password and customers/activate_account. Same look on each: intro column + panel.
+    login / register   tabs "Log in" / "Create account" + "Forgot your password?" in place, as in the HTML:
+                       {% form 'customer_login' %}, {% form 'create_customer' %}, {% form 'recover_customer_password' %}
+    reset_password     {% form 'reset_customer_password' %}      activate_account  {% form 'activate_customer_password' %}
+  "View" picks the panel (Auto = from the template). Errors come from form.errors; a form that came back opens its panel.
+{%- endcomment -%}
+{{ 'blko-lv3-account-access.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-account-access.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+  assign view = s.view
+  if view == 'auto'
+    assign tname = template.name | remove: 'customers/'
+    case tname
+      when 'register'
+        assign view = 'register'
+      when 'reset_password'
+        assign view = 'reset_password'
+      when 'activate_account'
+        assign view = 'activate_account'
+      else
+        assign view = 'login'
+    endcase
+  endif
+  assign start = 'login'
+  if view == 'register'
+    assign start = 'create'
+  endif
+  assign status = ''
+-%}
+<section class="s-acct-access" aria-labelledby="account-title-{{ section.id }}" data-lv3-account data-start="{{ start }}" data-view="{{ view }}">
+  <div class="wrap s-acct-access__grid">
+    {%- render 'blko-lv3-account-intro', s: s, sid: section.id -%}
+    <div class="s-acct-access__panel" id="account-panel">
+      {%- if view == 'login' or view == 'register' -%}
+        <div role="tablist" aria-label="{{ s.tabs_label | escape }}" class="s-acct-access__tabs" id="account-tabs">
+          <button type="button" role="tab" aria-selected="{% if start == 'login' %}true{% else %}false{% endif %}" aria-controls="account-login" id="account-login-tab"{% unless start == 'login' %} tabindex="-1"{% endunless %} data-mode="login">{{ s.tab_login | escape }}</button>
+          <button type="button" role="tab" aria-selected="{% if start == 'create' %}true{% else %}false{% endif %}" aria-controls="account-create" id="account-create-tab"{% unless start == 'create' %} tabindex="-1"{% endunless %} data-mode="create">{{ s.tab_create | escape }}</button>
+        </div>
+
+        <div id="account-login" role="tabpanel" aria-labelledby="account-login-tab"{% unless start == 'login' %} hidden{% endunless %}>
+          {%- form 'customer_login' -%}
+            {%- if form.errors -%}<span hidden data-acct-open="login"></span>{%- endif -%}
+            <h2 class="h3">{{ s.login_heading | escape }}</h2>
+            {%- if form.errors -%}<p class="s-acct-access__error" role="alert">{{ form.errors | default_errors }}</p>{%- endif -%}
+            <label for="login-email-{{ section.id }}">{{ s.email_label | escape }}</label>
+            <input id="login-email-{{ section.id }}" name="customer[email]" type="email" autocomplete="email" autocapitalize="off" required>
+            <label for="login-password-{{ section.id }}">{{ s.password_label | escape }}</label>
+            <input id="login-password-{{ section.id }}" name="customer[password]" type="password" autocomplete="current-password" required>
+            <button class="btn btn--primary btn--block" type="submit">{{ s.login_button | escape }}</button>
+            <button class="link" type="button" data-mode="reset">{{ s.forgot_label | escape }}</button>
+          {%- endform -%}
+        </div>
+
+        <div id="account-create" role="tabpanel" aria-labelledby="account-create-tab"{% unless start == 'create' %} hidden{% endunless %}>
+          {%- form 'create_customer' -%}
+            {%- if form.errors -%}<span hidden data-acct-open="create"></span>{%- endif -%}
+            <h2 class="h3">{{ s.create_heading | escape }}</h2>
+            {%- if form.errors -%}<p class="s-acct-access__error" role="alert">{{ form.errors | default_errors }}</p>{%- endif -%}
+            <label for="create-name-{{ section.id }}">{{ s.first_name_label | escape }}</label>
+            <input id="create-name-{{ section.id }}" name="customer[first_name]" autocomplete="given-name" required maxlength="60" value="{{ form.first_name | escape }}">
+            <label for="create-email-{{ section.id }}">{{ s.email_label | escape }}</label>
+            <input id="create-email-{{ section.id }}" name="customer[email]" type="email" autocomplete="email" autocapitalize="off" required value="{{ form.email | escape }}">
+            <label for="create-password-{{ section.id }}">{{ s.new_password_label | escape }}</label>
+            <input id="create-password-{{ section.id }}" name="customer[password]" type="password" autocomplete="new-password" minlength="8" required>
+            <button class="btn btn--primary btn--block" type="submit">{{ s.create_button | escape }}</button>
+          {%- endform -%}
+        </div>
+
+        <div id="account-reset" hidden>
+          {%- form 'recover_customer_password' -%}
+            {%- if form.posted_successfully? -%}
+              {%- assign status = s.reset_sent -%}
+              <span hidden data-acct-open="reset"></span>
+            {%- elsif form.errors -%}
+              <span hidden data-acct-open="reset"></span>
+            {%- endif -%}
+            <h2 class="h3" tabindex="-1">{{ s.reset_heading | escape }}</h2>
+            {%- if form.errors -%}<p class="s-acct-access__error" role="alert">{{ form.errors | default_errors }}</p>{%- endif -%}
+            <label for="reset-email-{{ section.id }}">{{ s.email_label | escape }}</label>
+            <input id="reset-email-{{ section.id }}" name="email" type="email" autocomplete="email" autocapitalize="off" required>
+            <button class="btn btn--primary btn--block" type="submit">{{ s.reset_button | escape }}</button>
+            <button type="button" class="link" data-mode="login">{{ s.back_label | escape }}</button>
+          {%- endform -%}
+        </div>
+
+      {%- else -%}
+        <div id="account-new-password">
+          {%- capture pw_fields -%}
+            <h2 class="h3" tabindex="-1">{% if view == 'activate_account' %}{{ s.activate_heading | escape }}{% else %}{{ s.new_password_heading | escape }}{% endif %}</h2>
+            <label for="new-password-{{ section.id }}">{{ s.new_password_label | escape }}</label>
+            <input id="new-password-{{ section.id }}" name="customer[password]" type="password" autocomplete="new-password" minlength="8" required>
+            <label for="new-password-confirm-{{ section.id }}">{{ s.confirm_password_label | escape }}</label>
+            <input id="new-password-confirm-{{ section.id }}" name="customer[password_confirmation]" type="password" autocomplete="new-password" minlength="8" required>
+            <button class="btn btn--primary btn--block" type="submit">{% if view == 'activate_account' %}{{ s.activate_button | escape }}{% else %}{{ s.new_password_button | escape }}{% endif %}</button>
+          {%- endcapture -%}
+          {%- if view == 'activate_account' -%}
+            {%- form 'activate_customer_password' -%}
+              {%- if form.errors -%}<p class="s-acct-access__error" role="alert">{{ form.errors | default_errors }}</p>{%- endif -%}
+              {{ pw_fields }}
+            {%- endform -%}
+          {%- else -%}
+            {%- form 'reset_customer_password' -%}
+              {%- if form.errors -%}<p class="s-acct-access__error" role="alert">{{ form.errors | default_errors }}</p>{%- endif -%}
+              {{ pw_fields }}
+            {%- endform -%}
+          {%- endif -%}
+        </div>
+
+      {%- endif -%}
+      <p class="s-acct-access__status" id="account-status" role="status">{{ status | escape }}</p>
+    </div>
+  </div>
+</section>
+
+
+{% schema %}
+{
+  "name": "Lather account access",
+  "class": "blko-lv3-section-account",
+  "settings": [
+    {"type": "select", "id": "view", "label": "View", "default": "auto", "info": "Auto picks the panel from the template (customers/login, register, reset_password, activate_account).", "options": [{"value": "auto", "label": "Auto"}, {"value": "login", "label": "Log in"}, {"value": "register", "label": "Create account"}, {"value": "reset_password", "label": "New password"}, {"value": "activate_account", "label": "Activate account"}]},
+    {"type": "header", "content": "Intro"},
+    {"type": "text", "id": "eyebrow", "label": "Small label", "default": "Your account"},
+    {"type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "A little less"},
+    {"type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "to <em>remember.</em>", "info": "Italic text shows in the accent style."},
+    {"type": "textarea", "id": "text", "label": "Text", "default": "Your orders, your details, and an easier way back to the formulas you like."},
+    {"type": "text", "id": "help_label", "label": "Help link", "default": "Need help with an order?"},
+    {"type": "url", "id": "help_link", "label": "Help link URL", "info": "Blank: /pages/help."},
+    {"type": "image_picker", "id": "image", "label": "Image", "info": "Portrait, shown at 220 px on desktop."},
+    {"type": "text", "id": "image_alt", "label": "Image description", "default": "Soft wash on warm stone with leaf shadows", "info": "Used when the image has no alt text."},
+    {"type": "header", "content": "Log in"},
+    {"type": "text", "id": "tabs_label", "label": "Tabs label (screen readers)", "default": "Account access"},
+    {"type": "text", "id": "tab_login", "label": "Tab, log in", "default": "Log in"},
+    {"type": "text", "id": "tab_create", "label": "Tab, create account", "default": "Create account"},
+    {"type": "text", "id": "login_heading", "label": "Heading", "default": "Welcome back."},
+    {"type": "text", "id": "email_label", "label": "Email label", "default": "Email"},
+    {"type": "text", "id": "password_label", "label": "Password label", "default": "Password"},
+    {"type": "text", "id": "login_button", "label": "Button", "default": "Log in"},
+    {"type": "text", "id": "forgot_label", "label": "Forgot password link", "default": "Forgot your password?"},
+    {"type": "header", "content": "Create account"},
+    {"type": "text", "id": "create_heading", "label": "Heading", "default": "Make room for your routine."},
+    {"type": "text", "id": "first_name_label", "label": "First name label", "default": "First name"},
+    {"type": "text", "id": "new_password_label", "label": "New password label", "default": "Password, at least 8 characters"},
+    {"type": "text", "id": "create_button", "label": "Button", "default": "Create account"},
+    {"type": "header", "content": "Reset password"},
+    {"type": "text", "id": "reset_heading", "label": "Heading", "default": "Reset your password."},
+    {"type": "text", "id": "reset_button", "label": "Button", "default": "Request reset link"},
+    {"type": "text", "id": "back_label", "label": "Back link", "default": "Back to log in"},
+    {"type": "text", "id": "reset_sent", "label": "Sent message", "default": "Thank you. Check your email for a password reset link."},
+    {"type": "text", "id": "new_password_heading", "label": "New password heading (from the email link)", "default": "Choose a new password."},
+    {"type": "text", "id": "confirm_password_label", "label": "Confirm password label", "default": "Password, once more"},
+    {"type": "text", "id": "new_password_button", "label": "New password button", "default": "Save password"},
+    {"type": "text", "id": "activate_heading", "label": "Activate heading", "default": "Set a password to finish."},
+    {"type": "text", "id": "activate_button", "label": "Activate button", "default": "Activate account"}
+  ],
+  "presets": [{ "name": "Lather account access" }]
+}
+{% endschema %}

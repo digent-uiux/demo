@@ -1,198 +1,313 @@
 {
   "sections": {
-    "home-collection-mega-menu": {
-      "type": "blko-home-collection-mega-menu",
+    "intro": {
+      "type": "blko-lv3-collection-intro",
       "settings": {
-        "eyebrow": "Shop by aisle",
-        "heading": "Pick a lane and go."
+        "crumb_home": "Home",
+        "crumb_current": "Shop all",
+        "crumb_label": "Breadcrumb",
+        "heading_mode": "auto",
+        "heading_1": "Less to choose.",
+        "heading_2": "More <em>comfort.</em>",
+        "text": "Wash, moisturise, get on with your day. Find the texture that feels right for your skin.",
+        "links_label": "Shop shortcuts"
       },
       "blocks": {
-        "block-1": {
+        "link_1": {
           "type": "link",
           "settings": {
-            "url": "#bar-soap"
+            "label": "Body washes",
+            "url": "/collections/all?type=wash"
           }
         },
-        "block-2": {
+        "link_2": {
           "type": "link",
           "settings": {
-            "label": "Body wash",
-            "url": "#body-wash"
+            "label": "Body moisturisers",
+            "url": "/collections/all?type=moisturiser"
           }
         },
-        "block-3": {
+        "link_3": {
           "type": "link",
           "settings": {
-            "label": "Deodorant",
-            "url": "#deodorant"
+            "label": "For little ones",
+            "url": "/collections/all?need=little"
           }
         },
-        "block-4": {
+        "link_4": {
           "type": "link",
           "settings": {
-            "label": "Hair care",
-            "url": "#hair"
-          }
-        },
-        "block-5": {
-          "type": "link",
-          "settings": {
-            "label": "Shave",
-            "url": "#shave"
-          }
-        },
-        "block-6": {
-          "type": "link",
-          "settings": {
-            "label": "Cologne",
-            "url": "#cologne"
-          }
-        },
-        "block-7": {
-          "type": "link",
-          "settings": {
-            "label": "Bundles",
-            "url": "#bundles"
-          }
-        },
-        "block-8": {
-          "type": "link",
-          "settings": {
-            "label": "Accessories",
-            "url": "#accessories"
-          }
-        },
-        "block-9": {
-          "type": "tile",
-          "settings": {
-            "url": "#bundles",
-            "image_alt": "Six bars of soap lined up on a wooden shelf",
-            "label": "Bundles"
-          }
-        },
-        "block-10": {
-          "type": "tile",
-          "settings": {
-            "url": "#bar-soap",
-            "image_alt": "A stack of plain bar soaps"
+            "label": "Need a hand choosing?",
+            "url": "/pages/help"
           }
         }
       },
       "block_order": [
-        "block-1",
-        "block-2",
-        "block-3",
-        "block-4",
-        "block-5",
-        "block-6",
-        "block-7",
-        "block-8",
-        "block-9",
-        "block-10"
+        "link_1",
+        "link_2",
+        "link_3",
+        "link_4"
       ]
     },
-    "home-collection-collection-toolbar": {
-      "type": "blko-home-collection-collection-toolbar",
+    "catalogue": {
+      "type": "blko-lv3-collection-catalogue",
       "settings": {
-        "breadcrumb": "All grooming",
-        "filter_eyebrow": "Narrow it down",
-        "filter_heading": "Sort by what you need",
-        "filters_label": "Scent, grit, format",
-        "sort_label": "Sort by"
-      }
-    },
-    "home-collection-collection-grid": {
-      "type": "blko-home-collection-collection-grid",
-      "settings": {
-        "promo_image_alt": "Pine branches and smoke in a forest",
-        "promo_eyebrow": "No clue where to start?",
-        "promo_heading": "Let your weekend pick the scent.",
-        "promo_label": "Take the quiz",
-        "load_more_label": "Show more products",
-        "empty_text": "Nothing matches those picks. Try a different grit or scent family."
-      }
-    },
-    "collection-about": {
-      "type": "blko-collection-about",
-      "settings": {
-        "image_alt": "Bars of soap stacked in rows by scent family",
-        "kicker": "About bar soap",
-        "heading": "A proper bar, not a pink rectangle.",
-        "text": "Our bars are made in small batches with plant oils, shea butter and real botanicals, then cured until they are hard enough to last. Choose a grit level for your hands, a scent family for your nose and a pack size that fits your shower schedule."
-      }
-    },
-    "collection-faq": {
-      "type": "blko-collection-faq",
-      "settings": {
-        "eyebrow": "Bar soap questions",
-        "heading": "Quick answers before you buy"
+        "label": "Shop all products",
+        "per_page": 24,
+        "filter_title": "Filter products",
+        "reset_label": "Clear filters",
+        "price_from": "From",
+        "price_to": "To",
+        "active_label": "Active filters",
+        "remove_label": "Remove filter:",
+        "count_one": "[count] product",
+        "count_other": "[count] products",
+        "sort_label": "Sort by",
+        "sort_aria": "Sort products",
+        "sort_featured": "Featured",
+        "sort_price_low": "Price, low to high",
+        "sort_price_high": "Price, high to low",
+        "sort_name": "Name, A to Z",
+        "qv_label": "Quick view",
+        "add_label": "Add to bag",
+        "add_aria": "Add [name] to bag",
+        "sold_label": "Sold out",
+        "label_best": "Best seller",
+        "label_new": "New",
+        "label_sale": "Sale",
+        "empty_heading": "A little too <em>specific?</em>",
+        "empty_text": "No products match these filters together. Try removing one, or see the whole line.",
+        "empty_button": "Show all products",
+        "pages_label": "Pages",
+        "prev_label": "Previous",
+        "next_label": "Next",
+        "footer_text": "All [count] products. No endless scroll.",
+        "footer_link_label": "Ask about your skin",
+        "footer_link": "/pages/help",
+        "footer_after": "if you need a hand."
       },
       "blocks": {
-        "block-1": {
-          "type": "question",
+        "filter_1": {
+          "type": "filter",
           "settings": {
-            "label": "Can I use a bar on my face?",
-            "text": "Zero-grit bars are gentle enough for most faces. Skip the gritty ones above the neck unless you like being sanded."
+            "legend": "Skin need",
+            "param": "need",
+            "options": "everyday | Everyday dry skin\nsensitive | Sensitive skin\nverydry | Very dry skin\nlittle | Little ones, ages 1+"
           }
         },
-        "block-2": {
-          "type": "question",
+        "filter_2": {
+          "type": "filter",
           "settings": {
-            "label": "Are the bars free of sulfates and parabens?",
-            "text": "Yes. The ingredient list stays short, and neither group is in it."
+            "legend": "Product type",
+            "param": "type",
+            "options": "wash | Body wash\nmoisturiser | Moisturiser\nbar | Soap bar"
           }
         },
-        "block-3": {
-          "type": "question",
+        "filter_3": {
+          "type": "filter",
           "settings": {
-            "label": "What do the grit levels mean?",
-            "text": "Zero is smooth and creamy. Light has a hint of texture, medium scrubs like a washcloth and heavy is for mechanics and weekend warriors."
+            "legend": "Scent",
+            "param": "scent",
+            "options": "free | Fragrance-free\nchamomile | Chamomile"
           }
         },
-        "block-4": {
-          "type": "question",
+        "editorial": {
+          "type": "editorial",
           "settings": {
-            "label": "How should I store a bar?",
-            "text": "Let it dry between showers on a draining dish or magnetic saver. A dry bar can last more than twice as long as a soggy one."
+            "position": 5,
+            "image": "shopify://shop_images/c-oat-bar-wide.jpg",
+            "image_alt": "Oat soap bar with its moss carton on a sage backdrop",
+            "heading": "A <em>small</em> place to start.",
+            "text": "One oat milk bar. Face, hands and body.",
+            "button": "Try the Oat bar",
+            "key": "bar",
+            "name": "Oat bar",
+            "size": "120 g",
+            "price": "900",
+            "labels": "best,ff"
           }
         },
-        "block-5": {
-          "type": "question",
+        "product_calm": {
+          "type": "product",
           "settings": {
-            "label": "Where are the bars made?",
-            "text": "Everything is mixed, poured and cut in our own facility, so we can check each batch ourselves."
+            "key": "calm",
+            "name": "Calm wash",
+            "size": "400 ml",
+            "price": "1800",
+            "desc": "Soft foam for everyday dry skin.",
+            "badge": "best",
+            "facets": "need:everyday need:sensitive type:wash scent:free",
+            "line": "Everyday, eczema-prone skin. Colloidal oat and glycerin.",
+            "labels": "best,ff",
+            "ing": "Water, glycerin, coco-glucoside, decyl glucoside, colloidal oat, shea butter, sunflower seed oil, xanthan gum, citric acid, sodium benzoate. pH 5.5.",
+            "image": "shopify://shop_images/t-calm.jpg",
+            "hover": "shopify://shop_images/h-calm.jpg"
+          }
+        },
+        "product_soft": {
+          "type": "product",
+          "settings": {
+            "key": "soft",
+            "name": "Soft wash",
+            "size": "400 ml",
+            "price": "1800",
+            "desc": "Low foam. A gentle place to start.",
+            "badge": "new",
+            "facets": "need:sensitive type:wash scent:free",
+            "line": "Our gentlest wash for sensitive skin. Low foam, rinses clean.",
+            "labels": "new,ff",
+            "ing": "Water, glycerin, coco-glucoside, colloidal oat, oat oil, sunflower seed oil, xanthan gum, citric acid, sodium benzoate. Fragrance-free. pH 5.5.",
+            "image": "shopify://shop_images/c-soft.jpg",
+            "hover": "shopify://shop_images/h-soft.jpg"
+          }
+        },
+        "product_chamomile": {
+          "type": "product",
+          "settings": {
+            "key": "chamomile",
+            "name": "Chamomile wash",
+            "size": "400 ml",
+            "price": "2000",
+            "desc": "Our only scented wash. Chamomile oil.",
+            "badge": "none",
+            "facets": "need:everyday need:sensitive type:wash scent:chamomile",
+            "line": "Our only scented wash: 0.2% chamomile oil, allergens listed.",
+            "labels": "",
+            "ing": "Calm wash plus chamomile flower oil (0.2%). Allergens: bisabolol. pH 5.5.",
+            "image": "shopify://shop_images/t-chamomile.jpg",
+            "hover": "shopify://shop_images/h-chamomile.jpg"
+          }
+        },
+        "product_rich": {
+          "type": "product",
+          "settings": {
+            "key": "rich",
+            "name": "Rich wash",
+            "size": "400 ml",
+            "price": "2000",
+            "desc": "A thicker wash for very dry skin.",
+            "badge": "none",
+            "facets": "need:verydry type:wash scent:free",
+            "line": "Very dry or winter skin. Thicker, almost a lotion.",
+            "labels": "ff",
+            "ing": "Calm wash plus extra shea butter and oat oil. Fragrance-free. pH 5.5.",
+            "image": "shopify://shop_images/c-rich.jpg",
+            "hover": "shopify://shop_images/h-rich.jpg"
+          }
+        },
+        "product_lotion": {
+          "type": "product",
+          "settings": {
+            "key": "lotion",
+            "name": "Calm lotion",
+            "size": "250 ml",
+            "price": "2200",
+            "desc": "Light lotion, straight after the shower.",
+            "badge": "none",
+            "facets": "need:everyday need:sensitive type:moisturiser scent:free",
+            "line": "Light lotion for damp skin, straight after the wash.",
+            "labels": "ff",
+            "ing": "Water, glycerin, shea butter, colloidal oat, squalane, ceramide NP, cetearyl alcohol, xanthan gum.",
+            "image": "shopify://shop_images/c-lotion.jpg"
+          }
+        },
+        "product_cream": {
+          "type": "product",
+          "settings": {
+            "key": "cream",
+            "name": "Rich cream",
+            "size": "200 ml",
+            "price": "2400",
+            "desc": "Thick cream for shins, elbows and hands.",
+            "badge": "none",
+            "facets": "need:verydry type:moisturiser scent:free",
+            "line": "Thick cream for shins, elbows and hands.",
+            "labels": "ff",
+            "ing": "Shea butter, glycerin, oat oil, ceramide NP, squalane, beeswax-free.",
+            "image": "shopify://shop_images/c-cream.jpg"
+          }
+        },
+        "product_milk": {
+          "type": "product",
+          "settings": {
+            "key": "milk",
+            "name": "Body milk",
+            "size": "300 ml",
+            "price": "2000",
+            "desc": "Light, quick and never sticky.",
+            "badge": "none",
+            "facets": "need:everyday type:moisturiser scent:free",
+            "line": "Light and quick for dry skin. Sinks in fast, never sticky.",
+            "labels": "new,ff",
+            "ing": "Water, glycerin, colloidal oat, sunflower seed oil, squalane, cetearyl alcohol, xanthan gum, sodium benzoate.",
+            "image": "shopify://shop_images/c-body-milk.jpg",
+            "hover": "shopify://shop_images/h-milk.jpg"
+          }
+        },
+        "product_little": {
+          "type": "product",
+          "settings": {
+            "key": "little",
+            "name": "Little lotion",
+            "size": "150 ml",
+            "price": "1400",
+            "desc": "Soft oat lotion for ages 1 and up.",
+            "badge": "none",
+            "facets": "need:little type:moisturiser scent:free",
+            "line": "Soft, light oat lotion for ages 1 and up. Fragrance-free.",
+            "labels": "new,ff",
+            "ing": "Water, glycerin, colloidal oat, calendula oil, shea butter, cetearyl alcohol, xanthan gum, sodium benzoate.",
+            "image": "shopify://shop_images/c-little-lotion.jpg",
+            "hover": "shopify://shop_images/h-little.jpg"
+          }
+        },
+        "product_bar": {
+          "type": "product",
+          "settings": {
+            "key": "bar",
+            "name": "Oat bar",
+            "size": "120 g",
+            "price": "900",
+            "desc": "Oat milk soap for face and body.",
+            "badge": "best",
+            "facets": "need:everyday type:bar scent:free",
+            "line": "Oat milk soap bar for face and body. Rich lather that rinses soft.",
+            "labels": "best,ff",
+            "ing": "Sodium olivate, sodium cocoate, oat milk, colloidal oat, shea butter, glycerin.",
+            "image": "shopify://shop_images/c-oat-bar.jpg",
+            "hover": "shopify://shop_images/h-bar.jpg"
           }
         }
       },
       "block_order": [
-        "block-1",
-        "block-2",
-        "block-3",
-        "block-4",
-        "block-5"
+        "filter_1",
+        "filter_2",
+        "filter_3",
+        "editorial",
+        "product_calm",
+        "product_soft",
+        "product_chamomile",
+        "product_rich",
+        "product_lotion",
+        "product_cream",
+        "product_milk",
+        "product_little",
+        "product_bar"
       ]
     },
-    "home-collection-quick-view-modal": {
-      "type": "blko-home-collection-quick-view-modal",
-      "settings": {}
-    },
-    "newsletter": {
-      "type": "blko-newsletter",
+    "choosing": {
+      "type": "blko-lv3-collection-choosing",
       "settings": {
-        "eyebrow": "20% off your first order",
-        "heading": "Join the crew",
-        "message": "Drop dates, secret sales and the odd locker-room joke. Once a week, no spam.",
-        "button_label": "Get my code"
+        "heading": "The right texture, without the guesswork.",
+        "text": "Light milk or rich cream? Scent or no scent? We can help you narrow it down.",
+        "button": "Ask us a question",
+        "button_link": "/pages/help"
       }
     }
   },
   "order": [
-    "home-collection-mega-menu",
-    "home-collection-collection-toolbar",
-    "home-collection-collection-grid",
-    "collection-about",
-    "collection-faq",
-    "home-collection-quick-view-modal",
-    "newsletter"
+    "intro",
+    "catalogue",
+    "choosing"
   ]
 }

@@ -1,0 +1,162 @@
+{%- comment -%}
+  Lather v3 search overlay (home-v3 shared/10-search.html). Footer group, after Lather overlays (it uses #scrim and the
+  placeholder template from there). The header search icon ([data-search-open]) opens it; without JS the icon is a plain
+  link to the search page.
+  - Store: predictive results from Shopify's /search/suggest.json (products, query suggestions, journal articles).
+  - Preview, or when that request fails: filters window.LATHER.products in the browser. The product blocks below hand
+    their products to the runtime (blko-lv3-product-data), with extra keywords, so every page can search the demo line.
+  - Enter and "See all" go to the search page (routes.search_url, q, type, options[prefix]=last).
+  Behaviour: blko-lv3-search-overlay.js. Copy: settings.
+{%- endcomment -%}
+{{ 'blko-lv3-search-overlay.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-search-overlay.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign s = section.settings
+  assign pblocks = section.blocks | where: 'type', 'product'
+  assign search_params = '&type=' | append: s.types | append: '&options%5Bprefix%5D=last'
+  assign suggest_types = 'product,query'
+  if s.show_articles and s.types contains 'article'
+    assign suggest_types = 'product,query,article'
+  endif
+  assign popular = s.popular | newline_to_br | split: '<br />'
+  assign suggest = s.suggest | newline_to_br | split: '<br />'
+-%}
+{%- for b in pblocks -%}
+  {%- if b.settings.key != blank -%}
+    {%- render 'blko-lv3-product-data', key: b.settings.key, product: b.settings.product, name: b.settings.name, size: b.settings.size, price: b.settings.price, line: b.settings.line, labels: b.settings.labels, img: b.settings.image -%}
+  {%- endif -%}
+{%- endfor -%}
+<div class="srch" id="srch" role="dialog" aria-modal="true" aria-label="{{ s.dialog_label | escape }}" aria-hidden="true">
+  <div class="wrap">
+    <div class="srch__bar">
+      <form class="srch__form" action="{{ routes.search_url }}" method="get" role="search" data-srch-form>
+        <svg class="srch__ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg>
+        <label class="sr" for="srchInput-{{ section.id }}">{{ s.input_label | escape }}</label>
+        <input class="srch__in" id="srchInput-{{ section.id }}" type="search" name="q" placeholder="{{ s.placeholder | escape }}" maxlength="100" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="search" aria-controls="srchList-{{ section.id }}" aria-describedby="srchStatus-{{ section.id }}" data-srch-input>
+        <input type="hidden" name="type" value="{{ s.types | escape }}">
+        <input type="hidden" name="options[prefix]" value="last">
+      </form>
+      <button class="icon-btn srch__x" type="button" aria-label="{{ s.close_label | escape }}" data-close><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="srch__body">
+      <div class="srch__side" data-srch-side></div>
+      <div class="srch__main">
+        <div class="srch__top"><h2 class="srch__h" data-srch-head>{{ s.loved | escape }}</h2><p class="srch__status" id="srchStatus-{{ section.id }}" role="status" aria-live="polite" aria-atomic="true" data-srch-status></p></div>
+        <ul class="srch__list" id="srchList-{{ section.id }}" data-srch-list></ul>
+        <p class="srch__empty" hidden data-srch-empty></p>
+        <a class="btn btn--ghost btn--sm srch__all" href="{{ routes.search_url }}" hidden data-srch-all>{{ s.see_all | replace: '[q]', '' | escape }}</a>
+      </div>
+    </div>
+  </div>
+  <script type="application/json" data-srch-cfg>
+    {
+      "live": {{ s.live | json }},
+      "suggestUrl": {{ routes.predictive_search_url | append: '.json' | json }},
+      "searchUrl": {{ routes.search_url | json }},
+      "searchParams": {{ search_params | json }},
+      "types": {{ suggest_types | json }},
+      "limit": {{ s.limit | json }},
+      "fallbackUrl": {{ routes.all_products_collection_url | json }},
+      "pages": {},
+      "extra": {
+        {%- assign first = true -%}
+        {%- for b in pblocks -%}
+          {%- if b.settings.key != blank -%}{%- unless first %},{% endunless -%}{{ b.settings.key | json }}: {{ b.settings.keywords | default: '' | json }}{%- assign first = false -%}{%- endif -%}
+        {%- endfor -%}
+      },
+      "loved": [
+        {%- assign first = true -%}
+        {%- for b in pblocks -%}
+          {%- if b.settings.key != blank and b.settings.loved -%}{%- unless first %},{% endunless -%}{{ b.settings.key | json }}{%- assign first = false -%}{%- endif -%}
+        {%- endfor -%}
+      ],
+      "popular": [
+        {%- assign first = true -%}
+        {%- for t in popular -%}{%- assign tt = t | strip -%}{%- if tt != blank -%}{%- unless first %},{% endunless -%}{{ tt | json }}{%- assign first = false -%}{%- endif -%}{%- endfor -%}
+      ],
+      "suggest": [
+        {%- assign first = true -%}
+        {%- for t in suggest -%}{%- assign tt = t | strip -%}{%- if tt != blank -%}{%- unless first %},{% endunless -%}{{ tt | json }}{%- assign first = false -%}{%- endif -%}{%- endfor -%}
+      ],
+      "strings": {
+        "popular": {{ s.popular_title | json }}, "suggest": {{ s.suggest_title | json }}, "journal": {{ s.journal_title | json }},
+        "loved": {{ s.loved | json }}, "results": {{ s.results | json }}, "loading": {{ s.loading | json }},
+        "count_one": {{ s.count_one | json }}, "count_many": {{ s.count_many | json }},
+        "see_all": {{ s.see_all | json }}, "empty": {{ s.empty | json }}
+      }
+    }
+  </script>
+</div>
+
+{% schema %}
+{
+  "name": "Lather search overlay",
+  "tag": "div",
+  "class": "blko-lv3-section-search-overlay",
+  "settings": [
+    { "type": "paragraph", "content": "Opens from the header search icon. In a store the results come from Shopify search; products picked in the blocks below also show while nothing is typed." },
+    { "type": "checkbox", "id": "live", "label": "Use Shopify predictive search", "default": true, "info": "Off: only the products in the blocks below are searched (as in the preview)." },
+    {
+      "type": "select",
+      "id": "types",
+      "label": "Search page shows",
+      "options": [
+        { "value": "product,article", "label": "Products and journal" },
+        { "value": "product", "label": "Products only" },
+        { "value": "product,article,page", "label": "Products, journal and pages" }
+      ],
+      "default": "product,article"
+    },
+    { "type": "checkbox", "id": "show_articles", "label": "Suggest journal articles", "default": true },
+    { "type": "range", "id": "limit", "label": "Products shown", "min": 2, "max": 8, "step": 1, "default": 4 },
+    { "type": "header", "content": "Field" },
+    { "type": "text", "id": "dialog_label", "label": "Overlay name (screen readers)", "default": "Search the shop" },
+    { "type": "text", "id": "input_label", "label": "Field label (screen readers)", "default": "Search" },
+    { "type": "text", "id": "placeholder", "label": "Placeholder", "default": "Search washes, lotions or ingredients" },
+    { "type": "text", "id": "close_label", "label": "Close button (screen readers)", "default": "Close search" },
+    { "type": "header", "content": "Suggestions" },
+    { "type": "text", "id": "popular_title", "label": "Popular searches heading", "default": "Popular searches" },
+    { "type": "textarea", "id": "popular", "label": "Popular searches (one per line)", "default": "Fragrance-free\nOat\nDry skin\nBody wash\nLotion" },
+    { "type": "text", "id": "suggest_title", "label": "Suggestions heading", "default": "Suggestions" },
+    { "type": "textarea", "id": "suggest", "label": "Demo search suggestions (one per line)", "info": "Used when Shopify search is off or unavailable. In a store, Shopify suggests searches from your catalogue.", "default": "oat\noat bar\nfragrance-free\nbody wash\nbody lotion\nbody milk\ndry skin\neczema-prone skin\nsensitive skin\nwinter skin\nchamomile\nsoap bar\nbaby lotion" },
+    { "type": "text", "id": "journal_title", "label": "Journal heading", "default": "From the journal" },
+    { "type": "header", "content": "Results" },
+    { "type": "text", "id": "loved", "label": "Heading before typing", "default": "Most loved" },
+    { "type": "text", "id": "results", "label": "Heading while typing", "default": "Products" },
+    { "type": "text", "id": "loading", "label": "Loading", "default": "Searching" },
+    { "type": "text", "id": "count_one", "label": "Count, one ([count], [q])", "default": "[count] product for “[q]”" },
+    { "type": "text", "id": "count_many", "label": "Count, many ([count], [q])", "default": "[count] products for “[q]”" },
+    { "type": "text", "id": "see_all", "label": "See all link ([q])", "default": "See all results for “[q]”" },
+    { "type": "text", "id": "empty", "label": "No results ([q])", "default": "No match for “[q]” yet. Try oat, fragrance-free or lotion." }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "limit": 12,
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "paragraph", "content": "When no product is picked, the demo fields are used (preview and empty stores)." },
+        { "type": "text", "id": "key", "label": "Demo key", "info": "Same key as in the other sections (calm, bar ...): quick view and the bag use it." },
+        { "type": "text", "id": "name", "label": "Demo name", "default": "Calm wash" },
+        { "type": "text", "id": "size", "label": "Size", "default": "400 ml" },
+        { "type": "text", "id": "price", "label": "Demo price in cents", "default": "1800" },
+        { "type": "text", "id": "line", "label": "Short line" },
+        { "type": "text", "id": "labels", "label": "Labels", "info": "Comma list of best, ff, new, sale." },
+        { "type": "text", "id": "keywords", "label": "Extra search words", "info": "Words shoppers type that are not in the name or line, e.g. eczema, daily, dry." },
+        { "type": "image_picker", "id": "image", "label": "Demo image" },
+        { "type": "checkbox", "id": "loved", "label": "Show before typing (Most loved)", "default": false }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather search overlay",
+      "blocks": [
+        { "type": "product", "settings": { "key": "calm", "name": "Calm wash", "size": "400 ml", "price": "1800", "labels": "best,ff", "line": "Everyday, eczema-prone skin. Colloidal oat and glycerin.", "keywords": "wash body wash eczema prone daily dry tight", "loved": true } },
+        { "type": "product", "settings": { "key": "bar", "name": "Oat bar", "size": "120 g", "price": "900", "labels": "best,ff", "line": "Oat milk soap bar for face and body. Rich lather that rinses soft.", "keywords": "soap bar face body hands oat milk", "loved": true } }
+      ]
+    }
+  ]
+}
+{% endschema %}

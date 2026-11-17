@@ -1,0 +1,125 @@
+{%- comment -%}
+  Lather v3 wishlist page (home-v3 pages/wishlist/10-saved.html), template page.wishlist.
+  The list is the shopper's own (localStorage 'lather-wish', written by the hearts on product cards), so the cards render
+  in the browser (blko-lv3-wishlist.js). Real products refresh price and stock from /products/<handle>.js; add to bag
+  goes through window.LATHER.add (real variant: /cart/add.js, demo: the demo bag).
+  Blocks "product" are the empty-state suggestions; each hands its product to window.LATHER (blko-lv3-product-data).
+{%- endcomment -%}
+{{ 'blko-lv3-wishlist.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-wishlist.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+  assign uid = section.id
+  assign keys = ''
+-%}
+{%- for block in section.blocks -%}
+  {%- liquid
+    assign b = block.settings
+    if b.product != blank
+      assign k = b.product.handle
+    else
+      assign k = b.key | default: block.id | strip | handleize
+    endif
+    assign keys = keys | append: ',' | append: k
+  -%}
+  {%- render 'blko-lv3-product-data', key: k, product: b.product, name: b.name, size: b.size, price: b.price, line: b.line, labels: b.labels, ing: b.ing, img: b.image, hover: b.hover -%}
+{%- endfor -%}
+{%- assign keys = keys | remove_first: ',' -%}
+
+<section class="s-wish" aria-labelledby="wishH-{{ uid }}" data-lv3-wishlist
+  data-count-one="{{ s.count_one | escape }}" data-count-many="{{ s.count_many | escape }}" data-count-zero="{{ s.count_zero | escape }}"
+  data-add-label="{{ s.add_label | escape }}" data-add-aria="{{ s.add_aria | escape }}" data-remove-label="{{ s.remove_label | escape }}" data-remove-aria="{{ s.remove_aria | escape }}"
+  data-sold-label="{{ s.sold_label | escape }}" data-removed-label="{{ s.removed_label | escape }}" data-undo-label="{{ s.undo_label | escape }}" data-save-aria="{{ s.save_aria | escape }}">
+  <template data-wish-ph>{{ 'product-1' | placeholder_svg_tag: 'blko-lv3-ph' }}</template>
+  <div class="wrap">
+    <div class="s-wish__hd">
+      <div>
+        <h1 class="h1" id="wishH-{{ uid }}" data-rv="blur">{{ s.heading }}</h1>
+        <p class="s-wish__status" data-wish-status>{{ s.count_zero | escape }}</p>
+        {%- if s.note != blank -%}<p class="small s-wish__note">{{ s.note | escape }}</p>{%- endif -%}
+      </div>
+      {%- if s.keep_label != blank -%}<a class="link" href="{{ s.keep_url | default: routes.all_products_collection_url }}" data-wish-full hidden>{{ s.keep_label | escape }}</a>{%- endif -%}
+    </div>
+    <div class="s-wish__undo" data-wish-undo hidden></div>
+    <ul class="s-wish__list" data-wish-list role="list" aria-label="{{ s.list_label | escape }}" hidden></ul>
+    <div class="s-wish__empty" data-wish-empty>
+      <div class="s-wish__start">
+        {%- if s.empty_text != blank -%}<p class="lead">{{ s.empty_text | escape }}</p>{%- endif -%}
+        {%- if s.empty_button != blank -%}<a class="btn btn--primary" href="{{ s.empty_url | default: routes.all_products_collection_url }}">{{ s.empty_button | escape }}</a>{%- endif -%}
+      </div>
+      {%- if keys != blank -%}
+        <div>
+          {%- if s.sugg_heading != blank -%}<h2 class="h3">{{ s.sugg_heading | escape }}</h2>{%- endif -%}
+          <ul class="s-wish__list" data-wish-suggest data-keys="{{ keys | escape }}" role="list" aria-label="{{ s.sugg_label | escape }}"></ul>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lather wishlist",
+  "tag": "div",
+  "class": "blko-lv3-section-wishlist",
+  "settings": [
+    { "type": "paragraph", "content": "Shows the products the shopper saved with the heart buttons. The list is kept in their browser, no account needed." },
+    { "type": "header", "content": "Heading" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "info": "Italic text shows in the display font.", "default": "Saved for <em>later.</em>" },
+    { "type": "text", "id": "count_zero", "label": "Count, none", "default": "Nothing saved yet." },
+    { "type": "text", "id": "count_one", "label": "Count, one", "default": "1 saved product." },
+    { "type": "text", "id": "count_many", "label": "Count, many", "info": "[count] is the number.", "default": "[count] saved products." },
+    { "type": "text", "id": "note", "label": "Note", "default": "Your list stays on this device. No account needed." },
+    { "type": "text", "id": "keep_label", "label": "Link beside the heading", "default": "Keep shopping" },
+    { "type": "url", "id": "keep_url", "label": "Link", "default": "/collections/all" },
+    { "type": "header", "content": "Cards" },
+    { "type": "text", "id": "add_label", "label": "Add button", "default": "Add to bag" },
+    { "type": "text", "id": "add_aria", "label": "Add button (screen readers)", "info": "[name] is the product name.", "default": "Add [name] to bag" },
+    { "type": "text", "id": "remove_label", "label": "Remove button", "default": "Remove" },
+    { "type": "text", "id": "remove_aria", "label": "Remove button (screen readers)", "info": "[name] is the product name.", "default": "Remove [name] from wishlist" },
+    { "type": "text", "id": "sold_label", "label": "Sold out button", "default": "Sold out" },
+    { "type": "text", "id": "removed_label", "label": "Removed message", "info": "[name] is the product name.", "default": "Removed [name]." },
+    { "type": "text", "id": "undo_label", "label": "Undo button", "default": "Undo" },
+    { "type": "text", "id": "save_aria", "label": "Heart on suggestions (screen readers)", "info": "[name] is the product name.", "default": "Save [name]" },
+    { "type": "text", "id": "list_label", "label": "List label (screen readers)", "default": "Saved products" },
+    { "type": "header", "content": "Empty state" },
+    { "type": "text", "id": "empty_text", "label": "Text", "default": "Tap the heart on any product and it waits here for your next order." },
+    { "type": "text", "id": "empty_button", "label": "Button", "default": "Shop all" },
+    { "type": "url", "id": "empty_url", "label": "Button link", "default": "/collections/all" },
+    { "type": "text", "id": "sugg_heading", "label": "Suggestions heading", "default": "Most people start here." },
+    { "type": "text", "id": "sugg_label", "label": "Suggestions label (screen readers)", "default": "Products to start with" },
+    { "type": "paragraph", "content": "Add up to 4 product blocks as suggestions for an empty wishlist." }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Suggestion",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "paragraph", "content": "When no product is picked, the demo fields are used. Size also applies to a real product." },
+        { "type": "text", "id": "key", "label": "Demo key", "info": "Used by quick view, the bag and the heart.", "default": "calm" },
+        { "type": "text", "id": "name", "label": "Demo name", "default": "Calm wash" },
+        { "type": "text", "id": "size", "label": "Size", "default": "400 ml" },
+        { "type": "text", "id": "price", "label": "Demo price in cents", "default": "1800" },
+        { "type": "text", "id": "line", "label": "Short line", "default": "Everyday, eczema-prone skin. Colloidal oat and glycerin." },
+        { "type": "text", "id": "labels", "label": "Labels", "info": "Comma list of best, ff, new, sale.", "default": "best,ff" },
+        { "type": "textarea", "id": "ing", "label": "Ingredients" },
+        { "type": "image_picker", "id": "image", "label": "Demo image" },
+        { "type": "image_picker", "id": "hover", "label": "Hover image" }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Lather wishlist",
+      "blocks": [
+        { "type": "product", "settings": { "key": "calm", "name": "Calm wash", "size": "400 ml", "price": "1800", "labels": "best,ff" } },
+        { "type": "product", "settings": { "key": "bar", "name": "Oat bar", "size": "120 g", "price": "900", "labels": "best,ff", "line": "Oat milk soap bar for face and body. Rich lather that rinses soft." } },
+        { "type": "product", "settings": { "key": "lotion", "name": "Calm lotion", "size": "250 ml", "price": "2200", "labels": "ff", "line": "Light lotion for damp skin, straight after the wash." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

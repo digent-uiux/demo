@@ -1,0 +1,27 @@
+{%- comment -%}
+  Demo links shown while no menu is picked. lines: textarea, one link per line "Label | link".
+  Link tokens: [home] [all] [search] [account] [cart]; a path starting with "/" gets the shop's root (locale) prefix,
+  e.g. /pages/about, /pages/help#shipping, /blogs/journal, /products/calm-wash. "#id" stays an in-page anchor.
+{%- endcomment -%}
+{%- liquid
+  assign rows = lines | newline_to_br | split: '<br />'
+  assign root = routes.root_url
+  if root == '/'
+    assign root = ''
+  endif
+-%}
+{%- for ln in rows -%}
+  {%- assign parts = ln | strip | split: '|' -%}
+  {%- assign label = parts[0] | strip -%}
+  {%- if label != blank -%}
+    {%- assign url = parts[1] | strip | default: '#' -%}
+    {%- liquid
+      assign first_char = url | slice: 0
+      assign url = url | replace: '[home]', routes.root_url | replace: '[all]', routes.all_products_collection_url | replace: '[search]', routes.search_url | replace: '[account]', routes.account_url | replace: '[cart]', routes.cart_url
+      if first_char == '/'
+        assign url = root | append: url
+      endif
+    -%}
+    <a href="{{ url }}">{{ label | escape }}</a>
+  {%- endif -%}
+{%- endfor -%}

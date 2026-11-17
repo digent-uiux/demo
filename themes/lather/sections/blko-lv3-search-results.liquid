@@ -1,0 +1,178 @@
+{%- comment -%}
+  Lather v3, search results (pages/search/20-results.html). Three modes (data-mode on the root):
+    server  a search was run (search.performed): search.results, paginated, products and journal articles (and pages
+            when the form searches them); no results shows the empty state.
+    browse  no search yet in a store: "the whole short list", the products of the picked collection (default: all).
+    demo    no products at all (local preview): the "Demo product" blocks, filtered in the browser as you type,
+            exactly like the HTML.
+  Suggestions in blko-lv3-search-find filter in demo mode and run a real search otherwise.
+{%- endcomment -%}
+{{ 'blko-lv3-search-results.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-search-results.js' | asset_url }}" defer></script>
+
+{%- paginate search.results by section.settings.per_page -%}
+{%- liquid
+  assign s = section.settings
+  assign uid = section.id
+  assign mode = 'demo'
+  assign browse = s.collection
+  if browse == blank
+    assign browse = collections.all
+  endif
+  if search.performed
+    assign mode = 'server'
+  elsif browse.products.size > 0
+    assign mode = 'browse'
+  endif
+  assign demos = section.blocks | where: 'type', 'product'
+
+  if mode == 'server'
+    assign n = search.results_count
+    assign heading = s.heading_results | replace: '[terms]', search.terms
+    if n == 1
+      assign count_text = s.res_one | replace: '[count]', n
+    else
+      assign count_text = s.res_other | replace: '[count]', n
+    endif
+  else
+    if mode == 'browse'
+      assign n = browse.products.size | at_most: s.browse_limit
+    else
+      assign n = demos.size
+    endif
+    assign heading = s.heading_all
+    if n == 1
+      assign count_text = s.count_one | replace: '[count]', n
+    else
+      assign count_text = s.count_other | replace: '[count]', n
+    endif
+  endif
+-%}
+<section class="s-search-results" id="latherSearchResults-{{ uid }}" aria-labelledby="searchResultsHeading-{{ uid }}" data-lv3-search-results data-mode="{{ mode }}" data-heading-all="{{ s.heading_all | escape }}" data-heading-results="{{ s.heading_results | escape }}" data-count-one="{{ s.count_one | escape }}" data-count-other="{{ s.count_other | escape }}">
+  <div class="wrap">
+    <div class="s-search-results__top"><h2 id="searchResultsHeading-{{ uid }}" data-heading>{{ heading | escape }}</h2><p role="status" aria-live="polite" aria-atomic="true" data-count>{{ count_text | escape }}</p></div>
+    <ul class="s-search-results__list" data-list{% if n == 0 %} hidden{% endif %}>
+      {%- liquid
+        case mode
+          when 'server'
+            for item in search.results
+              render 'blko-lv3-search-item', item: item, qv_aria: s.qv_aria, view_aria: s.view_aria, add_label: s.add_label, add_aria: s.add_aria, sold_label: s.sold_label, read_label: s.read_label
+            endfor
+          when 'browse'
+            for item in browse.products limit: s.browse_limit
+              render 'blko-lv3-search-item', item: item, qv_aria: s.qv_aria, view_aria: s.view_aria, add_label: s.add_label, add_aria: s.add_aria, sold_label: s.sold_label, read_label: s.read_label
+            endfor
+          else
+            for block in demos
+              render 'blko-lv3-search-item', demo: block.settings, qv_aria: s.qv_aria, view_aria: s.view_aria, add_label: s.add_label, add_aria: s.add_aria, sold_label: s.sold_label, read_label: s.read_label
+            endfor
+        endcase
+      -%}
+    </ul>
+    <div class="s-search-results__empty" data-empty{% if n > 0 %} hidden{% endif %}>
+      {%- if s.empty_heading != blank -%}<h2 class="h2">{{ s.empty_heading }}</h2>{%- endif -%}
+      {%- if s.empty_text != blank -%}<p>{{ s.empty_text | escape }}</p>{%- endif -%}
+      <div class="s-search-results__actions">
+        {%- if s.empty_button != blank -%}
+          {%- if mode == 'demo' -%}
+            <button class="btn btn--primary" type="button" data-clear>{{ s.empty_button | escape }}</button>
+          {%- else -%}
+            <a class="btn btn--primary" href="{{ routes.search_url }}">{{ s.empty_button | escape }}</a>
+          {%- endif -%}
+        {%- endif -%}
+        {%- if s.empty_link_label != blank -%}<a class="btn btn--ghost" href="{{ s.empty_link | default: routes.all_products_collection_url }}">{{ s.empty_link_label | escape }}</a>{%- endif -%}
+      </div>
+    </div>
+    {%- if mode == 'server' and paginate.pages > 1 -%}
+      <nav class="s-search-results__pages" aria-label="{{ s.pages_label | escape }}">
+        {%- if paginate.previous -%}<a href="{{ paginate.previous.url }}" rel="prev">{{ s.prev_label | escape }}</a>{%- endif -%}
+        {%- for part in paginate.parts -%}
+          {%- if part.is_link -%}<a href="{{ part.url }}">{{ part.title }}</a>{%- elsif part.title == paginate.current_page -%}<span aria-current="page">{{ part.title }}</span>{%- else -%}<span>{{ part.title }}</span>{%- endif -%}
+        {%- endfor -%}
+        {%- if paginate.next -%}<a href="{{ paginate.next.url }}" rel="next">{{ s.next_label | escape }}</a>{%- endif -%}
+      </nav>
+    {%- endif -%}
+    {%- if s.help_title != blank or s.help_text != blank -%}
+      <aside class="s-search-results__help" aria-label="{{ s.help_aria | escape }}"><div><strong>{{ s.help_title | escape }}</strong>{%- if s.help_text != blank -%}<p>{{ s.help_text | escape }}</p>{%- endif -%}</div>{%- if s.help_button != blank -%}<a class="btn btn--ghost" href="{{ s.help_link | default: routes.root_url }}">{{ s.help_button | escape }}</a>{%- endif -%}</aside>
+    {%- endif -%}
+    {%- if mode == 'demo' and s.noscript != blank -%}
+      <noscript><p class="small s-search-results__noscript">{{ s.noscript }}</p></noscript>
+    {%- endif -%}
+  </div>
+</section>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Lather search results",
+  "tag": "div",
+  "class": "blko-lv3-section-search-results",
+  "enabled_on": { "templates": ["search"] },
+  "settings": [
+    { "type": "range", "id": "per_page", "label": "Results per page", "min": 6, "max": 48, "step": 2, "default": 24 },
+    { "type": "header", "content": "Before a search" },
+    { "type": "collection", "id": "collection", "label": "Products to list", "info": "Empty: all products." },
+    { "type": "range", "id": "browse_limit", "label": "Products to show", "min": 2, "max": 24, "step": 1, "default": 12 },
+    { "type": "text", "id": "heading_all", "label": "Heading", "default": "The whole short list" },
+    { "type": "text", "id": "count_one", "label": "Count, one product", "default": "[count] product" },
+    { "type": "text", "id": "count_other", "label": "Count, several products", "default": "[count] products" },
+    { "type": "header", "content": "After a search" },
+    { "type": "text", "id": "heading_results", "label": "Heading", "default": "Results for “[terms]”", "info": "[terms] shows what was searched." },
+    { "type": "text", "id": "res_one", "label": "Count, one result", "default": "[count] result" },
+    { "type": "text", "id": "res_other", "label": "Count, several results", "default": "[count] results" },
+    { "type": "text", "id": "pages_label", "label": "Pagination label (screen readers)", "default": "Pages" },
+    { "type": "text", "id": "prev_label", "label": "Previous", "default": "Previous" },
+    { "type": "text", "id": "next_label", "label": "Next", "default": "Next" },
+    { "type": "header", "content": "Rows" },
+    { "type": "text", "id": "add_label", "label": "Add button", "default": "Add to bag" },
+    { "type": "text", "id": "add_aria", "label": "Add button (screen readers)", "default": "Add [name] to bag" },
+    { "type": "text", "id": "sold_label", "label": "Sold out button", "default": "Sold out" },
+    { "type": "text", "id": "read_label", "label": "Article and page button", "default": "Read" },
+    { "type": "text", "id": "view_aria", "label": "Photo link (screen readers)", "default": "View" },
+    { "type": "text", "id": "qv_aria", "label": "Quick view link (screen readers)", "default": "Quick view" },
+    { "type": "header", "content": "No results" },
+    { "type": "inline_richtext", "id": "empty_heading", "label": "Heading", "default": "Let's try something <em>simpler.</em>" },
+    { "type": "textarea", "id": "empty_text", "label": "Text", "default": "We couldn't find a match. Try a product name, “oat” or “fragrance-free”. You can also browse the full line." },
+    { "type": "text", "id": "empty_button", "label": "First button (clears the search)", "default": "Show all products" },
+    { "type": "text", "id": "empty_link_label", "label": "Second button", "default": "Shop the line" },
+    { "type": "url", "id": "empty_link", "label": "Second button link", "info": "Empty: all products." },
+    { "type": "header", "content": "Help box" },
+    { "type": "text", "id": "help_title", "label": "Title", "default": "Not sure what your skin needs?" },
+    { "type": "text", "id": "help_text", "label": "Text", "default": "Start with the differences between our washes, or ask us a question." },
+    { "type": "text", "id": "help_button", "label": "Button", "default": "A little help" },
+    { "type": "url", "id": "help_link", "label": "Button link" },
+    { "type": "text", "id": "help_aria", "label": "Help box label (screen readers)", "default": "Help choosing" },
+    { "type": "inline_richtext", "id": "noscript", "label": "Note without JavaScript (preview list only)", "default": "The full product list is shown above. Search needs JavaScript; you can still browse each product or <a href=\"/collections/all\">shop the line</a>." }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Demo product",
+      "limit": 24,
+      "settings": [
+        { "type": "paragraph", "content": "Shown only when the store has no products to list (preview)." },
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "text", "id": "key", "label": "Demo key", "info": "Used by quick view and the bag." },
+        { "type": "text", "id": "name", "label": "Demo name", "default": "Calm wash" },
+        { "type": "text", "id": "size", "label": "Size", "default": "400 ml" },
+        { "type": "text", "id": "price", "label": "Demo price in cents", "default": "1800" },
+        { "type": "text", "id": "line", "label": "Short line", "default": "Everyday, eczema-prone skin. Colloidal oat and glycerin." },
+        { "type": "text", "id": "labels", "label": "Labels", "info": "Comma list of best, ff, new, sale." },
+        { "type": "textarea", "id": "ing", "label": "Ingredients" },
+        { "type": "text", "id": "keywords", "label": "Extra search words" },
+        { "type": "url", "id": "url", "label": "Link", "info": "Empty: the name opens the quick view." },
+        { "type": "image_picker", "id": "image", "label": "Demo image" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather search results",
+      "blocks": [
+        { "type": "product", "settings": { "key": "calm", "name": "Calm wash", "size": "400 ml", "price": "1800", "labels": "best,ff", "line": "Everyday, eczema-prone skin. Colloidal oat and glycerin.", "keywords": "wash body wash eczema prone daily dry tight fragrance free unscented no scent" } },
+        { "type": "product", "settings": { "key": "bar", "name": "Oat bar", "size": "120 g", "price": "900", "labels": "best,ff", "line": "Oat milk soap bar for face and body. Rich lather that rinses soft.", "keywords": "soap bar face body hands oat milk fragrance free unscented no scent" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

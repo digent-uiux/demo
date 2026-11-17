@@ -1,0 +1,231 @@
+{%- comment -%}
+  Lather v3, 40 Product grid with filter chips (home-v3/parts/40-grid.html).
+  A dense four-column grid: one feature card (2 x 2), regular cards and a wide card (2 x 1). Each card shows a second
+  image on hover, labels, quick view and add to bag (window.LATHER via data-add / data-quick). Filter chips show the
+  cards whose filter tags include the chip's tag; leavers fade and blur out under html.motion.
+  Blocks: "Filter chip" (label + tag) and "Product" (product picker with demo fallback, tags, card size, two images).
+{%- endcomment -%}
+{{ 'blko-lv3-grid.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-grid.js' | asset_url }}" defer></script>
+{{ 'blko-lv3-wishlist.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-wishlist.js' | asset_url }}" defer></script>
+{%- liquid
+  assign s = section.settings
+  assign uid = 'blko-lv3-grid-' | append: section.id
+  assign anchor = s.anchor | handleize
+  if anchor == blank
+    assign anchor = uid
+  endif
+  assign n_products = 0
+  assign n_filters = 0
+  for block in section.blocks
+    if block.type == 'product'
+      assign n_products = n_products | plus: 1
+    else
+      assign n_filters = n_filters | plus: 1
+    endif
+  endfor
+  if n_products == 1
+    assign count_text = s.count_one | replace: '[n]', n_products
+  else
+    assign count_text = s.count_many | replace: '[n]', n_products
+  endif
+-%}
+<section class="s-grid" id="{{ anchor }}" aria-labelledby="{{ uid }}-h" data-count-one="{{ s.count_one | escape }}" data-count-many="{{ s.count_many | escape }}">
+  <div class="wrap">
+    <div class="s-grid__hd">
+      <h2 class="h2" id="{{ uid }}-h" data-rv="line">
+        {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
+        {%- if s.heading_2 != blank -%}<span class="ln"><span>{{ s.heading_2 }}</span></span>{%- endif -%}
+      </h2>
+      <div class="s-grid__filters" data-rv="blur" data-rv-delay="1">
+        {%- if n_filters > 0 -%}
+          <div class="s-grid__chips" role="group" aria-label="{{ s.filter_label | escape }}">
+            <button class="chip" type="button" aria-pressed="true" data-f="all">{{ s.all_label | escape }}</button>
+            {%- for block in section.blocks -%}
+              {%- if block.type != 'filter' -%}{%- continue -%}{%- endif -%}
+              <button class="chip" type="button" aria-pressed="false" data-f="{{ block.settings.tag | strip | downcase | escape }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}</button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+        <p class="s-grid__count" data-grid-count aria-live="polite">{{ count_text | escape }}</p>
+      </div>
+    </div>
+
+    <ul class="s-grid__list" role="list">
+      {%- assign pi = 0 -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type != 'product' -%}{%- continue -%}{%- endif -%}
+        {%- liquid
+          assign b = block.settings
+          assign p = b.product
+          assign delay = pi | modulo: 3
+          assign pi = pi | plus: 1
+          assign key = b.key | strip | handleize
+          if key == blank
+            assign key = 'g-' | append: block.id
+          endif
+          assign card = b.card
+          if card == 'feat'
+            assign sizes = '(min-width: 1100px) 50vw, 100vw'
+          elsif card == 'wide'
+            assign sizes = '(min-width: 760px) 66vw, 100vw'
+          else
+            assign sizes = '(min-width: 1100px) 25vw, (min-width: 760px) 33vw, 50vw'
+          endif
+
+          assign name = b.name
+          assign size = b.size
+          assign price_html = b.price | times: 1 | money_without_trailing_zeros
+          assign cut_html = ''
+          assign img_a = b.image
+          assign img_b = b.hover_image
+          if p != blank
+            assign v = p.selected_or_first_available_variant
+            assign name = p.title
+            if size == blank and v.title != 'Default Title'
+              assign size = v.title
+            endif
+            assign price_html = v.price | money_without_trailing_zeros
+            if v.compare_at_price > v.price
+              assign cut_html = v.compare_at_price | money_without_trailing_zeros
+            endif
+            if img_a == blank
+              assign img_a = p.featured_media.preview_image
+            endif
+            if img_b == blank and p.media.size > 1
+              assign img_b = p.media[1].preview_image
+            endif
+          endif
+          assign alt = b.image_alt | default: name
+          assign label_keys = b.labels | remove: ' ' | split: ','
+        -%}
+        {%- render 'blko-lv3-product-data', key: key, product: p, name: b.name, size: b.size, price: b.price, line: b.quick_line, ing: b.ingredients, labels: b.labels, img: b.image, hover: b.hover_image -%}
+        <li class="s-grid__card{% if card == 'feat' %} s-grid__card--feat{% elsif card == 'wide' %} s-grid__card--wide{% endif %}" data-tags="{{ b.tags | strip | downcase | escape }}" data-rv="settle"{% if delay > 0 %} data-rv-delay="{{ delay }}"{% endif %} {{ block.shopify_attributes }}>
+          <div class="s-grid__media">
+            {%- if img_a != blank -%}
+              {{ img_a | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '360, 540, 720, 1000, 1400', sizes: sizes, alt: alt, class: 'a' }}
+            {%- else -%}
+              {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph a' }}
+            {%- endif -%}
+            {%- if img_b != blank -%}
+              {%- capture b_style -%}{% if b.hover_zoom and b.hover_focus != blank %}--o: {{ b.hover_focus | escape }};{% endif %}{%- endcapture -%}
+              {%- capture b_class -%}b{% if b.hover_zoom %} zoom{% endif %}{%- endcapture -%}
+              {%- if b_style != blank -%}
+                {{ img_b | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '360, 540, 720, 1000, 1400', sizes: sizes, alt: '', class: b_class, style: b_style }}
+              {%- else -%}
+                {{ img_b | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '360, 540, 720, 1000, 1400', sizes: sizes, alt: '', class: b_class }}
+              {%- endif -%}
+            {%- endif -%}
+            {%- if label_keys.size > 0 -%}
+              <div class="labels">
+                {%- for lk in label_keys -%}
+                  {%- case lk -%}
+                    {%- when 'best' -%}<span class="label label--best">{{ s.label_best | escape }}</span>
+                    {%- when 'ff' -%}<span class="label label--ff">{{ s.label_ff | escape }}</span>
+                    {%- when 'new' -%}<span class="label label--new">{{ s.label_new | escape }}</span>
+                    {%- when 'sale' -%}<span class="label label--sale">{{ s.label_sale | escape }}</span>
+                  {%- endcase -%}
+                {%- endfor -%}
+              </div>
+            {%- endif -%}
+            <button class="btn btn--light btn--sm s-grid__qv" type="button" data-quick="{{ key }}">{{ s.quick_label | escape }}</button>
+            {%- render 'blko-lv3-wishlist-heart', key: key, name: name, label: s.wish_aria -%}
+          </div>
+          <div class="s-grid__info">
+            <h3 class="s-grid__nm">{{ name | escape }}</h3>
+            {%- if b.line != blank -%}<p class="s-grid__line">{{ b.line | escape }}</p>{%- endif -%}
+            <p class="s-grid__price"><span class="price">{{ price_html }}{% if cut_html != '' %} <s>{{ cut_html }}</s>{% endif %}</span>{% if size != blank %}<span class="small">{{ size | escape }}</span>{% endif %}</p>
+            {%- if card == 'feat' -%}
+              <button class="btn btn--primary" type="button" data-add="{{ key }}">{{ s.add_feature | replace: '[price]', price_html }}</button>
+            {%- else -%}
+              <button class="s-grid__add" type="button" data-add="{{ key }}" aria-label="{{ s.add_aria | replace: '[name]', name | escape }}"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 8h14l-1.2 12H6.2L5 8z"/><path d="M9 8V6.5a3 3 0 016 0V8"/><path d="M12 11.5v5M9.5 14h5"/></svg></button>
+            {%- endif -%}
+          </div>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lather v3 product grid",
+  "tag": "div",
+  "class": "blko-lv3-grid",
+  "max_blocks": 30,
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "Eight products, one" },
+    { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "info": "Italic text shows in the display font.", "default": "<em>short</em> list." },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "all" },
+    { "type": "header", "content": "Filter" },
+    { "type": "text", "id": "filter_label", "label": "Filter group label (screen readers)", "default": "Filter products" },
+    { "type": "text", "id": "all_label", "label": "First chip (shows all)", "default": "All" },
+    { "type": "text", "id": "count_one", "label": "Count, one", "info": "[n] is the number.", "default": "[n] product" },
+    { "type": "text", "id": "count_many", "label": "Count, many", "info": "[n] is the number.", "default": "[n] products" },
+    { "type": "header", "content": "Cards" },
+    { "type": "text", "id": "quick_label", "label": "Quick view button", "default": "Quick view" },
+    { "type": "text", "id": "wish_aria", "label": "Wishlist heart (screen readers)", "info": "[name] is the product name.", "default": "Save [name]" },
+    { "type": "text", "id": "add_feature", "label": "Feature card button", "info": "[price] is the price.", "default": "Add, [price]" },
+    { "type": "text", "id": "add_aria", "label": "Add button label (screen readers)", "info": "[name] is the product name.", "default": "Add [name]" },
+    { "type": "text", "id": "label_best", "label": "Label: best", "default": "Best seller" },
+    { "type": "text", "id": "label_ff", "label": "Label: ff", "default": "Fragrance-free" },
+    { "type": "text", "id": "label_new", "label": "Label: new", "default": "New" },
+    { "type": "text", "id": "label_sale", "label": "Label: sale", "default": "Sale" }
+  ],
+  "blocks": [
+    {
+      "type": "filter",
+      "name": "Filter chip",
+      "limit": 6,
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Fragrance-free" },
+        { "type": "text", "id": "tag", "label": "Tag", "info": "Shows the products whose filter tags include this word.", "default": "ff" }
+      ]
+    },
+    {
+      "type": "product",
+      "name": "Product",
+      "limit": 16,
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product", "info": "Blank uses the demo fields below." },
+        { "type": "text", "id": "key", "label": "Product key", "info": "Short id shared with other Lather sections (quick view, bag).", "default": "calm" },
+        {
+          "type": "select", "id": "card", "label": "Card size", "default": "regular",
+          "options": [ { "value": "feat", "label": "Feature (2 x 2)" }, { "value": "regular", "label": "Regular" }, { "value": "wide", "label": "Wide (2 x 1)" } ]
+        },
+        { "type": "text", "id": "tags", "label": "Filter tags", "info": "Words separated by spaces, matching the filter chip tags, e.g. ff dry.", "default": "ff" },
+        { "type": "text", "id": "labels", "label": "Labels", "info": "Comma separated: best, ff, new, sale.", "default": "ff" },
+        { "type": "text", "id": "line", "label": "Card line", "default": "Light lotion for damp skin." },
+        { "type": "header", "content": "Images" },
+        { "type": "image_picker", "id": "image", "label": "Main image", "info": "Blank uses the product's first image." },
+        { "type": "text", "id": "image_alt", "label": "Main image alt text", "default": "Calm lotion, 250 ml oat bottle with a moss pump" },
+        { "type": "image_picker", "id": "hover_image", "label": "Hover image", "info": "Blank uses the product's second image." },
+        { "type": "checkbox", "id": "hover_zoom", "label": "Zoom the hover image", "default": false },
+        { "type": "text", "id": "hover_focus", "label": "Zoom focus", "info": "x% y%, e.g. 62% 42%.", "default": "50% 50%" },
+        { "type": "header", "content": "Demo fields (used without a product)" },
+        { "type": "text", "id": "name", "label": "Name", "default": "Calm lotion" },
+        { "type": "text", "id": "size", "label": "Size", "info": "Also shown for a real product.", "default": "250 ml" },
+        { "type": "text", "id": "price", "label": "Price in cents", "default": "2200" },
+        { "type": "textarea", "id": "quick_line", "label": "Quick view text", "default": "Light lotion for damp skin, straight after the wash." },
+        { "type": "textarea", "id": "ingredients", "label": "Quick view ingredients", "default": "Water, glycerin, shea butter, colloidal oat, squalane, ceramide NP, cetearyl alcohol, xanthan gum." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather v3 product grid",
+      "blocks": [
+        { "type": "filter", "settings": { "label": "Fragrance-free", "tag": "ff" } },
+        { "type": "filter", "settings": { "label": "Kids", "tag": "kids" } },
+        { "type": "filter", "settings": { "label": "Very dry", "tag": "dry" } },
+        { "type": "product", "settings": { "key": "calm", "card": "feat", "tags": "ff", "labels": "best,ff", "name": "Calm wash", "size": "400 ml", "price": "1800", "line": "Fragrance-free. 10 ingredients. For everyday, eczema-prone skin.", "image_alt": "Calm wash, 400 ml clear bottle with a moss pump" } },
+        { "type": "product", "settings": { "key": "rich", "tags": "ff dry", "labels": "ff", "name": "Rich wash", "size": "400 ml", "price": "2000", "line": "Very dry or winter skin.", "image_alt": "Rich wash, 400 ml deep green bottle" } },
+        { "type": "product", "settings": { "key": "lotion", "tags": "ff", "labels": "ff", "name": "Calm lotion", "size": "250 ml", "price": "2200", "line": "Light lotion for damp skin." } },
+        { "type": "product", "settings": { "key": "bar", "card": "wide", "tags": "ff kids", "labels": "best,ff", "name": "Oat bar", "size": "120 g", "price": "900", "line": "Oat milk soap for face and body. Rich lather that rinses soft. The easiest way to start.", "image_alt": "Oat bar, 120 g soap with its moss carton" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

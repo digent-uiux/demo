@@ -1,0 +1,34 @@
+.s-search-results{background:var(--oat);padding:48px 0 100px;min-height:460px}
+.s-search-results__top{display:flex;align-items:baseline;justify-content:space-between;gap:20px;padding-bottom:22px;border-bottom:1px solid var(--line)}
+.s-search-results__top h2{font-size:24px;font-weight:500;line-height:1.3;overflow-wrap:anywhere}
+.s-search-results__top p{color:var(--muted);font-size:14px;flex:none}
+.s-search-results__list{list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 48px}
+.s-search-results__item{display:grid;grid-template-columns:144px minmax(0,1fr);gap:24px;padding:28px 0;border-bottom:1px solid var(--line);min-width:0}
+.s-search-results__item[hidden]{display:none}
+.s-search-results__photo{display:block;aspect-ratio:4/5;background:var(--sage-wash);border-radius:var(--r-img);overflow:hidden}
+.s-search-results__photo img{width:100%;height:100%;object-fit:cover;transition:filter .25s}
+.s-search-results__photo:hover img{filter:brightness(.97)}
+.s-search-results__info{display:flex;align-items:flex-start;flex-direction:column;min-width:0;gap:10px;justify-content:center}
+.s-search-results__info h3{font-size:21px;font-weight:600;line-height:1.2}
+.s-search-results__info h3 a{text-decoration:none}
+.s-search-results__info h3 a:hover{text-decoration:underline;text-underline-offset:4px}
+.s-search-results__line{font-size:14px;line-height:1.45;color:var(--muted);max-width:30ch}
+.s-search-results__buy{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:5px;width:100%}
+.s-search-results__buy .price{font-size:21px}
+.s-search-results__buy .btn{margin-left:auto}
+.s-search-results__empty{padding:66px 0 42px;max-width:650px}
+.s-search-results__empty[hidden]{display:none}
+.s-search-results__empty .h2{max-width:14ch;font-size:42px}
+.s-search-results__empty p{color:var(--muted);margin:22px 0;max-width:44ch}
+.s-search-results__actions{display:flex;flex-wrap:wrap;gap:12px}
+.s-search-results__help{display:flex;justify-content:space-between;gap:24px;margin-top:48px;padding:24px 28px;background:var(--stone);border-radius:var(--r-img);align-items:center}
+.s-search-results__help p{color:var(--muted);font-size:15px;margin-top:4px}
+.s-search-results__help strong{font-size:18px;font-weight:600}
+@media(max-width:1000px){.s-search-results__list{gap:0 28px}.s-search-results__item{grid-template-columns:112px minmax(0,1fr);gap:16px}.s-search-results__buy .btn{margin-left:0}.s-search-results__info h3{font-size:19px}}
+@media(max-width:680px){.s-search-results{padding:30px 0 64px}.s-search-results__top{align-items:flex-start;gap:12px}.s-search-results__top h2{font-size:21px}.s-search-results__list{grid-template-columns:1fr}.s-search-results__item{grid-template-columns:114px minmax(0,1fr);padding:22px 0;gap:20px}.s-search-results__info{gap:8px}.s-search-results__line{font-size:14px}.s-search-results__buy{gap:14px}.s-search-results__buy .btn{margin-left:auto}.s-search-results__empty{padding:44px 0 24px}.s-search-results__empty .h2{font-size:34px}.s-search-results__help{align-items:flex-start;flex-direction:column;margin-top:30px;padding:24px}.s-search-results__help .btn{width:100%}}
+/* Liquid port additions: placeholders, sale price, article button, no-JS note, pagination */
+.s-search-results__photo .blko-lv3-ph{width:100%;height:100%}
+.s-search-results__buy .price s{font-size:.7em;color:var(--muted);margin-left:6px}
+.s-search-results__noscript{margin-top:24px}.s-search-results__noscript a{font-weight:600;text-decoration:underline;text-underline-offset:4px}
+.s-search-results__pages{display:flex;flex-wrap:wrap;gap:8px;margin-top:40px;font-size:14px}.s-search-results__pages a,.s-search-results__pages span{display:inline-flex;align-items:center;justify-content:center;min-width:40px;min-height:40px;padding:0 12px;border-radius:var(--r-btn)}.s-search-results__pages a{background:var(--raised);box-shadow:inset 0 0 0 1px var(--line);text-decoration:none;transition:background-color .2s}.s-search-results__pages a:hover{background:var(--stone)}.s-search-results__pages [aria-current]{background:var(--deep);color:var(--oat)}
+.s-search-results__list[hidden]{display:none}

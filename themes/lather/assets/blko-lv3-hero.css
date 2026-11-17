@@ -1,0 +1,69 @@
+/* Lather v3 hero (ported from parts/05-hero.html). Shared tokens/classes come from blko-lv3-base.css. */
+/* 05 Hero slideshow. The header is sticky above us; pull the frame up under it. */
+.s-hero{position:relative;height:calc(100svh - 40px);min-height:560px;margin-top:-72px;color:var(--raised);overflow:hidden;background:var(--deep);isolation:isolate}
+@media (max-width:900px){.s-hero{margin-top:-60px}}
+.s-hero__slides{position:absolute;inset:0;z-index:0}
+.s-hero__slide{position:absolute;inset:0;opacity:0;visibility:hidden}
+.s-hero__slide.is-on{opacity:1;visibility:visible}
+.s-hero__slide :is(img,svg.blko-lv3-ph){width:100%;height:100%;object-fit:cover}
+.s-hero__slide[data-i="0"] :is(img,svg.blko-lv3-ph){object-position:50% 58%}
+.s-hero__slide[data-i="1"] :is(img,svg.blko-lv3-ph){object-position:50% 38%}
+.s-hero__slide[data-i="2"] :is(img,svg.blko-lv3-ph){object-position:50% 48%}
+html.motion .s-hero__slide{transition:opacity .9s var(--ease),filter .9s var(--ease),visibility 0s linear .9s;filter:blur(12px)}
+html.motion .s-hero__slide.is-on{filter:blur(0);transition:opacity .9s var(--ease),filter .9s var(--ease),visibility 0s}
+html.motion .s-hero__slide :is(img,svg.blko-lv3-ph){transform:scale(1.08);transition:transform 2.4s var(--ease-io)}
+html.motion .s-hero__slide.is-on :is(img,svg.blko-lv3-ph){transform:scale(1)}
+/* soft ink veils: top for the header, bottom-left for the text */
+.s-hero__veil{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(38,43,34,.42) 0%,rgba(38,43,34,0) 22%),
+             linear-gradient(0deg,rgba(38,43,34,.72) 0%,rgba(38,43,34,.34) 34%,rgba(38,43,34,0) 62%),
+             linear-gradient(90deg,rgba(38,43,34,.28) 0%,rgba(38,43,34,0) 55%)}
+.s-hero__fg{position:absolute;inset:auto 0 0 0;z-index:2;padding-bottom:clamp(40px,6vh,72px)}
+.s-hero__grid{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"copy ctrl";align-items:end;gap:32px}
+.s-hero__copy{grid-area:copy;max-width:760px}
+.s-hero__heads{display:grid}
+.s-hero__h{grid-area:1/1;font:500 clamp(40px,5.2vw,84px)/1 var(--f-body);letter-spacing:-.025em;color:var(--raised);visibility:hidden}
+.s-hero__h.is-on{visibility:visible}
+.s-hero__h em{font-family:var(--f-display);font-style:normal;font-weight:400;font-size:1.08em;letter-spacing:-.01em}
+.s-hero__h .ln{display:block;overflow:hidden;padding-bottom:.1em;margin-bottom:-.1em}
+.s-hero__h .ln>span{display:block}
+html.motion .s-hero__h .ln>span{transform:translateY(108%);transition:transform .5s var(--ease)}
+html.motion .s-hero__h.is-on .ln>span{transform:none;transition:transform 1s cubic-bezier(.22,1,.36,1) .25s}
+html.motion .s-hero__h.is-on .ln+.ln>span{transition-delay:.36s}
+.s-hero__lead{margin-top:18px;font-size:19px;line-height:1.5;color:var(--raised);opacity:.9;max-width:40ch}
+.s-hero__cta{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap}
+.s-hero__cta .btn--ghost{color:var(--raised)}
+.s-hero__cta .btn--ghost:hover{background:rgba(247,243,234,.14)}
+/* controls: progress lines + prev/next */
+.s-hero__ctrl{grid-area:ctrl;display:flex;align-items:center;gap:18px;padding-bottom:12px}
+.s-hero__bars{display:flex;gap:8px}
+.s-hero__bar{width:56px;height:28px;display:flex;align-items:center}
+.s-hero__bar i{display:block;width:100%;height:2px;border-radius:1px;background:rgba(247,243,234,.32);overflow:hidden}
+.s-hero__bar b{display:block;height:100%;background:var(--raised);transform-origin:left;transform:scaleX(0)}
+.s-hero__bar[aria-current="true"] b{transform:scaleX(1)}
+html.motion .s-hero.is-auto .s-hero__bar[aria-current="true"] b{transform:scaleX(0);animation:s-hero-prog 7s linear forwards}
+html.motion .s-hero.is-paused .s-hero__bar b{animation-play-state:paused}
+/* intro: the script after this section adds .is-intro at once, then lifts it */
+html.motion .s-hero.is-intro .s-hero__slide :is(img,svg.blko-lv3-ph){transform:scale(1.08)}
+html.motion .s-hero.is-intro .s-hero__h .ln>span{transform:translateY(108%)}
+@keyframes s-hero-prog{to{transform:scaleX(1)}}
+.s-hero__bar:focus-visible{outline:2px solid var(--raised);outline-offset:2px}
+.s-hero__arrows{display:flex;gap:6px}
+.s-hero__arrows button{width:46px;height:46px;border-radius:var(--r-btn);display:grid;place-items:center;box-shadow:inset 0 0 0 1.5px rgba(247,243,234,.5);transition:background-color .25s var(--ease),box-shadow .25s var(--ease)}
+.s-hero__arrows button:hover{background:rgba(247,243,234,.14);box-shadow:inset 0 0 0 1.5px var(--raised)}
+.s-hero__arrows button:focus-visible{outline:2px solid var(--raised);outline-offset:2px}
+.s-hero__arrows svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+@media (max-width:760px){
+  .s-hero{min-height:620px}
+  .s-hero__slide[data-i="1"] :is(img,svg.blko-lv3-ph){object-position:62% 40%}
+  .s-hero__veil{background:linear-gradient(180deg,rgba(38,43,34,.42) 0%,rgba(38,43,34,0) 20%),linear-gradient(0deg,rgba(38,43,34,.8) 0%,rgba(38,43,34,.42) 42%,rgba(38,43,34,0) 68%)}
+  .s-hero__fg{padding-bottom:24px}
+  .s-hero__grid{grid-template-columns:1fr;grid-template-areas:"ctrl" "copy";gap:18px}
+  .s-hero__ctrl{justify-content:space-between;padding-bottom:0}
+  .s-hero__bar{width:40px}
+  .s-hero__arrows button{width:40px;height:40px}
+  .s-hero__h{font-size:38px}
+  .s-hero__lead{font-size:17px;margin-top:12px}
+  .s-hero__cta{flex-direction:column;gap:10px;margin-top:20px}
+  .s-hero__cta .btn{width:100%}
+}

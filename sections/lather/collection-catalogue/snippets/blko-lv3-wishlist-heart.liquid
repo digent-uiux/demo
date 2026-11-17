@@ -1,0 +1,16 @@
+{%- comment -%}
+  Heart button for the Lather wishlist (blko-lv3-wishlist.js). Sits top right in a product card's image box.
+    {% render 'blko-lv3-wishlist-heart', key: key, name: name, label: section.settings.wish_aria %}
+  key    the product key in window.LATHER.products (same as data-add / data-quick)
+  name   product name for the screen-reader label
+  label  label template, [name] is the product name (default "Save [name]"). aria-pressed tells the saved state.
+  text, text_on   optional: render the text version (product page), e.g. text: 'Save', text_on: 'Saved'
+{%- endcomment -%}
+{%- liquid
+  assign w_label = label | default: 'Save [name]' | replace: '[name]', name
+-%}
+{%- if text != blank -%}
+<button class="lv3-heart lv3-heart--text" type="button" data-wish="{{ key | escape }}" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg><span data-wish-text data-off="{{ text | escape }}" data-on="{{ text_on | default: text | escape }}">{{ text | escape }}</span></button>
+{%- else -%}
+<button class="lv3-heart" type="button" data-wish="{{ key | escape }}" aria-pressed="false" aria-label="{{ w_label | escape }}"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg></button>
+{%- endif -%}

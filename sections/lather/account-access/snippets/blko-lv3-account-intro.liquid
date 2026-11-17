@@ -1,0 +1,23 @@
+{%- comment -%}
+  Lather v3 account pages: the intro column shared by blko-lv3-account-access and blko-lv3-account-orders.
+  s = section.settings (eyebrow, heading_1, heading_2, text, help_label, help_link, image, image_alt), sid = section.id
+{%- endcomment -%}
+{%- liquid
+  assign help_url = s.help_link | default: '/pages/help'
+  assign intro_alt = s.image.alt | default: s.image_alt
+-%}
+    <div class="s-acct-access__intro">
+      {%- if s.eyebrow != blank -%}<p class="small">{{ s.eyebrow | escape }}</p>{%- endif -%}
+      <h1 class="h1" id="account-title-{{ sid }}" data-rv="line">
+        {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
+        {%- if s.heading_2 != blank -%}<span class="ln"><span>{{ s.heading_2 }}</span></span>{%- endif -%}
+      </h1>
+      {%- if s.text != blank -%}<p>{{ s.text | escape }}</p>{%- endif -%}
+      {%- if s.help_label != blank -%}<a class="link" href="{{ help_url }}">{{ s.help_label | escape }}</a>{%- endif -%}
+      {%- if s.image != blank -%}
+        {{ s.image | image_url: width: 600 | image_tag: widths: '220, 440, 600', sizes: '220px', loading: 'lazy', alt: intro_alt }}
+      {%- else -%}
+        {{ 'lifestyle-2' | placeholder_svg_tag: 'blko-lv3-ph' }}
+      {%- endif -%}
+    </div>
+

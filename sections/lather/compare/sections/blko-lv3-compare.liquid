@@ -1,0 +1,151 @@
+{%- comment -%}
+  Lather home v3, 60 Compare: which wash for your skin. Card blocks (product or demo fields, best-for line, scent, feel)
+  and a chip per card: pick your skin and the right card steps forward on deep moss, the others step back.
+  Port of parts/60-compare.html; shared classes (.h2 .chip .price .btn) come from blko-lv3-base.css.
+{%- endcomment -%}
+{{ 'blko-lv3-compare.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-compare.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+  assign uid = section.id | replace: '_', '-'
+-%}
+<section class="s-cmp" id="{{ s.anchor | default: 'compare' | handleize }}" aria-labelledby="cmpH-{{ uid }}">
+  <div class="wrap">
+    <div class="s-cmp__top">
+      <h2 class="h2" id="cmpH-{{ uid }}" data-rv="line">
+        {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
+        {%- if s.heading_2 != blank -%}<span class="ln"><span>{{ s.heading_2 }}</span></span>{%- endif -%}
+      </h2>
+      <div class="s-cmp__ask" data-rv="blur" data-rv-delay="1">
+        <p id="cmpAsk-{{ uid }}">{{ s.ask | escape }}</p>
+        <div class="s-cmp__chips" role="group" aria-labelledby="cmpAsk-{{ uid }}">
+          {%- for block in section.blocks -%}
+            {%- if block.settings.chip != blank -%}
+              <button type="button" class="chip" aria-pressed="false" data-pick="{{ block.id }}">{{ block.settings.chip | escape }}</button>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+
+    <div class="s-cmp__row" data-rv="blur" data-rv-delay="2">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign b = block.settings
+          assign p = b.product
+          assign nm = b.name
+          assign cents = b.price | plus: 0
+          assign img = b.image
+          assign url = blank
+          if p != blank
+            assign nm = p.title
+            assign cents = p.selected_or_first_available_variant.price
+            assign img = p.featured_image
+            assign url = p.url
+          endif
+          assign key = b.key | strip
+          if key == blank and p != blank
+            assign key = p.handle
+          endif
+          if key == blank
+            assign key = block.id
+          endif
+          assign alt = b.image_alt | default: nm
+        -%}
+        {%- render 'blko-lv3-product-data', key: key, product: p, name: b.name, size: b.size, price: b.price, line: b.line, labels: b.labels, img: b.image -%}
+        <article class="s-cmp__card" data-c="{{ block.id }}" {{ block.shopify_attributes }}>
+          <div class="s-cmp__img">
+            {%- if img != blank -%}
+              {{ img | image_url: width: 800 | image_tag: alt: alt, loading: 'lazy', widths: '320, 480, 640, 800', sizes: '(min-width: 761px) 25vw, 80vw' }}
+            {%- else -%}
+              {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph' }}
+            {%- endif -%}
+          </div>
+          <div class="s-cmp__body">
+            <h3 class="s-cmp__name">{% if url != blank %}<a href="{{ url }}">{{ nm | escape }}</a>{% else %}{{ nm | escape }}{% endif %}</h3>
+            {%- if b.best_for != blank -%}<p class="s-cmp__for">{{ b.best_for | escape }}</p>{%- endif -%}
+            <dl class="s-cmp__facts">
+              {%- if b.scent != blank -%}<dt>{{ s.scent_label | escape }}</dt><dd>{{ b.scent | escape }}</dd>{%- endif -%}
+              {%- if b.feel != blank -%}<dt>{{ s.feel_label | escape }}</dt><dd>{{ b.feel | escape }}</dd>{%- endif -%}
+            </dl>
+            <div class="s-cmp__foot"><span class="price" data-price="{{ key | escape }}">{{ cents | money_without_trailing_zeros }}</span><button type="button" class="btn btn--light btn--sm" data-add="{{ key | escape }}" aria-label="{{ s.add_aria | replace: '[name]', nm | escape }}">{{ s.add_label | escape }}</button></div>
+          </div>
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Compare products",
+  "class": "blko-lv3-section-compare",
+  "settings": [
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "info": "Links like #compare jump here.", "default": "compare" },
+    { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "Which wash for" },
+    { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "info": "Use italic for the emphasised word.", "default": "<em>your</em> skin?" },
+    { "type": "text", "id": "ask", "label": "Chips question", "default": "My skin is" },
+    { "type": "text", "id": "scent_label", "label": "Scent label", "default": "Scent" },
+    { "type": "text", "id": "feel_label", "label": "Feel label", "default": "Feel" },
+    { "type": "text", "id": "add_label", "label": "Add button", "default": "Add" },
+    { "type": "text", "id": "add_aria", "label": "Add button (screen readers)", "info": "[name] becomes the product name.", "default": "Add [name]" }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Product card",
+      "limit": 4,
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "text", "id": "key", "label": "Product key", "info": "Shared with the other sections' buttons. Blank uses the product handle.", "default": "calm" },
+        { "type": "text", "id": "chip", "label": "Chip that picks this card", "info": "Blank: no chip for this card.", "default": "Eczema-prone" },
+        { "type": "text", "id": "best_for", "label": "Best for", "default": "Best for eczema-prone skin and everyday showers." },
+        { "type": "text", "id": "scent", "label": "Scent", "default": "None" },
+        { "type": "text", "id": "feel", "label": "Feel", "default": "Milky, soft foam" },
+        { "type": "text", "id": "image_alt", "label": "Image description", "default": "Calm wash, clear bottle with a moss pump" },
+        { "type": "header", "content": "Demo product (no product picked)" },
+        { "type": "text", "id": "name", "label": "Name", "default": "Calm wash" },
+        { "type": "text", "id": "size", "label": "Size", "default": "400 ml" },
+        { "type": "text", "id": "price", "label": "Price in cents", "default": "1800" },
+        { "type": "text", "id": "line", "label": "Quick view line", "default": "Everyday, eczema-prone skin. Colloidal oat and glycerin." },
+        { "type": "text", "id": "labels", "label": "Labels", "info": "Comma list: best, ff, new, sale.", "default": "best,ff" },
+        { "type": "image_picker", "id": "image", "label": "Image" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Compare products",
+      "blocks": [
+        { "type": "card" },
+        {
+          "type": "card",
+          "settings": {
+            "key": "rich", "chip": "Very dry", "best_for": "Best for very dry or winter skin that feels tight.", "scent": "None", "feel": "Thick, almost a lotion",
+            "image_alt": "Rich wash, deep green bottle", "name": "Rich wash", "size": "400 ml", "price": "2000",
+            "line": "Very dry or winter skin. Thicker, almost a lotion.", "labels": "ff"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "key": "chamomile", "chip": "Fine with a light scent", "best_for": "Calm wash with a light scent, for skin that's fine with one.", "scent": "Light chamomile, 0.2%", "feel": "Milky, soft foam",
+            "image_alt": "Chamomile wash, clear bottle with an ochre pump", "name": "Chamomile wash", "size": "400 ml", "price": "2000",
+            "line": "Our only scented wash: 0.2% chamomile oil, allergens listed.", "labels": ""
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "key": "soft", "chip": "Sensitive", "best_for": "Best for sensitive skin that reacts to almost everything.", "scent": "None", "feel": "Light, low foam",
+            "image_alt": "Soft wash, terracotta bottle", "name": "Soft wash", "size": "400 ml", "price": "1800",
+            "line": "Our gentlest wash for sensitive skin. Low foam, rinses clean.", "labels": "new,ff"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

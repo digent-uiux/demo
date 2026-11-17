@@ -1,0 +1,297 @@
+{%- comment -%}
+  Lather home v3, 45 Routine: the after-shower routine as a set. Step blocks (a choice of up to three products, or one
+  optional add-on), the routine discount on every line, a running total, and an honest countdown on the photo.
+  Products: each option takes a real product (title, price, image, variant id) or demo fields when blank.
+  Port of parts/45-routine.html; shared classes (.h2 .lead .small .price .btn .sr, data-rv) come from blko-lv3-base.css.
+{%- endcomment -%}
+{{ 'blko-lv3-routine.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-routine.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+  assign off = s.discount
+  assign keep = 100 | minus: off
+  assign anchor = s.anchor | default: 'routine' | handleize
+  assign uid = section.id | replace: '_', '-'
+  assign pick_count = 0
+  assign total_set = 0
+  assign total_orig = 0
+-%}
+<section class="s-routine" id="{{ anchor }}" aria-labelledby="routineH-{{ uid }}"
+  data-off="{{ off }}"
+  data-cd-mode="{{ s.countdown_mode }}" data-cd-day="{{ s.end_weekday }}" data-cd-hour="{{ s.end_hour }}" data-cd-min="{{ s.end_minute }}" data-cd-date="{{ s.end_date | escape }}"
+  data-fine="{{ s.fine_text | escape }}" data-note="{{ s.note_text | escape }}">
+  <div class="s-routine__in">
+    <div class="s-routine__copy">
+      <h2 class="h2" id="routineH-{{ uid }}" data-rv="line">
+        {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
+        {%- if s.heading_2 != blank -%}<span class="ln"><span>{{ s.heading_2 }}</span></span>{%- endif -%}
+      </h2>
+      {%- if s.lead != blank -%}<p class="lead" data-rv="blur" data-rv-delay="1">{{ s.lead | escape }}</p>{%- endif -%}
+
+      <ol class="s-routine__steps" data-rv="blur" data-rv-delay="2" aria-label="{{ s.steps_label | escape }}">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign b = block.settings
+            assign is_addon = false
+            if b.mode == 'addon'
+              assign is_addon = true
+            endif
+            assign max_n = 3
+            if is_addon
+              assign max_n = 1
+            endif
+            assign sel_id = 'rt-' | append: uid | append: '-' | append: block.id
+            assign step_on = true
+            if is_addon and b.addon_checked == false
+              assign step_on = false
+            endif
+            assign first_key = ''
+          -%}
+          {%- capture options_html -%}{%- endcapture -%}
+          {%- capture thumbs_html -%}{%- endcapture -%}
+          {%- capture addon_attrs -%}{%- endcapture -%}
+          {%- for n in (1..max_n) -%}
+            {%- liquid
+              assign pre = 'o' | append: n | append: '_'
+              assign k_key = pre | append: 'key'
+              assign k_product = pre | append: 'product'
+              assign k_label = pre | append: 'label'
+              assign k_name = pre | append: 'name'
+              assign k_size = pre | append: 'size'
+              assign k_price = pre | append: 'price'
+              assign k_image = pre | append: 'image'
+              assign k_line = pre | append: 'line'
+              assign k_labels = pre | append: 'labels'
+              assign p = b[k_product]
+              assign o_name = b[k_name]
+              assign o_size = b[k_size]
+              assign o_img = b[k_image]
+              assign o_cents = b[k_price] | plus: 0
+              if p != blank
+                assign o_name = p.title
+                assign o_cents = p.selected_or_first_available_variant.price
+                assign o_img = p.featured_image
+              endif
+              assign o_key = b[k_key] | strip
+              if o_key == blank and p != blank
+                assign o_key = p.handle
+              endif
+              if o_key == blank and o_name != blank
+                assign o_key = block.id | append: '-' | append: n
+              endif
+              assign o_label = b[k_label] | default: o_name
+            -%}
+            {%- if o_key != blank -%}
+              {%- render 'blko-lv3-product-data', key: o_key, product: p, name: b[k_name], size: o_size, price: b[k_price], line: b[k_line], labels: b[k_labels], img: b[k_image] -%}
+              {%- liquid
+                assign o_set = o_cents | times: keep | divided_by: 100.0 | round
+                if first_key == blank
+                  assign first_key = o_key
+                  assign now_set = o_set
+                  assign now_orig = o_cents
+                  assign now_img = o_img
+                  assign now_name = o_name
+                endif
+              -%}
+              {%- capture one_thumb -%}
+                {%- if o_img != blank -%}
+                  {{ o_img | image_url: width: 240 | image_tag: alt: '', loading: 'lazy', widths: '120, 160, 240', sizes: '80px' }}
+                {%- else -%}
+                  {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph s-routine__ph' }}
+                {%- endif -%}
+              {%- endcapture -%}
+              {%- capture thumbs_html -%}{{ thumbs_html }}<template data-thumb="{{ o_key | escape }}">{{ one_thumb }}</template>{%- endcapture -%}
+              {%- capture options_html -%}{{ options_html }}<option value="{{ o_key | escape }}" data-cents="{{ o_cents }}" data-name="{{ o_name | escape }}"{% if forloop.first %} selected{% endif %}>{{ o_label | escape }}</option>{%- endcapture -%}
+              {%- if is_addon -%}
+                {%- capture addon_attrs -%} data-key="{{ o_key | escape }}" data-cents="{{ o_cents }}" data-name="{{ o_name | escape }}"{%- endcapture -%}
+              {%- endif -%}
+            {%- endif -%}
+          {%- endfor -%}
+          {%- if first_key != blank -%}
+            {%- liquid
+              if step_on
+                assign pick_count = pick_count | plus: 1
+                assign total_set = total_set | plus: now_set
+                assign total_orig = total_orig | plus: now_orig
+              endif
+            -%}
+            <li class="s-routine__step{% unless step_on %} is-off{% endunless %}" data-step="{{ block.id }}" {{ block.shopify_attributes }}>
+              <div class="s-routine__thumb">
+                {%- if now_img != blank -%}
+                  {{ now_img | image_url: width: 240 | image_tag: alt: '', loading: 'lazy', widths: '120, 160, 240', sizes: '80px' }}
+                {%- else -%}
+                  {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph s-routine__ph' }}
+                {%- endif -%}
+                {{ thumbs_html }}
+              </div>
+              <div>
+                {%- if b.title != blank -%}<h3>{{ b.title | escape }}</h3>{%- endif -%}
+                {%- if b.text != blank -%}<p class="small">{{ b.text | escape }}</p>{%- endif -%}
+                {%- if is_addon -%}
+                  <label class="s-routine__check"><input type="checkbox" id="{{ sel_id }}" data-pick-addon{{ addon_attrs }}{% if step_on %} checked{% endif %}> {{ b.addon_label | default: now_name | escape }}</label>
+                {%- else -%}
+                  <div class="s-routine__sel">
+                    <label class="sr" for="{{ sel_id }}">{{ b.select_label | escape }}</label>
+                    <select id="{{ sel_id }}" data-pick>{{ options_html }}</select>
+                  </div>
+                {%- endif -%}
+              </div>
+              <p class="price s-routine__pp" data-pp>{{ now_set | money_without_trailing_zeros }} <s>{{ now_orig | money_without_trailing_zeros }}</s></p>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ol>
+
+      <div class="s-routine__total" data-rv="blur" data-rv-delay="3">
+        {%- if s.save_text != blank -%}<span class="s-routine__save">{{ s.save_text | replace: '[discount]', off | escape }}</span>{%- endif -%}
+        <p class="s-routine__sum"><span class="small">{{ s.total_label | escape }}</span><span class="price" data-rt-total>{{ total_set | money_without_trailing_zeros }} <s>{{ total_orig | money_without_trailing_zeros }}</s></span></p>
+        <button class="btn btn--primary btn--block" type="button" data-rt-add>{{ s.button_label | escape }}</button>
+        {%- if s.fine_text != blank -%}<p class="small s-routine__fine" data-rt-fine>{{ s.fine_text | replace: '[count]', pick_count | escape }}</p>{%- endif -%}
+      </div>
+    </div>
+
+    <figure class="s-routine__photo">
+      {%- assign photo_alt = s.photo_alt | default: s.photo.alt -%}
+      {%- if s.photo != blank -%}
+        {{ s.photo | image_url: width: 1800 | image_tag: alt: photo_alt, loading: 'lazy', widths: '600, 900, 1200, 1500, 1800', sizes: '(min-width: 1101px) 46vw, (min-width: 861px) 42vw, 100vw' }}
+      {%- else -%}
+        {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph s-routine__ph' }}
+      {%- endif -%}
+      {%- if s.countdown_mode != 'off' -%}
+        <div class="s-routine__cd" role="timer" aria-label="{{ s.countdown_text | escape }}" data-cd-box>
+          {%- if s.countdown_text != blank -%}<p>{{ s.countdown_text | escape }}</p>{%- endif -%}
+          <div class="s-routine__clock" aria-hidden="true">
+            <div class="s-routine__unit"><b data-cd="d">--</b><span>{{ s.unit_days | escape }}</span></div>
+            <div class="s-routine__unit"><b data-cd="h">--</b><span>{{ s.unit_hours | escape }}</span></div>
+            <div class="s-routine__unit"><b data-cd="m">--</b><span>{{ s.unit_min | escape }}</span></div>
+            <div class="s-routine__unit"><b data-cd="s">--</b><span>{{ s.unit_sec | escape }}</span></div>
+          </div>
+        </div>
+      {%- endif -%}
+    </figure>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Routine set",
+  "class": "blko-lv3-section-routine",
+  "settings": [
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "info": "Links like #routine jump here.", "default": "routine" },
+    { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "The after-shower" },
+    { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "info": "Use italic for the emphasised word.", "default": "<em>routine.</em>" },
+    { "type": "text", "id": "lead", "label": "Intro", "default": "Wash, pat dry, then lotion while skin is still damp." },
+    { "type": "text", "id": "steps_label", "label": "Steps list name (screen readers)", "default": "Routine steps" },
+    { "type": "header", "content": "Set price" },
+    { "type": "range", "id": "discount", "label": "Routine discount", "min": 5, "max": 50, "step": 1, "unit": "%", "default": 20, "info": "Shown on every line. To charge it at checkout, set up a matching automatic discount in Shopify." },
+    { "type": "text", "id": "save_text", "label": "Saving badge", "info": "[discount] becomes the discount.", "default": "Save [discount]%" },
+    { "type": "text", "id": "total_label", "label": "Total label", "default": "Total" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Add all to bag" },
+    { "type": "text", "id": "fine_text", "label": "Fine print", "info": "[count] becomes the number of items.", "default": "[count] items at the set price, each its own line in your bag." },
+    { "type": "text", "id": "note_text", "label": "Bag line note", "info": "[discount] and [price] (the full price) are filled in.", "default": "Routine price, [discount]% off [price]" },
+    { "type": "header", "content": "Photo" },
+    { "type": "image_picker", "id": "photo", "label": "Photo" },
+    { "type": "text", "id": "photo_alt", "label": "Photo description", "default": "A woman in a towel turban smoothing lotion onto her shoulder after a shower" },
+    { "type": "header", "content": "Countdown" },
+    {
+      "type": "select", "id": "countdown_mode", "label": "Countdown", "default": "weekly",
+      "options": [
+        { "value": "weekly", "label": "Every week, to a day and time" },
+        { "value": "date", "label": "To a fixed date" },
+        { "value": "off", "label": "Off" }
+      ]
+    },
+    { "type": "text", "id": "countdown_text", "label": "Countdown text", "default": "Set price ends Sunday, 11:59 pm" },
+    {
+      "type": "select", "id": "end_weekday", "label": "Weekly: ends on", "default": "0",
+      "options": [
+        { "value": "1", "label": "Monday" }, { "value": "2", "label": "Tuesday" }, { "value": "3", "label": "Wednesday" },
+        { "value": "4", "label": "Thursday" }, { "value": "5", "label": "Friday" }, { "value": "6", "label": "Saturday" },
+        { "value": "0", "label": "Sunday" }
+      ]
+    },
+    { "type": "range", "id": "end_hour", "label": "Weekly: hour", "min": 0, "max": 23, "step": 1, "default": 23 },
+    { "type": "range", "id": "end_minute", "label": "Weekly: minute", "min": 0, "max": 59, "step": 1, "default": 59 },
+    { "type": "text", "id": "end_date", "label": "Fixed date: ends at", "info": "Shopper's local time, as 2026-12-31 23:59. The timer hides once it has passed." },
+    { "type": "text", "id": "unit_days", "label": "Days label", "default": "days" },
+    { "type": "text", "id": "unit_hours", "label": "Hours label", "default": "hours" },
+    { "type": "text", "id": "unit_min", "label": "Minutes label", "default": "min" },
+    { "type": "text", "id": "unit_sec", "label": "Seconds label", "default": "sec" }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "limit": 4,
+      "settings": [
+        { "type": "text", "id": "title", "label": "Step name", "default": "Wash" },
+        { "type": "text", "id": "text", "label": "Step text", "default": "Cleans without the tight, squeaky feel." },
+        {
+          "type": "select", "id": "mode", "label": "Step type", "default": "choose",
+          "options": [ { "value": "choose", "label": "Choose one of the options" }, { "value": "addon", "label": "Optional add-on (option 1 only)" } ]
+        },
+        { "type": "text", "id": "select_label", "label": "Choice name (screen readers)", "default": "Choose your wash" },
+        { "type": "text", "id": "addon_label", "label": "Add-on: checkbox label", "default": "Add the Oat bar, 120 g" },
+        { "type": "checkbox", "id": "addon_checked", "label": "Add-on: ticked at first", "default": false },
+        { "type": "header", "content": "Option 1" },
+        { "type": "product", "id": "o1_product", "label": "Product" },
+        { "type": "text", "id": "o1_key", "label": "Product key", "info": "Shared with the other sections' buttons. Blank uses the product handle.", "default": "calm" },
+        { "type": "text", "id": "o1_label", "label": "Option label", "default": "Calm wash, 400 ml" },
+        { "type": "text", "id": "o1_name", "label": "Demo name (no product)", "default": "Calm wash" },
+        { "type": "text", "id": "o1_size", "label": "Size", "default": "400 ml" },
+        { "type": "text", "id": "o1_price", "label": "Demo price in cents (no product)", "default": "1800" },
+        { "type": "text", "id": "o1_line", "label": "Quick view line", "default": "Everyday, eczema-prone skin. Colloidal oat and glycerin." },
+        { "type": "text", "id": "o1_labels", "label": "Labels", "info": "Comma list: best, ff, new, sale.", "default": "best,ff" },
+        { "type": "image_picker", "id": "o1_image", "label": "Demo image (no product)" },
+        { "type": "header", "content": "Option 2" },
+        { "type": "product", "id": "o2_product", "label": "Product" },
+        { "type": "text", "id": "o2_key", "label": "Product key", "default": "rich" },
+        { "type": "text", "id": "o2_label", "label": "Option label", "default": "Rich wash, 400 ml" },
+        { "type": "text", "id": "o2_name", "label": "Demo name (no product)", "default": "Rich wash" },
+        { "type": "text", "id": "o2_size", "label": "Size", "default": "400 ml" },
+        { "type": "text", "id": "o2_price", "label": "Demo price in cents (no product)", "default": "2000" },
+        { "type": "text", "id": "o2_line", "label": "Quick view line", "default": "Very dry or winter skin. Thicker, almost a lotion." },
+        { "type": "text", "id": "o2_labels", "label": "Labels", "info": "Comma list: best, ff, new, sale.", "default": "ff" },
+        { "type": "image_picker", "id": "o2_image", "label": "Demo image (no product)" },
+        { "type": "header", "content": "Option 3" },
+        { "type": "product", "id": "o3_product", "label": "Product" },
+        { "type": "text", "id": "o3_key", "label": "Product key", "default": "chamomile" },
+        { "type": "text", "id": "o3_label", "label": "Option label", "default": "Chamomile wash, 400 ml" },
+        { "type": "text", "id": "o3_name", "label": "Demo name (no product)", "default": "Chamomile wash" },
+        { "type": "text", "id": "o3_size", "label": "Size", "default": "400 ml" },
+        { "type": "text", "id": "o3_price", "label": "Demo price in cents (no product)", "default": "2000" },
+        { "type": "text", "id": "o3_line", "label": "Quick view line", "default": "Our only scented wash: 0.2% chamomile oil, allergens listed." },
+        { "type": "text", "id": "o3_labels", "label": "Labels", "info": "Comma list: best, ff, new, sale." },
+        { "type": "image_picker", "id": "o3_image", "label": "Demo image (no product)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Routine set",
+      "blocks": [
+        { "type": "step" },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Moisturise", "text": "Holds water in while skin is damp.", "select_label": "Choose your moisturiser",
+            "o1_key": "lotion", "o1_label": "Calm lotion, 250 ml", "o1_name": "Calm lotion", "o1_size": "250 ml", "o1_price": "2200", "o1_line": "Light lotion for damp skin, straight after the wash.", "o1_labels": "ff",
+            "o2_key": "milk", "o2_label": "Body milk, 300 ml", "o2_name": "Body milk", "o2_size": "300 ml", "o2_price": "2000", "o2_line": "Light and quick for dry skin. Sinks in fast, never sticky.", "o2_labels": "new,ff",
+            "o3_key": "cream", "o3_label": "Rich cream, 200 ml", "o3_name": "Rich cream", "o3_size": "200 ml", "o3_price": "2400", "o3_line": "Thick cream for shins, elbows and hands.", "o3_labels": "ff"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Face and hands", "text": "An oat milk soap bar for the sink, rinses soft.", "mode": "addon",
+            "addon_label": "Add the Oat bar, 120 g", "addon_checked": false,
+            "o1_key": "bar", "o1_label": "Oat bar, 120 g", "o1_name": "Oat bar", "o1_size": "120 g", "o1_price": "900", "o1_line": "Oat milk soap bar for face and body. Rich lather that rinses soft.", "o1_labels": "best,ff"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

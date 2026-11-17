@@ -1,0 +1,102 @@
+{%- comment -%}
+  Lather v3, journal opening (home-v3/pages/journal/10-feature.html). Page title and one featured article: photo beside
+  the category, title, summary and a read button.
+  Featured article: the picked article, else the blog's newest article (when "Use the newest article" is on), else the
+  demo copy in the settings below (a fresh install and the local preview).
+{%- endcomment -%}
+{{ 'blko-lv3-journal-feature.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+  assign uid = section.id
+  assign feat = s.article
+  if feat == blank and s.use_latest and blog != blank and blog.articles_count > 0
+    assign feat = blog.articles.first
+  endif
+  assign kicker = s.kicker
+  if kicker == blank and blog != blank
+    assign kicker = blog.title
+  endif
+-%}
+<section class="s-jr-feature" aria-labelledby="journalTitle-{{ uid }}"><div class="wrap">
+  <div class="s-jr-feature__top">
+    {%- if s.back_label != blank -%}<a href="{{ s.back_link | default: routes.root_url }}">{{ s.back_label | escape }}</a>{%- endif -%}
+    {%- if kicker != blank -%}<p>{{ kicker | escape }}</p>{%- endif -%}
+  </div>
+  <h1 class="h1 s-jr-feature__title" id="journalTitle-{{ uid }}" data-rv="line"><span class="ln"><span>{{ s.heading | default: blog.title }}</span></span></h1>
+  <article class="s-jr-feature__layout">
+    {%- if feat != blank -%}
+      {%- liquid
+        assign f_cat = s.category
+        if feat.tags.size > 0
+          assign f_cat = feat.tags.first
+        endif
+        assign f_text = feat.excerpt | strip_html | strip
+        if f_text == blank
+          assign f_text = feat.content | strip_html | truncatewords: 26
+        endif
+      -%}
+      <figure class="s-jr-feature__photo" data-rv="settle">
+        {%- if feat.image != blank -%}
+          {{ feat.image | image_url: width: 1600 | image_tag: widths: '600, 900, 1200, 1600', sizes: '(max-width: 760px) 100vw, 56vw', fetchpriority: 'high', alt: feat.image.alt }}
+        {%- elsif s.image != blank -%}
+          {{ s.image | image_url: width: 1600 | image_tag: widths: '600, 900, 1200, 1600', sizes: '(max-width: 760px) 100vw, 56vw', fetchpriority: 'high', alt: s.image_alt }}
+        {%- else -%}
+          {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph' }}
+        {%- endif -%}
+      </figure>
+      <div class="s-jr-feature__copy">
+        {%- if f_cat != blank -%}<p class="s-jr-feature__category">{{ f_cat | escape }}</p>{%- endif -%}
+        <h2 class="h2" data-rv="line"><span class="ln"><span>{{ feat.title | escape }}</span></span></h2>
+        {%- if f_text != blank -%}<p>{{ f_text | escape }}</p>{%- endif -%}
+        {%- if s.button_label != blank -%}<a class="btn btn--primary" href="{{ feat.url }}">{{ s.button_label | escape }} <span aria-hidden="true">↗</span></a>{%- endif -%}
+      </div>
+    {%- else -%}
+      <figure class="s-jr-feature__photo" data-rv="settle">
+        {%- if s.image != blank -%}
+          {{ s.image | image_url: width: 1600 | image_tag: widths: '600, 900, 1200, 1600', sizes: '(max-width: 760px) 100vw, 56vw', fetchpriority: 'high', alt: s.image_alt }}
+        {%- else -%}
+          {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph' }}
+        {%- endif -%}
+      </figure>
+      <div class="s-jr-feature__copy">
+        {%- if s.category != blank -%}<p class="s-jr-feature__category">{{ s.category | escape }}</p>{%- endif -%}
+        <h2 class="h2" data-rv="line">
+          {%- if s.title_1 != blank -%}<span class="ln"><span>{{ s.title_1 }}</span></span>{%- endif -%}
+          {%- if s.title_2 != blank -%}<span class="ln"><span>{{ s.title_2 }}</span></span>{%- endif -%}
+          {%- if s.title_3 != blank -%}<span class="ln"><span>{{ s.title_3 }}</span></span>{%- endif -%}
+        </h2>
+        {%- if s.text != blank -%}<p>{{ s.text | escape }}</p>{%- endif -%}
+        {%- if s.button_label != blank -%}<a class="btn btn--primary" href="{{ s.button_link | default: '#' }}">{{ s.button_label | escape }} <span aria-hidden="true">↗</span></a>{%- endif -%}
+      </div>
+    {%- endif -%}
+  </article>
+</div></section>
+
+{% schema %}
+{
+  "name": "Lather journal opening",
+  "class": "blko-lv3-section-journal-feature",
+  "settings": [
+    { "type": "text", "id": "back_label", "label": "Back link label", "default": "Back to home" },
+    { "type": "url", "id": "back_link", "label": "Back link", "info": "Empty: the home page." },
+    { "type": "text", "id": "kicker", "label": "Text on the right", "default": "The Lather journal", "info": "Empty: the blog's title." },
+    { "type": "inline_richtext", "id": "heading", "label": "Page heading", "default": "A little less <em>guesswork.</em>", "info": "Italic text shows in the accent style. Empty: the blog's title." },
+    { "type": "header", "content": "Featured article" },
+    { "type": "article", "id": "article", "label": "Article" },
+    { "type": "checkbox", "id": "use_latest", "label": "Use the newest article when none is picked", "default": true },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Read the guide" },
+    { "type": "image_picker", "id": "image", "label": "Photo", "info": "Used when the article has no image, and for the demo article." },
+    { "type": "text", "id": "image_alt", "label": "Photo description", "default": "A quiet bathroom with a freestanding bath and folded towels" },
+    { "type": "text", "id": "category", "label": "Category", "default": "Skin basics", "info": "A real article shows its first tag instead." },
+    { "type": "paragraph", "content": "Demo article: shown while the store has no article to feature." },
+    { "type": "inline_richtext", "id": "title_1", "label": "Demo title, line 1", "default": "A gentler shower" },
+    { "type": "inline_richtext", "id": "title_2", "label": "Demo title, line 2", "default": "for eczema-prone" },
+    { "type": "inline_richtext", "id": "title_3", "label": "Demo title, line 3", "default": "<em>skin.</em>" },
+    { "type": "textarea", "id": "text", "label": "Demo summary", "default": "Small changes to washing, drying and moisturising. A practical place to start, without a longer routine." },
+    { "type": "url", "id": "button_link", "label": "Demo button link" }
+  ],
+  "presets": [{ "name": "Lather journal opening" }],
+  "enabled_on": { "templates": ["blog", "page", "index"] }
+}
+{% endschema %}

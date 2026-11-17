@@ -1,0 +1,217 @@
+{%- comment -%}
+  Lather v3, featured products (parts/15-featured.html). A tall promo tile on the left; heading, tabs and a product rail
+  that bleeds off the right edge. Blocks: "tab" starts a tab, the "product" blocks after it fill that tab.
+  Cards render server-side: the first tab straight into the rail, every tab in a <template> the script swaps in.
+{%- endcomment -%}
+{{ 'blko-lv3-featured.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-featured.js' | asset_url }}" defer></script>
+{{ 'blko-lv3-wishlist.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-wishlist.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+  assign anchor = s.anchor | default: 'shop' | handleize
+  assign uid = section.id
+  assign tabs = section.blocks | where: 'type', 'tab'
+  assign labels_text = 'best:' | append: s.label_best | append: '|ff:' | append: s.label_ff | append: '|new:' | append: s.label_new | append: '|sale:' | append: s.label_sale
+
+  if s.t_product != blank
+    assign t_key = s.t_product.handle
+    assign t_price = s.t_product.selected_or_first_available_variant.price
+  else
+    assign t_key = s.t_key | default: 'bar'
+    assign t_price = s.t_price | plus: 0
+  endif
+  assign t_money = t_price | money_without_trailing_zeros
+  assign t_title = s.t_title | replace: '[price]', t_money
+  assign t_btn = s.t_button | replace: '[price]', t_money
+-%}
+
+{%- comment -%} Product data for window.LATHER (quick view, bag). Outside the templates so the runtime can read it. {%- endcomment -%}
+{%- render 'blko-lv3-product-data',
+  key: t_key,
+  product: s.t_product,
+  name: s.t_name,
+  size: s.t_size,
+  price: s.t_price,
+  line: s.t_line,
+  labels: s.t_labels,
+  ing: s.t_ing,
+  img: s.t_pimage
+-%}
+{%- for block in section.blocks -%}
+  {%- if block.type == 'product' -%}
+    {%- assign b = block.settings -%}
+    {%- liquid
+      if b.product != blank
+        assign k = b.product.handle
+      else
+        assign k = b.key | default: block.id
+      endif
+    -%}
+    {%- render 'blko-lv3-product-data',
+      key: k,
+      product: b.product,
+      name: b.name,
+      size: b.size,
+      price: b.price,
+      line: b.line,
+      labels: b.labels,
+      ing: b.ing,
+      img: b.image,
+      hover: b.hover
+    -%}
+  {%- endif -%}
+{%- endfor -%}
+
+<section class="s-feat" id="{{ anchor }}" aria-labelledby="featH-{{ uid }}" data-lv3-feat>
+  <div class="wrap s-feat__grid">
+    <div class="s-feat__head">
+      <h2 class="h2" id="featH-{{ uid }}" data-rv="blur">{{ s.heading }}</h2>
+      {%- if s.sub != blank -%}<p data-rv="blur" data-rv-delay="1">{{ s.sub | escape }}</p>{%- endif -%}
+    </div>
+    <div class="s-feat__tile" data-rv="settle">
+      {%- if s.t_image != blank -%}
+        {{ s.t_image | image_url: width: 1600 | image_tag: widths: '600, 900, 1200, 1600', sizes: '(max-width: 900px) 100vw, 40vw', loading: 'lazy', alt: s.t_image.alt }}
+      {%- else -%}
+        {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph' }}
+      {%- endif -%}
+      <div class="s-feat__tcopy">
+        {%- if s.t_kicker != blank -%}<p>{{ s.t_kicker | escape }}</p>{%- endif -%}
+        {%- if t_title != blank -%}<h3>{{ t_title | escape }}</h3>{%- endif -%}
+        {%- if s.t_text != blank -%}<p class="small">{{ s.t_text | escape }}</p>{%- endif -%}
+        {%- if t_btn != blank -%}<button class="btn btn--light" type="button" data-add="{{ t_key | escape }}">{{ t_btn | escape }}</button>{%- endif -%}
+      </div>
+    </div>
+    <div class="s-feat__railbox">
+      <div class="s-feat__bar">
+        <div class="s-feat__tabs" role="tablist" aria-label="{{ s.tabs_label | escape }}">
+          {%- for block in tabs -%}
+            <button class="chip" type="button" role="tab" id="featTab-{{ uid }}-{{ forloop.index }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="featPanel-{{ uid }}" data-tab="{{ forloop.index }}"{% unless forloop.first %} tabindex="-1"{% endunless %} {{ block.shopify_attributes }}>{{ block.settings.label | escape }}</button>
+          {%- endfor -%}
+        </div>
+        <div class="s-feat__arrows">
+          <button type="button" data-dir="-1" aria-label="Scroll products left"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <button type="button" data-dir="1" aria-label="Scroll products right"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+        </div>
+      </div>
+      <div class="s-feat__panel" id="featPanel-{{ uid }}" role="tabpanel" aria-labelledby="featTab-{{ uid }}-1">
+        <ul class="s-feat__rail" tabindex="0" aria-label="{{ s.rail_label | escape }}" role="list">
+          {%- assign t = 0 -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'tab' -%}
+              {%- assign t = t | plus: 1 -%}
+            {%- elsif t <= 1 -%}
+              {%- render 'blko-lv3-featured-card', block: block, labels_text: labels_text, qv_label: s.qv_label, add_label: s.add_label, wish_label: s.wish_aria -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+      {%- for tab in tabs -%}
+        {%- assign want = forloop.index -%}
+        <template data-feat-tab="{{ want }}">
+          {%- assign t = 0 -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'tab' -%}
+              {%- assign t = t | plus: 1 -%}
+            {%- else -%}
+              {%- assign tt = t -%}
+              {%- if tt < 1 -%}{%- assign tt = 1 -%}{%- endif -%}
+              {%- if tt == want -%}
+                {%- render 'blko-lv3-featured-card', block: block, labels_text: labels_text, qv_label: s.qv_label, add_label: s.add_label, wish_label: s.wish_aria -%}
+              {%- endif -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </template>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lather featured",
+  "tag": "div",
+  "class": "blko-lv3-section-featured",
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Our <em>favourites.</em>", "info": "Italic text shows in the display font." },
+    { "type": "text", "id": "sub", "label": "Text", "default": "Fragrance-free unless the label says otherwise." },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "shop" },
+    { "type": "header", "content": "Promo tile" },
+    { "type": "image_picker", "id": "t_image", "label": "Photo" },
+    { "type": "text", "id": "t_kicker", "label": "Small line", "default": "New here?" },
+    { "type": "text", "id": "t_title", "label": "Title", "default": "Start with the Oat bar, $9", "info": "Write [price] to show the product's current price." },
+    { "type": "textarea", "id": "t_text", "label": "Text", "default": "Oat milk soap for face and body. A rich lather that rinses soft, and no fragrance." },
+    { "type": "text", "id": "t_button", "label": "Button (adds the product)", "default": "Add the Oat bar, $9", "info": "Write [price] to show the product's current price." },
+    { "type": "product", "id": "t_product", "label": "Tile product" },
+    { "type": "paragraph", "content": "When no tile product is picked, the demo fields below are used." },
+    { "type": "text", "id": "t_key", "label": "Demo key", "default": "bar" },
+    { "type": "text", "id": "t_name", "label": "Demo name", "default": "Oat bar" },
+    { "type": "text", "id": "t_size", "label": "Size", "default": "120 g" },
+    { "type": "text", "id": "t_price", "label": "Demo price in cents", "default": "900" },
+    { "type": "text", "id": "t_line", "label": "Short line", "default": "Oat milk soap bar for face and body. Rich lather that rinses soft." },
+    { "type": "text", "id": "t_labels", "label": "Labels", "default": "best,ff", "info": "Comma list of best, ff, new, sale." },
+    { "type": "textarea", "id": "t_ing", "label": "Ingredients", "default": "Sodium olivate, sodium cocoate, oat milk, colloidal oat, shea butter, glycerin." },
+    { "type": "image_picker", "id": "t_pimage", "label": "Demo product image" },
+    { "type": "header", "content": "Cards" },
+    { "type": "text", "id": "qv_label", "label": "Quick view button", "default": "Quick view" },
+    { "type": "text", "id": "add_label", "label": "Add button", "default": "Add" },
+    { "type": "text", "id": "wish_aria", "label": "Wishlist heart (screen readers)", "info": "[name] is the product name.", "default": "Save [name]" },
+    { "type": "text", "id": "tabs_label", "label": "Tabs label (screen readers)", "default": "Product type" },
+    { "type": "text", "id": "rail_label", "label": "Rail label (screen readers)", "default": "Products" },
+    { "type": "header", "content": "Label names" },
+    { "type": "text", "id": "label_best", "label": "best", "default": "Best seller" },
+    { "type": "text", "id": "label_ff", "label": "ff", "default": "Fragrance-free" },
+    { "type": "text", "id": "label_new", "label": "new", "default": "New" },
+    { "type": "text", "id": "label_sale", "label": "sale", "default": "Sale" }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Tab",
+      "limit": 6,
+      "settings": [
+        { "type": "text", "id": "label", "label": "Tab name", "default": "Body wash" },
+        { "type": "paragraph", "content": "The product blocks below this tab, up to the next tab, show in it." }
+      ]
+    },
+    {
+      "type": "product",
+      "name": "Product",
+      "limit": 30,
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "paragraph", "content": "When no product is picked, the demo fields are used. Size and short line also apply to a real product." },
+        { "type": "text", "id": "key", "label": "Demo key", "info": "Used by quick view and the bag." },
+        { "type": "text", "id": "name", "label": "Demo name", "default": "Calm wash" },
+        { "type": "text", "id": "size", "label": "Size", "default": "400 ml" },
+        { "type": "text", "id": "price", "label": "Demo price in cents", "default": "1800" },
+        { "type": "text", "id": "line", "label": "Short line", "default": "Everyday, eczema-prone skin. Colloidal oat and glycerin." },
+        { "type": "text", "id": "labels", "label": "Labels", "info": "Comma list of best, ff, new, sale." },
+        { "type": "textarea", "id": "ing", "label": "Ingredients" },
+        { "type": "image_picker", "id": "image", "label": "Demo image" },
+        { "type": "image_picker", "id": "hover", "label": "Hover image", "info": "Optional. A real product uses its second image." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather featured",
+      "blocks": [
+        { "type": "tab", "settings": { "label": "Body wash" } },
+        { "type": "product", "settings": { "key": "calm", "name": "Calm wash", "size": "400 ml", "price": "1800", "labels": "best,ff", "line": "Everyday, eczema-prone skin. Colloidal oat and glycerin.", "ing": "Water, glycerin, coco-glucoside, decyl glucoside, colloidal oat, shea butter, sunflower seed oil, xanthan gum, citric acid, sodium benzoate. pH 5.5." } },
+        { "type": "product", "settings": { "key": "rich", "name": "Rich wash", "size": "400 ml", "price": "2000", "labels": "ff", "line": "Very dry or winter skin. Thicker, almost a lotion.", "ing": "Calm wash plus extra shea butter and oat oil. Fragrance-free. pH 5.5." } },
+        { "type": "product", "settings": { "key": "chamomile", "name": "Chamomile wash", "size": "400 ml", "price": "2000", "labels": "", "line": "Our only scented wash: 0.2% chamomile oil, allergens listed.", "ing": "Calm wash plus chamomile flower oil (0.2%). Allergens: bisabolol. pH 5.5." } },
+        { "type": "tab", "settings": { "label": "Lotion & cream" } },
+        { "type": "product", "settings": { "key": "lotion", "name": "Calm lotion", "size": "250 ml", "price": "2200", "labels": "ff", "line": "Light lotion for damp skin, straight after the wash.", "ing": "Water, glycerin, shea butter, colloidal oat, squalane, ceramide NP, cetearyl alcohol, xanthan gum." } },
+        { "type": "product", "settings": { "key": "milk", "name": "Body milk", "size": "300 ml", "price": "2000", "labels": "new,ff", "line": "Light and quick for dry skin. Sinks in fast, never sticky.", "ing": "Water, glycerin, colloidal oat, sunflower seed oil, squalane, cetearyl alcohol, xanthan gum, sodium benzoate." } },
+        { "type": "product", "settings": { "key": "cream", "name": "Rich cream", "size": "200 ml", "price": "2400", "labels": "ff", "line": "Thick cream for shins, elbows and hands.", "ing": "Shea butter, glycerin, oat oil, ceramide NP, squalane, beeswax-free." } },
+        { "type": "tab", "settings": { "label": "Little ones" } },
+        { "type": "product", "settings": { "key": "little", "name": "Little lotion", "size": "150 ml", "price": "1400", "labels": "new,ff", "line": "Soft, light oat lotion for ages 1 and up. Fragrance-free.", "ing": "Water, glycerin, colloidal oat, calendula oil, shea butter, cetearyl alcohol, xanthan gum, sodium benzoate." } },
+        { "type": "product", "settings": { "key": "bar", "name": "Oat bar", "size": "120 g", "price": "900", "labels": "best,ff", "line": "Oat milk soap bar for face and body. Rich lather that rinses soft.", "ing": "Sodium olivate, sodium cocoate, oat milk, colloidal oat, shea butter, glycerin." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,103 @@
+{%- comment -%}
+  Lather v3, collection page intro (pages/collection/10-intro.html): breadcrumb, two-line heading, short text and
+  shortcut links. Heading source "auto": the settings on the all-products collection (or with no collection, as in the
+  local preview), the collection's own title and description on every other collection.
+{%- endcomment -%}
+{{ 'blko-lv3-collection-intro.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+  assign uid = section.id
+  assign use_collection = false
+  if collection != blank
+    if s.heading_mode == 'collection'
+      assign use_collection = true
+    elsif s.heading_mode == 'auto' and collection.handle != 'all'
+      assign use_collection = true
+    endif
+  endif
+  assign crumb_current = s.crumb_current
+  if collection != blank and collection.handle != 'all'
+    assign crumb_current = collection.title
+  endif
+  assign text = s.text
+  if use_collection and collection.description != blank
+    assign text = collection.description | strip_html | truncatewords: 30
+  endif
+-%}
+<section class="s-shop-intro" aria-labelledby="shopTitle-{{ uid }}">
+  <div class="wrap">
+    <nav class="s-shop-intro__crumb" aria-label="{{ s.crumb_label | escape }}"><a href="{{ routes.root_url }}">{{ s.crumb_home | escape }}</a> / {{ crumb_current | escape }}</nav>
+    <div class="s-shop-intro__row">
+      <h1 class="h1" id="shopTitle-{{ uid }}" data-rv="line">
+        {%- if use_collection -%}
+          <span class="ln"><span>{{ collection.title | escape }}</span></span>
+        {%- else -%}
+          {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
+          {%- if s.heading_2 != blank -%}<span class="ln"><span>{{ s.heading_2 }}</span></span>{%- endif -%}
+        {%- endif -%}
+      </h1>
+      {%- if text != blank -%}<p data-rv="blur">{{ text | escape }}</p>{%- endif -%}
+    </div>
+    {%- if section.blocks.size > 0 -%}
+      <nav class="s-shop-intro__links" aria-label="{{ s.links_label | escape }}">
+        {%- for block in section.blocks -%}
+          <a href="{{ block.settings.url | default: routes.all_products_collection_url }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}</a>
+        {%- endfor -%}
+      </nav>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lather collection intro",
+  "tag": "div",
+  "class": "blko-lv3-section-collection-intro",
+  "settings": [
+    { "type": "header", "content": "Breadcrumb" },
+    { "type": "text", "id": "crumb_home", "label": "Home link", "default": "Home" },
+    { "type": "text", "id": "crumb_current", "label": "Current page (all products)", "default": "Shop all", "info": "Other collections show their own title." },
+    { "type": "text", "id": "crumb_label", "label": "Breadcrumb label (screen readers)", "default": "Breadcrumb" },
+    { "type": "header", "content": "Heading" },
+    {
+      "type": "select",
+      "id": "heading_mode",
+      "label": "Heading and text",
+      "options": [
+        { "value": "auto", "label": "Settings on all products, collection title elsewhere" },
+        { "value": "settings", "label": "Always these settings" },
+        { "value": "collection", "label": "Always the collection title and description" }
+      ],
+      "default": "auto"
+    },
+    { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "Less to choose." },
+    { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "More <em>comfort.</em>", "info": "Italic text shows in the display font." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Wash, moisturise, get on with your day. Find the texture that feels right for your skin." },
+    { "type": "header", "content": "Shortcut links" },
+    { "type": "text", "id": "links_label", "label": "Links label (screen readers)", "default": "Shop shortcuts" }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Link",
+      "limit": 8,
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Body washes" },
+        { "type": "url", "id": "url", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather collection intro",
+      "blocks": [
+        { "type": "link", "settings": { "label": "Body washes" } },
+        { "type": "link", "settings": { "label": "Body moisturisers" } },
+        { "type": "link", "settings": { "label": "For little ones" } },
+        { "type": "link", "settings": { "label": "Need a hand choosing?" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

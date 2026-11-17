@@ -1,61 +1,37 @@
 {
-  "blko": {
-    "account": {
-      "address": "Address",
-      "order_prefix": "No.",
-      "quantity": "Quantity"
-    },
-    "cart": {
-      "decrease": "Decrease quantity",
-      "empty": "Your cart is empty",
-      "increase": "Increase quantity",
-      "line_total": "Line total",
-      "remove": "Remove",
-      "subtotal": "Subtotal"
-    },
-    "collection": {
-      "of": "of",
-      "page": "Page",
-      "products": "products",
-      "products_shown": "products shown",
-      "showing": "Showing",
-      "sort": "Sort"
-    },
-    "general": {
-      "close": "Close",
-      "home": "Home",
-      "read_more": "Read more",
-      "skip_to_content": "Skip to content"
-    },
-    "header": {
-      "bag": "Cart",
-      "menu": "Menu"
-    },
-    "password": {
-      "enter": "Enter using password",
-      "error": "Wrong password",
-      "label": "Password",
-      "submit": "Enter"
-    },
-    "pdp": {
-      "add": "Add",
-      "after": "After",
-      "before": "Before",
-      "decrease_quantity": "Decrease quantity",
-      "increase_quantity": "Increase quantity",
-      "product_images": "Product images",
-      "rating_breakdown": "Rating breakdown",
-      "remove": "Remove",
-      "reveal_comparison": "Reveal before and after image",
-      "sold_out": "Sold out",
-      "zoom": "Zoom",
-      "zoom_image": "Zoom product image"
-    },
-    "reviews": {
-      "count_template": "From {count} verified reviews"
+  "general": {
+    "page": "Page {{ page }}",
+    "password_page": {
+      "title": "Opening soon",
+      "login": "Enter with password",
+      "password": "Password",
+      "submit": "Enter",
+      "admin": "Are you the store owner? Log in here",
+      "signup": "Email me when it opens",
+      "email": "Email",
+      "notify": "Notify me",
+      "thanks": "Thanks. We'll email you when we open."
     }
   },
-  "general": {
-    "tagged": "Tagged \"{{ tags }}\""
+  "accessibility": {
+    "skip_to_content": "Skip to content"
+  },
+  "gift_card": {
+    "title": "Your {{ value }} gift card for {{ shop }}",
+    "heading": "Here's your gift card",
+    "expired": "Expired on {{ date }}",
+    "disabled": "Disabled",
+    "expires": "Valid until {{ date }}",
+    "code": "Gift card code",
+    "copy": "Copy code",
+    "copied": "Code copied",
+    "balance": "Balance {{ balance }}",
+    "shop": "Shop now",
+    "print": "Print",
+    "apple_wallet": "Add to Apple Wallet",
+    "qr": "QR code"
+  },
+  "collections": {
+    "empty": "No collections yet."
   }
 }

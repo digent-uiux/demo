@@ -1,11 +1,78 @@
 {
   "sections": {
-    "global-wishlist-page": {
-      "type": "blko-global-wishlist-page",
-      "settings": {}
+    "main": {
+      "type": "blko-lv3-wishlist",
+      "settings": {
+        "heading": "Saved for <em>later.</em>",
+        "count_zero": "Nothing saved yet.",
+        "count_one": "1 saved product.",
+        "count_many": "[count] saved products.",
+        "note": "Your list stays on this device. No account needed.",
+        "keep_label": "Keep shopping",
+        "keep_url": "/collections/all",
+        "add_label": "Add to bag",
+        "add_aria": "Add [name] to bag",
+        "remove_label": "Remove",
+        "remove_aria": "Remove [name] from wishlist",
+        "sold_label": "Sold out",
+        "removed_label": "Removed [name].",
+        "undo_label": "Undo",
+        "save_aria": "Save [name]",
+        "list_label": "Saved products",
+        "empty_text": "Tap the heart on any product and it waits here for your next order.",
+        "empty_button": "Shop all",
+        "empty_url": "/collections/all",
+        "sugg_heading": "Most people start here.",
+        "sugg_label": "Products to start with"
+      },
+      "blocks": {
+        "s1": {
+          "type": "product",
+          "settings": {
+            "key": "calm",
+            "name": "Calm wash",
+            "size": "400 ml",
+            "price": "1800",
+            "labels": "best,ff",
+            "line": "Everyday, eczema-prone skin. Colloidal oat and glycerin.",
+            "image": "shopify://shop_images/t-calm.jpg",
+            "hover": "shopify://shop_images/h-calm.jpg"
+          }
+        },
+        "s2": {
+          "type": "product",
+          "settings": {
+            "key": "bar",
+            "name": "Oat bar",
+            "size": "120 g",
+            "price": "900",
+            "labels": "best,ff",
+            "line": "Oat milk soap bar for face and body. Rich lather that rinses soft.",
+            "image": "shopify://shop_images/c-oat-bar.jpg",
+            "hover": "shopify://shop_images/h-bar.jpg"
+          }
+        },
+        "s3": {
+          "type": "product",
+          "settings": {
+            "key": "lotion",
+            "name": "Calm lotion",
+            "size": "250 ml",
+            "price": "2200",
+            "labels": "ff",
+            "line": "Light lotion for damp skin, straight after the wash.",
+            "image": "shopify://shop_images/c-lotion.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3"
+      ]
     }
   },
   "order": [
-    "global-wishlist-page"
+    "main"
   ]
 }

@@ -1,0 +1,100 @@
+{%- comment -%}
+  Lather v3, article opening (home-v3/pages/article/10-opening.html). Back link, title, meta line (category, author,
+  date, read time), standfirst, wide photo with caption, and the reading progress bar (moved by blko-lv3-article-reading.js).
+  Real article: title, first tag, author, published_at, read time from the content, excerpt, image (caption from the
+  custom.caption metafield). No article (local preview): the demo settings.
+{%- endcomment -%}
+{{ 'blko-lv3-article-opening.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+  assign back = s.back_link
+  if back == blank
+    if blog != blank
+      assign back = blog.url
+    else
+      assign back = routes.root_url
+    endif
+  endif
+-%}
+<section class="s-art-opening" aria-labelledby="art-title"><div class="wrap">
+  {%- if s.back_label != blank -%}<a class="s-art-opening__back" href="{{ back }}">{{ s.back_label | escape }}</a>{%- endif -%}
+  {%- if article != blank -%}
+    {%- liquid
+      assign words = article.content | strip_html | split: ' ' | size
+      assign mins = words | divided_by: 200 | at_least: 1
+      assign read = s.read_time | replace: '[n]', mins
+      assign standfirst = article.excerpt | strip_html | strip
+      assign img = article.image
+      assign caption = article.metafields.custom.caption.value
+    -%}
+    <h1 class="h1 s-art-opening__title" id="art-title" data-rv="line"><span class="ln"><span>{{ article.title | escape }}</span></span></h1>
+    <div class="s-art-opening__meta">
+      {%- if article.tags.size > 0 -%}<span>{{ article.tags.first | escape }}</span>{%- endif -%}
+      {%- if article.author != blank -%}<span>{{ s.author_prefix | escape }} {{ article.author | escape }}</span>{%- endif -%}
+      <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: '%B %-d, %Y' }}</time>
+      {%- if s.read_time != blank -%}<span>{{ read | escape }}</span>{%- endif -%}
+    </div>
+    {%- if standfirst != blank -%}<p class="s-art-opening__standfirst">{{ standfirst | escape }}</p>{%- endif -%}
+    {%- if img != blank or s.image != blank -%}
+      <figure class="s-art-opening__figure" data-rv="settle">
+        {%- if img != blank -%}
+          {{ img | image_url: width: 2000 | image_tag: widths: '800, 1200, 1600, 2000', sizes: '(max-width: 1320px) 100vw, 1280px', fetchpriority: 'high', alt: img.alt }}
+        {%- else -%}
+          {{ s.image | image_url: width: 2000 | image_tag: widths: '800, 1200, 1600, 2000', sizes: '(max-width: 1320px) 100vw, 1280px', fetchpriority: 'high', alt: s.image_alt }}
+        {%- endif -%}
+        {%- if caption != blank -%}<figcaption>{{ caption | escape }}</figcaption>{%- endif -%}
+      </figure>
+    {%- endif -%}
+  {%- else -%}
+    <h1 class="h1 s-art-opening__title" id="art-title" data-rv="line">
+      {%- if s.title_1 != blank -%}<span class="ln"><span>{{ s.title_1 }}</span></span>{%- endif -%}
+      {%- if s.title_2 != blank -%}<span class="ln"><span>{{ s.title_2 }}</span></span>{%- endif -%}
+    </h1>
+    <div class="s-art-opening__meta">
+      {%- if s.category != blank -%}<span>{{ s.category | escape }}</span>{%- endif -%}
+      {%- if s.author != blank -%}<span>{{ s.author_prefix | escape }} {{ s.author | escape }}</span>{%- endif -%}
+      {%- if s.date != blank -%}<time datetime="{{ s.date_iso | escape }}">{{ s.date | escape }}</time>{%- endif -%}
+      {%- if s.demo_read != blank -%}<span>{{ s.demo_read | escape }}</span>{%- endif -%}
+    </div>
+    {%- if s.standfirst != blank -%}<p class="s-art-opening__standfirst">{{ s.standfirst | escape }}</p>{%- endif -%}
+    <figure class="s-art-opening__figure" data-rv="settle">
+      {%- if s.image != blank -%}
+        {{ s.image | image_url: width: 2000 | image_tag: widths: '800, 1200, 1600, 2000', sizes: '(max-width: 1320px) 100vw, 1280px', fetchpriority: 'high', alt: s.image_alt }}
+      {%- else -%}
+        {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph' }}
+      {%- endif -%}
+      {%- if s.caption != blank -%}<figcaption>{{ s.caption | escape }}</figcaption>{%- endif -%}
+    </figure>
+  {%- endif -%}
+</div>{%- if s.progress -%}<div class="s-art-opening__progress" aria-hidden="true"><i id="art-progress"></i></div>{%- endif -%}</section>
+
+{% schema %}
+{
+  "name": "Lather article opening",
+  "class": "blko-lv3-section-article-opening",
+  "settings": [
+    { "type": "text", "id": "back_label", "label": "Back link label", "default": "← Back to skin notes" },
+    { "type": "url", "id": "back_link", "label": "Back link", "info": "Empty: the article's blog." },
+    { "type": "text", "id": "author_prefix", "label": "Before the author", "default": "By" },
+    { "type": "text", "id": "read_time", "label": "Read time", "default": "[n] minute read", "info": "[n] is worked out from the article's length. Empty: hidden." },
+    { "type": "checkbox", "id": "progress", "label": "Show the reading progress bar", "default": true },
+    { "type": "image_picker", "id": "image", "label": "Photo", "info": "Used when the article has no image, and for the demo article." },
+    { "type": "text", "id": "image_alt", "label": "Photo description", "default": "A quiet stone bathroom with a bath and simple washbasins" },
+    { "type": "paragraph", "content": "A real article shows its own title, first tag, author, date, excerpt and image. Caption: the article metafield custom.caption." },
+    { "type": "header", "content": "Demo article" },
+    { "type": "paragraph", "content": "Shown where there is no article (fresh install preview)." },
+    { "type": "inline_richtext", "id": "title_1", "label": "Title, line 1", "default": "A gentler shower for" },
+    { "type": "inline_richtext", "id": "title_2", "label": "Title, line 2", "default": "eczema-prone <em>skin.</em>" },
+    { "type": "text", "id": "category", "label": "Category", "default": "Everyday routines" },
+    { "type": "text", "id": "author", "label": "Author", "default": "the Lather team" },
+    { "type": "text", "id": "date", "label": "Date", "default": "November 16, 2026" },
+    { "type": "text", "id": "date_iso", "label": "Date (YYYY-MM-DD)", "default": "2026-11-16" },
+    { "type": "text", "id": "demo_read", "label": "Read time", "default": "5 minute read" },
+    { "type": "textarea", "id": "standfirst", "label": "Standfirst", "default": "You do not need a shelf full of products to make washing less complicated. Start with the water, the cleanser and what happens after the towel." },
+    { "type": "text", "id": "caption", "label": "Photo caption", "default": "A quieter routine starts before you turn on the tap." }
+  ],
+  "presets": [{ "name": "Lather article opening" }],
+  "enabled_on": { "templates": ["article"] }
+}
+{% endschema %}

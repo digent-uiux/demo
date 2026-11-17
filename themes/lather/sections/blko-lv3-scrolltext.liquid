@@ -1,0 +1,105 @@
+{%- comment -%}
+  Lather v3, 35 Scrolling text band (home-v3/parts/35-scrolltext.html). The page's one giant-type block.
+  Two rows of words (solid or outlined) with small photo chips between them, running in opposite directions and
+  nudged faster by page scroll (html.motion only; still without it or with reduced motion). Word blocks pick their
+  row; the chip after each word alternates between photo A and photo B.
+{%- endcomment -%}
+{{ 'blko-lv3-scrolltext.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-scrolltext.js' | asset_url }}" defer></script>
+{%- liquid
+  assign s = section.settings
+  assign chip_n = 0
+  assign link_href = s.link_url | default: '#compare'
+  assign rows = '1,2' | split: ','
+-%}
+<section class="s-scrolltext on-dark" aria-label="{{ s.label | escape }}" data-speed="{{ s.speed }}">
+  {%- if s.sr_text != blank -%}<p class="sr">{{ s.sr_text | escape }}</p>{%- endif -%}
+  {%- for r in rows -%}
+    {%- liquid
+      if r == '1'
+        assign dir = s.row1_dir
+      else
+        assign dir = s.row2_dir
+      endif
+    -%}
+    <div class="s-scrolltext__row" data-dir="{{ dir }}" aria-hidden="true">
+      <div class="s-scrolltext__track">
+        <div class="s-scrolltext__set">
+          {%- for block in section.blocks -%}
+            {%- if block.settings.row != r -%}{%- continue -%}{%- endif -%}
+            <span class="s-scrolltext__w s-scrolltext__w--{{ block.settings.style }}" {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</span>
+            {%- if block.settings.chip -%}
+              {%- liquid
+                assign chip_n = chip_n | plus: 1
+                assign odd = chip_n | modulo: 2
+                if odd == 1
+                  assign chip_img = s.chip_a
+                  assign chip_cls = 'a'
+                else
+                  assign chip_img = s.chip_b
+                  assign chip_cls = 'b'
+                endif
+              -%}
+              <span class="s-scrolltext__chip s-scrolltext__chip--{{ chip_cls }}">
+                {%- if chip_img != blank -%}
+                  {{ chip_img | image_url: width: 240 | image_tag: loading: 'lazy', widths: '120, 240', sizes: '150px', alt: '' }}
+                {%- else -%}
+                  {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph' }}
+                {%- endif -%}
+              </span>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  {%- endfor -%}
+  {%- if s.link_label != blank -%}
+    <div class="wrap s-scrolltext__note"><a href="{{ link_href }}">{{ s.link_label | escape }}</a></div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Lather v3 scrolling text",
+  "tag": "div",
+  "class": "blko-lv3-scrolltext",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Section label (screen readers)", "default": "What every bottle promises" },
+    { "type": "textarea", "id": "sr_text", "label": "Text for screen readers", "info": "The moving rows are hidden from screen readers; this sentence is read instead.", "default": "Fragrance-free. Ten ingredients. Soft foam. pH 5.5. Made with oat." },
+    { "type": "image_picker", "id": "chip_a", "label": "Chip photo A" },
+    { "type": "image_picker", "id": "chip_b", "label": "Chip photo B" },
+    { "type": "text", "id": "link_label", "label": "Link text", "default": "Read all ten ingredients" },
+    { "type": "url", "id": "link_url", "label": "Link", "info": "Blank links to #compare on the same page." },
+    { "type": "header", "content": "Motion" },
+    { "type": "range", "id": "speed", "label": "Speed", "min": 12, "max": 120, "step": 2, "unit": "px", "info": "Pixels per second; page scroll speeds it up for a moment.", "default": 42 },
+    { "type": "select", "id": "row1_dir", "label": "Row 1 runs", "default": "-1", "options": [ { "value": "-1", "label": "Left" }, { "value": "1", "label": "Right" } ] },
+    { "type": "select", "id": "row2_dir", "label": "Row 2 runs", "default": "1", "options": [ { "value": "-1", "label": "Left" }, { "value": "1", "label": "Right" } ] }
+  ],
+  "blocks": [
+    {
+      "type": "word",
+      "name": "Word",
+      "limit": 12,
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text", "default": "Fragrance-free" },
+        { "type": "select", "id": "row", "label": "Row", "default": "1", "options": [ { "value": "1", "label": "Row 1" }, { "value": "2", "label": "Row 2" } ] },
+        { "type": "select", "id": "style", "label": "Style", "default": "solid", "options": [ { "value": "solid", "label": "Solid" }, { "value": "line", "label": "Outline" } ] },
+        { "type": "checkbox", "id": "chip", "label": "Photo chip after the word", "default": true }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather v3 scrolling text",
+      "blocks": [
+        { "type": "word", "settings": { "text": "Fragrance-free", "row": "1", "style": "solid" } },
+        { "type": "word", "settings": { "text": "Ten ingredients", "row": "1", "style": "line" } },
+        { "type": "word", "settings": { "text": "Soft foam", "row": "1", "style": "solid" } },
+        { "type": "word", "settings": { "text": "pH 5.5", "row": "2", "style": "line" } },
+        { "type": "word", "settings": { "text": "Made with oat", "row": "2", "style": "solid" } },
+        { "type": "word", "settings": { "text": "Fragrance-free", "row": "2", "style": "line" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,97 @@
+{%- comment -%}
+  Lather v3, product page: questions (home-v3/pages/product/60-questions.html).
+  Heading, intro, help link; question blocks (native details). A question can end with a quick-view button for another
+  product: pick it (real product) or fill the demo fields; the button opens the shared quick view (window.LATHER).
+{%- endcomment -%}
+{{ 'blko-lv3-product-questions.css' | asset_url | stylesheet_tag }}
+{%- assign s = section.settings -%}
+{%- for block in section.blocks -%}
+  {%- assign b = block.settings -%}
+  {%- if b.quick_label != blank and b.quick_product != blank -%}
+    {%- render 'blko-lv3-product-data', key: b.quick_product.handle, product: b.quick_product, labels: b.quick_labels -%}
+  {%- elsif b.quick_label != blank and b.quick_name != blank -%}
+    {%- assign qk = b.quick_key | strip | handleize | default: block.id -%}
+    {%- render 'blko-lv3-product-data', key: qk, product: nil, name: b.quick_name, size: b.quick_size, price: b.quick_price, line: b.quick_line, labels: b.quick_labels, img: b.quick_image, hover: b.quick_hover, ing: b.quick_ing -%}
+  {%- endif -%}
+{%- endfor -%}
+<section class="s-pdp-questions" aria-labelledby="pdp-questions-title-{{ section.id }}"><div class="wrap s-pdp-questions__layout">
+  <div class="s-pdp-questions__intro">
+    <h2 class="h2" id="pdp-questions-title-{{ section.id }}" data-rv="line">
+      {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
+      {%- if s.heading_2 != blank -%}<span class="ln"><span>{{ s.heading_2 }}</span></span>{%- endif -%}
+    </h2>
+    {%- if s.text != blank -%}<p>{{ s.text | escape }}</p>{%- endif -%}
+    {%- if s.link_label != blank -%}<a href="{{ s.link | default: '#' }}" class="link">{{ s.link_label | escape }}</a>{%- endif -%}
+  </div>
+  <div class="s-pdp-questions__list">
+    {%- for block in section.blocks -%}
+      {%- liquid
+        assign b = block.settings
+        assign qk = ''
+        if b.quick_label != blank
+          if b.quick_product != blank
+            assign qk = b.quick_product.handle
+          elsif b.quick_name != blank
+            assign qk = b.quick_key | strip | handleize | default: block.id
+          endif
+        endif
+        assign answer = b.answer
+        if qk != blank
+          assign ql = b.quick_label | escape
+          assign btn = ' <button type="button" class="link" data-quick="' | append: qk | append: '">' | append: ql | append: '</button></p>'
+          assign answer = answer | remove_last: '</p>' | append: btn
+        endif
+      -%}
+      <details {{ block.shopify_attributes }}><summary>{{ b.question | escape }}</summary>{{ answer }}</details>
+    {%- endfor -%}
+  </div>
+</div></section>
+
+{% schema %}
+{
+  "name": "Lather product questions",
+  "class": "blko-lv3-section-product-questions",
+  "max_blocks": 10,
+  "settings": [
+    { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "Before you" },
+    { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "<em>choose.</em>", "info": "Italic text shows in the accent style." },
+    { "type": "textarea", "id": "text", "label": "Intro", "default": "A few things worth knowing before the bottle reaches your shower." },
+    { "type": "text", "id": "link_label", "label": "Link label", "default": "All help and answers" },
+    { "type": "url", "id": "link", "label": "Link" }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "Does fragrance-free mean it has no smell?" },
+        { "type": "richtext", "id": "answer", "label": "Answer", "default": "<p>We add no perfume or essential oils to Calm wash. You may notice a faint scent from the ingredients themselves.</p>" },
+        { "type": "header", "content": "Quick view button (optional)" },
+        { "type": "text", "id": "quick_label", "label": "Button label", "info": "Shown after the answer. Opens the quick view of the product below." },
+        { "type": "product", "id": "quick_product", "label": "Product" },
+        { "type": "text", "id": "quick_labels", "label": "Labels", "info": "Comma list of best, ff, new, sale." },
+        { "type": "paragraph", "content": "Demo product, used when no product is picked." },
+        { "type": "text", "id": "quick_key", "label": "Product key", "info": "Same key as elsewhere on the page shares one product." },
+        { "type": "text", "id": "quick_name", "label": "Name" },
+        { "type": "text", "id": "quick_size", "label": "Size" },
+        { "type": "text", "id": "quick_price", "label": "Price in cents" },
+        { "type": "textarea", "id": "quick_line", "label": "Short line" },
+        { "type": "textarea", "id": "quick_ing", "label": "Ingredients" },
+        { "type": "image_picker", "id": "quick_image", "label": "Image" },
+        { "type": "image_picker", "id": "quick_hover", "label": "Second image" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather product questions",
+      "blocks": [
+        { "type": "question", "settings": { "question": "Does fragrance-free mean it has no smell?", "answer": "<p>We add no perfume or essential oils to Calm wash. You may notice a faint scent from the ingredients themselves.</p>" } },
+        { "type": "question", "settings": { "question": "Can I use it if I have an oat allergy?", "answer": "<p>Calm wash contains colloidal oat. Check the full ingredient list against your known allergies, and ask your healthcare professional if you are unsure.</p>" } },
+        { "type": "question", "settings": { "question": "How is Rich wash different?", "answer": "<p>Rich wash has extra shea butter and oat oil, with a thicker, almost lotion-like feel. Calm wash is the everyday starting point.</p>", "quick_label": "See Rich wash", "quick_key": "rich", "quick_name": "Rich wash", "quick_size": "400 ml", "quick_price": "2000", "quick_labels": "ff", "quick_line": "Very dry or winter skin. Thicker, almost a lotion.", "quick_ing": "Calm wash plus extra shea butter and oat oil. Fragrance-free. pH 5.5." } },
+        { "type": "question", "settings": { "question": "What if my skin reacts?", "answer": "<p>Stop using it and contact us. We refund your first bottle, used or not. <a href=\"/pages/help#refund\">Read the skin-reaction refund details</a>.</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

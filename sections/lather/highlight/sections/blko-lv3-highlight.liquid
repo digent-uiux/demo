@@ -1,0 +1,77 @@
+{%- comment -%}
+  Lather v3, highlight sentence (parts/10-highlight.html). One large sentence with inline photo pills; the words fill in
+  as you scroll. The sentence is a text setting where [1], [2], [3]... mark where each photo pill block sits.
+{%- endcomment -%}
+{{ 'blko-lv3-highlight.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-highlight.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+  assign anchor = s.anchor | default: 'highlight' | handleize
+  assign out = s.text | escape
+  for block in section.blocks
+    assign b = block.settings
+    capture pill
+      echo '<span class="s-hl__pill" '
+      echo block.shopify_attributes
+      echo '><span>'
+      if b.image != blank
+        echo b.image | image_url: width: 480 | image_tag: widths: '120, 240, 360, 480', sizes: '120px', loading: 'lazy', alt: b.image.alt
+      else
+        echo 'image' | placeholder_svg_tag: 'blko-lv3-ph'
+      endif
+      echo '</span></span>'
+    endcapture
+    assign mark = '[' | append: forloop.index | append: ']'
+    assign out = out | replace: mark, pill
+  endfor
+-%}
+
+<section class="s-hl" id="{{ anchor }}" aria-label="{{ s.label | escape }}" data-lv3-hl>
+  <div class="wrap s-hl__in">
+    <p class="s-hl__txt">{{ out }}</p>
+    {%- if s.side_text != blank or s.link_label != blank -%}
+      <div class="s-hl__side" data-rv="blur" data-rv-delay="2">
+        {%- if s.side_text != blank -%}<p>{{ s.side_text | escape }}</p>{%- endif -%}
+        {%- if s.link_label != blank -%}<a class="link" href="{{ s.link_url | default: '#compare' }}">{{ s.link_label | escape }}</a>{%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lather highlight",
+  "tag": "div",
+  "class": "blko-lv3-section-highlight",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Section label (screen readers)", "default": "What's in the wash" },
+    { "type": "textarea", "id": "text", "label": "Sentence", "default": "Oat [1], shea and glycerin wash you clean [2] and leave skin soft [3], not tight [4].", "info": "[1], [2]... place the photo pills, in block order." },
+    { "type": "textarea", "id": "side_text", "label": "Side note", "default": "The other seven: two sugar cleansers, sunflower oil, xanthan gum, citric acid, a preservative and water." },
+    { "type": "text", "id": "link_label", "label": "Link", "default": "See every ingredient" },
+    { "type": "url", "id": "link_url", "label": "Link target", "info": "Empty: jumps to the comparison section." },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "highlight" }
+  ],
+  "blocks": [
+    {
+      "type": "pill",
+      "name": "Photo pill",
+      "limit": 8,
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Photo", "info": "Shown as a small pill inside the sentence. Set the focal point to frame it." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather highlight",
+      "blocks": [
+        { "type": "pill" },
+        { "type": "pill" },
+        { "type": "pill" },
+        { "type": "pill" }
+      ]
+    }
+  ]
+}
+{% endschema %}

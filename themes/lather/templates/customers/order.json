@@ -1,16 +1,43 @@
 {
   "sections": {
-    "account-order-detail": {
-      "type": "blko-account-order-detail",
-      "settings": {}
-    },
-    "account-help-note": {
-      "type": "blko-account-help-note",
-      "settings": {}
+    "main": {
+      "type": "blko-lv3-account-orders",
+      "settings": {
+        "view": "order",
+        "eyebrow": "Your account",
+        "heading_1": "A little less",
+        "heading_2": "to <em>remember.</em>",
+        "text": "Your orders, your details, and an easier way back to the formulas you like.",
+        "help_label": "Need help with an order?",
+        "image_alt": "Soft wash on warm stone with leaf shadows",
+        "welcome": "Welcome back.",
+        "hello": "Hello, [name].",
+        "orders_heading": "Your orders",
+        "order_heading": "Order [number]",
+        "no_orders": "No orders yet. Your first one will show here.",
+        "cta_label": "Shop Calm wash",
+        "logout_label": "Log out",
+        "pages_label": "More orders",
+        "prev_label": "Newer orders",
+        "next_label": "Older orders",
+        "qty_label": "Quantity",
+        "subtotal_label": "Subtotal",
+        "shipping_label": "Shipping",
+        "tax_label": "Tax",
+        "total_label": "Total",
+        "ship_to_label": "Shipping to",
+        "cancelled_label": "cancelled",
+        "back_account_label": "Back to your account",
+        "demo_number": "Order #1042",
+        "demo_line": "Calm wash, 400 ml",
+        "demo_status": "Delivered October 28",
+        "demo_total": "$18",
+        "image": "shopify://shop_images/h-soft.jpg",
+        "demo_image": "shopify://shop_images/t-calm.jpg"
+      }
     }
   },
   "order": [
-    "account-order-detail",
-    "account-help-note"
+    "main"
   ]
 }

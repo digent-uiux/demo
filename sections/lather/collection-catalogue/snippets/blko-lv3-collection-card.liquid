@@ -1,0 +1,119 @@
+{%- comment -%}
+  One product card of the Lather v3 collection grid (blko-lv3-collection-catalogue), same markup as
+  pages/collection/20-catalogue.html. Also hands the product to window.LATHER (blko-lv3-product-data).
+  product   optional real product: wins for key (handle), name, price, compare, images, availability, URL
+  key, name, size, price (cents), img, hover   demo values (size, img, hover also override a real product's)
+  badge     'best' | 'new' | 'sale' | blank. A real product: 'sale' when on sale, else its tag label:best / label:new
+  desc      card text. A real product: metafield custom.short_description, else the description, shortened
+  facets    "group:value ..." for the static filters. A real product: its tags written "group:value" (e.g. need:sensitive)
+  line, ing, labels   quick view data (demo; a real product falls back to its description / custom.ingredients)
+  order, attrs (block.shopify_attributes), labels_text ("best:Best seller|new:New|sale:Sale"),
+  qv_label, add_label, add_aria ([name]), sold_label, wish_label (heart, [name])
+{%- endcomment -%}
+{%- liquid
+  assign c_key = key
+  assign c_name = name
+  assign c_size = size
+  assign c_price = price | plus: 0
+  assign c_compare = 0
+  assign c_img = img
+  assign c_hover = hover
+  assign c_badge = badge
+  assign c_desc = desc
+  assign c_facets = facets
+  assign c_labels = labels
+  assign c_available = true
+  if c_badge == 'none'
+    assign c_badge = ''
+  endif
+  if product != blank
+    assign v = product.selected_or_first_available_variant
+    assign c_key = product.handle
+    assign c_name = product.title
+    assign c_price = v.price
+    assign c_compare = v.compare_at_price | default: 0
+    assign c_available = v.available
+    if c_size == blank
+      if product.metafields.custom.size != blank
+        assign c_size = product.metafields.custom.size.value
+      elsif product.has_only_default_variant == false
+        assign c_size = v.title
+      endif
+    endif
+    if c_img == blank
+      assign c_img = product.featured_media
+    endif
+    if c_hover == blank and product.media.size > 1
+      assign c_hover = product.media[1]
+    endif
+    if c_badge == blank
+      if c_compare > c_price
+        assign c_badge = 'sale'
+      elsif product.tags contains 'label:best'
+        assign c_badge = 'best'
+      elsif product.tags contains 'label:new'
+        assign c_badge = 'new'
+      endif
+    endif
+    if c_desc == blank
+      if product.metafields.custom.short_description != blank
+        assign c_desc = product.metafields.custom.short_description.value
+      else
+        assign c_desc = product.description | strip_html | truncatewords: 8
+      endif
+    endif
+    if c_facets == blank
+      assign c_facets = ''
+      for tag in product.tags
+        if tag contains ':'
+          assign tp = tag | split: ':'
+          assign f_group = tp[0] | handleize
+          assign f_value = tp[1] | handleize
+          assign c_facets = c_facets | append: ' ' | append: f_group | append: ':' | append: f_value
+        endif
+      endfor
+      assign c_facets = c_facets | strip
+    endif
+    if c_labels == blank
+      assign c_labels = ''
+      for l in product.tags
+        if l == 'label:best' or l == 'label:new' or l == 'label:ff'
+          assign c_labels = c_labels | append: ',' | append: l | remove: 'label:'
+        endif
+      endfor
+    endif
+  endif
+  assign badge_text = ''
+  assign pairs = labels_text | split: '|'
+  for pair in pairs
+    assign kv = pair | split: ':'
+    if kv[0] == c_badge
+      assign badge_text = kv[1]
+    endif
+  endfor
+  assign alt = c_name
+  if c_size != blank
+    assign alt = c_name | append: ', ' | append: c_size
+  endif
+  assign aria_add = add_aria | replace: '[name]', c_name
+-%}
+{%- render 'blko-lv3-product-data', key: c_key, product: product, name: name, size: c_size, price: price, line: line, labels: c_labels, ing: ing, img: img, hover: hover -%}
+<li class="s-shop-catalogue__card" data-product="{{ c_key | escape }}" data-facets="{{ c_facets | escape }}" data-price="{{ c_price | divided_by: 100.0 }}" data-name="{{ c_name | escape }}" data-order="{{ order }}" {{ attrs }}>
+  <div class="s-shop-catalogue__media"><button class="s-shop-catalogue__view" type="button" data-quick="{{ c_key | escape }}" aria-label="{{ qv_label | escape }} {{ c_name | escape }}">
+    {%- if c_img != blank -%}
+      {{ c_img | image_url: width: 900 | image_tag: class: 's-shop-catalogue__main', widths: '360, 540, 720, 900', sizes: '(max-width: 760px) 50vw, (max-width: 1100px) 38vw, 27vw', loading: 'lazy', alt: alt }}
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'blko-lv3-ph s-shop-catalogue__main' }}
+    {%- endif -%}
+    {%- if c_hover != blank -%}
+      {{ c_hover | image_url: width: 900 | image_tag: class: 's-shop-catalogue__hover', widths: '360, 540, 720, 900', sizes: '(max-width: 760px) 50vw, (max-width: 1100px) 38vw, 27vw', loading: 'lazy', alt: '' }}
+    {%- endif -%}
+    {%- if badge_text != blank -%}<span class="s-shop-catalogue__labels label label--{{ c_badge }}">{{ badge_text | escape }}</span>{%- endif -%}
+    <span class="s-shop-catalogue__view-hint" aria-hidden="true">{{ qv_label | escape }}</span></button>{%- render 'blko-lv3-wishlist-heart', key: c_key, name: c_name, label: wish_label -%}</div>
+  <div class="s-shop-catalogue__info"><div><h2 class="s-shop-catalogue__name"><button type="button" data-quick="{{ c_key | escape }}">{{ c_name | escape }}</button></h2>{%- if c_size != blank -%}<p class="s-shop-catalogue__size">{{ c_size | escape }}</p>{%- endif -%}</div><p class="price s-shop-catalogue__price">{{ c_price | money_without_trailing_zeros }}{%- if c_compare > c_price %} <s>{{ c_compare | money_without_trailing_zeros }}</s>{%- endif -%}</p>{%- if c_desc != blank -%}<p class="s-shop-catalogue__desc">{{ c_desc | escape }}</p>{%- endif -%}</div>
+  {%- if c_available -%}
+    <button class="btn s-shop-catalogue__add" type="button" data-add="{{ c_key | escape }}" aria-label="{{ aria_add | escape }}">{{ add_label | escape }}</button>
+  {%- else -%}
+    <button class="btn s-shop-catalogue__add" type="button" disabled>{{ sold_label | escape }}</button>
+  {%- endif -%}
+</li>

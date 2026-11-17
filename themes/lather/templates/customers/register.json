@@ -1,34 +1,41 @@
 {
   "sections": {
-    "account-register": {
-      "type": "blko-account-register",
-      "settings": {},
-      "blocks": {
-        "block-1": {
-          "type": "benefit",
-          "settings": {}
-        },
-        "block-2": {
-          "type": "benefit",
-          "settings": {
-            "text": "Save delivery details"
-          }
-        },
-        "block-3": {
-          "type": "benefit",
-          "settings": {
-            "text": "Move through checkout faster"
-          }
-        }
-      },
-      "block_order": [
-        "block-1",
-        "block-2",
-        "block-3"
-      ]
+    "main": {
+      "type": "blko-lv3-account-access",
+      "settings": {
+        "view": "register",
+        "eyebrow": "Your account",
+        "heading_1": "A little less",
+        "heading_2": "to <em>remember.</em>",
+        "text": "Your orders, your details, and an easier way back to the formulas you like.",
+        "help_label": "Need help with an order?",
+        "image_alt": "Soft wash on warm stone with leaf shadows",
+        "tabs_label": "Account access",
+        "tab_login": "Log in",
+        "tab_create": "Create account",
+        "login_heading": "Welcome back.",
+        "email_label": "Email",
+        "password_label": "Password",
+        "login_button": "Log in",
+        "forgot_label": "Forgot your password?",
+        "create_heading": "Make room for your routine.",
+        "first_name_label": "First name",
+        "new_password_label": "Password, at least 8 characters",
+        "create_button": "Create account",
+        "reset_heading": "Reset your password.",
+        "reset_button": "Request reset link",
+        "back_label": "Back to log in",
+        "reset_sent": "Thank you. Check your email for a password reset link.",
+        "new_password_heading": "Choose a new password.",
+        "confirm_password_label": "Password, once more",
+        "new_password_button": "Save password",
+        "activate_heading": "Set a password to finish.",
+        "activate_button": "Activate account",
+        "image": "shopify://shop_images/h-soft.jpg"
+      }
     }
   },
   "order": [
-    "account-register"
+    "main"
   ]
 }

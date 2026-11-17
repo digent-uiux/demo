@@ -1,0 +1,24 @@
+/* Lather v3 highlight (ported from parts/10-highlight.html). Shared tokens/classes come from blko-lv3-base.css. */
+/* 10 Highlight sentence with inline photo pills; words fill in as you scroll */
+.s-hl{background:var(--sage-wash);padding:clamp(96px,13vw,184px) 0 clamp(72px,9vw,128px)}
+.s-hl__in{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:48px;align-items:end}
+.s-hl__txt{font:500 clamp(30px,4.1vw,56px)/1.18 var(--f-body);letter-spacing:-.02em;color:var(--ink);max-width:22ch}
+.s-hl__w{display:inline}
+html.motion .s-hl.is-armed .s-hl__w{opacity:var(--o,.35);transition:opacity .25s linear}
+/* pill: reserved box 1.9em; the visible image is scaled to 1.7em and opens to full width on hover */
+.s-hl__pill{display:inline-block;width:1.9em;height:.95em;vertical-align:-.1em;margin:0 .02em;position:relative}
+.s-hl__pill span{position:absolute;inset:0;border-radius:999px;overflow:hidden;transform:scaleX(.895);transition:transform .45s var(--ease);background:var(--stone)}
+.s-hl__pill :is(img,svg.blko-lv3-ph){width:100%;height:100%;object-fit:cover;transform:scaleX(1.117);transition:transform .45s var(--ease)}
+.s-hl__pill:hover span{transform:scaleX(1)}
+.s-hl__pill:hover :is(img,svg.blko-lv3-ph){transform:scaleX(1)}
+html.motion .s-hl.is-armed .s-hl__pill{opacity:calc(.5 + var(--o,.35) * .5)}
+.s-hl__side{padding-bottom:.6em;max-width:240px}
+.s-hl__side p{font-size:15px;color:var(--muted);margin-bottom:12px;line-height:1.5}
+@media (max-width:900px){
+  .s-hl__in{grid-template-columns:1fr;gap:32px}
+  .s-hl__side{padding-bottom:0;max-width:none}
+}
+@media (max-width:760px){
+  .s-hl{padding:88px 0 72px}
+  .s-hl__txt{font-size:30px;line-height:1.22}
+}

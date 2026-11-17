@@ -1,0 +1,175 @@
+{%- comment -%}
+  Lather home v3, 55 Hotspots: one full-bleed photo with still pins (only the ring behind each pin pulses) and a compact
+  product slider bottom-right. Pin blocks: x/y position on the photo (0 to 100), a product (or demo fields), tag side.
+  Port of parts/55-hotspots.html; shared classes come from blko-lv3-base.css.
+{%- endcomment -%}
+{{ 'blko-lv3-hotspots.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-hotspots.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+  assign uid = section.id | replace: '_', '-'
+  assign ratio = 1.5
+  if s.image != blank
+    assign ratio = s.image.aspect_ratio
+  endif
+  assign img_alt = s.image_alt | default: s.image.alt
+-%}
+<section class="s-look"{% if s.anchor != blank %} id="{{ s.anchor | handleize }}"{% endif %} aria-label="{{ s.label | escape }}">
+  <div class="s-look__stage" data-ratio="{{ ratio }}">
+    {%- if s.image != blank -%}
+      {{ s.image | image_url: width: 2400 | image_tag: class: 's-look__img', alt: img_alt, loading: 'lazy', widths: '750, 1100, 1500, 2000, 2400', sizes: '100vw' }}
+    {%- else -%}
+      {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph s-look__img' }}
+    {%- endif -%}
+    <div class="s-look__shade"></div>
+    <div class="s-look__head wrap">
+      <h2 class="h2" data-rv="line">
+        {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
+        {%- if s.heading_2 != blank -%}<span class="ln"><span>{{ s.heading_2 }}</span></span>{%- endif -%}
+      </h2>
+      {%- if s.text != blank -%}<p data-rv="blur" data-rv-delay="2">{{ s.text | escape }}</p>{%- endif -%}
+    </div>
+    {%- for block in section.blocks -%}
+      {%- liquid
+        assign b = block.settings
+        assign p = b.product
+        assign nm = b.name
+        if p != blank
+          assign nm = p.title
+        endif
+        assign tag = b.tag | default: nm
+        assign fx = b.x | divided_by: 100.0
+        assign fy = b.y | divided_by: 100.0
+      -%}
+      <button type="button" class="s-look__pin" style="--i:{{ forloop.index0 }};--px:{{ b.x }}%;--py:{{ b.y }}%" data-fx="{{ fx }}" data-fy="{{ fy }}" data-i="{{ forloop.index0 }}"{% if b.side == 'left' %} data-side="left"{% endif %} aria-label="{{ s.pin_aria | replace: '[name]', tag | escape }}" aria-controls="lookCard-{{ uid }}-{{ forloop.index0 }}" {{ block.shopify_attributes }}><span class="s-look__tag">{{ tag | escape }}</span></button>
+    {%- endfor -%}
+  </div>
+
+  <div class="s-look__panel" role="region" aria-label="{{ s.panel_label | escape }}" data-rv="blur" data-rv-delay="3">
+    <div class="s-look__bar">
+      <p>{{ s.panel_title | escape }}</p>
+      <div class="s-look__arrows">
+        <button type="button" data-dir="-1" aria-label="{{ s.prev_label | escape }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <button type="button" data-dir="1" aria-label="{{ s.next_label | escape }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+      </div>
+    </div>
+    <div class="s-look__track" tabindex="0" aria-label="{{ s.track_label | escape }}">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign b = block.settings
+          assign p = b.product
+          assign nm = b.name
+          assign cents = b.price | plus: 0
+          assign img = b.image
+          if p != blank
+            assign nm = p.title
+            assign cents = p.selected_or_first_available_variant.price
+            assign img = p.featured_image
+          endif
+          assign key = b.key | strip
+          if key == blank and p != blank
+            assign key = p.handle
+          endif
+          if key == blank
+            assign key = block.id
+          endif
+          assign desc = b.desc
+          if b.size != blank
+            assign desc = desc | append: ' ' | append: b.size | strip
+          endif
+        -%}
+        {%- render 'blko-lv3-product-data', key: key, product: p, name: b.name, size: b.size, price: b.price, line: b.line, labels: b.labels, img: b.image -%}
+        <article class="s-look__card" id="lookCard-{{ uid }}-{{ forloop.index0 }}" data-i="{{ forloop.index0 }}" data-id="{{ key | escape }}">
+          <div class="s-look__thumb">
+            {%- if img != blank -%}
+              {{ img | image_url: width: 320 | image_tag: alt: '', loading: 'lazy', widths: '160, 240, 320', sizes: '104px' }}
+            {%- else -%}
+              {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph' }}
+            {%- endif -%}
+          </div>
+          <div><h3>{{ nm | escape }}</h3>{%- if desc != blank -%}<p class="small">{{ desc | escape }}</p>{%- endif -%}
+            <div class="s-look__row"><span class="price">{{ cents | money_without_trailing_zeros }}</span><button type="button" class="s-look__q" data-quick="{{ key | escape }}" aria-label="{{ s.quick_aria | replace: '[name]', nm | escape }}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg></button><button type="button" class="btn btn--primary btn--sm" data-add="{{ key | escape }}" aria-label="{{ s.add_aria | replace: '[name]', nm | escape }}">{{ s.add_label | escape }}</button></div></div>
+        </article>
+      {%- endfor -%}
+    </div>
+    <div class="s-look__dash" aria-hidden="true">
+      {%- for block in section.blocks -%}<span{% if forloop.first %} class="is-on"{% endif %}></span>{%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Shoppable photo",
+  "class": "blko-lv3-section-hotspots",
+  "settings": [
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "after-shower" },
+    { "type": "text", "id": "label", "label": "Section name (screen readers)", "default": "Shop the after-shower routine from a photo" },
+    { "type": "image_picker", "id": "image", "label": "Photo", "info": "Pins follow the photo when it is cropped." },
+    { "type": "text", "id": "image_alt", "label": "Photo description", "default": "Sitting on the bed after a shower, pouring lotion into an open palm" },
+    { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "Shop the" },
+    { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "info": "Use italic for the emphasised word.", "default": "<em>after.</em>" },
+    { "type": "text", "id": "text", "label": "Text", "default": "Wash, pat dry, then moisturise while skin is still damp." },
+    { "type": "header", "content": "Product slider" },
+    { "type": "text", "id": "panel_title", "label": "Slider title", "default": "In this routine" },
+    { "type": "text", "id": "panel_label", "label": "Slider name (screen readers)", "default": "Products in this photo" },
+    { "type": "text", "id": "track_label", "label": "Track name (screen readers)", "default": "Product slider" },
+    { "type": "text", "id": "prev_label", "label": "Previous button (screen readers)", "default": "Previous product" },
+    { "type": "text", "id": "next_label", "label": "Next button (screen readers)", "default": "Next product" },
+    { "type": "text", "id": "add_label", "label": "Add button", "default": "Add" },
+    { "type": "text", "id": "add_aria", "label": "Add button (screen readers)", "info": "[name] becomes the product name.", "default": "Add [name]" },
+    { "type": "text", "id": "quick_aria", "label": "Quick view button (screen readers)", "default": "Quick view [name]" },
+    { "type": "text", "id": "pin_aria", "label": "Pin (screen readers)", "default": "[name]: show in the list" }
+  ],
+  "blocks": [
+    {
+      "type": "pin",
+      "name": "Pin",
+      "limit": 6,
+      "settings": [
+        { "type": "range", "id": "x", "label": "Left to right", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 57 },
+        { "type": "range", "id": "y", "label": "Top to bottom", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 78 },
+        {
+          "type": "select", "id": "side", "label": "Tag side", "default": "right",
+          "options": [ { "value": "right", "label": "Right of the pin" }, { "value": "left", "label": "Left of the pin" } ]
+        },
+        { "type": "text", "id": "tag", "label": "Tag text", "info": "Blank uses the product name." },
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "text", "id": "key", "label": "Product key", "info": "Shared with the other sections' buttons. Blank uses the product handle.", "default": "rich" },
+        { "type": "text", "id": "desc", "label": "Short line", "default": "Thicker, for very dry skin." },
+        { "type": "text", "id": "size", "label": "Size", "default": "400 ml" },
+        { "type": "header", "content": "Demo product (no product picked)" },
+        { "type": "text", "id": "name", "label": "Name", "default": "Rich wash" },
+        { "type": "text", "id": "price", "label": "Price in cents", "default": "2000" },
+        { "type": "text", "id": "line", "label": "Quick view line", "default": "Very dry or winter skin. Thicker, almost a lotion." },
+        { "type": "text", "id": "labels", "label": "Labels", "info": "Comma list: best, ff, new, sale.", "default": "ff" },
+        { "type": "image_picker", "id": "image", "label": "Image" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shoppable photo",
+      "blocks": [
+        { "type": "pin" },
+        {
+          "type": "pin",
+          "settings": {
+            "x": 54, "y": 17, "key": "lotion", "desc": "Light, for damp skin.", "size": "250 ml",
+            "name": "Calm lotion", "price": "2200", "line": "Light lotion for damp skin, straight after the wash.", "labels": "ff"
+          }
+        },
+        {
+          "type": "pin",
+          "settings": {
+            "x": 28, "y": 50, "side": "left", "key": "cream", "desc": "For shins, elbows and hands.", "size": "200 ml",
+            "name": "Rich cream", "price": "2400", "line": "Thick cream for shins, elbows and hands.", "labels": "ff"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

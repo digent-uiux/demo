@@ -1,0 +1,122 @@
+{%- comment -%}
+  Lather v3, Social (home-v3/parts/90-social.html). A slow drifting strip of customer photos at different sizes; each tile
+  shows its product chip on hover or focus (always on touch). Tiles are blocks; chips use a real product when picked.
+{%- endcomment -%}
+{{ 'blko-lv3-social.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-social.js' | asset_url }}" defer></script>
+
+{%- assign s = section.settings -%}
+<section class="s-social" id="{{ s.anchor | default: 'social' | handleize }}" aria-label="{{ s.label | escape }}" data-lv3-social>
+  <div class="wrap s-social__top">
+    <h2 class="h2" data-rv="line">
+      {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
+      {%- if s.heading_2 != blank -%}<span class="ln"><span>{{ s.heading_2 }}</span></span>{%- endif -%}
+    </h2>
+    <div class="s-social__acct" data-rv="blur" data-rv-delay="1">
+      <p><b>{{ s.handle | escape }}</b>{{ s.tagline | escape }}</p>
+      {%- if s.button_label != blank -%}<a class="btn btn--ghost" href="{{ s.button_link | default: '#social' }}">{{ s.button_label | escape }}</a>{%- endif -%}
+    </div>
+  </div>
+  <div class="s-social__strip">
+    <div class="s-social__track">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign b = block.settings
+          assign p = b.product
+          assign key = b.key | default: block.id | handleize
+          if p != blank
+            assign key = p.handle
+            assign p_name = p.title
+            assign p_price = p.price | money_without_trailing_zeros
+            assign p_img = p.featured_image
+          else
+            assign p_name = b.name
+            assign p_price = b.price | plus: 0 | money_without_trailing_zeros
+            assign p_img = b.thumb
+          endif
+          assign img_w = b.width | times: 2
+        -%}
+        <figure class="s-social__tile" style="--w:{{ b.width }}px;--h:{{ b.height }}px" {{ block.shopify_attributes }}>
+          {%- if b.image != blank -%}
+            {%- assign pos = 'object-position: ' | append: b.image.presentation.focal_point -%}
+            {%- capture sizes -%}(max-width: 760px) {{ b.width | times: 0.58 | round }}px, {{ b.width }}px{%- endcapture -%}
+            {{ b.image | image_url: width: img_w | image_tag: widths: '240, 400, 600, 800', sizes: sizes, loading: 'lazy', alt: b.image.alt, style: pos }}
+          {%- else -%}
+            {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph' }}
+          {%- endif -%}
+          {%- if p != blank or b.name != blank -%}
+            {%- if p != blank -%}
+              {%- render 'blko-lv3-product-data', key: key, product: p -%}
+            {%- else -%}
+              {%- render 'blko-lv3-product-data', key: key, name: b.name, size: b.size, price: b.price, line: b.line, labels: b.labels, img: b.thumb -%}
+            {%- endif -%}
+            <button class="s-social__chip" type="button" data-quick="{{ key }}" aria-label="{{ s.quick_label | escape }}: {{ p_name | escape }}, {{ p_price | strip_html }}">
+              {%- if p_img -%}
+                {{ p_img | image_url: width: 64 | image_tag: class: 's-social__thumb', alt: '', loading: 'lazy', width: 32, height: 32 }}
+              {%- else -%}
+                {{ 'product-1' | placeholder_svg_tag: 'blko-lv3-ph s-social__thumb' }}
+              {%- endif -%}
+              <span data-n>{{ p_name | escape }}</span><span class="price" data-p>{{ p_price }}</span>
+            </button>
+          {%- endif -%}
+        </figure>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lather social",
+  "class": "blko-lv3-section-social",
+  "max_blocks": 12,
+  "settings": [
+    { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "Shared by <em>you.</em>", "info": "Italic text shows in the accent style." },
+    { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2 (optional)" },
+    { "type": "text", "id": "handle", "label": "Account", "default": "@lather.skin" },
+    { "type": "text", "id": "tagline", "label": "Account line", "default": "Tag us to be featured" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Follow" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "text", "id": "quick_label", "label": "Product chip label (screen readers)", "default": "Quick view" },
+    { "type": "header", "content": "Section" },
+    { "type": "text", "id": "label", "label": "Section label (screen readers)", "default": "Customer photos" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "social" }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Photo",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Photo" },
+        { "type": "range", "id": "width", "label": "Width", "min": 200, "max": 400, "step": 10, "unit": "px", "default": 300 },
+        { "type": "range", "id": "height", "label": "Height", "min": 200, "max": 420, "step": 10, "unit": "px", "default": 300 },
+        { "type": "header", "content": "Product chip" },
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "paragraph", "content": "Demo product, shown while no product is picked. Clear the name to hide the chip." },
+        { "type": "image_picker", "id": "thumb", "label": "Image" },
+        { "type": "text", "id": "key", "label": "Demo id", "default": "calm" },
+        { "type": "text", "id": "name", "label": "Name", "default": "Calm wash" },
+        { "type": "text", "id": "size", "label": "Size", "default": "400 ml" },
+        { "type": "text", "id": "price", "label": "Price in cents", "default": "1800" },
+        { "type": "text", "id": "line", "label": "Short line", "default": "Everyday, eczema-prone skin. Colloidal oat and glycerin." },
+        { "type": "text", "id": "labels", "label": "Labels", "info": "Comma list: best, ff, new, sale", "default": "best,ff" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather social",
+      "blocks": [
+        { "type": "tile", "settings": { "width": 340, "height": 250, "key": "milk", "name": "Body milk", "size": "300 ml", "price": "2000", "line": "Light and quick for dry skin. Sinks in fast, never sticky.", "labels": "new,ff" } },
+        { "type": "tile", "settings": { "width": 250, "height": 360, "key": "chamomile", "name": "Chamomile wash", "size": "400 ml", "price": "2000", "line": "Our only scented wash: 0.2% chamomile oil, allergens listed.", "labels": "" } },
+        { "type": "tile", "settings": { "width": 230, "height": 290, "key": "bar", "name": "Oat bar", "size": "120 g", "price": "900", "line": "Oat milk soap bar for face and body. Rich lather that rinses soft.", "labels": "best,ff" } },
+        { "type": "tile", "settings": { "width": 290, "height": 400, "key": "rich", "name": "Rich wash", "size": "400 ml", "price": "2000", "line": "Very dry or winter skin. Thicker, almost a lotion.", "labels": "ff" } },
+        { "type": "tile", "settings": { "width": 330, "height": 230, "key": "little", "name": "Little lotion", "size": "150 ml", "price": "1400", "line": "Soft, light oat lotion for ages 1 and up. Fragrance-free.", "labels": "new,ff" } },
+        { "type": "tile", "settings": { "width": 360, "height": 270, "key": "cream", "name": "Rich cream", "size": "200 ml", "price": "2400", "line": "Thick cream for shins, elbows and hands.", "labels": "ff" } },
+        { "type": "tile", "settings": { "width": 250, "height": 340, "key": "lotion", "name": "Calm lotion", "size": "250 ml", "price": "2200", "line": "Light lotion for damp skin, straight after the wash.", "labels": "ff" } },
+        { "type": "tile", "settings": { "width": 310, "height": 300, "key": "calm", "name": "Calm wash", "size": "400 ml", "price": "1800", "line": "Everyday, eczema-prone skin. Colloidal oat and glycerin.", "labels": "best,ff" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

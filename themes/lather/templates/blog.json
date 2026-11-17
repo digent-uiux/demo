@@ -1,50 +1,174 @@
 {
   "sections": {
-    "search-blog-journal-hero": {
-      "type": "blko-search-blog-journal-hero",
+    "journal-feature": {
+      "type": "blko-lv3-journal-feature",
       "settings": {
-        "crumb": "The Locker Room",
-        "eyebrow": "The Locker Room",
-        "heading": "Grooming advice without the smoke and mirrors.",
-        "text": "Question-style guides on skin, hair, scent and the outdoors, written by the crew.",
-        "image_alt": "Two men talking in a gym locker room"
+        "back_label": "Back to home",
+        "kicker": "The Lather journal",
+        "heading": "A little less <em>guesswork.</em>",
+        "use_latest": true,
+        "button_label": "Read the guide",
+        "image": "shopify://shop_images/u-1620626011761-996317b8d101.jpg",
+        "image_alt": "A quiet bathroom with a freestanding bath and folded towels",
+        "category": "Skin basics",
+        "title_1": "A gentler shower",
+        "title_2": "for eczema-prone",
+        "title_3": "<em>skin.</em>",
+        "text": "Small changes to washing, drying and moisturising. A practical place to start, without a longer routine.",
+        "button_link": "/blogs/journal/a-gentler-shower-for-eczema-prone-skin"
       }
     },
-    "search-blog-featured-post": {
-      "type": "blko-search-blog-featured-post",
+    "journal-reading": {
+      "type": "blko-lv3-journal-reading",
       "settings": {
-        "eyebrow_prefix": "Pick of the week",
-        "reading_time": "6 minutes",
-        "button_label": "Read it"
-      }
-    },
-    "search-blog-article-grid": {
-      "type": "blko-search-blog-article-grid",
-      "settings": {
-        "eyebrow": "Browse by topic",
-        "heading": "More from the locker room",
-        "link_label": "Read it"
-      }
-    },
-    "search-blog-pagination": {
-      "type": "blko-search-blog-pagination",
-      "settings": {}
-    },
-    "newsletter": {
-      "type": "blko-newsletter",
-      "settings": {
-        "eyebrow": "20% off your first order",
-        "heading": "Join the crew",
-        "message": "Drop dates, secret sales and the odd locker-room joke. Once a week, no spam.",
-        "button_label": "Get my code"
-      }
+        "heading": "Worth a <em>read.</em>",
+        "count_one": "[count] short read",
+        "count_many": "[count] short reads",
+        "show_filters": true,
+        "all_label": "All articles",
+        "filter_label": "Filter journal articles",
+        "per_page": 6,
+        "skip_first": true,
+        "show_preview": true,
+        "preview_label": "Read a short preview",
+        "read_label": "Read the full article",
+        "pages_label": "Journal pages",
+        "note": "Have a question about a formula? Start with the complete ingredient list, or ask us directly.",
+        "note_button": "Talk to Lather",
+        "note_link": "/pages/help",
+        "anchor": "journalReading"
+      },
+      "blocks": {
+        "filter_daily_care": {
+          "type": "filter",
+          "settings": {
+            "label": "Daily care",
+            "key": "daily-care"
+          }
+        },
+        "filter_ingredients": {
+          "type": "filter",
+          "settings": {
+            "label": "Ingredients",
+            "key": "ingredients"
+          }
+        },
+        "filter_family": {
+          "type": "filter",
+          "settings": {
+            "label": "Family",
+            "key": "family"
+          }
+        },
+        "card_1": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/h-calm.jpg",
+            "image_alt": "Calm wash on a wet stone ledge with soft foam",
+            "category": "Daily care",
+            "category_key": "daily-care",
+            "title": "Soft foam, on purpose.",
+            "excerpt": "A wash doesn't need a mountain of bubbles to earn a place in your bathroom.",
+            "summary": "Read the short guide",
+            "text": "<p>Calm wash and Soft wash are made with a low-foam texture. Work a small amount between wet palms, then spread it over damp skin. The foam is soft and light.</p><p>Choose by how a formula feels during and after your shower, rather than by the size of its bubbles. You can find each wash's ingredient list in its quick view.</p>",
+            "link_label": "Compare the body washes",
+            "link": "/collections/all?type=wash",
+            "anchor": "routines"
+          }
+        },
+        "card_2": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/h-bar.jpg",
+            "image_alt": "Oat bar with a debossed logo, soap foam and a few oat grains",
+            "category": "Ingredients",
+            "category_key": "ingredients",
+            "title": "What's in an oat bar?",
+            "excerpt": "The full list, in plain sight. And what a bar changes about your daily wash.",
+            "summary": "Read the ingredient note",
+            "text": "<p>Our Oat bar contains sodium olivate, sodium cocoate, oat milk, colloidal oat, shea butter and glycerin. It has no added fragrance.</p><p>A bar is a different format from our liquid washes. Keep it on a draining dish between uses so it can dry. The 120 g size is for face and body.</p>",
+            "link_label": "Meet the Oat bar",
+            "link": "/collections/all?type=bar",
+            "anchor": "ingredients"
+          }
+        },
+        "card_3": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/h-little.jpg",
+            "image_alt": "Little lotion beside a folded oat towel and a wicker basket",
+            "category": "Family",
+            "category_key": "family",
+            "title": "A shorter shelf for little ones.",
+            "excerpt": "One light lotion, a towel, and a place for everything when bath time is done.",
+            "summary": "Read the family note",
+            "text": "<p>Little lotion is our fragrance-free oat lotion for ages 1 and up. The squeeze tube has an oat flip cap, so it can sit within easy reach on a dry shelf.</p><p>Keep your towel and lotion together if that makes the end of bath time simpler. Check the full ingredient list before choosing a new product for your child.</p>",
+            "link_label": "See Little lotion",
+            "link": "/collections/all?need=little",
+            "anchor": "family"
+          }
+        },
+        "card_4": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/h-milk.jpg",
+            "image_alt": "Body milk resting on a folded linen towel in gentle light",
+            "category": "Daily care",
+            "category_key": "daily-care",
+            "title": "Milk, lotion or cream?",
+            "excerpt": "Three textures. One decision: how much richness do you want to feel?",
+            "summary": "Read the texture guide",
+            "text": "<p>Body milk is the lightest, quickest-feeling option. Calm lotion is a light lotion for straight after the shower. Rich cream is our thickest texture, in a jar.</p><p>You don't need all three. Start with the texture you prefer and the areas you want to moisturise. See the ingredient lists alongside each product.</p>",
+            "link_label": "Compare the moisturisers",
+            "link": "/collections/all?type=moisturiser"
+          }
+        },
+        "card_5": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/h-chamomile.jpg",
+            "image_alt": "Golden Chamomile wash lying on linen among dried chamomile flowers",
+            "category": "Ingredients",
+            "category_key": "ingredients",
+            "title": "The one with a little scent.",
+            "excerpt": "Chamomile is the exception in our line. Here's where to find the difference.",
+            "summary": "Read the scent note",
+            "text": "<p>Chamomile wash is our only scented formula. It contains 0.2% chamomile flower oil. The ingredient list identifies its listed allergen, bisabolol.</p><p>Prefer no added fragrance? The other products in the line are fragrance-free. Choose the option that matches your own preferences and ingredient needs.</p>",
+            "link_label": "See fragrance-free products",
+            "link": "/collections/all?scent=free"
+          }
+        },
+        "card_6": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/h-rich.jpg",
+            "image_alt": "A single drop of cream wash hanging from a deep green pump",
+            "category": "Daily care",
+            "category_key": "daily-care",
+            "title": "When you want a richer wash.",
+            "excerpt": "A thicker texture for the days your usual wash feels a little too light.",
+            "summary": "Read the formula note",
+            "text": "<p>Rich wash is the thicker body wash in our line. Its formula pairs the Calm wash base with extra shea butter and oat oil, and stays fragrance-free.</p><p>It comes in a 400 ml deep green bottle. If you also want a richer moisturiser, compare Rich cream with the lighter lotion and milk before adding another step.</p>",
+            "link_label": "See the richer textures",
+            "link": "/collections/all?need=verydry"
+          }
+        }
+      },
+      "block_order": [
+        "filter_daily_care",
+        "filter_ingredients",
+        "filter_family",
+        "card_1",
+        "card_2",
+        "card_3",
+        "card_4",
+        "card_5",
+        "card_6"
+      ]
     }
   },
   "order": [
-    "search-blog-journal-hero",
-    "search-blog-featured-post",
-    "search-blog-article-grid",
-    "search-blog-pagination",
-    "newsletter"
+    "journal-feature",
+    "journal-reading"
   ]
 }

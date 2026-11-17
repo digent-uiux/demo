@@ -1,0 +1,177 @@
+{%- comment -%}
+  Lather sign-up popup ({% form 'customer' %}, opens once per session after a delay) and cookie bar (Shopify
+  customer privacy consent when available). Behaviour in blko-lv3-store.js (#pop, #popForm, #cookie).
+{%- endcomment -%}
+{%- assign st = section.settings -%}
+<script type="application/json" data-lv3-strings-pop>{"pop_delay": {{ st.pop_delay | json }}, "cookie_delay": {{ st.cookie_delay | json }}}</script>
+{%- if st.pop_enable -%}
+  <div class="pop" id="pop" role="dialog" aria-modal="true" aria-labelledby="popTitle" aria-hidden="true" data-enabled>
+    <button class="icon-btn pop__x" type="button" aria-label="{{ st.close_label | escape }}" data-close><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    {%- if st.pop_image != blank -%}
+      {%- assign pop_alt = st.pop_image.alt | default: st.pop_alt -%}
+      {{ st.pop_image | image_url: width: 1200 | image_tag: widths: '450, 600, 900, 1200', sizes: '(min-width: 760px) 360px, 100vw', loading: 'lazy', alt: pop_alt }}
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'blko-lv3-ph' }}
+    {%- endif -%}
+    {%- form 'customer', id: 'popForm', class: 'pop__body', novalidate: 'novalidate' -%}
+      <input type="hidden" name="contact[tags]" value="newsletter,popup">
+      <h2 class="h2" id="popTitle" style="font-size:36px">{{ st.pop_title }}</h2>
+      {%- if st.pop_text != blank -%}<p class="small">{{ st.pop_text | escape }}</p>{%- endif -%}
+      <label class="sr" for="popEmail">{{ st.pop_email_label | escape }}</label>
+      <input id="popEmail" type="email" name="contact[email]" placeholder="{{ st.pop_email_label | escape }}" autocomplete="email" required>
+      <button class="btn btn--primary" type="submit">{{ st.pop_button | escape }}</button>
+      <button class="pop__no" type="button" data-close>{{ st.pop_no | escape }}</button>
+      {%- if form.posted_successfully? -%}<span hidden data-lv3-posted></span>{%- endif -%}
+    {%- endform -%}
+    <div class="pop__body" data-pop-done hidden>
+      <h2 class="h2" style="font-size:34px">{{ st.pop_done_title }}</h2>
+      {%- if st.pop_done_text != blank -%}<p class="small">{{ st.pop_done_text | escape }}</p>{%- endif -%}
+      <button class="btn btn--primary" type="button" data-close>{{ st.pop_done_button | escape }}</button>
+    </div>
+  </div>
+{%- endif -%}
+
+{%- if st.cookie_enable -%}
+  <div class="cookie" id="cookie" role="region" aria-label="{{ st.cookie_label | escape }}">
+    {{ st.cookie_text | escape }}
+    <div class="cookie__row"><button class="btn btn--light btn--sm" type="button" data-cookie="yes">{{ st.cookie_yes | escape }}</button><button class="btn btn--ghost btn--sm" type="button" data-cookie="no">{{ st.cookie_no | escape }}</button></div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Lather popup and cookies",
+  "tag": "div",
+  "class": "lv3-popup-sec",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Popup"
+    },
+    {
+      "type": "checkbox",
+      "id": "pop_enable",
+      "label": "Show the sign-up popup",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "pop_delay",
+      "label": "Open after",
+      "min": 3,
+      "max": 60,
+      "step": 1,
+      "unit": "s",
+      "default": 12
+    },
+    {
+      "type": "image_picker",
+      "id": "pop_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "pop_alt",
+      "label": "Image alt (when the image has none)",
+      "default": "Wet shoulder wrapped in a towel after a shower"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "pop_title",
+      "label": "Title",
+      "default": "10% off your <em>first</em> bottle."
+    },
+    {
+      "type": "text",
+      "id": "pop_text",
+      "label": "Text",
+      "default": "Skin notes twice a month. No daily emails."
+    },
+    {
+      "type": "text",
+      "id": "pop_email_label",
+      "label": "Email placeholder",
+      "default": "Email"
+    },
+    {
+      "type": "text",
+      "id": "pop_button",
+      "label": "Button",
+      "default": "Get my 10%"
+    },
+    {
+      "type": "text",
+      "id": "pop_no",
+      "label": "Dismiss",
+      "default": "No thanks"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "pop_done_title",
+      "label": "Thanks title",
+      "default": "Check your <em>inbox.</em>"
+    },
+    {
+      "type": "text",
+      "id": "pop_done_text",
+      "label": "Thanks text",
+      "default": "Your code works on any bottle or set."
+    },
+    {
+      "type": "text",
+      "id": "pop_done_button",
+      "label": "Thanks button",
+      "default": "Keep browsing"
+    },
+    {
+      "type": "header",
+      "content": "Cookie bar"
+    },
+    {
+      "type": "checkbox",
+      "id": "cookie_enable",
+      "label": "Show the cookie bar",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "cookie_delay",
+      "label": "Show after",
+      "min": 0,
+      "max": 6000,
+      "step": 200,
+      "unit": "ms",
+      "default": 1800
+    },
+    {
+      "type": "text",
+      "id": "cookie_label",
+      "label": "Region label (screen readers)",
+      "default": "Cookies"
+    },
+    {
+      "type": "text",
+      "id": "cookie_text",
+      "label": "Text",
+      "default": "We use cookies to keep your bag and see what helps. Nothing is sold."
+    },
+    {
+      "type": "text",
+      "id": "cookie_yes",
+      "label": "Accept",
+      "default": "Accept"
+    },
+    {
+      "type": "text",
+      "id": "cookie_no",
+      "label": "Decline",
+      "default": "Only needed ones"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather popup and cookies"
+    }
+  ]
+}
+{% endschema %}

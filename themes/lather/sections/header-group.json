@@ -1,18 +1,57 @@
 {
-  "name": "Header",
   "type": "header",
+  "name": "Header group",
   "sections": {
-    "announcement": {
-      "type": "blko-chrome-announcement",
+    "lv3-theme": {
+      "type": "blko-lv3-theme",
       "settings": {}
     },
-    "header": {
-      "type": "blko-chrome-header",
-      "settings": {}
+    "lv3-announcement": {
+      "type": "blko-lv3-announcement",
+      "blocks": {
+        "msg-1": {
+          "type": "message",
+          "settings": {
+            "text": "New here? Start with the Oat bar, $9.",
+            "link_label": "Shop the line"
+          }
+        },
+        "msg-2": {
+          "type": "message",
+          "settings": {
+            "text": "Free shipping over $40. Free Oat bar over $60."
+          }
+        },
+        "msg-3": {
+          "type": "message",
+          "settings": {
+            "text": "Skin reacted? We refund your first bottle, used or not."
+          }
+        }
+      },
+      "block_order": [
+        "msg-1",
+        "msg-2",
+        "msg-3"
+      ],
+      "settings": {
+        "home_only": true
+      }
+    },
+    "lv3-header": {
+      "type": "blko-lv3-header",
+      "settings": {
+        "menu": "main-menu",
+        "over_hero": true,
+        "demo_links": "Shop all | [all]\nBuild a set | [home]#bundle\nSkin quiz | [home]#quiz\nOur story | /pages/about\nJournal | /blogs/journal",
+        "demo_mobile_links": "Shop all | [all]\nBuild a set | [home]#bundle\nSkin quiz | [home]#quiz\nOur story | /pages/about\nJournal | /blogs/journal\nHelp | /pages/help\nAccount | [account]",
+        "logo": "shopify://shop_images/logo-final.png"
+      }
     }
   },
   "order": [
-    "announcement",
-    "header"
+    "lv3-theme",
+    "lv3-announcement",
+    "lv3-header"
   ]
 }

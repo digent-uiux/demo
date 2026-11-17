@@ -1,36 +1,23 @@
 {
   "sections": {
-    "cart-checkout-not-found": {
-      "type": "blko-cart-checkout-not-found",
-      "settings": {},
-      "blocks": {
-        "block-1": {
-          "type": "link",
-          "settings": {}
-        },
-        "block-2": {
-          "type": "link",
-          "settings": {
-            "label": "Bar soap",
-            "url": "#complexion"
-          }
-        },
-        "block-3": {
-          "type": "link",
-          "settings": {
-            "label": "Body care",
-            "url": "#care"
-          }
-        }
-      },
-      "block_order": [
-        "block-1",
-        "block-2",
-        "block-3"
-      ]
+    "lost": {
+      "type": "blko-lv3-404-lost",
+      "settings": {
+        "code": "404",
+        "heading_1": "A page gone",
+        "heading_2": "<em>astray.</em>",
+        "text": "This link no longer leads anywhere. Your next comfortable shower is still here.",
+        "button_label": "Shop the line",
+        "home_label": "Back home",
+        "search_label": "Search",
+        "image_alt": "Oat bar with soft foam on a stone dish",
+        "caption_title": "A small place to start",
+        "caption_text": "Oat bar for face and body, $9.",
+        "image": "shopify://shop_images/h-bar.jpg"
+      }
     }
   },
   "order": [
-    "cart-checkout-not-found"
+    "lost"
   ]
 }

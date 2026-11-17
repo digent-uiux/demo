@@ -1,0 +1,12 @@
+.s-about-fragrance{padding:88px 0;background:var(--deep);color:var(--oat)}
+.s-about-fragrance__layout{display:grid;grid-template-columns:.9fr 1.1fr;gap:12%}
+.s-about-fragrance__intro .h2{max-width:12ch}.s-about-fragrance__intro p{color:var(--sage-wash);margin-top:24px;font-size:17px;max-width:35ch}
+.s-about-fragrance__choices{list-style:none}
+.s-about-fragrance__choices li{padding:25px 0;border-top:1px solid color-mix(in srgb,var(--oat) 25%,transparent)}
+.s-about-fragrance__choices li:first-child{padding-top:0;border-top:0}
+.s-about-fragrance__choices h3{font-size:22px;font-weight:500;line-height:1.25;margin-bottom:10px}
+.s-about-fragrance__choices p{color:var(--sage-wash);font-size:16px;max-width:45ch}
+.s-about-fragrance__choices a{display:inline-block;margin-top:14px;color:var(--oat)}
+.s-about-fragrance__choices a:hover{color:var(--sage)}
+.s-about-fragrance__choices a:focus-visible{outline-color:var(--sage)}
+@media(max-width:760px){.s-about-fragrance{padding:60px 0}.s-about-fragrance__layout{grid-template-columns:1fr;gap:38px}.s-about-fragrance__intro .h2{max-width:14ch}.s-about-fragrance__choices h3{font-size:21px}}

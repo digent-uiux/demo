@@ -1,0 +1,54 @@
+/* Lather v3 quiz (ported from parts/20-quiz.html). Shared tokens/classes come from blko-lv3-base.css. */
+/* 20 Skin quiz: deep moss scene, the photo fills the left edge to edge, a two-question quiz on the right */
+.s-quiz{background:var(--deep);color:var(--oat);display:grid;grid-template-columns:minmax(0,46fr) minmax(0,54fr);min-height:min(820px,100svh)}
+.s-quiz__photo{position:relative;overflow:hidden;min-height:560px}
+.s-quiz__photo :is(img,svg.blko-lv3-ph){position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 22%}
+html.motion .s-quiz__photo :is(img,svg.blko-lv3-ph){transform:scale(1.06);transition:transform 1.4s var(--ease-io)}
+html.motion .s-quiz.in .s-quiz__photo :is(img,svg.blko-lv3-ph){transform:scale(1)}
+.s-quiz__body{padding:clamp(64px,8vw,120px) clamp(24px,6vw,104px) clamp(56px,6vw,88px) clamp(32px,5vw,80px);display:flex;flex-direction:column;max-width:760px}
+.s-quiz__body .h2{color:var(--oat)}
+.s-quiz__sub{margin-top:12px;color:var(--sage);font-size:18px}
+/* progress: two short lines, no numbers */
+.s-quiz__prog{display:flex;gap:6px;margin:48px 0 24px}
+.s-quiz__prog i{width:44px;height:3px;border-radius:2px;background:rgba(163,174,142,.28);overflow:hidden}
+.s-quiz__prog i b{display:block;height:100%;background:var(--sage);transform-origin:left;transform:scaleX(0);transition:transform .52s var(--ease)}
+.s-quiz__prog i.on b{transform:scaleX(1)}
+.s-quiz__steps{display:grid;flex:1}
+.s-quiz__step{grid-area:1/1;visibility:hidden;opacity:0}
+.s-quiz__step.is-on{visibility:visible;opacity:1}
+html.motion .s-quiz__step{transition:opacity .52s var(--ease),filter .52s var(--ease),transform .52s var(--ease),visibility 0s linear .52s;filter:blur(6px);transform:translateY(10px)}
+html.motion .s-quiz__step.is-on{filter:none;transform:none;transition:opacity .52s var(--ease) .12s,filter .52s var(--ease) .12s,transform .52s var(--ease) .12s,visibility 0s}
+.s-quiz__q{font:500 clamp(22px,2vw,28px)/1.25 var(--f-body);letter-spacing:-.01em;max-width:24ch;outline:none}
+.s-quiz__opts{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.s-quiz .chip{height:48px;padding:0 20px;font-size:15px;background:rgba(238,232,220,.09);color:var(--oat);box-shadow:inset 0 0 0 1px rgba(238,232,220,.18)}
+.s-quiz .chip:hover{background:rgba(238,232,220,.16)}
+.s-quiz .chip[aria-pressed="true"]{background:var(--oat);color:var(--ink);box-shadow:none}
+.s-quiz .chip:focus-visible{outline-color:var(--sage)}
+.s-quiz__back{margin-top:22px;font-size:14px;color:var(--sage);text-decoration:underline;text-underline-offset:4px}
+.s-quiz__back:hover{color:var(--oat)}
+/* result */
+.s-quiz__res{display:grid;grid-template-columns:176px minmax(0,1fr);gap:28px;align-items:stretch;margin-top:4px}
+.s-quiz__res :is(img,svg.blko-lv3-ph){width:100%;height:100%;min-height:236px;object-fit:cover;border-radius:var(--r-img);background:var(--raised)}
+.s-quiz__res .pre{font-size:15px;color:var(--sage)}
+.s-quiz__res h3{font:500 clamp(26px,2.3vw,34px)/1.1 var(--f-body);letter-spacing:-.02em;margin:4px 0 8px}
+.s-quiz__res .why{color:rgba(238,232,220,.82);max-width:38ch}
+.s-quiz__res .price{margin:16px 0}
+.s-quiz__res .row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.s-quiz__res .again{font-size:14px;color:var(--sage);text-decoration:underline;text-underline-offset:4px}
+.s-quiz__res .again:hover{color:var(--oat)}
+.s-quiz__foot{margin-top:40px;padding-top:20px;border-top:1px solid rgba(163,174,142,.22);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;font-size:14px;color:var(--sage)}
+.s-quiz__foot .link{color:var(--oat);font-size:15px}
+.s-quiz__foot .link:hover{color:var(--sage)}
+@media (max-width:900px){
+  .s-quiz{grid-template-columns:1fr;min-height:0}
+  .s-quiz__photo{min-height:0;aspect-ratio:4/3}
+  .s-quiz__photo :is(img,svg.blko-lv3-ph){object-position:50% 20%}
+  .s-quiz__body{padding:44px var(--gut) 48px}
+  .s-quiz__prog{margin:32px 0 18px}
+  .s-quiz__res{grid-template-columns:96px minmax(0,1fr);gap:16px}
+  .s-quiz__res :is(img,svg.blko-lv3-ph){width:96px;height:auto;min-height:0;aspect-ratio:3/4;align-self:start}
+}
+@media (max-width:760px){
+  .s-quiz .chip{flex:1 1 calc(50% - 5px);justify-content:center;padding:0 12px}
+  .s-quiz__res .row .btn{width:100%}
+}

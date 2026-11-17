@@ -1,0 +1,970 @@
+{%- comment -%}
+  Lather v3, product page: buy box (home-v3/pages/product/10-buy.html).
+  Breadcrumb, gallery with thumbnails and caption, labels, title, rating link, short line, fact blocks, price + unit
+  price, variant radios, quantity stepper, add to bag (product form), reassurance notes, jump links and a
+  sticky add bar on phones.
+  Real product (the template's `product`): title, variants, price / compare-at / unit price, media gallery, labels from
+  tags (best-seller, fragrance-free, new; sale is automatic), line from the custom.tagline metafield or the description,
+  ingredients from custom.ingredients. The form posts the variant id and quantity to Shopify; with JS the add goes
+  through window.LATHER (bag drawer).
+  No product (fresh install, local preview): the demo settings and the "Image" blocks, demo cart in memory.
+  Subscribe & save: the product's selling_plan_groups print as radios named "selling_plan" inside the product form
+  (one-time = empty value; prices per variant from selling_plan_allocations). Demo: weeks + percent settings.
+  Back in stock: a sold-out variant turns the add button into "Email me when it's back", which opens a
+  Shopify contact form (tag + product/variant field, outside the product form). Demo: thanks shown locally.
+{%- endcomment -%}
+{{ 'blko-lv3-product-buy.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-product-buy.js' | asset_url }}" defer></script>
+{%- liquid
+  assign s = section.settings
+  assign key = s.key | strip | handleize | default: 'calm'
+  assign p = product
+  assign img_blocks = section.blocks | where: 'type', 'image'
+  assign fact_blocks = section.blocks | where: 'type', 'fact'
+  assign note_blocks = section.blocks | where: 'type', 'note'
+  assign jump_blocks = section.blocks | where: 'type', 'jump'
+  assign max_q = s.max_qty | default: 20
+  assign sub_block = section.blocks | where: 'type', 'subscribe' | first
+  assign notify_block = section.blocks | where: 'type', 'notify' | first
+  assign sb = sub_block.settings
+  assign nb = notify_block.settings
+  assign notify_on = false
+  if notify_block != blank
+    assign notify_on = true
+  endif
+
+  if p != blank
+    assign v = p.selected_or_first_available_variant
+    assign name = p.title
+    assign cents = v.price
+    assign compare = v.compare_at_price
+    assign available = v.available
+    assign size = ''
+    unless p.has_only_default_variant
+      assign size = v.title
+    endunless
+    assign line = p.metafields.custom.tagline.value | default: p.description | strip_html | truncatewords: 30
+    assign ing = p.metafields.custom.ingredients.value | strip_html
+    assign lbl = ''
+    for t in p.tags
+      assign th = t | handleize
+      if th == 'best-seller' or th == 'bestseller'
+        assign lbl = lbl | append: ',best'
+      elsif th == 'fragrance-free'
+        assign lbl = lbl | append: ',ff'
+      elsif th == 'new'
+        assign lbl = lbl | append: ',new'
+      endif
+    endfor
+    assign crumb_label = s.crumb_label
+    assign crumb_url = s.crumb_link | default: routes.all_products_collection_url
+    if p.collections.size > 0
+      assign crumb_label = p.collections.first.title
+      assign crumb_url = p.collections.first.url
+    endif
+    assign unit = ''
+    if v.unit_price_measurement
+      assign ref = v.unit_price_measurement.reference_value
+      assign ref_unit = v.unit_price_measurement.reference_unit
+      if ref != 1
+        assign ref_unit = ref | append: ' ' | append: ref_unit
+      endif
+      assign unit_amount = v.unit_price | money_without_trailing_zeros
+      assign unit = s.unit_tpl | replace: '[amount]', unit_amount | replace: '[unit]', ref_unit
+    endif
+    assign use_media = false
+    if p.media.size > 0
+      assign use_media = true
+    endif
+  else
+    assign name = s.name
+    assign cents = s.price | plus: 0
+    assign compare = s.compare | plus: 0
+    assign available = true
+    assign size = s.size
+    assign line = s.line
+    assign ing = s.ing
+    assign lbl = s.labels
+    assign crumb_label = s.crumb_label
+    assign crumb_url = s.crumb_link | default: routes.all_products_collection_url
+    assign unit = s.unit_text
+    assign use_media = false
+  endif
+  assign demo_img = blank
+  if img_blocks.size > 0
+    assign demo_img = img_blocks.first.settings.image
+  endif
+  assign price_str = cents | money_without_trailing_zeros
+  assign add_text = s.add_label | replace: '[amount]', price_str
+  if available == false
+    if notify_on
+      assign add_text = nb.notify_btn
+    else
+      assign add_text = s.sold_out
+    endif
+  endif
+
+  # Subscribe & save: a real product's selling plans (a subscription app), or the demo weeks.
+  assign has_plans = false
+  assign requires_plan = false
+  assign pct = 0
+  assign sub_cents = cents
+  assign default_plan = ''
+  if sub_block != blank
+    if p != blank
+      if p.selling_plan_groups.size > 0
+        assign has_plans = true
+        assign requires_plan = p.requires_selling_plan
+        assign first_plan = p.selling_plan_groups.first.selling_plans.first
+        assign default_plan = first_plan.id
+        assign adj = first_plan.price_adjustments.first
+        if adj.value_type == 'percentage'
+          assign pct = adj.value
+        endif
+        for a in v.selling_plan_allocations
+          if a.selling_plan.id == first_plan.id
+            assign sub_cents = a.price
+          endif
+        endfor
+      endif
+    elsif sb.demo_weeks != blank
+      assign has_plans = true
+      assign pct = sb.sub_percent | plus: 0
+      assign default_plan = sb.demo_default | strip | prepend: 'w'
+      assign keep = 100 | minus: pct
+      assign sub_cents = cents | times: keep | divided_by: 100
+    endif
+  endif
+  assign pct_str = pct | append: '%'
+  if pct > 0
+    assign sub_title = sb.sub_label | replace: '[percent]', pct_str
+  else
+    assign sub_title = sb.sub_label_plain
+  endif
+  assign sub_terms = sb.sub_terms | replace: '[percent]', pct_str
+  assign demo_weeks = sb.demo_weeks | remove: ' ' | split: ','
+  assign notify_open = false
+  if available == false and notify_on
+    assign notify_open = true
+  endif
+  assign bar_name = name
+  if size != blank
+    assign bar_name = name | append: ', ' | append: size
+  endif
+-%}
+{%- if p != blank -%}
+  {%- render 'blko-lv3-product-data', key: key, product: p, size: size, labels: lbl, ing: ing, line: line -%}
+{%- else -%}
+  {%- assign hover_img = blank -%}
+  {%- if img_blocks.size > 1 -%}{%- assign hover_img = img_blocks[1].settings.image -%}{%- endif -%}
+  {%- render 'blko-lv3-product-data', key: key, product: nil, name: s.name, size: s.size, price: s.price, line: s.line, labels: s.labels, img: demo_img, hover: hover_img, ing: s.ing -%}
+{%- endif -%}
+<section class="s-pdp-buy{% unless available %} is-out{% if notify_on %} is-asking{% endif %}{% endunless %}" aria-labelledby="pdp-title" data-key="{{ key }}" data-max="{{ max_q }}" data-real="{% if p != blank %}1{% endif %}" data-pct="{{ pct }}">
+  <script type="application/json" data-pdp-strings>
+    {
+      "add": {{ s.add_label | json }}, "mobile_add": {{ s.mobile_add | json }}, "sold_out": {{ s.sold_out | json }},
+      "qty_note": {{ s.qty_note | json }}, "qty_note_sub": {{ sb.qty_note_sub | json }}, "name": {{ name | json }},
+      "sub_note": {{ sb.sub_note | json }},
+      "notify_btn": {{ nb.notify_btn | json }}, "notify_note": {{ nb.notify_note | json }}, "notify_bad": {{ nb.notify_bad | json }},
+      "notify_done": {{ nb.notify_done | json }}
+    }
+  </script>
+  {%- if p == blank -%}
+    {%- assign d2_price = s.option2_price | plus: 0 | divided_by: 100.0 -%}
+    <script type="application/json" data-pdp-variants>
+      [
+        {"id": "d1", "title": {{ s.option_label | default: s.size | json }}, "short": {{ s.size | json }}, "price": {{ cents | divided_by: 100.0 | json }}, "compare": 0, "available": true, "unit": {{ s.unit_text | json }}, "media": 0}
+        {%- if s.option2_label != blank -%}
+          , {"id": "d2", "title": {{ s.option2_label | json }}, "short": {{ s.option2_label | json }}, "price": {{ d2_price | json }}, "compare": 0, "available": {{ s.option2_available | json }}, "unit": {{ s.option2_unit | json }}, "media": 0}
+        {%- endif -%}
+      ]
+    </script>
+  {%- endif -%}
+  {%- if p != blank -%}
+    <script type="application/json" data-pdp-variants>
+      [
+        {%- for vv in p.variants -%}
+          {%- liquid
+            assign vu = ''
+            if vv.unit_price_measurement
+              assign vref = vv.unit_price_measurement.reference_value
+              assign vref_unit = vv.unit_price_measurement.reference_unit
+              if vref != 1
+                assign vref_unit = vref | append: ' ' | append: vref_unit
+              endif
+              assign vu_amount = vv.unit_price | money_without_trailing_zeros
+              assign vu = s.unit_tpl | replace: '[amount]', vu_amount | replace: '[unit]', vref_unit
+            endif
+          -%}
+          {"id": {{ vv.id | json }}, "title": {{ vv.title | json }}, "short": {{ vv.title | json }}, "price": {{ vv.price | divided_by: 100.0 | json }}, "compare": {% if vv.compare_at_price > vv.price %}{{ vv.compare_at_price | divided_by: 100.0 | json }}{% else %}0{% endif %}, "available": {{ vv.available | json }}, "unit": {{ vu | json }}, "media": {{ vv.featured_media.id | default: 0 | json }},
+           "plans": {
+            {%- for a in vv.selling_plan_allocations -%}
+              {{ a.selling_plan.id | append: '' | json }}: {{ a.price | divided_by: 100.0 | json }}{% unless forloop.last %},{% endunless %}
+            {%- endfor -%}
+           }}{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ]
+    </script>
+  {%- endif -%}
+  <div class="wrap">
+    <nav class="s-pdp-buy__crumb" aria-label="{{ s.crumb_aria | escape }}"><a href="{{ routes.root_url }}">{{ s.crumb_home | escape }}</a>{% if crumb_label != blank %}<span aria-hidden="true">/</span><a href="{{ crumb_url }}">{{ crumb_label | escape }}</a>{% endif %}<span aria-hidden="true">/</span><span aria-current="page">{{ name | escape }}</span></nav>
+    <div class="s-pdp-buy__layout">
+      <div class="s-pdp-buy__gallery">
+        {%- liquid
+          assign first_img = blank
+          assign first_caption = ''
+          assign first_alt = ''
+          if use_media
+            assign fm = v.featured_media | default: p.featured_media
+            assign first_img = fm.preview_image
+            assign first_caption = fm.alt
+            assign first_alt = fm.alt | default: name
+          elsif img_blocks.size > 0
+            assign b0 = img_blocks.first.settings
+            assign first_img = b0.image
+            assign first_caption = b0.caption
+            assign first_alt = b0.alt | default: b0.image.alt
+          endif
+        -%}
+        <figure class="s-pdp-buy__stage">
+          {%- if first_img != blank -%}
+            {{ first_img | image_url: width: 1320 | image_tag: widths: '660, 880, 1320', sizes: '(max-width: 760px) 100vw, 55vw', fetchpriority: 'high', alt: first_alt, id: 'pdp-main-image', width: 880, height: 1100 }}
+          {%- else -%}
+            {{ 'product-1' | placeholder_svg_tag: 'blko-lv3-ph' }}
+          {%- endif -%}
+          {%- if s.show_caption and first_caption != blank -%}<figcaption class="s-pdp-buy__caption" id="pdp-image-caption">{{ first_caption | escape }}</figcaption>{%- endif -%}
+        </figure>
+        {%- if use_media and p.media.size > 1 -%}
+          <div class="s-pdp-buy__thumbs" role="group" aria-label="{{ s.thumbs_aria | escape }}">
+            {%- for m in p.media -%}
+              {%- assign mi = m.preview_image -%}
+              {%- if mi == blank -%}{%- continue -%}{%- endif -%}
+              {%- assign m_alt = m.alt | default: name -%}
+              <button class="s-pdp-buy__thumb" type="button" aria-pressed="{% if m.id == fm.id %}true{% else %}false{% endif %}" data-media-id="{{ m.id }}" data-pdp-image="{{ mi | image_url: width: 1320 }}" data-srcset="{{ mi | image_url: width: 660 }} 660w, {{ mi | image_url: width: 880 }} 880w, {{ mi | image_url: width: 1320 }} 1320w" data-caption="{{ m.alt | escape }}" data-alt="{{ m_alt | escape }}">{{ mi | image_url: width: 352 | image_tag: alt: '', loading: 'lazy', width: 176, height: 132 }}{% if s.thumb_labels and m.alt != blank %}<span>{{ m.alt | truncatewords: 3, '' | escape }}</span>{% endif %}</button>
+            {%- endfor -%}
+          </div>
+        {%- elsif use_media == false and img_blocks.size > 1 -%}
+          <div class="s-pdp-buy__thumbs" role="group" aria-label="{{ s.thumbs_aria | escape }}">
+            {%- for block in img_blocks -%}
+              {%- assign bs = block.settings -%}
+              {%- assign b_alt = bs.alt | default: bs.image.alt -%}
+              <button class="s-pdp-buy__thumb" type="button" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"{% if bs.image != blank %} data-pdp-image="{{ bs.image | image_url: width: 1320 }}" data-srcset="{{ bs.image | image_url: width: 660 }} 660w, {{ bs.image | image_url: width: 880 }} 880w, {{ bs.image | image_url: width: 1320 }} 1320w"{% endif %} data-caption="{{ bs.caption | escape }}" data-alt="{{ b_alt | escape }}" {{ block.shopify_attributes }}>
+                {%- if bs.image != blank -%}
+                  {{ bs.image | image_url: width: 352 | image_tag: alt: '', loading: 'lazy', width: 176, height: 132 }}
+                {%- else -%}
+                  {{ 'product-1' | placeholder_svg_tag: 'blko-lv3-ph' }}
+                {%- endif -%}
+                {%- if bs.label != blank -%}<span>{{ bs.label | escape }}</span>{%- endif -%}
+              </button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+      <div class="s-pdp-buy__info">
+        <div class="labels" id="pdp-labels"></div>
+        <h1 class="h1" id="pdp-title">{{ name | escape }}</h1>
+        {%- if s.rating_label != blank -%}<a class="s-pdp-buy__rating" href="{{ s.rating_link | default: '#pdp-reviews' }}"><span class="stars" aria-hidden="true">★★★★★</span><span>{{ s.rating_label | escape }}</span></a>{%- endif -%}
+        {%- if line != blank -%}<p class="s-pdp-buy__line">{{ line | escape }}</p>{%- endif -%}
+        {%- if fact_blocks.size > 0 -%}
+          <div class="s-pdp-buy__facts">
+            {%- for block in fact_blocks -%}<span {{ block.shopify_attributes }}><b>{{ block.settings.title | escape }}</b>{{ block.settings.text | escape }}</span>{%- endfor -%}
+          </div>
+        {%- endif -%}
+        <p class="s-pdp-buy__price"><span class="price" data-pdp-price>{{ price_str }}{% if compare > cents %} <s>{{ compare | money_without_trailing_zeros }}</s>{% endif %}</span><span class="small" data-pdp-unit>{{ unit | escape }}</span></p>
+
+        {%- capture purchase -%}
+          {%- if p != blank -%}
+            {%- if p.has_only_default_variant -%}
+              <input type="hidden" name="id" value="{{ v.id }}">
+            {%- else -%}
+              <fieldset class="s-pdp-buy__size"><legend>{{ p.options | join: ', ' | escape }}</legend><div class="s-pdp-buy__sizes">
+                {%- for vv in p.variants -%}
+                  <label><input type="radio" name="id" value="{{ vv.id }}" data-pdp-variant{% if vv.id == v.id %} checked{% endif %}>{{ vv.title | escape }}{% unless vv.available %} <small>{{ s.sold_out | escape }}</small>{% endunless %}</label>
+                {%- endfor -%}
+              </div></fieldset>
+            {%- endif -%}
+          {%- elsif s.option_label != blank -%}
+            <fieldset class="s-pdp-buy__size"><legend>{{ s.option_legend | escape }}</legend><div class="s-pdp-buy__sizes">
+              <label><input type="radio" name="pdp-size" value="d1" data-pdp-variant checked>{{ s.option_label | escape }}</label>
+              {%- if s.option2_label != blank -%}
+                <label><input type="radio" name="pdp-size" value="d2" data-pdp-variant>{{ s.option2_label | escape }}{% unless s.option2_available %} <small>{{ s.sold_out | escape }}</small>{% endunless %}</label>
+              {%- endif -%}
+            </div></fieldset>
+          {%- endif -%}
+          {%- if has_plans -%}
+            <fieldset class="s-pdp-buy__plan" id="pdp-plan" {{ sub_block.shopify_attributes }}><legend>{{ sb.plan_legend | escape }}</legend>
+              {%- unless requires_plan -%}
+                <div class="s-pdp-buy__opt"><label class="s-pdp-buy__opt-head"><input type="radio" name="selling_plan" value="" checked><span class="s-pdp-buy__dot" aria-hidden="true"></span><b>{{ sb.once_label | escape }}</b><span class="price" data-plan-once>{{ price_str }}</span></label></div>
+              {%- endunless -%}
+              <div class="s-pdp-buy__opt">
+                <label class="s-pdp-buy__opt-head" for="pdp-plan-{{ default_plan }}"><span class="s-pdp-buy__dot" aria-hidden="true"></span><b>{{ sub_title | escape }}</b><span class="price" data-plan-sub>{{ sub_cents | money_without_trailing_zeros }}</span></label>
+                {%- if sub_terms != blank -%}<p class="s-pdp-buy__terms" id="pdp-plan-terms">{{ sub_terms | escape }}</p>{%- endif -%}
+                <div class="s-pdp-buy__cadence" role="group" aria-label="{{ sb.cadence_aria | escape }}"{% if sub_terms != blank %} aria-describedby="pdp-plan-terms"{% endif %}>
+                  {%- if p != blank -%}
+                    {%- for g in p.selling_plan_groups -%}
+                      {%- for sp in g.selling_plans -%}
+                        <label class="s-pdp-buy__chip"><input type="radio" name="selling_plan" value="{{ sp.id }}" id="pdp-plan-{{ sp.id }}" data-plan-name="{{ sp.name | escape }}"{% if requires_plan and sp.id == default_plan %} checked{% endif %}>{{ sp.name | escape }}</label>
+                      {%- endfor -%}
+                    {%- endfor -%}
+                  {%- else -%}
+                    {%- for w in demo_weeks -%}
+                      {%- if w == blank -%}{%- continue -%}{%- endif -%}
+                      {%- assign w_name = sb.plan_label | replace: '[n]', w -%}
+                      <label class="s-pdp-buy__chip"><input type="radio" name="selling_plan" value="w{{ w }}" id="pdp-plan-w{{ w }}" data-plan-name="{{ w_name | escape }}">{{ w_name | escape }}</label>
+                    {%- endfor -%}
+                  {%- endif -%}
+                </div>
+              </div>
+            </fieldset>
+          {%- endif -%}
+          <div class="s-pdp-buy__purchase" id="pdp-purchase"><div class="s-pdp-buy__quantity"><button type="button" data-pdp-qty="-1" aria-label="{{ s.less_aria | escape }}">−</button><label class="sr" for="pdp-qty">{{ s.qty_label | escape }}</label><input id="pdp-qty" name="quantity" type="number" min="1" max="{{ max_q }}" value="1" inputmode="numeric"><button type="button" data-pdp-qty="1" aria-label="{{ s.more_aria | escape }}">+</button></div><button class="btn btn--primary" type="{% if p != blank %}submit{% else %}button{% endif %}" data-pdp-add{% if notify_on %} aria-controls="pdp-notify"{% unless available %} aria-expanded="true"{% endunless %}{% elsif available == false %} disabled{% endif %}>{{ add_text | escape }}</button>{%- render 'blko-lv3-wishlist-heart', key: key, name: bar_name -%}</div>
+        {%- endcapture -%}
+        {%- if p != blank -%}
+          {%- form 'product', p, class: 's-pdp-buy__form', novalidate: 'novalidate' -%}{{ purchase }}{%- endform -%}
+        {%- else -%}
+          <div class="s-pdp-buy__form">{{ purchase }}</div>
+        {%- endif -%}
+        {%- comment -%} Back in stock: a Shopify contact form tagged for the merchant (outside the product form, forms can't nest). {%- endcomment -%}
+        {%- if notify_on -%}
+          {%- liquid
+            assign notify_size = size | default: name
+            assign notify_note = nb.notify_note | replace: '[size]', notify_size
+            assign notify_line = name
+            if size != blank
+              assign notify_line = name | append: ', ' | append: size
+            endif
+            if p != blank
+              assign notify_line = notify_line | append: ' (variant ' | append: v.id | append: ')'
+            endif
+          -%}
+          {%- form 'contact', class: 's-pdp-buy__notify-form', novalidate: 'novalidate' -%}
+            {%- assign posted = form.posted_successfully? -%}
+            <div class="s-pdp-buy__notify" id="pdp-notify" {{ notify_block.shopify_attributes }}{% unless notify_open or posted or form.errors %} hidden{% endunless %} data-posted="{% if posted %}1{% endif %}">
+              <div data-pdp-notify-ask{% if posted %} hidden{% endif %}>
+                <p class="s-pdp-buy__notify-note" data-pdp-notify-note>{{ notify_note | escape }}</p>
+                <input type="hidden" name="contact[tags]" value="{{ nb.notify_tag | escape }}">
+                <input type="hidden" name="contact[{{ nb.notify_field | default: 'Back in stock' | escape }}]" value="{{ notify_line | escape }}" data-pdp-notify-line data-name="{{ name | escape }}">
+                <label for="pdp-notify-email">{{ nb.notify_label | escape }}</label>
+                <div class="s-pdp-buy__notify-row"><input type="email" id="pdp-notify-email" name="contact[email]" autocomplete="email" placeholder="{{ nb.notify_placeholder | escape }}" aria-describedby="pdp-notify-msg" required{% if form.errors %} aria-invalid="true"{% endif %}><button class="btn btn--primary" type="submit">{{ nb.notify_submit | escape }}</button></div>
+                <p class="s-pdp-buy__notify-msg" id="pdp-notify-msg" aria-live="polite">{% if form.errors %}{{ nb.notify_bad | escape }}{% endif %}</p>
+              </div>
+              <div class="s-pdp-buy__notify-thanks" data-pdp-notify-done tabindex="-1"{% unless posted %} hidden{% endunless %}><p class="s-pdp-buy__notify-done" data-pdp-notify-done-text role="status">{% if posted %}{{ nb.notify_posted | escape }}{% endif %}</p><button type="button" class="s-pdp-buy__notify-back" data-pdp-notify-again>{{ nb.notify_again | escape }}</button></div>
+            </div>
+          {%- endform -%}
+        {%- endif -%}
+        <p class="s-pdp-buy__live" aria-live="polite" id="pdp-quantity-note"></p>
+        {%- if note_blocks.size > 0 -%}
+          <div class="s-pdp-buy__reassure">
+            {%- for block in note_blocks -%}<div {{ block.shopify_attributes }}>{{ block.settings.text }}</div>{%- endfor -%}
+          </div>
+        {%- endif -%}
+        {%- if jump_blocks.size > 0 -%}
+          <nav class="s-pdp-buy__jump" aria-label="{{ s.jump_aria | escape }}">
+            {%- for block in jump_blocks -%}<a href="{{ block.settings.link | default: '#' }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}</a>{%- endfor -%}
+          </nav>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+  {%- if s.mobile_bar -%}
+    <div class="s-pdp-buy__mobile" id="pdp-mobile-buy" hidden><p><b data-pdp-mobile-name>{{ bar_name | escape }}</b><span class="price" data-pdp-mobile-price>{% if available %}{{ price_str }}{% else %}{{ s.sold_out | escape }}{% endif %}</span></p><button type="button" class="btn btn--primary" data-pdp-add{% if available == false and notify_on == false %} disabled{% endif %}>{% if available %}{{ s.mobile_add | escape }}{% else %}{{ add_text | escape }}{% endif %}</button></div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Lather product buy box",
+  "class": "blko-lv3-section-product-buy",
+  "enabled_on": {
+    "templates": [
+      "product"
+    ]
+  },
+  "max_blocks": 20,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Shows the product of this page: title, variants, price, media, labels from the tags best-seller, fragrance-free and new. The demo settings below are only used when there is no product (fresh install, preview)."
+    },
+    {
+      "type": "text",
+      "id": "key",
+      "label": "Product key",
+      "default": "calm",
+      "info": "Links this product to the other Lather sections on the page (pair, questions). Letters only."
+    },
+    {
+      "type": "header",
+      "content": "Breadcrumb"
+    },
+    {
+      "type": "text",
+      "id": "crumb_home",
+      "label": "Home link label",
+      "default": "Home"
+    },
+    {
+      "type": "text",
+      "id": "crumb_label",
+      "label": "Collection label",
+      "default": "Body wash",
+      "info": "A real product shows its first collection."
+    },
+    {
+      "type": "url",
+      "id": "crumb_link",
+      "label": "Collection link"
+    },
+    {
+      "type": "text",
+      "id": "crumb_aria",
+      "label": "Breadcrumb label (screen readers)",
+      "default": "Breadcrumb"
+    },
+    {
+      "type": "header",
+      "content": "Gallery"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_caption",
+      "label": "Show the caption on the photo",
+      "default": true,
+      "info": "Product media: the media alt text."
+    },
+    {
+      "type": "checkbox",
+      "id": "thumb_labels",
+      "label": "Label thumbnails with the alt text (product media)",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "thumbs_aria",
+      "label": "Thumbnails label (screen readers)",
+      "default": "Choose product image"
+    },
+    {
+      "type": "header",
+      "content": "Details"
+    },
+    {
+      "type": "text",
+      "id": "rating_label",
+      "label": "Reviews link label",
+      "default": "Read the skin notes"
+    },
+    {
+      "type": "text",
+      "id": "rating_link",
+      "label": "Reviews link",
+      "default": "#pdp-reviews",
+      "info": "The anchor of the reviews section."
+    },
+    {
+      "type": "text",
+      "id": "unit_tpl",
+      "label": "Unit price text (product)",
+      "default": "[amount] per [unit]"
+    },
+    {
+      "type": "header",
+      "content": "Buying"
+    },
+    {
+      "type": "range",
+      "id": "max_qty",
+      "label": "Most per order",
+      "min": 5,
+      "max": 50,
+      "step": 1,
+      "default": 20
+    },
+    {
+      "type": "text",
+      "id": "qty_label",
+      "label": "Quantity label (screen readers)",
+      "default": "Quantity"
+    },
+    {
+      "type": "text",
+      "id": "less_aria",
+      "label": "Minus button label",
+      "default": "Decrease quantity"
+    },
+    {
+      "type": "text",
+      "id": "more_aria",
+      "label": "Plus button label",
+      "default": "Increase quantity"
+    },
+    {
+      "type": "text",
+      "id": "add_label",
+      "label": "Add button",
+      "default": "Add to bag, [amount]"
+    },
+    {
+      "type": "text",
+      "id": "sold_out",
+      "label": "Sold out text",
+      "default": "Sold out"
+    },
+    {
+      "type": "text",
+      "id": "qty_note",
+      "label": "Note for more than one",
+      "default": "[n] bottles, [amount] total."
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_bar",
+      "label": "Sticky add bar on phones",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "mobile_add",
+      "label": "Sticky bar button",
+      "default": "Add to bag"
+    },
+    {
+      "type": "text",
+      "id": "jump_aria",
+      "label": "Jump links label (screen readers)",
+      "default": "Product details"
+    },
+    {
+      "type": "header",
+      "content": "Demo product (no product)"
+    },
+    {
+      "type": "text",
+      "id": "name",
+      "label": "Name",
+      "default": "Calm wash"
+    },
+    {
+      "type": "text",
+      "id": "size",
+      "label": "Size",
+      "default": "400 ml"
+    },
+    {
+      "type": "text",
+      "id": "price",
+      "label": "Price in cents",
+      "default": "1800"
+    },
+    {
+      "type": "text",
+      "id": "compare",
+      "label": "Compare-at price in cents"
+    },
+    {
+      "type": "text",
+      "id": "labels",
+      "label": "Labels",
+      "default": "best,ff",
+      "info": "Comma list of best, ff, new, sale."
+    },
+    {
+      "type": "textarea",
+      "id": "line",
+      "label": "Short line",
+      "default": "A soft, everyday body wash for dry, tight skin. Colloidal oat and glycerin, without the added scent."
+    },
+    {
+      "type": "textarea",
+      "id": "ing",
+      "label": "Ingredients",
+      "default": "Water, glycerin, coco-glucoside, decyl glucoside, colloidal oat, shea butter, sunflower seed oil, xanthan gum, citric acid, sodium benzoate. pH 5.5."
+    },
+    {
+      "type": "text",
+      "id": "unit_text",
+      "label": "Unit price",
+      "default": "$4.50 per 100 ml"
+    },
+    {
+      "type": "text",
+      "id": "option_legend",
+      "label": "Option name",
+      "default": "Size"
+    },
+    {
+      "type": "text",
+      "id": "option_label",
+      "label": "Option value",
+      "default": "400 ml bottle"
+    },
+    {
+      "type": "text",
+      "id": "option2_label",
+      "label": "Second option value",
+      "default": "1 L refill",
+      "info": "Leave blank for one size."
+    },
+    {
+      "type": "text",
+      "id": "option2_price",
+      "label": "Second option price in cents",
+      "default": "3600"
+    },
+    {
+      "type": "text",
+      "id": "option2_unit",
+      "label": "Second option unit price",
+      "default": "$3.60 per 100 ml"
+    },
+    {
+      "type": "checkbox",
+      "id": "option2_available",
+      "label": "Second option in stock",
+      "default": false,
+      "info": "Off shows the back-in-stock form."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image (demo gallery)",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Used when there is no product or the product has no media."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Thumbnail label",
+          "default": "The bottle"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Caption",
+          "default": "The bottle, 400 ml"
+        },
+        {
+          "type": "text",
+          "id": "alt",
+          "label": "Alt text",
+          "default": "Calm wash, 400 ml clear bottle with a moss pump"
+        }
+      ]
+    },
+    {
+      "type": "subscribe",
+      "name": "Subscribe and save",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Real product: its selling plans, from a subscription app (prices and plan names come from Shopify). Demo: the weeks below. Remove this block to sell one time only."
+        },
+        {
+          "type": "text",
+          "id": "qty_note_sub",
+          "label": "Note for more than one, subscription",
+          "default": "[n] bottles, [amount] each delivery."
+        },
+        {
+          "type": "text",
+          "id": "plan_legend",
+          "label": "Choice label",
+          "default": "How often"
+        },
+        {
+          "type": "text",
+          "id": "once_label",
+          "label": "One-time option",
+          "default": "One time"
+        },
+        {
+          "type": "text",
+          "id": "sub_label",
+          "label": "Subscription option",
+          "default": "Subscribe and save [percent]",
+          "info": "[percent] is the plan discount, like 10%."
+        },
+        {
+          "type": "text",
+          "id": "sub_label_plain",
+          "label": "Subscription option without a percent discount",
+          "default": "Subscribe"
+        },
+        {
+          "type": "text",
+          "id": "sub_terms",
+          "label": "Terms next to the choice",
+          "default": "Save [percent] on every refill. Skip or cancel any time.",
+          "info": "State every term your subscription app applies."
+        },
+        {
+          "type": "text",
+          "id": "cadence_aria",
+          "label": "Delivery choice label (screen readers)",
+          "default": "Delivers every"
+        },
+        {
+          "type": "text",
+          "id": "sub_note",
+          "label": "Bag note for a subscription (demo)",
+          "default": "[size], [plan], save [percent]"
+        },
+        {
+          "type": "text",
+          "id": "demo_weeks",
+          "label": "Demo delivery weeks",
+          "default": "4,6,8",
+          "info": "Comma list. Used only without a product."
+        },
+        {
+          "type": "text",
+          "id": "demo_default",
+          "label": "Demo weeks chosen from the subscription title",
+          "default": "6"
+        },
+        {
+          "type": "text",
+          "id": "sub_percent",
+          "label": "Demo discount percent",
+          "default": "10"
+        },
+        {
+          "type": "text",
+          "id": "plan_label",
+          "label": "Demo delivery label",
+          "default": "Every [n] weeks"
+        }
+      ]
+    },
+    {
+      "type": "notify",
+      "name": "Back in stock",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "When a variant is sold out, the add button opens an email form. It sends a Shopify contact form message with the tag and the product and variant, so you can email the shopper when it is back."
+        },
+        {
+          "type": "text",
+          "id": "notify_btn",
+          "label": "Button when sold out",
+          "default": "Email me when it’s back"
+        },
+        {
+          "type": "text",
+          "id": "notify_note",
+          "label": "Note",
+          "default": "The [size] is sold out. Leave your email and we’ll write once when it’s back."
+        },
+        {
+          "type": "text",
+          "id": "notify_label",
+          "label": "Email label",
+          "default": "Email"
+        },
+        {
+          "type": "text",
+          "id": "notify_placeholder",
+          "label": "Email placeholder",
+          "default": "you@example.com"
+        },
+        {
+          "type": "text",
+          "id": "notify_submit",
+          "label": "Send button",
+          "default": "Notify me"
+        },
+        {
+          "type": "text",
+          "id": "notify_bad",
+          "label": "Invalid email",
+          "default": "Please enter a valid email."
+        },
+        {
+          "type": "text",
+          "id": "notify_done",
+          "label": "Thanks (this visit)",
+          "default": "Thanks. We’ll email [email] once the [size] is back."
+        },
+        {
+          "type": "text",
+          "id": "notify_posted",
+          "label": "Thanks (after the form is sent)",
+          "default": "Thanks. We’ll email you once it’s back."
+        },
+        {
+          "type": "text",
+          "id": "notify_again",
+          "label": "Change email link",
+          "default": "Use another email"
+        },
+        {
+          "type": "text",
+          "id": "notify_tag",
+          "label": "Contact form tag",
+          "default": "back-in-stock"
+        },
+        {
+          "type": "text",
+          "id": "notify_field",
+          "label": "Contact form field name",
+          "default": "Back in stock"
+        }
+      ]
+    },
+    {
+      "type": "fact",
+      "name": "Fact",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Fact",
+          "default": "Fragrance-free"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "No added scent"
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "name": "Reassurance note",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Free shipping over $40. <a href=\"/pages/help#shipping\">Shipping details</a></p>"
+        }
+      ]
+    },
+    {
+      "type": "jump",
+      "name": "Jump link",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Every ingredient"
+        },
+        {
+          "type": "text",
+          "id": "link",
+          "label": "Link",
+          "default": "#pdp-ingredients",
+          "info": "An anchor on this page, like #pdp-use."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather product buy box",
+      "blocks": [
+        {
+          "type": "image",
+          "settings": {
+            "label": "The bottle",
+            "caption": "The bottle, 400 ml",
+            "alt": "Calm wash, 400 ml clear bottle with a moss pump"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "label": "The lather",
+            "caption": "Soft foam, a clean rinse",
+            "alt": "Calm wash with soft foam on wet travertine"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "label": "The routine",
+            "caption": "Calm wash with Calm lotion",
+            "alt": "Calm wash and Calm lotion together on wet stone"
+          }
+        },
+        {
+          "type": "subscribe"
+        },
+        {
+          "type": "notify"
+        },
+        {
+          "type": "fact",
+          "settings": {
+            "title": "Fragrance-free",
+            "text": "No added scent"
+          }
+        },
+        {
+          "type": "fact",
+          "settings": {
+            "title": "pH 5.5",
+            "text": "A gentle rinse"
+          }
+        },
+        {
+          "type": "fact",
+          "settings": {
+            "title": "400 ml",
+            "text": "One everyday bottle"
+          }
+        },
+        {
+          "type": "note",
+          "settings": {
+            "text": "<p>Free shipping over $40. <a href=\"/pages/help#shipping\">Shipping details</a></p>"
+          }
+        },
+        {
+          "type": "note",
+          "settings": {
+            "text": "<p>Skin reacted? We refund your first bottle, used or not. <a href=\"/pages/help#refund\">How it works</a></p>"
+          }
+        },
+        {
+          "type": "jump",
+          "settings": {
+            "label": "Every ingredient",
+            "link": "#pdp-ingredients"
+          }
+        },
+        {
+          "type": "jump",
+          "settings": {
+            "label": "How to use",
+            "link": "#pdp-use"
+          }
+        },
+        {
+          "type": "jump",
+          "settings": {
+            "label": "Make it a routine",
+            "link": "#pdp-pair"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

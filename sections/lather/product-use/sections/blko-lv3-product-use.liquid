@@ -1,0 +1,76 @@
+{%- comment -%}
+  Lather v3, product page: how to use (home-v3/pages/product/30-use.html).
+  Heading and intro; numbered step blocks; a note with a link. When the product has the custom.how_to_use metafield
+  and "Use the product's how-to-use metafield" is on, its rich text replaces the steps.
+{%- endcomment -%}
+{{ 'blko-lv3-product-use.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign s = section.settings
+  assign anchor = s.anchor | handleize | default: 'pdp-use'
+  assign mf = blank
+  if s.use_metafield and product != blank and product.metafields.custom.how_to_use != blank
+    assign mf = product.metafields.custom.how_to_use
+  endif
+-%}
+<section class="s-pdp-use" id="{{ anchor }}" aria-labelledby="{{ anchor }}-title"><div class="wrap">
+  <div class="s-pdp-use__head">
+    <h2 class="h2" id="{{ anchor }}-title" data-rv="line">
+      {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
+      {%- if s.heading_2 != blank -%}<span class="ln"><span>{{ s.heading_2 }}</span></span>{%- endif -%}
+    </h2>
+    {%- if s.text != blank -%}<p>{{ s.text | escape }}</p>{%- endif -%}
+  </div>
+  {%- if mf != blank -%}
+    <div class="s-pdp-use__rte" data-rv="blur">{{ mf | metafield_tag }}</div>
+  {%- else -%}
+    <ol class="s-pdp-use__steps">
+      {%- for block in section.blocks -%}
+        {%- assign d = forloop.index0 | modulo: 3 -%}
+        <li data-rv="blur"{% if d > 0 %} data-rv-delay="{{ d }}"{% endif %} {{ block.shopify_attributes }}><h3>{{ block.settings.title | escape }}</h3>{%- if block.settings.text != blank -%}<p>{{ block.settings.text | escape }}</p>{%- endif -%}</li>
+      {%- endfor -%}
+    </ol>
+  {%- endif -%}
+  {%- if s.note != blank or s.link_label != blank -%}
+    <div class="s-pdp-use__note"><p>{{ s.note | escape }}</p>{%- if s.link_label != blank -%}<a href="{{ s.link | default: '#' }}" class="link">{{ s.link_label | escape }}</a>{%- endif -%}</div>
+  {%- endif -%}
+</div></section>
+
+{% schema %}
+{
+  "name": "Lather product how to use",
+  "class": "blko-lv3-section-product-use",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "Keep the shower" },
+    { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "<em>simple.</em>", "info": "Italic text shows in the accent style." },
+    { "type": "textarea", "id": "text", "label": "Intro", "default": "Soft foam. A thorough rinse. Then a little lotion while skin is still damp." },
+    { "type": "checkbox", "id": "use_metafield", "label": "Use the product's how-to-use metafield", "default": true, "info": "custom.how_to_use (rich text) replaces the steps when the product has it." },
+    { "type": "header", "content": "Note" },
+    { "type": "textarea", "id": "note", "label": "Note", "default": "New to your skin? Try a small area first. Stop using if irritation occurs." },
+    { "type": "text", "id": "link_label", "label": "Link label", "default": "A little help for reactive skin" },
+    { "type": "url", "id": "link", "label": "Link" },
+    { "type": "header", "content": "Section" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "pdp-use" }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Step", "default": "Wet, then lather" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Work a small amount between wet palms. Wash gently with lukewarm water." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather product how to use",
+      "blocks": [
+        { "type": "step", "settings": { "title": "Wet, then lather", "text": "Work a small amount between wet palms. Wash gently with lukewarm water." } },
+        { "type": "step", "settings": { "title": "Rinse it away", "text": "Rinse the foam off fully. Skip the hard scrubbing and pat dry with a soft towel." } },
+        { "type": "step", "settings": { "title": "Follow with lotion", "text": "Keep Calm lotion nearby. Smooth it over damp skin after your shower." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

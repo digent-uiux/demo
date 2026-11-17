@@ -1,0 +1,2 @@
+.s-shop-choosing{background:var(--stone);padding:44px 0}.s-shop-choosing__row{display:grid;grid-template-columns:1fr 1fr auto;gap:32px;align-items:center}.s-shop-choosing .h3{max-width:19ch}.s-shop-choosing p{color:var(--muted);max-width:40ch}.s-shop-choosing a{justify-self:end}
+@media(max-width:760px){.s-shop-choosing{padding:36px 0}.s-shop-choosing__row{grid-template-columns:1fr;gap:18px}.s-shop-choosing a{justify-self:start}}

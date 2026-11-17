@@ -1,0 +1,170 @@
+{%- comment -%}
+  Lather v3, Reviews (home-v3/parts/80-reviews.html). One photo with one review card overlapping its edge; the reviewers'
+  faces are the pager (tabs, arrow keys, arrows, swipe). Rating summary is set on the section; each review is a block with
+  its own product row and Add button (real product when picked, demo settings otherwise).
+{%- endcomment -%}
+{{ 'blko-lv3-reviews.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-reviews.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+  assign uid = 'rv-' | append: section.id
+-%}
+<section class="s-reviews" id="{{ s.anchor | default: 'reviews' | handleize }}" aria-label="{{ s.label | escape }}" data-lv3-reviews>
+  <div class="wrap s-reviews__grid">
+    <div class="s-reviews__intro">
+      <div class="s-reviews__head">
+        <h2 class="h2" data-rv="line">
+          {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
+          {%- if s.heading_2 != blank -%}<span class="ln"><span>{{ s.heading_2 }}</span></span>{%- endif -%}
+        </h2>
+        {%- if s.rating != blank or s.count_text != blank -%}
+          <p class="s-reviews__rate" data-rv="blur" data-rv-delay="1">
+            {%- if s.rating != blank -%}<b>{{ s.rating | escape }}</b>{%- endif -%}
+            <span class="stars" aria-hidden="true">★★★★★</span>
+            {%- if s.count_text != blank -%}<span>{{ s.count_text | escape }}</span>{%- endif -%}
+          </p>
+        {%- endif -%}
+      </div>
+      <div class="s-reviews__ctrl" data-rv="blur" data-rv-delay="2">
+        <div class="s-reviews__faces" role="tablist" aria-label="{{ s.tabs_label | escape }}">
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign b = block.settings
+              assign face = b.face | default: b.photo
+              assign i = forloop.index0
+            -%}
+            <button class="s-reviews__face" type="button" role="tab" id="{{ uid }}-tab{{ i }}" aria-controls="{{ uid }}-slide{{ i }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"{% unless forloop.first %} tabindex="-1"{% endunless %} aria-label="{{ b.tab_label | default: b.name | escape }}">
+              {%- if face != blank -%}
+                {%- assign pos = 'object-position: ' | append: face.presentation.focal_point -%}
+                {{ face | image_url: width: 160, height: 160, crop: 'region' | image_tag: alt: '', loading: 'lazy', width: 56, height: 56, style: pos }}
+              {%- else -%}
+                {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph' }}
+              {%- endif -%}
+            </button>
+          {%- endfor -%}
+        </div>
+        <div class="s-reviews__arrows">
+          <button type="button" data-rvgo="-1" aria-label="{{ s.prev_label | escape }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+          <button type="button" data-rvgo="1" aria-label="{{ s.next_label | escape }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="s-reviews__stage" data-rv="settle">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign b = block.settings
+          assign i = forloop.index0
+          assign p = b.product
+          assign key = b.key | default: block.id | handleize
+          if p != blank
+            assign key = p.handle
+            assign p_name = p.title
+            assign p_price = p.price | money_without_trailing_zeros
+            assign p_img = p.featured_image
+          else
+            assign p_name = b.name_product
+            assign p_price = b.price | plus: 0 | money_without_trailing_zeros
+            assign p_img = b.thumb
+          endif
+          assign off = 5 | minus: b.stars
+        -%}
+        <div class="s-reviews__slide{% if forloop.first %} is-on{% endif %}" role="tabpanel" id="{{ uid }}-slide{{ i }}" aria-labelledby="{{ uid }}-tab{{ i }}" {{ block.shopify_attributes }}>
+          <figure class="s-reviews__photo">
+            {%- if b.photo != blank -%}
+              {%- assign pos = 'object-position: ' | append: b.photo.presentation.focal_point -%}
+              {{ b.photo | image_url: width: 1400 | image_tag: widths: '550, 800, 1100, 1400', sizes: '(max-width: 900px) 100vw, 50vw', loading: 'lazy', alt: b.photo.alt, style: pos }}
+            {%- else -%}
+              {{ 'lifestyle-2' | placeholder_svg_tag: 'blko-lv3-ph' }}
+            {%- endif -%}
+          </figure>
+          <article class="s-reviews__card">
+            <p class="stars" role="img" aria-label="{{ s.stars_label | replace: '[n]', b.stars | escape }}">
+              {%- for n in (1..b.stars) -%}★{%- endfor -%}
+              {%- if off > 0 -%}<span class="s-reviews__star-off">{%- for n in (1..off) -%}★{%- endfor -%}</span>{%- endif -%}
+            </p>
+            {%- if b.text != blank -%}<blockquote class="s-reviews__q">“{{ b.text | escape }}”</blockquote>{%- endif -%}
+            <p class="s-reviews__who"><b>{{ b.name | escape }}</b>{{ b.detail | escape }}{%- if b.date != blank -%}<span class="s-reviews__date">{{ b.date | escape }}</span>{%- endif -%}</p>
+            {%- if p != blank or b.name_product != blank -%}
+              {%- if p != blank -%}
+                {%- render 'blko-lv3-product-data', key: key, product: p -%}
+              {%- else -%}
+                {%- render 'blko-lv3-product-data', key: key, name: b.name_product, size: b.size, price: b.price, line: b.line, labels: b.labels, img: b.thumb -%}
+              {%- endif -%}
+              <div class="s-reviews__prod">
+                {%- if p_img -%}
+                  {{ p_img | image_url: width: 96 | image_tag: class: 's-reviews__thumb', alt: '', loading: 'lazy', width: 48, height: 48 }}
+                {%- else -%}
+                  {{ 'product-1' | placeholder_svg_tag: 'blko-lv3-ph s-reviews__thumb' }}
+                {%- endif -%}
+                <span>{{ p_name | escape }}<span class="price">{{ p_price }}</span></span>
+                <button class="btn btn--primary btn--sm" type="button" data-add="{{ key }}" aria-label="{{ s.add_label | escape }} {{ p_name | escape }}, {{ p_price | strip_html }}">{{ s.add_label | escape }}</button>
+              </div>
+            {%- endif -%}
+          </article>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lather reviews",
+  "class": "blko-lv3-section-reviews",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "From skin" },
+    { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "like <em>yours.</em>", "info": "Italic text shows in the accent style." },
+    { "type": "header", "content": "Rating summary" },
+    { "type": "text", "id": "rating", "label": "Average rating", "default": "4.7" },
+    { "type": "text", "id": "count_text", "label": "Review count", "default": "from 1,240 reviews" },
+    { "type": "header", "content": "Labels" },
+    { "type": "text", "id": "add_label", "label": "Add button", "default": "Add" },
+    { "type": "text", "id": "stars_label", "label": "Stars (screen readers)", "default": "[n] out of 5 stars", "info": "[n] is the review's stars." },
+    { "type": "text", "id": "tabs_label", "label": "Faces label (screen readers)", "default": "Choose a review" },
+    { "type": "text", "id": "prev_label", "label": "Previous button (screen readers)", "default": "Previous review" },
+    { "type": "text", "id": "next_label", "label": "Next button (screen readers)", "default": "Next review" },
+    { "type": "text", "id": "label", "label": "Section label (screen readers)", "default": "Reviews" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "reviews" }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        { "type": "image_picker", "id": "photo", "label": "Photo", "info": "5:6. Also used for the face button unless a face is set." },
+        { "type": "image_picker", "id": "face", "label": "Face (optional)" },
+        { "type": "range", "id": "stars", "label": "Stars", "min": 1, "max": 5, "step": 1, "default": 5 },
+        { "type": "textarea", "id": "text", "label": "Review", "default": "First wash that doesn't leave my arms tight. No smell at all, which is the whole point." },
+        { "type": "text", "id": "name", "label": "Name", "default": "Hannah K." },
+        { "type": "text", "id": "detail", "label": "Skin and use", "default": "Eczema-prone skin, using it for 6 months" },
+        { "type": "text", "id": "date", "label": "Date (optional)" },
+        { "type": "text", "id": "tab_label", "label": "Face label (screen readers)", "default": "Hannah K., eczema-prone skin" },
+        { "type": "header", "content": "Product" },
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "paragraph", "content": "Demo product, shown while no product is picked." },
+        { "type": "image_picker", "id": "thumb", "label": "Image" },
+        { "type": "text", "id": "key", "label": "Demo id", "default": "calm" },
+        { "type": "text", "id": "name_product", "label": "Name", "default": "Calm wash" },
+        { "type": "text", "id": "size", "label": "Size", "default": "400 ml" },
+        { "type": "text", "id": "price", "label": "Price in cents", "default": "1800" },
+        { "type": "text", "id": "line", "label": "Short line", "default": "Everyday, eczema-prone skin. Colloidal oat and glycerin." },
+        { "type": "text", "id": "labels", "label": "Labels", "info": "Comma list: best, ff, new, sale", "default": "best,ff" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather reviews",
+      "blocks": [
+        { "type": "review", "settings": { "stars": 5, "text": "First wash that doesn't leave my arms tight. No smell at all, which is the whole point.", "name": "Hannah K.", "detail": "Eczema-prone skin, using it for 6 months", "tab_label": "Hannah K., eczema-prone skin", "key": "calm", "name_product": "Calm wash", "size": "400 ml", "price": "1800", "line": "Everyday, eczema-prone skin. Colloidal oat and glycerin.", "labels": "best,ff" } },
+        { "type": "review", "settings": { "stars": 5, "text": "My shins stopped itching by the second week. I put it on while I'm still damp.", "name": "Nia R.", "detail": "Very dry skin, using it for 3 months", "tab_label": "Nia R., very dry skin", "key": "cream", "name_product": "Rich cream", "size": "200 ml", "price": "2400", "line": "Thick cream for shins, elbows and hands.", "labels": "ff" } },
+        { "type": "review", "settings": { "stars": 5, "text": "Bath time used to end with red arms and crying. Now it's a little lotion after, and that's it.", "name": "Dan P., parent of a 1-year-old", "detail": "Dry skin, using it for 5 months", "tab_label": "Dan P., parent", "key": "little", "name_product": "Little lotion", "size": "150 ml", "price": "1400", "line": "Soft, light oat lotion for ages 1 and up. Fragrance-free.", "labels": "new,ff" } },
+        { "type": "review", "settings": { "stars": 4, "text": "I wanted a little scent without a flare. The chamomile is faint, and my skin stayed calm.", "name": "Ama O.", "detail": "Reactive skin, using it for 2 months", "tab_label": "Ama O., reactive skin", "key": "chamomile", "name_product": "Chamomile wash", "size": "400 ml", "price": "2000", "line": "Our only scented wash: 0.2% chamomile oil, allergens listed.", "labels": "" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

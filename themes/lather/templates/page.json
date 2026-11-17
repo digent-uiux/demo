@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "main": {
+      "type": "blko-lv3-main-page",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

@@ -1,0 +1,44 @@
+/* 65 Collage: three photos of clearly different sizes (tall, wide, square) set as one mosaic */
+.s-col{background:var(--oat);padding:120px 0 128px}
+.s-col__box{container-type:inline-size}
+.s-col__grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-template-rows:13cqw 22cqw 32cqw;gap:16px}
+.s-col__head{grid-column:1 / 6;grid-row:1;align-self:start}
+.s-col__head .h2{max-width:11ch}
+.s-col__tile--wide{grid-column:6 / 13;grid-row:1 / 3}
+.s-col__tile--tall{grid-column:1 / 6;grid-row:2 / 4}
+.s-col__tile--square{grid-column:6 / 10;grid-row:3}
+.s-col__note{grid-column:10 / 13;grid-row:3;align-self:stretch;display:flex;flex-direction:column;justify-content:space-between;padding:28px;border-radius:var(--r-img);background:var(--stone)}
+.s-col__note p{font:500 clamp(20px,1.7vw,26px)/1.3 var(--f-body);letter-spacing:-.01em;color:var(--ink);max-width:16ch;margin-bottom:14px}
+
+.s-col__tile{position:relative;overflow:hidden;border-radius:var(--r-img);background:var(--stone);color:var(--raised);isolation:isolate}
+.s-col__tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .7s var(--ease)}
+.s-col__tile::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(0deg,rgba(38,43,34,.62) 0%,rgba(38,43,34,.18) 34%,rgba(38,43,34,0) 52%)}
+.s-col__tile:hover img,.s-col__tile:focus-within img{transform:scale(1.04)}
+.s-col__cap{position:absolute;left:24px;right:24px;bottom:22px;z-index:2;display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.s-col__cap h3{font:500 clamp(20px,1.9vw,28px)/1.15 var(--f-body);letter-spacing:-.01em;max-width:16ch}
+.s-col__cap a{font-weight:600;font-size:15px;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1.5px;transition:color .2s}
+.s-col__cap a:hover{color:var(--stone)}
+.s-col__cap a:focus-visible{outline:2px solid var(--raised);outline-offset:3px}
+/* the whole tile is clickable; the visible link carries the name */
+.s-col__cap a::before{content:"";position:absolute;inset:-2000px;z-index:-1}
+
+.s-col__tile--tall img{object-position:50% 40%}
+.s-col__tile--wide img{object-position:50% 58%}
+.s-col__tile--square img{object-position:50% 56%}
+
+@media (max-width:760px){
+  .s-col{padding:72px 0 80px}
+  .s-col__grid{grid-template-columns:1.25fr 1fr;grid-template-rows:auto auto auto auto;gap:10px}
+  .s-col__head{grid-column:1 / 3;grid-row:1;margin-bottom:14px}
+  .s-col__tile--wide{grid-column:1 / 3;grid-row:2;aspect-ratio:16/10}
+  .s-col__tile--tall{grid-column:1;grid-row:3 / 5;aspect-ratio:3/4;align-self:start}
+  .s-col__tile--square{grid-column:2;grid-row:3;aspect-ratio:1}
+  .s-col__note{grid-column:2;grid-row:4;padding:18px}
+  .s-col__note p{font-size:17px;margin-bottom:10px}
+  .s-col__cap{left:14px;right:12px;bottom:14px;gap:4px}
+  .s-col__cap h3{font-size:17px}
+  .s-col__cap a{font-size:14px}
+  .s-col__tile--square .s-col__cap h3{font-size:15px}
+}
+/* Liquid port: Shopify placeholders fill the same boxes as the photos */
+.s-col__tile .blko-lv3-ph{position:absolute;inset:0;width:100%;height:100%}

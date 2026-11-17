@@ -1,0 +1,70 @@
+{%- comment -%}
+  Lather v3, product page: recently viewed (home-v3/pages/product/45-recent.html + shared/40-recent.html).
+  A quiet row of the products the shopper opened before (product pages and quick views), newest first, from
+  localStorage 'lather-recent' in the browser; never the product on this page. Hidden until there is something to show.
+  Real products link to their page and are refreshed from /products/<handle>.js (current title, price, image; deleted
+  products drop out). Demo products (no product on the page) open the quick view.
+  Theme editor: with "Show a sample" on, an empty history shows this page's products as a sample, so the row can be styled.
+  Tracking on every page (quick view opens) needs blko-lv3-recent.js site-wide, loaded by the Lather look section;
+  this section loads it too (the script runs once).
+{%- endcomment -%}
+{{ 'blko-lv3-recent.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-recent.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign s = section.settings
+  assign anchor = s.anchor | handleize | default: 'pdp-recent'
+  assign dk = s.demo_key | strip | handleize | default: 'calm'
+  if product != blank and product.title != blank
+    assign v = product.selected_or_first_available_variant
+    assign c_key = product.handle
+    assign c_name = product.title
+    assign c_price = v.price | divided_by: 100.0
+    assign c_url = product.url
+    assign c_size = ''
+    unless product.has_only_default_variant
+      assign c_size = v.title
+    endunless
+    assign c_img = ''
+    if product.featured_media != blank
+      assign c_img = product.featured_media | image_url: width: 240
+    endif
+  endif
+-%}
+<section class="s-pdp-recent" id="{{ anchor }}" aria-labelledby="{{ anchor }}-title" data-recent data-max="{{ s.max }}" data-recent-current="{% if c_key %}entry{% else %}{{ dk }}{% endif %}"{% if request.design_mode and s.editor_sample %} data-recent-sample{% endif %} hidden>
+  {%- if c_key %}
+  <script type="application/json" data-recent-entry>
+    { "k": {{ c_key | json }}, "name": {{ c_name | json }}, "size": {{ c_size | json }}, "price": {{ c_price | json }}, "img": {{ c_img | json }}, "url": {{ c_url | json }} }
+  </script>
+  {%- endif %}
+  <script type="application/json" data-recent-strings>
+    { "cleared": {{ s.cleared | json }}, "quick": {{ s.quick | json }} }
+  </script>
+  <div class="wrap">
+    <div class="s-pdp-recent__head">
+      <h2 class="s-pdp-recent__title" id="{{ anchor }}-title">{{ s.heading | escape }}</h2>
+      {%- if s.clear != blank -%}<button class="s-pdp-recent__clear" type="button" data-recent-clear>{{ s.clear | escape }}</button>{%- endif -%}
+    </div>
+    <ul class="s-pdp-recent__list" data-recent-list></ul>
+    <p class="sr" aria-live="polite" data-recent-status></p>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lather recently viewed",
+  "class": "blko-lv3-section-product-recent",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Recently viewed" },
+    { "type": "text", "id": "clear", "label": "Clear button", "default": "Clear", "info": "Empty hides the button." },
+    { "type": "text", "id": "cleared", "label": "Message after clearing (screen readers)", "default": "Viewing history cleared." },
+    { "type": "text", "id": "quick", "label": "Quick view name (screen readers)", "default": "Quick view", "info": "Read as \"Quick view: <product>\" on demo products." },
+    { "type": "range", "id": "max", "label": "Products shown", "min": 2, "max": 8, "step": 1, "default": 4 },
+    { "type": "checkbox", "id": "editor_sample", "label": "Show a sample in the theme editor", "default": true, "info": "Only in the editor, while your own history is empty. Shoppers never see it." },
+    { "type": "header", "content": "No product on the page" },
+    { "type": "text", "id": "demo_key", "label": "Demo product key", "default": "calm", "info": "Same as the buy box's product key." },
+    { "type": "header", "content": "Section" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "pdp-recent" }
+  ],
+  "presets": [{ "name": "Lather recently viewed" }]
+}
+{% endschema %}

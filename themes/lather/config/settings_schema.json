@@ -2,272 +2,144 @@
   {
     "name": "theme_info",
     "theme_name": "Lather",
-    "theme_version": "1.0.0",
     "theme_author": "Blocko",
-    "theme_documentation_url": "https://shopify.dev/docs/storefronts/themes",
-    "theme_support_url": "https://shopify.dev/docs/storefronts/themes"
+    "theme_version": "1.0.0",
+    "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
+    "theme_support_url": "https://help.shopify.com/manual/online-store/themes"
   },
   {
-    "name": "Color schemes",
+    "name": "Cart",
     "settings": [
       {
-        "type": "color_scheme_group",
-        "id": "color_schemes",
-        "definition": [
-          {
-            "type": "color",
-            "id": "background",
-            "label": "Background",
-            "default": "#162005"
-          },
-          {
-            "type": "color",
-            "id": "text",
-            "label": "Text",
-            "default": "#d8d2ad"
-          },
-          {
-            "type": "color",
-            "id": "button",
-            "label": "Button",
-            "default": "#cc4c30"
-          },
-          {
-            "type": "color",
-            "id": "button_label",
-            "label": "Button label",
-            "default": "#ffffff"
-          },
-          {
-            "type": "color",
-            "id": "button_hover",
-            "label": "Button hover",
-            "default": "#9b331e"
-          }
-        ],
-        "role": {
-          "background": "background",
-          "text": "text",
-          "primary_button": "button",
-          "on_primary_button": "button_label",
-          "primary_button_border": "button",
-          "secondary_button": "background",
-          "on_secondary_button": "text",
-          "secondary_button_border": "text",
-          "links": "text",
-          "icons": "text"
-        }
-      }
-    ]
-  },
-  {
-    "name": "Brand",
-    "settings": [
-      {
-        "type": "paragraph",
-        "content": "Pick your logo files here. Empty fields use the logo bundled with the theme (an SVG that follows your colours)."
+        "type": "range",
+        "id": "free_shipping_threshold",
+        "label": "Free shipping from",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "$",
+        "default": 40,
+        "info": "In the shop currency. Drives the bar in the bag drawer; 0 hides it."
       },
       {
-        "type": "image_picker",
-        "id": "brand_logo",
-        "label": "Logo"
-      },
-      {
-        "type": "image_picker",
-        "id": "brand_logo_inverse",
-        "label": "Inverse logo (dark backgrounds)",
-        "info": "Used in the footer and on dark bands. Falls back to Logo."
-      },
-      {
-        "type": "image_picker",
-        "id": "brand_favicon",
-        "label": "Favicon"
+        "type": "header",
+        "content": "Free gift"
       },
       {
         "type": "range",
-        "id": "logo_width",
-        "label": "Logo width",
-        "min": 60,
-        "max": 320,
-        "step": 4,
-        "unit": "px",
-        "default": 148
-      }
-    ]
-  },
-  {
-    "name": "Design tokens",
-    "settings": [
-      {
-        "type": "color",
-        "id": "color_bg",
-        "label": "Bg",
-        "default": "#ffffff"
+        "id": "free_gift_threshold",
+        "label": "Free gift from",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "$",
+        "default": 60,
+        "info": "In the shop currency, gift excluded. The gift is added to the bag at this amount and taken out below it; 0 turns it off. Shares one progress bar with free shipping."
       },
       {
-        "type": "color",
-        "id": "color_bg_alt",
-        "label": "Bg Alt",
-        "default": "#d8d2ad"
-      },
-      {
-        "type": "color",
-        "id": "color_text",
-        "label": "Text",
-        "default": "#342017"
-      },
-      {
-        "type": "color",
-        "id": "color_text_muted",
-        "label": "Text Muted",
-        "default": "#666671"
-      },
-      {
-        "type": "color",
-        "id": "color_border",
-        "label": "Border",
-        "default": "#d6b7a8"
-      },
-      {
-        "type": "color",
-        "id": "color_button",
-        "label": "Button",
-        "default": "#cc4c30"
-      },
-      {
-        "type": "color",
-        "id": "color_button_text",
-        "label": "Button Text",
-        "default": "#ffffff"
-      },
-      {
-        "type": "color",
-        "id": "color_button_hover",
-        "label": "Button Hover",
-        "default": "#9b331e"
-      },
-      {
-        "type": "color",
-        "id": "color_accent",
-        "label": "Accent",
-        "default": "#d7593b"
-      },
-      {
-        "type": "color",
-        "id": "color_sale",
-        "label": "Sale",
-        "default": "#962a40"
-      },
-      {
-        "type": "color",
-        "id": "color_announcement_bg",
-        "label": "Announcement Bg",
-        "default": "#962a40"
-      },
-      {
-        "type": "color",
-        "id": "color_announcement_text",
-        "label": "Announcement Text",
-        "default": "#ffffff"
-      },
-      {
-        "type": "color",
-        "id": "color_footer_bg",
-        "label": "Footer Bg",
-        "default": "#162005"
-      },
-      {
-        "type": "color",
-        "id": "color_footer_text",
-        "label": "Footer Text",
-        "default": "#d8d2ad"
-      },
-      {
-        "type": "color",
-        "id": "color_success",
-        "label": "Success",
-        "default": "#363a14"
-      },
-      {
-        "type": "color",
-        "id": "color_error",
-        "label": "Error",
-        "default": "#962a40"
-      },
-      {
-        "type": "color",
-        "id": "color_input_bg",
-        "label": "Input Bg",
-        "default": "#ffffff"
-      },
-      {
-        "type": "color",
-        "id": "color_input_text",
-        "label": "Input Text",
-        "default": "#342017"
-      },
-      {
-        "type": "color",
-        "id": "color_swatch_wood_musk",
-        "label": "Swatch wood musk",
-        "default": "#162005"
-      },
-      {
-        "type": "color",
-        "id": "color_swatch_fresh_clean",
-        "label": "Swatch fresh clean",
-        "default": "#6b6a47"
-      },
-      {
-        "type": "color",
-        "id": "color_swatch_warm_rich",
-        "label": "Swatch warm rich",
-        "default": "#9a9414"
-      },
-      {
-        "type": "color",
-        "id": "color_swatch_tropical_fruity",
-        "label": "Swatch tropical fruity",
-        "default": "#c27a1c"
-      },
-      {
-        "type": "color",
-        "id": "color_swatch_green_aromatic",
-        "label": "Swatch green aromatic",
-        "default": "#7a3b36"
-      },
-      {
-        "type": "color",
-        "id": "color_swatch_light",
-        "label": "Swatch light",
-        "default": "#6b6a47"
-      },
-      {
-        "type": "color",
-        "id": "color_swatch_medium",
-        "label": "Swatch medium",
-        "default": "#162005"
-      },
-      {
-        "type": "color",
-        "id": "color_swatch_deep",
-        "label": "Swatch deep",
-        "default": "#7a3b36"
-      }
-    ]
-  },
-  {
-    "name": "Blocko app",
-    "settings": [
-      {
-        "type": "paragraph",
-        "content": "Reviews, wishlist and stockist features call a Cloudflare Worker through a Shopify App Proxy."
+        "type": "product",
+        "id": "free_gift_product",
+        "label": "Gift product",
+        "info": "Added through the cart with the hidden property _gift. Its price only becomes 0 with an automatic discount in Shopify admin: Discounts > Buy X get Y, Customer spends minimum purchase amount = the amount above, Customer gets 1 of this product at 100% off, max 1 use per order. Without a product, only the theme's demo bag shows the gift."
       },
       {
         "type": "text",
-        "id": "blocko_api_base",
-        "label": "App proxy base path",
-        "default": "/apps/blocko"
+        "id": "free_gift_name",
+        "label": "Gift name in the progress text",
+        "default": "Oat bar",
+        "info": "Blank = product title."
+      },
+      {
+        "type": "text",
+        "id": "free_gift_value",
+        "label": "Demo gift value in cents",
+        "default": "900",
+        "info": "Used only without a gift product (its price is used instead)."
+      },
+      {
+        "type": "text",
+        "id": "free_gift_key",
+        "label": "Demo gift product key",
+        "default": "bar",
+        "info": "Image and size for the demo gift come from this product key (bar = Oat bar)."
+      },
+      {
+        "type": "text",
+        "id": "free_gift_msg_empty",
+        "label": "Empty bag, both offers",
+        "default": "Free shipping over [ship], and a free [name] over [amount]."
+      },
+      {
+        "type": "text",
+        "id": "free_gift_msg_left",
+        "label": "Gift still to go",
+        "default": "[amount] more for a free [name].",
+        "info": "After free shipping is reached the shipping message comes first."
+      },
+      {
+        "type": "text",
+        "id": "free_gift_msg_done",
+        "label": "Gift in the bag",
+        "default": "Your free [name] ([value] value) is in your bag."
+      },
+      {
+        "type": "text",
+        "id": "free_gift_msg_off",
+        "label": "Gift removed by the shopper",
+        "default": "Your free [name] is still yours to take."
+      },
+      {
+        "type": "text",
+        "id": "free_gift_add",
+        "label": "Add the gift back",
+        "default": "Add my free [name]"
+      },
+      {
+        "type": "text",
+        "id": "free_gift_note",
+        "label": "Gift line note",
+        "default": "Free gift, [value] value"
+      },
+      {
+        "type": "text",
+        "id": "free_gift_free",
+        "label": "Gift line price",
+        "default": "Free"
+      },
+      {
+        "type": "text",
+        "id": "free_gift_remove",
+        "label": "Remove the gift (screen readers)",
+        "default": "Remove free [name]"
+      },
+      {
+        "type": "text",
+        "id": "free_gift_step_ship",
+        "label": "Bar label, shipping",
+        "default": "Free shipping, [amount]"
+      },
+      {
+        "type": "text",
+        "id": "free_gift_step_gift",
+        "label": "Bar label, gift",
+        "default": "[name], [amount]"
+      },
+      {
+        "type": "text",
+        "id": "free_gift_bar_label",
+        "label": "Progress bar (screen readers)",
+        "default": "Progress toward free shipping and a free gift"
+      }
+    ]
+  },
+  {
+    "name": "Favicon",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon",
+        "info": "Blank = the Lather mark."
       }
     ]
   }

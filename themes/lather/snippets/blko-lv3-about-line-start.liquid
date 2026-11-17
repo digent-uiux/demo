@@ -1,0 +1,14 @@
+{%- comment -%}
+  Closing note of a group in blko-lv3-about-line: note text and an add button for the group's first product.
+  note, add (label with [name] / [price]), key, name, price (formatted money)
+{%- endcomment -%}
+{%- if note != blank or add != blank and key != blank -%}
+  <p class="s-about-line__start">
+    {{- note | escape -}}
+    {%- if add != blank and key != blank -%}
+      {%- assign label = add | replace: '[name]', name | replace: '[price]', price -%}
+      {%- if note != blank -%}<br>{%- endif -%}
+      <button type="button" class="btn btn--primary btn--sm s-about-line__add" data-add="{{ key | escape }}">{{ label | escape }}</button>
+    {%- endif -%}
+  </p>
+{%- endif -%}

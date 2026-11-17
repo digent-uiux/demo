@@ -1,0 +1,193 @@
+{%- comment -%}
+  Lather combined progress: free shipping + free gift on one calm bar (drawer and cart page).
+  Server-renders the state of the real cart; blko-lv3-store.js repaints every [data-progress] live (same structure).
+    {% render 'blko-lv3-free-gift-progress', id: 'shipBox', cls: 'ship', ship_free_over: st.ship_free_over,
+       ship_left: st.ship_left, ship_done: st.ship_done %}
+  Thresholds and gift copy: Theme settings > Cart. The gift is offered when a threshold is set and either a gift
+  product is picked (and available) or the cart has no real items yet (demo bag).
+{%- endcomment -%}
+{%- liquid
+  assign free = settings.free_shipping_threshold | default: 0
+  assign free_c = free | times: 100
+  assign gat = settings.free_gift_threshold | default: 0
+  assign gp = settings.free_gift_product
+  assign g_value = settings.free_gift_value | plus: 0
+  assign g_name = settings.free_gift_name
+  if gp != blank and gp.title != blank
+    assign gv = gp.selected_or_first_available_variant
+    assign g_value = gv.price
+    if g_name == blank
+      assign g_name = gp.title
+    endif
+    unless gv.available
+      assign gat = 0
+    endunless
+  elsif cart.item_count > 0
+    assign has_paid = false
+    for item in cart.items
+      if item.properties._gift == blank
+        assign has_paid = true
+      endif
+    endfor
+    if has_paid
+      assign gat = 0
+    endif
+  endif
+  assign gat_c = gat | times: 100
+
+  assign st = 0
+  assign in_bag = false
+  for item in cart.items
+    if item.properties._gift != blank
+      assign in_bag = true
+    else
+      assign st = st | plus: item.final_line_price
+    endif
+  endfor
+
+  comment
+    steps: a = lower, b = higher (b may be empty)
+  endcomment
+  assign a_k = ''
+  assign b_k = ''
+  if free > 0 and gat > 0
+    if free <= gat
+      assign a_k = 'ship'
+      assign a_at = free
+      assign b_k = 'gift'
+      assign b_at = gat
+    else
+      assign a_k = 'gift'
+      assign a_at = gat
+      assign b_k = 'ship'
+      assign b_at = free
+    endif
+  elsif free > 0
+    assign a_k = 'ship'
+    assign a_at = free
+  elsif gat > 0
+    assign a_k = 'gift'
+    assign a_at = gat
+  endif
+
+  assign free_m = free_c | money_without_trailing_zeros
+  assign gat_m = gat_c | money_without_trailing_zeros
+  assign value_m = g_value | money_without_trailing_zeros
+  assign lbl_ship = settings.free_gift_step_ship | replace: '[amount]', free_m
+  assign lbl_gift = settings.free_gift_step_gift | replace: '[name]', g_name | replace: '[amount]', gat_m
+
+  assign ship_done_now = false
+  if free > 0 and st >= free_c
+    assign ship_done_now = true
+  endif
+  assign gift_done_now = false
+  if gat > 0 and st >= gat_c
+    assign gift_done_now = true
+  endif
+  assign pre = ''
+  if ship_done_now
+    assign pre = ship_done | append: ' '
+  endif
+
+  assign next_k = ''
+  if a_k != ''
+    assign a_c = a_at | times: 100
+    if st < a_c
+      assign next_k = a_k
+    elsif b_k != ''
+      assign b_c = b_at | times: 100
+      if st < b_c
+        assign next_k = b_k
+      endif
+    endif
+  endif
+
+  if a_k == ''
+    assign msg = ''
+  elsif st == 0
+    if free > 0 and gat > 0
+      assign msg = settings.free_gift_msg_empty | replace: '[ship]', free_m | replace: '[name]', g_name | replace: '[amount]', gat_m
+    elsif free > 0
+      assign msg = ship_free_over | replace: '[amount]', free_m
+    else
+      assign msg = settings.free_gift_msg_left | replace: '[amount]', gat_m | replace: '[name]', g_name
+    endif
+  elsif next_k == 'ship'
+    assign left_m = free_c | minus: st | money_without_trailing_zeros
+    assign msg = ship_left | replace: '[amount]', left_m
+  elsif next_k == 'gift'
+    assign left_m = gat_c | minus: st | money_without_trailing_zeros
+    assign msg = settings.free_gift_msg_left | replace: '[amount]', left_m | replace: '[name]', g_name | prepend: pre
+  elsif gat == 0
+    assign msg = ship_done
+  elsif in_bag
+    assign msg = settings.free_gift_msg_done | replace: '[name]', g_name | replace: '[value]', value_m | prepend: pre
+  else
+    assign msg = settings.free_gift_msg_off | replace: '[name]', g_name | prepend: pre
+  endif
+
+  assign max = a_at
+  if b_k != ''
+    assign max = b_at
+  endif
+  assign max_c = max | times: 100
+  assign fill = 0
+  if max_c > 0
+    assign fill = st | times: 1.0 | divided_by: max_c
+    if fill > 1
+      assign fill = 1
+    endif
+  endif
+  assign now = st | divided_by: 100
+  if now > max
+    assign now = max
+  endif
+  assign sig = a_k | append: a_at
+  if b_k != ''
+    assign w_a = a_at | times: 100.0 | divided_by: max | round: 3
+    assign w_b = 100 | minus: w_a | round: 3
+    assign sig = sig | append: '|' | append: b_k | append: b_at
+  else
+    assign w_a = 100
+  endif
+  assign check = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7"/></svg>'
+  assign offer = false
+  if gift_done_now and in_bag == false
+    assign offer = true
+  endif
+  assign add_label = settings.free_gift_add | replace: '[name]', g_name
+-%}
+<div class="{{ cls | default: 'ship' }}"{% if id != blank %} id="{{ id }}"{% endif %} data-progress data-sig="{{ sig }}"{% if a_k == '' %} hidden{% endif %}>
+  {%- if a_k != '' -%}
+    <p class="ship__msg" aria-live="polite">{{ msg | escape }}</p>
+    <div class="ship__bar" role="progressbar" aria-label="{{ settings.free_gift_bar_label | escape }}" aria-valuemin="0" aria-valuemax="{{ max }}" aria-valuenow="{{ now }}" aria-valuetext="{{ msg | escape }}">
+      <i style="transform: scaleX({{ fill }})"></i>
+      {%- if b_k != '' -%}<b style="left: {{ w_a }}%"></b>{%- endif -%}
+    </div>
+    <div class="ship__steps" aria-hidden="true">
+      {%- liquid
+        if a_k == 'ship'
+          assign a_lbl = lbl_ship
+          assign a_done = ship_done_now
+        else
+          assign a_lbl = lbl_gift
+          assign a_done = gift_done_now
+        endif
+      -%}
+      <span data-step="{{ a_k }}" style="width: {{ w_a }}%"{% if a_done %} class="is-done"{% endif %}>{{ check }}{{ a_lbl | escape }}</span>
+      {%- if b_k != '' -%}
+        {%- liquid
+          if b_k == 'ship'
+            assign b_lbl = lbl_ship
+            assign b_done = ship_done_now
+          else
+            assign b_lbl = lbl_gift
+            assign b_done = gift_done_now
+          endif
+        -%}
+        <span data-step="{{ b_k }}" style="width: {{ w_b }}%"{% if b_done %} class="is-done"{% endif %}>{{ check }}{{ b_lbl | escape }}</span>
+      {%- endif -%}
+    </div>
+    <p class="ship__add"{% unless offer %} hidden{% endunless %}><button class="link" type="button" data-gift-add>{{ add_label | escape }}</button></p>
+  {%- endif -%}
+</div>

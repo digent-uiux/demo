@@ -1,0 +1,88 @@
+{%- comment -%}
+  Hands one product to the Lather runtime (window.LATHER.products[key]). Render once per product shown:
+    {% render 'blko-lv3-product-data', key: 'calm', product: block.settings.product, name: block.settings.name,
+       size: block.settings.size, price: block.settings.price, line: block.settings.line, labels: 'best,ff',
+       img: block.settings.image, hover: block.settings.hover_image, ing: block.settings.ing %}
+  key      required, the HTML id ('calm', 'bar', ...), matches data-add / data-quick
+  product  optional product; when set it wins for name, price, image, variant, url (and line/ing when those are blank)
+  name, size, line, ing   demo text (size also shown with a real product; blank size = variant title)
+  price    demo price in cents, as text or number ('1800' = 18.00)
+  labels   comma list of best, ff, new, sale ('sale' is added for a real product on sale)
+  img, hover   optional image settings (demo or override); a real product's featured image is used when img is blank
+  Prints <script type="application/json" data-lv3-product="key">{name,size,price,compare,img,hover,labels,line,ing,variant,available,url}</script>.
+  The first script per key on the page wins.
+{%- endcomment -%}
+{%- liquid
+  assign p_name = name
+  assign p_size = size
+  assign p_line = line
+  assign p_ing = ing
+  assign p_price = price | plus: 0 | divided_by: 100.0
+  assign p_compare = nil
+  assign p_variant = nil
+  assign p_available = true
+  assign p_url = ''
+  assign p_img = ''
+  assign p_hover = ''
+  if img != blank
+    assign p_img = img | image_url: width: 1200
+  endif
+  if hover != blank
+    assign p_hover = hover | image_url: width: 1200
+  endif
+  assign p_labels = labels | default: '' | split: ','
+
+  if product != blank and product.title != blank
+    assign v = product.selected_or_first_available_variant
+    assign p_name = product.title
+    assign p_price = v.price | divided_by: 100.0
+    if v.compare_at_price > v.price
+      assign p_compare = v.compare_at_price | divided_by: 100.0
+      unless p_labels contains 'sale'
+        assign p_labels = p_labels | join: ',' | append: ',sale' | split: ','
+      endunless
+    endif
+    assign p_variant = v.id
+    assign p_available = v.available
+    assign p_url = product.url
+    if p_size == blank and product.has_only_default_variant == false
+      assign p_size = v.title
+    endif
+    if img == blank and product.featured_media != blank
+      assign p_img = product.featured_media | image_url: width: 1200
+    endif
+    if hover == blank and product.media.size > 1
+      assign p_hover = product.media[1] | image_url: width: 1200
+    endif
+    if p_ing == blank and product.metafields.custom.ingredients != blank
+      assign p_ing = product.metafields.custom.ingredients.value | strip_html
+    endif
+    if p_line == blank
+      assign p_line = product.description | strip_html | truncatewords: 18
+    endif
+  endif
+-%}
+<script type="application/json" data-lv3-product="{{ key | escape }}">
+  {
+    "name": {{ p_name | default: '' | json }},
+    "size": {{ p_size | default: '' | json }},
+    "price": {{ p_price | json }},
+    "compare": {% if p_compare %}{{ p_compare | json }}{% else %}null{% endif %},
+    "img": {{ p_img | json }},
+    "hover": {{ p_hover | json }},
+    "labels": [
+      {%- assign first = true -%}
+      {%- for l in p_labels -%}
+        {%- assign lk = l | strip -%}
+        {%- if lk == 'best' or lk == 'ff' or lk == 'new' or lk == 'sale' -%}
+          {%- unless first %},{% endunless -%}{{ lk | json }}{%- assign first = false -%}
+        {%- endif -%}
+      {%- endfor -%}
+    ],
+    "line": {{ p_line | default: '' | json }},
+    "ing": {{ p_ing | default: '' | json }},
+    "variant": {% if p_variant %}{{ p_variant | json }}{% else %}null{% endif %},
+    "available": {{ p_available | json }},
+    "url": {{ p_url | json }}
+  }
+</script>

@@ -1,0 +1,92 @@
+{%- comment -%}
+  Lather v3, search page form (pages/search/10-find.html): two-line heading, text, a GET form to routes.search_url
+  (q = search.terms) and suggestion blocks. The results section (blko-lv3-search-results) handles the suggestions:
+  in the preview it filters in the browser like the HTML, in a store a suggestion runs a real search.
+{%- endcomment -%}
+{{ 'blko-lv3-search-find.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+  assign uid = section.id
+  assign terms = ''
+  if search.performed
+    assign terms = search.terms
+  endif
+-%}
+<section class="s-search-find" aria-labelledby="searchHeading-{{ uid }}">
+  <div class="wrap s-search-find__layout">
+    <div class="s-search-find__intro">
+      <h1 class="h1" id="searchHeading-{{ uid }}" data-rv="line">
+        {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
+        {%- if s.heading_2 != blank -%}<span class="ln"><span>{{ s.heading_2 }}</span></span>{%- endif -%}
+      </h1>
+      {%- if s.text != blank -%}<p>{{ s.text | escape }}</p>{%- endif -%}
+    </div>
+    <div>
+      <form class="s-search-find__form" id="latherSearchForm-{{ uid }}" action="{{ routes.search_url }}" method="get" role="search" data-lv3-search-form>
+        <label for="latherSearchQuery-{{ uid }}">{{ s.label | escape }}</label>
+        <div class="s-search-find__field"><input id="latherSearchQuery-{{ uid }}" type="search" name="q" value="{{ terms | escape }}" placeholder="{{ s.placeholder | escape }}" maxlength="100" autocomplete="off" data-lv3-search-input><input type="hidden" name="type" value="{{ s.types }}"><input type="hidden" name="options[prefix]" value="last"><button class="btn btn--primary" type="submit">{{ s.button | escape }}</button></div>
+      </form>
+      {%- if section.blocks.size > 0 -%}
+        <div class="s-search-find__suggest" aria-label="{{ s.suggest_aria | escape }}">
+          {%- if s.suggest_label != blank -%}<span>{{ s.suggest_label | escape }}</span>{%- endif -%}
+          {%- for block in section.blocks -%}
+            <button type="button" data-search-term="{{ block.settings.term | escape }}" {{ block.shopify_attributes }}>{{ block.settings.label | default: block.settings.term | escape }}</button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lather search form",
+  "tag": "div",
+  "class": "blko-lv3-section-search-find",
+  "settings": [
+    { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "A little help" },
+    { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "finding <em>soft.</em>", "info": "Italic text shows in the display font." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Search by product, ingredient or what your skin needs." },
+    { "type": "header", "content": "Form" },
+    { "type": "text", "id": "label", "label": "Field label", "default": "What are you looking for?" },
+    { "type": "text", "id": "placeholder", "label": "Placeholder", "default": "Try oat, dry skin or body wash" },
+    { "type": "text", "id": "button", "label": "Button", "default": "Search" },
+    {
+      "type": "select",
+      "id": "types",
+      "label": "Search in",
+      "options": [
+        { "value": "product,article", "label": "Products and journal" },
+        { "value": "product", "label": "Products only" },
+        { "value": "product,article,page", "label": "Products, journal and pages" }
+      ],
+      "default": "product,article"
+    },
+    { "type": "header", "content": "Suggestions" },
+    { "type": "text", "id": "suggest_label", "label": "Lead-in", "default": "Try" },
+    { "type": "text", "id": "suggest_aria", "label": "Suggestions label (screen readers)", "default": "Popular searches" }
+  ],
+  "blocks": [
+    {
+      "type": "term",
+      "name": "Suggestion",
+      "limit": 6,
+      "settings": [
+        { "type": "text", "id": "term", "label": "Search term", "default": "oat" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Oat" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather search form",
+      "blocks": [
+        { "type": "term", "settings": { "term": "fragrance-free", "label": "Fragrance-free" } },
+        { "type": "term", "settings": { "term": "body wash", "label": "Body wash" } },
+        { "type": "term", "settings": { "term": "oat", "label": "Oat" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

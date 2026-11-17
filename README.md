@@ -45,7 +45,7 @@ Without the plugin: every item in the live catalog (https://blocko.ai/browse/) a
 - `clip`: 213 sections/blocks as Liquid, 10 gaps (see `catalog.json`). Demo: `demo/clip/`.
 - `dew`: 211 sections/blocks as Liquid, 10 gaps (see `catalog.json`). Demo: `demo/dew/`.
 - `isle`: 219 sections/blocks as Liquid, 10 gaps (see `catalog.json`). Demo: `demo/isle/`.
-- `lather`: 224 sections/blocks as Liquid, 10 gaps (see `catalog.json`). Demo: `demo/lather/`.
+- `lather`: body wash theme (oat and moss), 57 sections as Liquid, 12 pages, 0 gaps; 54 have an HTML demo (see `catalog.json`). Demo: `demo/lather/`.
 - `prism`: 228 sections/blocks as Liquid, 10 gaps (see `catalog.json`). Demo: `demo/prism/`.
 - `shelf`: 248 sections/blocks as Liquid, 10 gaps (see `catalog.json`). Demo: `demo/shelf/`.
 - `stubble`: 210 sections/blocks as Liquid, 10 gaps (see `catalog.json`). Demo: `demo/stubble/`.

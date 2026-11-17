@@ -1,0 +1,84 @@
+{%- comment -%}
+  Lather v3, About: making (home-v3/pages/about/30-making.html). Heading and intro on one row, then a photo beside
+  numbered steps (blocks; the numbers come from a CSS counter) and a closing note.
+{%- endcomment -%}
+{{ 'blko-lv3-about-making.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+  assign uid = 'aboutMakingTitle-' | append: section.id
+-%}
+<section class="s-about-making" id="{{ s.anchor | default: 'making' | handleize }}" aria-labelledby="{{ uid }}">
+  <div class="wrap">
+    <div class="s-about-making__head">
+      <h2 class="h2" id="{{ uid }}" data-rv="line">
+        {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
+        {%- if s.heading_2 != blank -%}<span class="ln"><span>{{ s.heading_2 }}</span></span>{%- endif -%}
+      </h2>
+      {%- if s.text != blank -%}<p>{{ s.text | escape }}</p>{%- endif -%}
+    </div>
+    <div class="s-about-making__layout">
+      <figure class="s-about-making__photo" data-rv="settle">
+        {%- if s.image != blank -%}
+          {{ s.image | image_url: width: 1600 | image_tag: widths: '500, 800, 1100, 1400, 1600', sizes: '(max-width: 760px) 100vw, 50vw', loading: 'lazy', alt: s.image_alt | default: s.image.alt }}
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag: 'blko-lv3-ph' }}
+        {%- endif -%}
+      </figure>
+      <div>
+        {%- if section.blocks.size > 0 -%}
+          <ol class="s-about-making__steps">
+            {%- for block in section.blocks -%}
+              {%- assign d = forloop.index0 | at_most: 3 -%}
+              <li data-rv="blur"{% if d > 0 %} data-rv-delay="{{ d }}"{% endif %} {{ block.shopify_attributes }}>
+                <div>
+                  {%- if block.settings.title != blank -%}<h3>{{ block.settings.title | escape }}</h3>{%- endif -%}
+                  {%- if block.settings.text != blank -%}<p>{{ block.settings.text | escape }}</p>{%- endif -%}
+                </div>
+              </li>
+            {%- endfor -%}
+          </ol>
+        {%- endif -%}
+        {%- if s.note != blank -%}<p class="s-about-making__note">{{ s.note | escape }}</p>{%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lather about making",
+  "class": "blko-lv3-section-about-making",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "A job for" },
+    { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "every <em>ingredient.</em>", "info": "Italic text shows in the accent style." },
+    { "type": "textarea", "id": "text", "label": "Intro", "default": "We build around the wash, the rinse and the feeling after. The ingredient list should help you understand all three." },
+    { "type": "image_picker", "id": "image", "label": "Photo" },
+    { "type": "text", "id": "image_alt", "label": "Photo description (alt)", "default": "Calm wash with soft foam on wet travertine, steam rising behind it" },
+    { "type": "text", "id": "note", "label": "Closing note", "default": "No cure promises. Just body care with its purpose written plainly." },
+    { "type": "header", "content": "Section" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "making" }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Start with the task" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Gentle sugar cleansers help lift away the day. Glycerin, oat and oils give each wash its own feel. We choose the texture to match the job." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather about making",
+      "blocks": [
+        { "type": "step" },
+        { "type": "step", "settings": { "title": "Keep the differences clear", "text": "A soft everyday wash, a thicker wash for very dry skin, a light lotion or a rich cream. We explain what changes, rather than giving everything the same promise." } },
+        { "type": "step", "settings": { "title": "Put the list where you need it", "text": "Ingredients live alongside each product. You can read them before you buy, compare the textures and choose how much care your skin needs." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

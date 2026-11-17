@@ -1,0 +1,70 @@
+{%- comment -%}
+  Lather v3, 404 page (home-v3/pages/404/10-lost.html). Copy on the left, a full-height photo with a small caption card
+  on the right. All settings; the photo settles in with [data-rv="settle"].
+{%- endcomment -%}
+{{ 'blko-lv3-404-lost.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+  assign primary_url = s.button_link | default: routes.all_products_collection_url
+  assign home_url = s.home_link | default: routes.root_url
+  assign search_url = s.search_link | default: routes.search_url
+  assign caption_url = s.caption_link | default: routes.all_products_collection_url
+  assign img_alt = s.image.alt | default: s.image_alt
+-%}
+<section class="s-404-lost" aria-labelledby="lost-title-{{ section.id }}">
+  <div class="s-404-lost__copy">
+    {%- if s.code != blank -%}<p class="s-404-lost__code">{{ s.code | escape }}</p>{%- endif -%}
+    <h1 class="h1" id="lost-title-{{ section.id }}" data-rv="line">
+      {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
+      {%- if s.heading_2 != blank -%}<span class="ln"><span>{{ s.heading_2 }}</span></span>{%- endif -%}
+    </h1>
+    {%- if s.text != blank -%}<p>{{ s.text | escape }}</p>{%- endif -%}
+    <div class="s-404-lost__links">
+      {%- if s.button_label != blank -%}<a href="{{ primary_url }}" class="btn btn--primary">{{ s.button_label | escape }}</a>{%- endif -%}
+      {%- if s.home_label != blank -%}<a href="{{ home_url }}" class="link">{{ s.home_label | escape }}</a>{%- endif -%}
+      {%- if s.search_label != blank -%}<a href="{{ search_url }}" class="link">{{ s.search_label | escape }}</a>{%- endif -%}
+    </div>
+  </div>
+  <div class="s-404-lost__image" data-rv="settle">
+    {%- if s.image != blank -%}
+      {%- assign pos = 'object-position: ' | append: s.image.presentation.focal_point -%}
+      {{ s.image | image_url: width: 1800 | image_tag: widths: '600, 900, 1200, 1500, 1800', sizes: '(max-width: 760px) 100vw, 50vw', alt: img_alt, style: pos }}
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'blko-lv3-ph' }}
+    {%- endif -%}
+    {%- if s.caption_title != blank or s.caption_text != blank -%}
+      <div class="s-404-lost__caption">
+        {%- if s.caption_title != blank -%}<a href="{{ caption_url }}">{{ s.caption_title | escape }}</a>{%- endif -%}
+        {%- if s.caption_text != blank -%}<p>{{ s.caption_text | escape }}</p>{%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lather page not found",
+  "class": "blko-lv3-section-404",
+  "settings": [
+    { "type": "text", "id": "code", "label": "Code", "default": "404" },
+    { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "A page gone" },
+    { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "<em>astray.</em>", "info": "Italic text shows in the accent style." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "This link no longer leads anywhere. Your next comfortable shower is still here." },
+    { "type": "header", "content": "Links" },
+    { "type": "text", "id": "button_label", "label": "Button", "default": "Shop the line" },
+    { "type": "url", "id": "button_link", "label": "Button URL", "info": "Blank: all products." },
+    { "type": "text", "id": "home_label", "label": "Home link", "default": "Back home" },
+    { "type": "url", "id": "home_link", "label": "Home link URL", "info": "Blank: home page." },
+    { "type": "text", "id": "search_label", "label": "Search link", "default": "Search" },
+    { "type": "url", "id": "search_link", "label": "Search link URL", "info": "Blank: search page." },
+    { "type": "header", "content": "Photo" },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "image_alt", "label": "Image description", "default": "Oat bar with soft foam on a stone dish", "info": "Used when the image has no alt text." },
+    { "type": "text", "id": "caption_title", "label": "Caption link", "default": "A small place to start" },
+    { "type": "url", "id": "caption_link", "label": "Caption link URL", "info": "Blank: all products." },
+    { "type": "text", "id": "caption_text", "label": "Caption text", "default": "Oat bar for face and body, $9." }
+  ],
+  "presets": [{ "name": "Lather page not found" }]
+}
+{% endschema %}

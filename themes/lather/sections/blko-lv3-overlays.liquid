@@ -1,0 +1,448 @@
+{%- comment -%}
+  Lather overlays: bag drawer and quick view (popup and cookie bar: blko-lv3-popup) (markup only; behaviour in blko-lv3-store.js).
+  Also hands the runtime its texts (script[data-lv3-strings]), the demo ingredients per product key
+  (script[data-lv3-ing]), the upsell product (key 'bar' unless changed) and the placeholder used for image-less lines.
+  Free gift (Theme settings > Cart): script[data-lv3-gift] {at, variant, name, value, img, size, key} and the combined
+  free-shipping + gift progress (snippet blko-lv3-free-gift-progress). A gift product is added with the _gift property;
+  it is free only with an automatic Buy X get Y discount in admin (see the Gift product setting).
+{%- endcomment -%}
+{{ 'blko-lv3-free-gift.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign st = section.settings
+  assign ing_blocks = section.blocks | where: 'type', 'ingredients'
+  assign gp = settings.free_gift_product
+  assign g_at = settings.free_gift_threshold | default: 0
+  assign g_variant = nil
+  assign g_value = settings.free_gift_value | plus: 0 | divided_by: 100.0
+  assign g_name = settings.free_gift_name
+  assign g_img = ''
+  assign g_size = ''
+  if gp != blank and gp.title != blank
+    assign gv = gp.selected_or_first_available_variant
+    if gv.available
+      assign g_variant = gv.id
+    else
+      assign g_at = 0
+    endif
+    assign g_value = gv.price | divided_by: 100.0
+    if g_name == blank
+      assign g_name = gp.title
+    endif
+    if gp.featured_media != blank
+      assign g_img = gp.featured_media | image_url: width: 200
+    endif
+    unless gp.has_only_default_variant
+      assign g_size = gv.title
+    endunless
+  endif
+-%}
+<template id="lv3-ph">{{ 'product-1' | placeholder_svg_tag: 'blko-lv3-ph' }}</template>
+{%- render 'blko-lv3-product-data', key: st.upsell_key, product: st.upsell_product, name: st.upsell_name, size: st.upsell_size, price: st.upsell_price, line: st.upsell_line, labels: 'best,ff', img: st.upsell_image -%}
+<script type="application/json" data-lv3-strings>
+  {
+    "bag": {{ st.bag_title | json }}, "bag_n": {{ st.bag_title_n | json }},
+    "free_ship": {{ settings.free_shipping_threshold | json }}, "ship_free_over": {{ st.ship_free_over | json }},
+    "ship_left": {{ st.ship_left | json }}, "ship_done": {{ st.ship_done | json }},
+    "empty": {{ st.empty | json }}, "upsell": {{ st.upsell | json }}, "upsell_add": {{ st.upsell_add | json }}, "upsell_key": {{ st.upsell_key | json }},
+    "removed": {{ st.removed | json }}, "undo": {{ st.undo | json }}, "remove": {{ st.remove | json }},
+    "less": {{ st.less | json }}, "more": {{ st.more | json }},
+    "checkout": {{ st.checkout | json }}, "checkout_total": {{ st.checkout_total | json }},
+    "ftr_ok": {{ st.ftr_ok | json }}, "ftr_bad": {{ st.ftr_bad | json }},
+    "ann_every": {{ st.ann_every | json }},
+    "lbl_best": {{ st.lbl_best | json }}, "lbl_ff": {{ st.lbl_ff | json }}, "lbl_new": {{ st.lbl_new | json }}, "lbl_sale": {{ st.lbl_sale | json }},
+    "prog_empty": {{ settings.free_gift_msg_empty | json }}, "gift_left": {{ settings.free_gift_msg_left | json }},
+    "gift_done": {{ settings.free_gift_msg_done | json }}, "gift_off": {{ settings.free_gift_msg_off | json }},
+    "gift_add": {{ settings.free_gift_add | json }}, "gift_note": {{ settings.free_gift_note | json }},
+    "gift_free": {{ settings.free_gift_free | json }}, "gift_remove": {{ settings.free_gift_remove | json }},
+    "step_ship": {{ settings.free_gift_step_ship | json }}, "step_gift": {{ settings.free_gift_step_gift | json }},
+    "prog_label": {{ settings.free_gift_bar_label | json }}
+  }
+</script>
+<script type="application/json" data-lv3-gift>
+  {
+    "at": {{ g_at | json }}, "variant": {{ g_variant | json }}, "name": {{ g_name | json }}, "value": {{ g_value | json }},
+    "img": {{ g_img | json }}, "size": {{ g_size | json }}, "key": {{ settings.free_gift_key | default: 'bar' | json }}
+  }
+</script>
+<script type="application/json" data-lv3-ing>
+  {
+    {%- for b in ing_blocks -%}
+      {{ b.settings.key | json }}: {{ b.settings.ing | json }}{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  }
+</script>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="{{ st.bag_title | escape }}" aria-hidden="true">
+  <div class="drawer__hd"><h2 id="drawerTitle">{{ st.bag_title | escape }}</h2><button class="icon-btn" type="button" aria-label="{{ st.close_bag | escape }}" data-close><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  {%- render 'blko-lv3-free-gift-progress', id: 'shipBox', cls: 'ship', ship_free_over: st.ship_free_over, ship_left: st.ship_left, ship_done: st.ship_done -%}
+  <div class="drawer__list" id="drawerList"></div>
+  <div class="drawer__ft"><button class="btn btn--primary btn--block" type="button" id="checkoutBtn">{{ st.checkout | escape }}</button>{%- if st.drawer_note != blank or st.view_bag != blank -%}<p class="small">{%- if st.view_bag != blank -%}<a class="link" href="{{ routes.cart_url }}">{{ st.view_bag | escape }}</a>.{% if st.drawer_note != blank %} {% endif %}{%- endif -%}{{ st.drawer_note | escape }}</p>{%- endif -%}</div>
+</aside>
+
+<div class="qv" id="qv" role="dialog" aria-modal="true" aria-labelledby="qvName" aria-hidden="true">
+  <button class="icon-btn qv__x" type="button" aria-label="{{ st.close_label | escape }}" data-close><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <div class="qv__img"></div>
+  <div class="qv__body">
+    <div class="labels" id="qvLabels"></div>
+    <h2 class="h3" id="qvName"></h2>
+    <p class="price" id="qvPrice"></p>
+    <p id="qvLine"></p>
+    <p class="qv__ing" id="qvIng"></p>
+    <div class="qv__row"><div class="qty"><button type="button" aria-label="{{ st.less | escape }}" id="qvMinus">−</button><span id="qvQty">1</span><button type="button" aria-label="{{ st.more | escape }}" id="qvPlus">+</button></div><button class="btn btn--primary" type="button" id="qvAdd" style="flex:1">{{ st.qv_add | escape }}</button></div>
+    {%- if st.qv_details != blank -%}<a class="link small" id="qvLink" href="#" hidden>{{ st.qv_details | escape }}</a>{%- endif -%}
+    {%- if st.qv_hint != blank -%}<p class="small">{{ st.qv_hint_before | escape }} <a href="#" class="link" data-add="{{ st.upsell_key | escape }}">{{ st.qv_hint | escape }}</a>.</p>{%- endif -%}
+  </div>
+</div>
+
+
+{% schema %}
+{
+  "name": "Lather overlays",
+  "tag": "div",
+  "class": "lv3-overlays-sec",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Bag drawer"
+    },
+    {
+      "type": "text",
+      "id": "bag_title",
+      "label": "Title",
+      "default": "Your bag"
+    },
+    {
+      "type": "text",
+      "id": "bag_title_n",
+      "label": "Title with items ([count])",
+      "default": "Your bag ([count])"
+    },
+    {
+      "type": "text",
+      "id": "ship_free_over",
+      "label": "Shipping, empty bag ([amount])",
+      "default": "Free shipping over [amount]."
+    },
+    {
+      "type": "text",
+      "id": "ship_left",
+      "label": "Shipping, still to go ([amount])",
+      "default": "[amount] away from free shipping."
+    },
+    {
+      "type": "text",
+      "id": "ship_done",
+      "label": "Shipping, reached",
+      "default": "Free shipping unlocked."
+    },
+    {
+      "type": "text",
+      "id": "empty",
+      "label": "Empty bag ([price] = upsell price)",
+      "default": "Nothing here yet. Most people start with the Oat bar, [price]."
+    },
+    {
+      "type": "text",
+      "id": "removed",
+      "label": "Removed line ([name])",
+      "default": "Removed [name]."
+    },
+    {
+      "type": "text",
+      "id": "undo",
+      "label": "Undo",
+      "default": "Undo"
+    },
+    {
+      "type": "text",
+      "id": "remove",
+      "label": "Remove",
+      "default": "Remove"
+    },
+    {
+      "type": "text",
+      "id": "checkout",
+      "label": "Check out",
+      "default": "Check out"
+    },
+    {
+      "type": "text",
+      "id": "checkout_total",
+      "label": "Check out with total ([amount])",
+      "default": "Check out, [amount]"
+    },
+    {
+      "type": "text",
+      "id": "view_bag",
+      "label": "Link to the cart page",
+      "default": "View bag"
+    },
+    {
+      "type": "text",
+      "id": "drawer_note",
+      "label": "Note under the button",
+      "default": "Skin reacted? Refund on your first bottle, used or not."
+    },
+    {
+      "type": "text",
+      "id": "close_bag",
+      "label": "Close bag label (screen readers)",
+      "default": "Close bag"
+    },
+    {
+      "type": "header",
+      "content": "Upsell in the bag"
+    },
+    {
+      "type": "text",
+      "id": "upsell_key",
+      "label": "Product key",
+      "default": "bar",
+      "info": "Same key as the sections use (bar = Oat bar). A section showing this key wins over the product below."
+    },
+    {
+      "type": "product",
+      "id": "upsell_product",
+      "label": "Product"
+    },
+    {
+      "type": "text",
+      "id": "upsell_name",
+      "label": "Demo name",
+      "default": "Oat bar"
+    },
+    {
+      "type": "text",
+      "id": "upsell_size",
+      "label": "Demo size",
+      "default": "120 g"
+    },
+    {
+      "type": "text",
+      "id": "upsell_price",
+      "label": "Demo price in cents",
+      "default": "900"
+    },
+    {
+      "type": "text",
+      "id": "upsell_line",
+      "label": "Demo line",
+      "default": "Oat milk soap bar for face and body. Rich lather that rinses soft."
+    },
+    {
+      "type": "image_picker",
+      "id": "upsell_image",
+      "label": "Image (blank = product image)"
+    },
+    {
+      "type": "text",
+      "id": "upsell",
+      "label": "Upsell text ([price])",
+      "default": "Add the Oat bar for face and hands, [price]."
+    },
+    {
+      "type": "text",
+      "id": "upsell_add",
+      "label": "Upsell button",
+      "default": "Add"
+    },
+    {
+      "type": "header",
+      "content": "Quick view"
+    },
+    {
+      "type": "text",
+      "id": "qv_add",
+      "label": "Add button",
+      "default": "Add to bag"
+    },
+    {
+      "type": "text",
+      "id": "qv_details",
+      "label": "Product page link (real products only)",
+      "default": ""
+    },
+    {
+      "type": "text",
+      "id": "qv_hint_before",
+      "label": "Hint",
+      "default": "Not sure?"
+    },
+    {
+      "type": "text",
+      "id": "qv_hint",
+      "label": "Hint link (adds the upsell product)",
+      "default": "Start with the Oat bar, $9"
+    },
+    {
+      "type": "text",
+      "id": "less",
+      "label": "Less (screen readers)",
+      "default": "Less"
+    },
+    {
+      "type": "text",
+      "id": "more",
+      "label": "More (screen readers)",
+      "default": "More"
+    },
+    {
+      "type": "text",
+      "id": "close_label",
+      "label": "Close (screen readers)",
+      "default": "Close"
+    },
+    {
+      "type": "header",
+      "content": "Labels"
+    },
+    {
+      "type": "text",
+      "id": "lbl_best",
+      "label": "Best seller",
+      "default": "Best seller"
+    },
+    {
+      "type": "text",
+      "id": "lbl_ff",
+      "label": "Fragrance-free",
+      "default": "Fragrance-free"
+    },
+    {
+      "type": "text",
+      "id": "lbl_new",
+      "label": "New",
+      "default": "New"
+    },
+    {
+      "type": "text",
+      "id": "lbl_sale",
+      "label": "Sale",
+      "default": "Sale"
+    },
+    {
+      "type": "header",
+      "content": "Newsletter messages"
+    },
+    {
+      "type": "text",
+      "id": "ftr_ok",
+      "label": "Thanks",
+      "default": "Thanks. Your 10% code is on its way."
+    },
+    {
+      "type": "text",
+      "id": "ftr_bad",
+      "label": "Invalid email",
+      "default": "Please enter a valid email."
+    },
+    {
+      "type": "header",
+      "content": "Announcement"
+    },
+    {
+      "type": "range",
+      "id": "ann_every",
+      "label": "Rotate messages every",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "s",
+      "default": 6,
+      "info": "0 = no auto-rotation"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "ingredients",
+      "name": "Demo ingredients",
+      "settings": [
+        {
+          "type": "text",
+          "id": "key",
+          "label": "Product key",
+          "default": "calm"
+        },
+        {
+          "type": "textarea",
+          "id": "ing",
+          "label": "Ingredients (quick view)",
+          "info": "Used when the product has no custom.ingredients metafield."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 20,
+  "presets": [
+    {
+      "name": "Lather overlays",
+      "blocks": [
+        {
+          "type": "ingredients",
+          "settings": {
+            "key": "calm",
+            "ing": "Water, glycerin, coco-glucoside, decyl glucoside, colloidal oat, shea butter, sunflower seed oil, xanthan gum, citric acid, sodium benzoate. pH 5.5."
+          }
+        },
+        {
+          "type": "ingredients",
+          "settings": {
+            "key": "chamomile",
+            "ing": "Calm wash plus chamomile flower oil (0.2%). Allergens: bisabolol. pH 5.5."
+          }
+        },
+        {
+          "type": "ingredients",
+          "settings": {
+            "key": "soft",
+            "ing": "Water, glycerin, coco-glucoside, colloidal oat, oat oil, sunflower seed oil, xanthan gum, citric acid, sodium benzoate. Fragrance-free. pH 5.5."
+          }
+        },
+        {
+          "type": "ingredients",
+          "settings": {
+            "key": "rich",
+            "ing": "Calm wash plus extra shea butter and oat oil. Fragrance-free. pH 5.5."
+          }
+        },
+        {
+          "type": "ingredients",
+          "settings": {
+            "key": "lotion",
+            "ing": "Water, glycerin, shea butter, colloidal oat, squalane, ceramide NP, cetearyl alcohol, xanthan gum."
+          }
+        },
+        {
+          "type": "ingredients",
+          "settings": {
+            "key": "cream",
+            "ing": "Shea butter, glycerin, oat oil, ceramide NP, squalane, beeswax-free."
+          }
+        },
+        {
+          "type": "ingredients",
+          "settings": {
+            "key": "milk",
+            "ing": "Water, glycerin, colloidal oat, sunflower seed oil, squalane, cetearyl alcohol, xanthan gum, sodium benzoate."
+          }
+        },
+        {
+          "type": "ingredients",
+          "settings": {
+            "key": "little",
+            "ing": "Water, glycerin, colloidal oat, calendula oil, shea butter, cetearyl alcohol, xanthan gum, sodium benzoate."
+          }
+        },
+        {
+          "type": "ingredients",
+          "settings": {
+            "key": "bar",
+            "ing": "Sodium olivate, sodium cocoate, oat milk, colloidal oat, shea butter, glycerin."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

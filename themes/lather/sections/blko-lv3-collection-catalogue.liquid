@@ -1,0 +1,336 @@
+{%- comment -%}
+  Lather v3, collection catalogue (pages/collection/20-catalogue.html): filter sidebar, count and sort, product grid
+  with quick view and quick add, an editorial tile, empty state, pagination and a closing line.
+  Three modes (data-mode on the root):
+    server  a real collection with storefront filters (Search & Discovery): collection.filters and
+            collection.sort_options; changing a filter or the sort reloads the page (GET to collection.url).
+    static  a real collection without storefront filters: the "Filter group" blocks filter the cards on the page by tag
+            ("need:sensitive", "type:wash"...); sort reloads with sort_by.
+    demo    no collection object (local preview): "Product" blocks with demo values; filter and sort run in the
+            browser exactly like the HTML.
+  A "Product" block with a product picked always shows that product (demo mode).
+{%- endcomment -%}
+{{ 'blko-lv3-collection-catalogue.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-collection-catalogue.js' | asset_url }}" defer></script>
+{{ 'blko-lv3-wishlist.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-wishlist.js' | asset_url }}" defer></script>
+
+{%- paginate collection.products by section.settings.per_page -%}
+{%- liquid
+  assign s = section.settings
+  assign uid = section.id
+  assign form_id = 'shopFilterForm-' | append: uid
+  assign labels_text = 'best:' | append: s.label_best | append: '|new:' | append: s.label_new | append: '|sale:' | append: s.label_sale
+  assign groups = section.blocks | where: 'type', 'filter'
+  assign demo_products = section.blocks | where: 'type', 'product'
+  assign editorial = section.blocks | where: 'type', 'editorial' | first
+
+  assign mode = 'demo'
+  assign total = demo_products.size
+  if collection != blank and collection.handle != blank
+    assign mode = 'static'
+    assign total = collection.products_count
+    if collection.filters.size > 0
+      assign mode = 'server'
+    endif
+  endif
+
+  assign sort_default = 'featured'
+  assign sort_current = 'featured'
+  assign any_active = false
+  if mode != 'demo'
+    assign sort_default = collection.default_sort_by
+    assign sort_current = collection.sort_by | default: collection.default_sort_by
+    for filter in collection.filters
+      if filter.active_values.size > 0 or filter.min_value.value != blank or filter.max_value.value != blank
+        assign any_active = true
+      endif
+    endfor
+  endif
+
+  assign show_editorial = false
+  if editorial != blank
+    assign show_editorial = true
+    if mode != 'demo'
+      if any_active or sort_current != sort_default or paginate.current_page > 1
+        assign show_editorial = false
+      endif
+    endif
+  endif
+
+  if total == 1
+    assign count_text = s.count_one | replace: '[count]', total
+  else
+    assign count_text = s.count_other | replace: '[count]', total
+  endif
+  assign footer_text = s.footer_text | replace: '[count]', total
+-%}
+
+{%- if show_editorial -%}
+  {%- liquid
+    assign e = editorial.settings
+    if e.product != blank
+      assign e_key = e.product.handle
+      assign e_price = e.product.selected_or_first_available_variant.price
+    else
+      assign e_key = e.key | default: 'bar'
+      assign e_price = e.price | plus: 0
+    endif
+    assign e_alt = e.image_alt | default: e.image.alt
+  -%}
+  {%- render 'blko-lv3-product-data', key: e_key, product: e.product, name: e.name, size: e.size, price: e.price, labels: e.labels -%}
+  {%- capture editorial_html -%}
+    <li class="s-shop-catalogue__editorial" data-editorial data-pos="{{ e.position }}" {{ editorial.shopify_attributes }}>
+      {%- if e.image != blank -%}
+        {{ e.image | image_url: width: 1600 | image_tag: widths: '600, 900, 1200, 1600', sizes: '(max-width: 760px) 50vw, 33vw', loading: 'lazy', alt: e_alt }}
+      {%- else -%}
+        {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph' }}
+      {%- endif -%}
+      <div class="s-shop-catalogue__editorial-copy">
+        {%- if e.heading != blank -%}<h2 class="h2">{{ e.heading }}</h2>{%- endif -%}
+        {%- if e.text != blank -%}<p>{{ e.text | escape }}</p>{%- endif -%}
+        <span class="price">{{ e_price | money_without_trailing_zeros }}</span>
+        {%- if e.button != blank -%}<button class="btn btn--light btn--sm" type="button" data-add="{{ e_key | escape }}">{{ e.button | escape }}</button>{%- endif -%}
+      </div>
+    </li>
+  {%- endcapture -%}
+{%- endif -%}
+
+<section class="s-shop-catalogue" id="shopCatalogue-{{ uid }}" aria-label="{{ s.label | escape }}" data-lv3-catalogue data-mode="{{ mode }}" data-total="{{ total }}" data-count-one="{{ s.count_one | escape }}" data-count-other="{{ s.count_other | escape }}" data-remove="{{ s.remove_label | escape }}">
+<div class="wrap s-shop-catalogue__layout">
+  <details class="s-shop-catalogue__filters" open data-filters>
+    <summary>{{ s.filter_title | escape }}</summary>
+    <form class="s-shop-catalogue__filter-body" id="{{ form_id }}"{% if mode != 'demo' %} action="{{ collection.url }}" method="get"{% endif %} data-filter-form>
+      {%- if mode == 'server' -%}
+        {%- for filter in collection.filters -%}
+          <fieldset class="s-shop-catalogue__fieldset"><legend>{{ filter.label | escape }}</legend>
+            {%- if filter.type == 'price_range' -%}
+              <label class="s-shop-catalogue__option s-shop-catalogue__price-field">{{ s.price_from | escape }} <input type="number" name="{{ filter.min_value.param_name }}" value="{%- if filter.min_value.value -%}{{ filter.min_value.value | money_without_currency | replace: ',', '' }}{%- endif -%}" min="0" placeholder="0" inputmode="decimal"></label>
+              <label class="s-shop-catalogue__option s-shop-catalogue__price-field">{{ s.price_to | escape }} <input type="number" name="{{ filter.max_value.param_name }}" value="{%- if filter.max_value.value -%}{{ filter.max_value.value | money_without_currency | replace: ',', '' }}{%- endif -%}" min="0" placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}" inputmode="decimal"></label>
+            {%- else -%}
+              {%- for value in filter.values -%}
+                <label class="s-shop-catalogue__option"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value | escape }}"{% if value.active %} checked{% endif %}{% if value.count == 0 and value.active == false %} disabled{% endif %}> {{ value.label | escape }}</label>
+              {%- endfor -%}
+            {%- endif -%}
+          </fieldset>
+        {%- endfor -%}
+        <a class="s-shop-catalogue__reset" href="{{ collection.url }}?sort_by={{ sort_current }}">{{ s.reset_label | escape }}</a>
+      {%- else -%}
+        {%- for g in groups -%}
+          {%- assign param = g.settings.param | handleize -%}
+          <fieldset class="s-shop-catalogue__fieldset" {{ g.shopify_attributes }}><legend>{{ g.settings.legend | escape }}</legend>
+            {%- assign rows = g.settings.options | newline_to_br | split: '<br />' -%}
+            {%- for row in rows -%}
+              {%- assign parts = row | strip | split: '|' -%}
+              {%- assign val = parts[0] | strip | handleize -%}
+              {%- if val != blank -%}
+                {%- assign lbl = parts[1] | strip | default: parts[0] -%}
+                <label class="s-shop-catalogue__option"><input type="checkbox" name="{{ param }}" value="{{ val }}"> {{ lbl | strip | escape }}</label>
+              {%- endif -%}
+            {%- endfor -%}
+          </fieldset>
+        {%- endfor -%}
+        <button class="s-shop-catalogue__reset" type="reset">{{ s.reset_label | escape }}</button>
+      {%- endif -%}
+    </form>
+  </details>
+  <div class="s-shop-catalogue__results">
+    <div class="s-shop-catalogue__toolbar"><p class="s-shop-catalogue__count" role="status" data-count>{{ count_text | escape }}</p><label class="s-shop-catalogue__sort"><span>{{ s.sort_label | escape }}</span><select aria-label="{{ s.sort_aria | escape }}" data-sort{% if mode != 'demo' %} name="sort_by" form="{{ form_id }}"{% endif %}>
+      {%- if mode == 'demo' -%}
+        <option value="featured">{{ s.sort_featured | escape }}</option><option value="price-low">{{ s.sort_price_low | escape }}</option><option value="price-high">{{ s.sort_price_high | escape }}</option><option value="name">{{ s.sort_name | escape }}</option>
+      {%- else -%}
+        {%- for option in collection.sort_options -%}
+          <option value="{{ option.value | escape }}"{% if option.value == sort_current %} selected{% endif %}>{{ option.name | escape }}</option>
+        {%- endfor -%}
+      {%- endif -%}
+    </select></label></div>
+    <div class="s-shop-catalogue__active" aria-label="{{ s.active_label | escape }}" data-active>
+      {%- if mode == 'server' -%}
+        {%- for filter in collection.filters -%}
+          {%- for value in filter.active_values -%}
+            <a href="{{ value.url_to_remove }}" aria-label="{{ s.remove_label | escape }} {{ value.label | escape }}">{{ value.label | escape }} ×</a>
+          {%- endfor -%}
+          {%- if filter.type == 'price_range' -%}
+            {%- if filter.min_value.value != blank or filter.max_value.value != blank -%}
+              {%- capture range_text -%}{{ filter.min_value.value | default: 0 | money_without_trailing_zeros }} – {{ filter.max_value.value | default: filter.range_max | money_without_trailing_zeros }}{%- endcapture -%}
+              <a href="{{ filter.url_to_remove }}" aria-label="{{ s.remove_label | escape }} {{ range_text }}">{{ range_text }} ×</a>
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+    <ul class="s-shop-catalogue__list" data-list{% if total == 0 %} hidden{% endif %}>
+      {%- assign placed = false -%}
+      {%- if mode == 'demo' -%}
+        {%- for block in demo_products -%}
+          {%- if show_editorial and forloop.index0 == editorial.settings.position -%}{{ editorial_html }}{%- assign placed = true -%}{%- endif -%}
+          {%- assign b = block.settings -%}
+          {%- render 'blko-lv3-collection-card', product: b.product, key: b.key, name: b.name, size: b.size, price: b.price, img: b.image, hover: b.hover, badge: b.badge, desc: b.desc, facets: b.facets, line: b.line, ing: b.ing, labels: b.labels, order: forloop.index0, attrs: block.shopify_attributes, labels_text: labels_text, qv_label: s.qv_label, add_label: s.add_label, add_aria: s.add_aria, sold_label: s.sold_label, wish_label: s.wish_aria -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for product in collection.products -%}
+          {%- if show_editorial and forloop.index0 == editorial.settings.position -%}{{ editorial_html }}{%- assign placed = true -%}{%- endif -%}
+          {%- render 'blko-lv3-collection-card', product: product, order: forloop.index0, labels_text: labels_text, qv_label: s.qv_label, add_label: s.add_label, add_aria: s.add_aria, sold_label: s.sold_label, wish_label: s.wish_aria -%}
+        {%- endfor -%}
+      {%- endif -%}
+      {%- if show_editorial and placed == false and total > 0 -%}{{ editorial_html }}{%- endif -%}
+    </ul>
+    <div class="s-shop-catalogue__empty" data-empty{% if total > 0 %} hidden{% endif %}>
+      {%- if s.empty_heading != blank -%}<h2 class="h3">{{ s.empty_heading }}</h2>{%- endif -%}
+      {%- if s.empty_text != blank -%}<p>{{ s.empty_text | escape }}</p>{%- endif -%}
+      {%- if mode == 'server' -%}
+        <a class="btn btn--primary" href="{{ collection.url }}">{{ s.empty_button | escape }}</a>
+      {%- elsif total == 0 and mode == 'static' -%}
+        <a class="btn btn--primary" href="{{ routes.all_products_collection_url }}">{{ s.empty_button | escape }}</a>
+      {%- else -%}
+        <button class="btn btn--primary" type="button" data-reset>{{ s.empty_button | escape }}</button>
+      {%- endif -%}
+    </div>
+    {%- if paginate.pages > 1 -%}
+      <nav class="s-shop-catalogue__pages" aria-label="{{ s.pages_label | escape }}">
+        {%- if paginate.previous -%}<a href="{{ paginate.previous.url }}" rel="prev">{{ s.prev_label | escape }}</a>{%- endif -%}
+        {%- for part in paginate.parts -%}
+          {%- if part.is_link -%}<a href="{{ part.url }}">{{ part.title }}</a>{%- elsif part.title == paginate.current_page -%}<span aria-current="page">{{ part.title }}</span>{%- else -%}<span>{{ part.title }}</span>{%- endif -%}
+        {%- endfor -%}
+        {%- if paginate.next -%}<a href="{{ paginate.next.url }}" rel="next">{{ s.next_label | escape }}</a>{%- endif -%}
+      </nav>
+    {%- endif -%}
+    {%- if footer_text != blank or s.footer_link_label != blank -%}
+      <p class="s-shop-catalogue__footer">{{ footer_text | escape }}{% if s.footer_link_label != blank %} <a href="{{ s.footer_link | default: routes.root_url }}" class="link">{{ s.footer_link_label | escape }}</a>{% endif %}{% if s.footer_after != blank %} {{ s.footer_after | escape }}{% endif %}</p>
+    {%- endif -%}
+  </div>
+</div>
+</section>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Lather catalogue",
+  "tag": "div",
+  "class": "blko-lv3-section-collection-catalogue",
+  "enabled_on": { "templates": ["collection"] },
+  "settings": [
+    { "type": "text", "id": "label", "label": "Section label (screen readers)", "default": "Shop all products" },
+    { "type": "range", "id": "per_page", "label": "Products per page", "min": 8, "max": 48, "step": 4, "default": 24 },
+    { "type": "header", "content": "Filters" },
+    { "type": "paragraph", "content": "With the Search & Discovery app's filters on, those filters show. Without them, the Filter group blocks below filter by product tags written group:value, for example need:sensitive or type:wash." },
+    { "type": "text", "id": "filter_title", "label": "Filter title", "default": "Filter products" },
+    { "type": "text", "id": "reset_label", "label": "Clear button", "default": "Clear filters" },
+    { "type": "text", "id": "price_from", "label": "Price filter, from", "default": "From" },
+    { "type": "text", "id": "price_to", "label": "Price filter, to", "default": "To" },
+    { "type": "text", "id": "active_label", "label": "Active filters label (screen readers)", "default": "Active filters" },
+    { "type": "text", "id": "remove_label", "label": "Remove filter label (screen readers)", "default": "Remove filter:" },
+    { "type": "header", "content": "Count and sort" },
+    { "type": "text", "id": "count_one", "label": "Count, one product", "default": "[count] product" },
+    { "type": "text", "id": "count_other", "label": "Count, several products", "default": "[count] products" },
+    { "type": "text", "id": "sort_label", "label": "Sort label", "default": "Sort by" },
+    { "type": "text", "id": "sort_aria", "label": "Sort label (screen readers)", "default": "Sort products" },
+    { "type": "paragraph", "content": "A real collection uses Shopify's sort options. The four below show in the preview." },
+    { "type": "text", "id": "sort_featured", "label": "Featured", "default": "Featured" },
+    { "type": "text", "id": "sort_price_low", "label": "Price, low to high", "default": "Price, low to high" },
+    { "type": "text", "id": "sort_price_high", "label": "Price, high to low", "default": "Price, high to low" },
+    { "type": "text", "id": "sort_name", "label": "Name, A to Z", "default": "Name, A to Z" },
+    { "type": "header", "content": "Cards" },
+    { "type": "text", "id": "qv_label", "label": "Quick view", "default": "Quick view" },
+    { "type": "text", "id": "add_label", "label": "Add button", "default": "Add to bag" },
+    { "type": "text", "id": "add_aria", "label": "Add button (screen readers)", "default": "Add [name] to bag" },
+    { "type": "text", "id": "sold_label", "label": "Sold out button", "default": "Sold out" },
+    { "type": "text", "id": "wish_aria", "label": "Wishlist heart (screen readers)", "info": "[name] is the product name.", "default": "Save [name]" },
+    { "type": "text", "id": "label_best", "label": "Label best", "default": "Best seller" },
+    { "type": "text", "id": "label_new", "label": "Label new", "default": "New" },
+    { "type": "text", "id": "label_sale", "label": "Label sale", "default": "Sale" },
+    { "type": "paragraph", "content": "Real products show Sale when on sale, else Best seller or New from the tags label:best or label:new. The card text comes from the custom.short_description metafield, else the description." },
+    { "type": "header", "content": "Empty state" },
+    { "type": "inline_richtext", "id": "empty_heading", "label": "Heading", "default": "A little too <em>specific?</em>" },
+    { "type": "textarea", "id": "empty_text", "label": "Text", "default": "No products match these filters together. Try removing one, or see the whole line." },
+    { "type": "text", "id": "empty_button", "label": "Button", "default": "Show all products" },
+    { "type": "header", "content": "Pages and closing line" },
+    { "type": "text", "id": "pages_label", "label": "Pagination label (screen readers)", "default": "Pages" },
+    { "type": "text", "id": "prev_label", "label": "Previous", "default": "Previous" },
+    { "type": "text", "id": "next_label", "label": "Next", "default": "Next" },
+    { "type": "text", "id": "footer_text", "label": "Closing line", "default": "All [count] products. No endless scroll.", "info": "[count] shows the number of products." },
+    { "type": "text", "id": "footer_link_label", "label": "Link text", "default": "Ask about your skin" },
+    { "type": "url", "id": "footer_link", "label": "Link" },
+    { "type": "text", "id": "footer_after", "label": "After the link", "default": "if you need a hand." }
+  ],
+  "blocks": [
+    {
+      "type": "filter",
+      "name": "Filter group",
+      "limit": 6,
+      "settings": [
+        { "type": "text", "id": "legend", "label": "Title", "default": "Skin need" },
+        { "type": "text", "id": "param", "label": "Group key", "default": "need", "info": "Matches the first part of tags written group:value." },
+        { "type": "textarea", "id": "options", "label": "Options", "default": "everyday | Everyday dry skin\nsensitive | Sensitive skin", "info": "One per line: value | label. The value matches the second part of the tag." }
+      ]
+    },
+    {
+      "type": "editorial",
+      "name": "Editorial tile",
+      "limit": 1,
+      "settings": [
+        { "type": "range", "id": "position", "label": "After this many products", "min": 0, "max": 12, "step": 1, "default": 5 },
+        { "type": "paragraph", "content": "Shows on the first page, with no filter and the default sort." },
+        { "type": "image_picker", "id": "image", "label": "Photo" },
+        { "type": "text", "id": "image_alt", "label": "Photo description" },
+        { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "A <em>small</em> place to start." },
+        { "type": "text", "id": "text", "label": "Text", "default": "One oat milk bar. Face, hands and body." },
+        { "type": "text", "id": "button", "label": "Button (adds the product)", "default": "Try the Oat bar" },
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "paragraph", "content": "When no product is picked, the demo fields are used." },
+        { "type": "text", "id": "key", "label": "Demo key", "default": "bar" },
+        { "type": "text", "id": "name", "label": "Demo name", "default": "Oat bar" },
+        { "type": "text", "id": "size", "label": "Size", "default": "120 g" },
+        { "type": "text", "id": "price", "label": "Demo price in cents", "default": "900" },
+        { "type": "text", "id": "labels", "label": "Labels", "default": "best,ff", "info": "Comma list of best, ff, new, sale." }
+      ]
+    },
+    {
+      "type": "product",
+      "name": "Demo product",
+      "limit": 24,
+      "settings": [
+        { "type": "paragraph", "content": "Shown only where there is no collection (preview). On a collection page the collection's products show." },
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "text", "id": "key", "label": "Demo key", "info": "Used by quick view and the bag." },
+        { "type": "text", "id": "name", "label": "Demo name", "default": "Calm wash" },
+        { "type": "text", "id": "size", "label": "Size", "default": "400 ml" },
+        { "type": "text", "id": "price", "label": "Demo price in cents", "default": "1800" },
+        { "type": "text", "id": "desc", "label": "Card text", "default": "Soft foam for everyday dry skin." },
+        {
+          "type": "select",
+          "id": "badge",
+          "label": "Card label",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "best", "label": "Best seller" },
+            { "value": "new", "label": "New" },
+            { "value": "sale", "label": "Sale" }
+          ],
+          "default": "none"
+        },
+        { "type": "text", "id": "facets", "label": "Filter values", "info": "Space separated group:value, e.g. need:everyday type:wash scent:free." },
+        { "type": "text", "id": "line", "label": "Quick view line" },
+        { "type": "text", "id": "labels", "label": "Quick view labels", "info": "Comma list of best, ff, new, sale." },
+        { "type": "textarea", "id": "ing", "label": "Ingredients" },
+        { "type": "image_picker", "id": "image", "label": "Demo image" },
+        { "type": "image_picker", "id": "hover", "label": "Hover image" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather catalogue",
+      "blocks": [
+        { "type": "filter", "settings": { "legend": "Skin need", "param": "need", "options": "everyday | Everyday dry skin\nsensitive | Sensitive skin\nverydry | Very dry skin\nlittle | Little ones, ages 1+" } },
+        { "type": "filter", "settings": { "legend": "Product type", "param": "type", "options": "wash | Body wash\nmoisturiser | Moisturiser\nbar | Soap bar" } },
+        { "type": "filter", "settings": { "legend": "Scent", "param": "scent", "options": "free | Fragrance-free\nchamomile | Chamomile" } },
+        { "type": "editorial" },
+        { "type": "product", "settings": { "key": "calm", "name": "Calm wash", "size": "400 ml", "price": "1800", "desc": "Soft foam for everyday dry skin.", "badge": "best", "facets": "need:everyday need:sensitive type:wash scent:free" } },
+        { "type": "product", "settings": { "key": "soft", "name": "Soft wash", "size": "400 ml", "price": "1800", "desc": "Low foam. A gentle place to start.", "badge": "new", "facets": "need:sensitive type:wash scent:free" } },
+        { "type": "product", "settings": { "key": "lotion", "name": "Calm lotion", "size": "250 ml", "price": "2200", "desc": "Light lotion, straight after the shower.", "facets": "need:everyday need:sensitive type:moisturiser scent:free" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

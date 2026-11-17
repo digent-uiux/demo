@@ -1,0 +1,191 @@
+{%- comment -%}
+  Lather v3, journal list (home-v3/pages/journal/20-reading.html). Heading with a live count, category chips, a three
+  column list of short reads (each with an expandable note) and a closing help line.
+  Real blog: blog.articles, paginated; chips are the blog's tags (blog.all_tags, links to /tagged/<tag>); each card shows
+  the article image, first tag, title, excerpt and an expandable preview with a link to the article.
+  No blog or no articles (fresh install, local preview): the "Demo filter" and "Demo article" blocks, filtered in place.
+{%- endcomment -%}
+{{ 'blko-lv3-journal-reading.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-journal-reading.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+  assign uid = section.id
+  assign real = false
+  if blog != blank and blog.articles_count > 0
+    assign real = true
+  endif
+  assign demo_cards = section.blocks | where: 'type', 'card'
+  assign demo_filters = section.blocks | where: 'type', 'filter'
+  assign sizes = '(max-width: 760px) 100vw, (max-width: 1000px) 50vw, 33vw'
+-%}
+<section class="s-jr-reading" id="{{ s.anchor | default: 'journalReading' | handleize }}" aria-labelledby="journalReadingTitle-{{ uid }}" data-lv3-journal data-one="{{ s.count_one | escape }}" data-many="{{ s.count_many | escape }}"><div class="wrap">
+{%- if real -%}
+  {%- paginate blog.articles by s.per_page -%}
+    {%- liquid
+      assign shown = paginate.items
+      if s.skip_first and paginate.current_page == 1 and current_tags == blank
+        assign shown = shown | minus: 1
+      endif
+      if shown == 1
+        assign count_text = s.count_one | replace: '[count]', shown
+      else
+        assign count_text = s.count_many | replace: '[count]', shown
+      endif
+    -%}
+    <div class="s-jr-reading__head"><h2 class="h2" id="journalReadingTitle-{{ uid }}">{{ s.heading }}</h2><p class="s-jr-reading__count" role="status" data-count>{{ count_text | escape }}</p></div>
+    {%- if s.show_filters and blog.all_tags.size > 0 -%}
+      <nav class="s-jr-reading__filters" aria-label="{{ s.filter_label | escape }}">
+        <a class="chip" href="{{ blog.url }}"{% if current_tags == blank %} aria-current="page"{% endif %}>{{ s.all_label | escape }}</a>
+        {%- for tag in blog.all_tags -%}
+          <a class="chip" href="{{ blog.url }}/tagged/{{ tag | handleize }}"{% if current_tags contains tag %} aria-current="page"{% endif %}>{{ tag | escape }}</a>
+        {%- endfor -%}
+      </nav>
+    {%- endif -%}
+    <ul class="s-jr-reading__list">
+      {%- for art in blog.articles -%}
+        {%- if s.skip_first and paginate.current_page == 1 and current_tags == blank and forloop.first -%}{%- continue -%}{%- endif -%}
+        {%- liquid
+          assign cats = ''
+          for t in art.tags
+            assign th = t | handleize
+            assign cats = cats | append: ' ' | append: th
+          endfor
+          assign excerpt = art.excerpt | strip_html | strip
+          if excerpt == blank
+            assign excerpt = art.content | strip_html | truncatewords: 20
+          endif
+        -%}
+        <li class="s-jr-reading__card" data-category="{{ cats | strip }}"><article>
+          <a class="s-jr-reading__photo" href="{{ art.url }}" tabindex="-1" aria-hidden="true">
+            {%- if art.image != blank -%}
+              {{ art.image | image_url: width: 1100 | image_tag: widths: '440, 660, 880, 1100', sizes: sizes, loading: 'lazy', alt: art.image.alt }}
+            {%- else -%}
+              {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph' }}
+            {%- endif -%}
+          </a>
+          {%- if art.tags.size > 0 -%}<p class="s-jr-reading__category">{{ art.tags.first | escape }}</p>{%- endif -%}
+          <h3><a href="{{ art.url }}">{{ art.title | escape }}</a></h3>
+          {%- if excerpt != blank -%}<p class="s-jr-reading__excerpt">{{ excerpt | escape }}</p>{%- endif -%}
+          {%- if s.show_preview -%}
+            <details class="s-jr-reading__details"><summary>{{ s.preview_label | escape }}</summary><div class="s-jr-reading__text"><p>{{ art.content | strip_html | truncatewords: 60 }}</p><a href="{{ art.url }}">{{ s.read_label | escape }}</a></div></details>
+          {%- endif -%}
+        </article></li>
+      {%- endfor -%}
+    </ul>
+    {%- if paginate.pages > 1 -%}<nav class="s-jr-reading__pages" aria-label="{{ s.pages_label | escape }}">{{ paginate | default_pagination: next: '→', previous: '←' }}</nav>{%- endif -%}
+  {%- endpaginate -%}
+{%- else -%}
+  {%- liquid
+    if demo_cards.size == 1
+      assign count_text = s.count_one | replace: '[count]', demo_cards.size
+    else
+      assign count_text = s.count_many | replace: '[count]', demo_cards.size
+    endif
+  -%}
+  <div class="s-jr-reading__head"><h2 class="h2" id="journalReadingTitle-{{ uid }}">{{ s.heading }}</h2><p class="s-jr-reading__count" role="status" data-count>{{ count_text | escape }}</p></div>
+  {%- if s.show_filters and demo_filters.size > 0 -%}
+    <div class="s-jr-reading__filters" role="group" aria-label="{{ s.filter_label | escape }}">
+      <button class="chip" type="button" aria-pressed="true" data-journal-filter="all">{{ s.all_label | escape }}</button>
+      {%- for block in demo_filters -%}
+        <button class="chip" type="button" aria-pressed="false" data-journal-filter="{{ block.settings.key | default: block.settings.label | handleize }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}</button>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+  <ul class="s-jr-reading__list">
+    {%- for block in demo_cards -%}
+      {%- assign b = block.settings -%}
+      <li class="s-jr-reading__card" data-category="{{ b.category_key | default: b.category | handleize }}"{% if b.anchor != blank %} id="{{ b.anchor | handleize }}"{% endif %} {{ block.shopify_attributes }}><article>
+        <figure class="s-jr-reading__photo">
+          {%- if b.image != blank -%}
+            {{ b.image | image_url: width: 1100 | image_tag: widths: '440, 660, 880, 1100', sizes: sizes, loading: 'lazy', alt: b.image_alt }}
+          {%- else -%}
+            {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph' }}
+          {%- endif -%}
+        </figure>
+        {%- if b.category != blank -%}<p class="s-jr-reading__category">{{ b.category | escape }}</p>{%- endif -%}
+        <h3>{{ b.title | escape }}</h3>
+        {%- if b.excerpt != blank -%}<p class="s-jr-reading__excerpt">{{ b.excerpt | escape }}</p>{%- endif -%}
+        {%- if b.summary != blank -%}
+          <details class="s-jr-reading__details"><summary>{{ b.summary | escape }}</summary><div class="s-jr-reading__text">{{ b.text }}{%- if b.link_label != blank -%}<a href="{{ b.link | default: routes.all_products_collection_url }}">{{ b.link_label | escape }}</a>{%- endif -%}</div></details>
+        {%- endif -%}
+      </article></li>
+    {%- endfor -%}
+  </ul>
+{%- endif -%}
+{%- if s.note != blank or s.note_button != blank -%}
+  <div class="s-jr-reading__note">{%- if s.note != blank -%}<p>{{ s.note | escape }}</p>{%- endif -%}{%- if s.note_button != blank -%}<a class="btn btn--ghost" href="{{ s.note_link | default: '#' }}">{{ s.note_button | escape }}</a>{%- endif -%}</div>
+{%- endif -%}
+</div></section>
+
+{% schema %}
+{
+  "name": "Lather journal list",
+  "class": "blko-lv3-section-journal-reading",
+  "max_blocks": 24,
+  "settings": [
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Worth a <em>read.</em>", "info": "Italic text shows in the accent style." },
+    { "type": "text", "id": "count_one", "label": "Count, one article", "default": "[count] short read" },
+    { "type": "text", "id": "count_many", "label": "Count, several articles", "default": "[count] short reads" },
+    { "type": "checkbox", "id": "show_filters", "label": "Show category chips", "default": true, "info": "A real blog shows its tags." },
+    { "type": "text", "id": "all_label", "label": "First chip label", "default": "All articles" },
+    { "type": "text", "id": "filter_label", "label": "Chips label (screen readers)", "default": "Filter journal articles" },
+    { "type": "header", "content": "Real articles" },
+    { "type": "range", "id": "per_page", "label": "Articles per page", "min": 3, "max": 24, "step": 3, "default": 6 },
+    { "type": "checkbox", "id": "skip_first", "label": "Leave out the newest article on page one", "default": true, "info": "Keep on when the journal opening features the newest article." },
+    { "type": "checkbox", "id": "show_preview", "label": "Show an expandable preview", "default": true },
+    { "type": "text", "id": "preview_label", "label": "Preview label", "default": "Read a short preview" },
+    { "type": "text", "id": "read_label", "label": "Article link label", "default": "Read the full article" },
+    { "type": "text", "id": "pages_label", "label": "Pages label (screen readers)", "default": "Journal pages" },
+    { "type": "header", "content": "Closing line" },
+    { "type": "textarea", "id": "note", "label": "Text", "default": "Have a question about a formula? Start with the complete ingredient list, or ask us directly." },
+    { "type": "text", "id": "note_button", "label": "Button label", "default": "Talk to Lather" },
+    { "type": "url", "id": "note_link", "label": "Button link" },
+    { "type": "header", "content": "Section" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "journalReading" }
+  ],
+  "blocks": [
+    {
+      "type": "filter",
+      "name": "Demo filter",
+      "settings": [
+        { "type": "paragraph", "content": "Shown while the store has no blog articles; a real blog uses its tags." },
+        { "type": "text", "id": "label", "label": "Label", "default": "Daily care" },
+        { "type": "text", "id": "key", "label": "Category key", "default": "daily-care", "info": "Matches the demo articles' category key. Also works as a page link: /blogs/journal#daily-care." }
+      ]
+    },
+    {
+      "type": "card",
+      "name": "Demo article",
+      "settings": [
+        { "type": "paragraph", "content": "Shown while the store has no blog articles." },
+        { "type": "image_picker", "id": "image", "label": "Photo" },
+        { "type": "text", "id": "image_alt", "label": "Photo description" },
+        { "type": "text", "id": "category", "label": "Category", "default": "Daily care" },
+        { "type": "text", "id": "category_key", "label": "Category key", "default": "daily-care", "info": "Empty: made from the category." },
+        { "type": "text", "id": "title", "label": "Title", "default": "Soft foam, on purpose." },
+        { "type": "textarea", "id": "excerpt", "label": "Excerpt", "default": "A wash doesn't need a mountain of bubbles to earn a place in your bathroom." },
+        { "type": "text", "id": "summary", "label": "Expand label", "default": "Read the short guide" },
+        { "type": "richtext", "id": "text", "label": "Expanded text", "default": "<p>Calm wash and Soft wash are made with a low-foam texture. Work a small amount between wet palms, then spread it over damp skin. The foam is soft and light.</p>" },
+        { "type": "text", "id": "link_label", "label": "Link label", "default": "Compare the body washes" },
+        { "type": "url", "id": "link", "label": "Link" },
+        { "type": "text", "id": "anchor", "label": "Anchor id", "info": "A page link to it (#routines) shows its category." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather journal list",
+      "blocks": [
+        { "type": "filter", "settings": { "label": "Daily care", "key": "daily-care" } },
+        { "type": "filter", "settings": { "label": "Ingredients", "key": "ingredients" } },
+        { "type": "filter", "settings": { "label": "Family", "key": "family" } },
+        { "type": "card" },
+        { "type": "card", "settings": { "category": "Ingredients", "category_key": "ingredients", "title": "What's in an oat bar?", "excerpt": "The full list, in plain sight. And what a bar changes about your daily wash.", "summary": "Read the ingredient note", "text": "<p>Our Oat bar contains sodium olivate, sodium cocoate, oat milk, colloidal oat, shea butter and glycerin. It has no added fragrance.</p>", "link_label": "Meet the Oat bar" } },
+        { "type": "card", "settings": { "category": "Family", "category_key": "family", "title": "A shorter shelf for little ones.", "excerpt": "One light lotion, a towel, and a place for everything when bath time is done.", "summary": "Read the family note", "text": "<p>Little lotion is our fragrance-free oat lotion for ages 1 and up.</p>", "link_label": "See Little lotion" } }
+      ]
+    }
+  ],
+  "enabled_on": { "templates": ["blog", "page", "index"] }
+}
+{% endschema %}

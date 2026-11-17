@@ -1,16 +1,60 @@
 {%- layout none -%}
+{%- assign formatted_initial_value = gift_card.initial_value | money_without_trailing_zeros: gift_card.currency -%}
+{%- assign formatted_balance = gift_card.balance | money_without_trailing_zeros: gift_card.currency -%}
 <!doctype html>
 <html lang="{{ request.locale.iso_code }}">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="robots" content="noindex">
-  <title>{{ shop.name | escape }}</title>
-  {% render 'blko-theme-styles' %}
-  {{ 'blko-theme.css' | asset_url | stylesheet_tag }}
-  {{ content_for_header }}
-</head>
-<body class="blko-theme">
-  <main id="content">{% section 'blko-global-gift-card-page' %}</main>
-</body>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <link rel="icon" type="image/png" href="{{ 'blko-lv3-mark.png' | asset_url }}">
+    <title>{{ 'gift_card.title' | t: value: formatted_initial_value, shop: shop.name }}</title>
+    {{ content_for_header }}
+    {% section 'blko-lv3-theme' %}
+    <script src="{{ 'vendor/qrcode.js' | shopify_asset_url }}" defer></script>
+  </head>
+  <body class="lv3 template-gift-card">
+    <main class="lv3-page" style="min-height:100svh;display:grid;place-items:center">
+      <div class="wrap" style="width:100%">
+        <div class="lv3-card" style="max-width:560px;margin:0 auto">
+          <a href="{{ shop.url }}" class="logo" aria-label="{{ shop.name | escape }}" style="width:150px;height:56px"></a>
+          <h1 class="h2">{{ 'gift_card.heading' | t }}</h1>
+          <p class="price" style="font-size:44px">{{ formatted_initial_value }}</p>
+          {%- if gift_card.enabled == false -%}
+            <p class="lv3-err">{{ 'gift_card.disabled' | t }}</p>
+          {%- elsif gift_card.expired and gift_card.expires_on != blank -%}
+            <p class="lv3-err">{{ 'gift_card.expired' | t: date: gift_card.expires_on | date: '%B %e, %Y' }}</p>
+          {%- elsif gift_card.expires_on != blank -%}
+            <p class="small">{{ 'gift_card.expires' | t: date: gift_card.expires_on | date: '%B %e, %Y' }}</p>
+          {%- endif -%}
+          {%- if gift_card.balance != gift_card.initial_value -%}
+            <p class="small">{{ 'gift_card.balance' | t: balance: formatted_balance }}</p>
+          {%- endif -%}
+          <p class="small">{{ 'gift_card.code' | t }}</p>
+          <p class="lv3-code" id="lv3GcCode">{{ gift_card.code | format_code }}</p>
+          <div id="lv3GcQr" data-identifier="{{ gift_card.qr_identifier }}" aria-label="{{ 'gift_card.qr' | t }}" style="align-self:center"></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn--light" type="button" id="lv3GcCopy">{{ 'gift_card.copy' | t }}</button>
+            <a class="btn btn--primary" href="{{ shop.url }}">{{ 'gift_card.shop' | t }}</a>
+            <button class="btn btn--ghost" type="button" onclick="window.print()">{{ 'gift_card.print' | t }}</button>
+          </div>
+          {%- if gift_card.pass_url -%}
+            <a href="{{ gift_card.pass_url }}" class="link small">{{ 'gift_card.apple_wallet' | t }}</a>
+          {%- endif -%}
+          <p class="small" id="lv3GcMsg" aria-live="polite"></p>
+        </div>
+      </div>
+    </main>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        var qr = document.getElementById('lv3GcQr');
+        if (qr && window.QRCode) new QRCode(qr, { text: qr.dataset.identifier, width: 120, height: 120 });
+        var b = document.getElementById('lv3GcCopy');
+        if (b) b.addEventListener('click', function () {
+          var code = document.getElementById('lv3GcCode').textContent.trim();
+          if (navigator.clipboard) navigator.clipboard.writeText(code).then(function () { document.getElementById('lv3GcMsg').textContent = {{ 'gift_card.copied' | t | json }}; });
+        });
+      });
+    </script>
+  </body>
 </html>

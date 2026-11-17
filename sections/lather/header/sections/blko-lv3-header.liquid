@@ -1,0 +1,203 @@
+{%- comment -%}
+  Lather header: menu (link_list, demo links while it is empty), centred logo, search, account and bag with the cart
+  count. On the home page it sits over the hero (light) until scrolled; elsewhere it is solid. Mobile: menu sheet.
+  Behaviour lives in blko-lv3-store.js (#hdr, #menuBtn, #mnav, #bagBtn, #bagCount).
+{%- endcomment -%}
+{%- liquid
+  assign menu = section.settings.menu
+  assign has_menu = false
+  if menu != blank and menu.links.size > 0
+    assign has_menu = true
+  endif
+  assign over = false
+  if section.settings.over_hero and request.page_type == 'index'
+    assign over = true
+  endif
+-%}
+{%- capture logo_inner -%}
+  {%- if section.settings.logo != blank and section.settings.logo_tint == false -%}
+    {{ section.settings.logo | image_url: width: 480 | image_tag: alt: shop.name, widths: '160, 240, 320, 480', sizes: '160px', loading: 'eager' }}
+  {%- elsif section.settings.logo == blank and section.settings.brand_logo == false -%}
+    {{ shop.name | escape }}
+  {%- endif -%}
+{%- endcapture -%}
+{%- liquid
+  assign logo_class = 'logo'
+  assign logo_style = ''
+  if section.settings.logo != blank
+    if section.settings.logo_tint
+      assign logo_style = section.settings.logo | image_url: width: 480 | prepend: '--lv3-logo:url(' | append: ')'
+    else
+      assign logo_class = 'logo logo--img'
+    endif
+  elsif section.settings.brand_logo == false
+    assign logo_class = 'logo logo--text'
+  endif
+-%}
+<header class="hdr{% if over %} is-over{% else %} is-inner{% endif %}" id="hdr">
+  <div class="wrap hdr__in">
+    <nav class="hdr__nav" aria-label="{{ section.settings.nav_label | escape }}">
+      {%- if has_menu -%}
+        {%- for link in menu.links -%}<a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>{%- endfor -%}
+      {%- else -%}
+        {%- render 'blko-lv3-demo-links', lines: section.settings.demo_links, routes: routes -%}
+      {%- endif -%}
+    </nav>
+    <button class="icon-btn hdr__menu" type="button" aria-label="{{ section.settings.open_label | escape }}" aria-controls="mnav" aria-expanded="false" id="menuBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <a href="{{ routes.root_url }}" class="{{ logo_class }}"{% if logo_style != blank %} style="{{ logo_style }}"{% endif %} aria-label="{{ section.settings.home_label | replace: '[shop]', shop.name | escape }}">{{ logo_inner }}</a>
+    <div class="hdr__tools">
+      {%- if section.settings.show_search -%}
+        <a class="icon-btn" href="{{ routes.search_url }}" aria-label="{{ section.settings.search_label | escape }}" aria-haspopup="dialog" aria-controls="srch" aria-expanded="false" data-search-open><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg></a>
+      {%- endif -%}
+      {%- if section.settings.show_account and shop.customer_accounts_enabled -%}
+        <a class="icon-btn hide-m" href="{{ routes.account_url }}" aria-label="{{ section.settings.account_label | escape }}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1.4-3.6 4.2-5.4 7.5-5.4s6.1 1.8 7.5 5.4"/></svg></a>
+      {%- endif -%}
+      <a class="icon-btn" href="{{ routes.root_url | append: '/pages/wishlist' | replace: '//', '/' }}" aria-label="{{ section.settings.wish_label | escape }}" data-wish-link data-label="{{ section.settings.wish_label | escape }}" data-label-n="{{ section.settings.wish_label_n | escape }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg></a>
+      <span class="bag-count" data-wish-count aria-hidden="true" hidden>0</span>
+      <a class="icon-btn" href="{{ routes.cart_url }}" aria-label="{{ section.settings.bag_label | escape }}" id="bagBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1.2 12H6.2L5 8z"/><path d="M9 8V6.5a3 3 0 016 0V8"/></svg></a>
+      <span class="bag-count" id="bagCount" aria-live="polite">{{ cart.item_count }}</span>
+    </div>
+  </div>
+</header>
+<nav class="mnav" id="mnav" aria-label="{{ section.settings.mobile_label | escape }}">
+  <div class="mnav__top"><span class="{{ logo_class }}"{% if logo_style != blank %} style="color:var(--ink);{{ logo_style }}"{% else %} style="color:var(--ink)"{% endif %}>{{ logo_inner }}</span><button class="icon-btn" type="button" aria-label="{{ section.settings.close_label | escape }}" id="menuClose"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  {%- if has_menu -%}
+    {%- for link in menu.links -%}<a href="{{ link.url }}">{{ link.title | escape }}</a>{%- endfor -%}
+  {%- else -%}
+    {%- render 'blko-lv3-demo-links', lines: section.settings.demo_mobile_links, routes: routes -%}
+  {%- endif -%}
+</nav>
+
+{% schema %}
+{
+  "name": "Lather header",
+  "tag": "div",
+  "class": "lv3-hdr-sec",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "checkbox",
+      "id": "logo_tint",
+      "label": "Tint the logo with the header colour (needs a transparent PNG or SVG)",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "brand_logo",
+      "label": "No image: use the Lather mark (off = store name as text)",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Menu"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "textarea",
+      "id": "demo_links",
+      "label": "Demo links while the menu is empty (one per line: label | link; [all] [search] [account] [cart] [home] or /pages/about)",
+      "default": "Shop all | [all]\nBuild a set | [home]#bundle\nSkin quiz | [home]#quiz\nOur story | /pages/about\nJournal | /blogs/journal"
+    },
+    {
+      "type": "textarea",
+      "id": "demo_mobile_links",
+      "label": "Demo mobile links while the menu is empty",
+      "default": "Shop all | [all]\nBuild a set | [home]#bundle\nSkin quiz | [home]#quiz\nOur story | /pages/about\nJournal | /blogs/journal\nHelp | /pages/help\nWishlist | /pages/wishlist\nAccount | [account]"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "over_hero",
+      "label": "Home page: sit over the hero until scrolled",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Show search",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_account",
+      "label": "Show account",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Labels (screen readers)"
+    },
+    {
+      "type": "text",
+      "id": "nav_label",
+      "label": "Main menu",
+      "default": "Main"
+    },
+    {
+      "type": "text",
+      "id": "mobile_label",
+      "label": "Mobile menu",
+      "default": "Mobile"
+    },
+    {
+      "type": "text",
+      "id": "home_label",
+      "label": "Logo link ([shop] = store name)",
+      "default": "[shop] home"
+    },
+    {
+      "type": "text",
+      "id": "open_label",
+      "label": "Open menu",
+      "default": "Open menu"
+    },
+    {
+      "type": "text",
+      "id": "close_label",
+      "label": "Close menu",
+      "default": "Close menu"
+    },
+    {
+      "type": "text",
+      "id": "search_label",
+      "label": "Search",
+      "default": "Search"
+    },
+    {
+      "type": "text",
+      "id": "account_label",
+      "label": "Account",
+      "default": "Account"
+    },
+    { "type": "text", "id": "wish_label", "label": "Wishlist icon label (screen readers)", "default": "Wishlist" },
+    { "type": "text", "id": "wish_label_n", "label": "Wishlist label with count", "info": "[count] = number saved", "default": "Wishlist, [count] saved" },
+    {
+      "type": "text",
+      "id": "bag_label",
+      "label": "Bag",
+      "default": "Open bag"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather header"
+    }
+  ]
+}
+{% endschema %}

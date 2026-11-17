@@ -1,0 +1,50 @@
+/* 60 Which wash: three washes, pick your skin and the right one comes forward */
+.s-cmp{background:var(--raised);padding:120px 0 112px}
+.s-cmp__top{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:28px 48px;margin-bottom:44px}
+.s-cmp__top .h2{max-width:13ch}
+.s-cmp__ask{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end}
+.s-cmp__ask p{font-weight:600;font-size:15px}
+.s-cmp__chips{display:flex;flex-wrap:wrap;gap:8px}
+.s-cmp__chips .chip{background:var(--oat)}
+.s-cmp__chips .chip:hover{background:var(--stone)}
+.s-cmp__chips .chip[aria-pressed="true"]{background:var(--deep);color:var(--oat)}
+
+.s-cmp__row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.s-cmp__card{display:flex;flex-direction:column;border-radius:10px;background:var(--oat);overflow:hidden;transition:opacity .5s var(--ease),background-color .4s var(--ease),color .4s var(--ease)}
+.s-cmp__img{aspect-ratio:4/5;overflow:hidden;background:var(--stone)}
+.s-cmp__img img{width:100%;height:100%;object-fit:cover;object-position:50% 50%}
+.s-cmp__body{padding:20px 20px 22px;display:flex;flex-direction:column;gap:14px;flex:1}
+.s-cmp__name{font:600 20px/1.2 var(--f-body)}
+.s-cmp__for{font-size:16px;line-height:1.45}
+.s-cmp__facts{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:15px;color:var(--muted);margin-top:auto}
+.s-cmp__facts dt{font-weight:600;color:inherit}
+.s-cmp__foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:16px;border-top:1px solid var(--line)}
+.s-cmp__foot .price{font-size:22px}
+.s-cmp__note{margin-top:24px;font-size:15px;color:var(--muted)}
+
+/* picked: the best wash steps forward on deep moss, the others step back */
+.s-cmp__row[data-pick] .s-cmp__card{opacity:.45}
+.s-cmp__row[data-pick] .s-cmp__card.is-pick{opacity:1;background:var(--deep);color:var(--oat)}
+.s-cmp__card.is-pick .s-cmp__facts{color:var(--sage)}
+.s-cmp__card.is-pick .s-cmp__foot{border-color:rgba(238,232,220,.18)}
+
+@media (max-width:900px){
+  .s-cmp__top{grid-template-columns:1fr}
+  .s-cmp__ask{justify-content:flex-start}
+}
+@media (max-width:760px){
+  .s-cmp{padding:72px 0}
+  .s-cmp__top{margin-bottom:24px}
+  .s-cmp__chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 calc(-1 * var(--gut));padding:0 var(--gut);width:calc(100% + 2 * var(--gut))}
+  .s-cmp__chips::-webkit-scrollbar{display:none}
+  .s-cmp__chips .chip{flex:none}
+  .s-cmp__row{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:80%;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;gap:12px;margin-right:calc(-1 * var(--gut));padding-right:var(--gut)}
+  .s-cmp__row::-webkit-scrollbar{display:none}
+  .s-cmp__card{scroll-snap-align:start}
+  .s-cmp__body{padding:18px 18px 20px}
+  .s-cmp__name{font-size:19px}
+}
+/* Liquid port: Shopify placeholders fill the same boxes as the photos */
+.s-cmp__img .blko-lv3-ph{display:block;width:100%;height:100%}
+.s-cmp__name a{color:inherit;text-decoration:none}
+.s-cmp__name a:hover{text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1.5px}

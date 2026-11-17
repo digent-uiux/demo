@@ -1,0 +1,147 @@
+{%- comment -%}
+  Lather v3, product page: pairs with (home-v3/pages/product/40-pair.html).
+  Photo; heading and text; the two products with prices; the set price with a % off; "Add the routine" adds both;
+  a quick-view link for the paired product.
+  Main product = this page's product (demo fields without one). Paired product = the "Paired product" setting, else
+  the product's custom.pairs_with metafield (product reference), else the demo fields.
+  Two real variants: both go to the cart with the line property "Set: <set name>"; the % off itself must be an
+  automatic discount in Shopify admin (real lines always carry Shopify prices). Otherwise one demo line, as in the HTML.
+{%- endcomment -%}
+{{ 'blko-lv3-product-pair.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-product-pair.js' | asset_url }}" defer></script>
+{%- liquid
+  assign s = section.settings
+  assign anchor = s.anchor | handleize | default: 'pdp-pair'
+  assign mk = s.main_key | strip | handleize | default: 'calm'
+  assign pk = s.pair_key | strip | handleize | default: 'lotion'
+  assign main = product
+  assign pair = s.pair_product
+  if pair == blank and main != blank and main.metafields.custom.pairs_with != blank
+    assign pair = main.metafields.custom.pairs_with.value
+  endif
+
+  if main != blank
+    assign mv = main.selected_or_first_available_variant
+    assign m_name = main.title
+    assign m_cents = mv.price
+    assign m_size = ''
+    unless main.has_only_default_variant
+      assign m_size = mv.title
+    endunless
+  else
+    assign m_name = s.main_name
+    assign m_cents = s.main_price | plus: 0
+    assign m_size = s.main_size
+  endif
+  if pair != blank
+    assign pk = pair.handle
+    assign pv = pair.selected_or_first_available_variant
+    assign p_name = pair.title
+    assign p_cents = pv.price
+    assign p_size = ''
+    unless pair.has_only_default_variant
+      assign p_size = pv.title
+    endunless
+    assign photo = pair.featured_media.preview_image
+    assign photo_alt = pair.featured_media.alt | default: pair.title
+  else
+    assign p_name = s.pair_name
+    assign p_cents = s.pair_price | plus: 0
+    assign p_size = s.pair_size
+    assign photo = s.image
+    assign photo_alt = s.image_alt | default: s.image.alt
+  endif
+  assign m_label = m_name
+  if m_size != blank
+    assign m_label = m_name | append: ', ' | append: m_size
+  endif
+  assign p_label = p_name
+  if p_size != blank
+    assign p_label = p_name | append: ', ' | append: p_size
+  endif
+  assign total = m_cents | plus: p_cents
+  assign keep = 100 | minus: s.pct
+  assign set_cents = total | times: keep | divided_by: 100
+  assign set_str = set_cents | money_without_trailing_zeros
+  assign save_text = s.save_text | replace: '[pct]', s.pct
+  assign btn_text = s.button | replace: '[amount]', set_str
+-%}
+{%- if main != blank -%}
+  {%- render 'blko-lv3-product-data', key: mk, product: main -%}
+{%- else -%}
+  {%- render 'blko-lv3-product-data', key: mk, product: nil, name: s.main_name, size: s.main_size, price: s.main_price -%}
+{%- endif -%}
+{%- if pair != blank -%}
+  {%- render 'blko-lv3-product-data', key: pk, product: pair, labels: s.pair_labels -%}
+{%- else -%}
+  {%- render 'blko-lv3-product-data', key: pk, product: nil, name: s.pair_name, size: s.pair_size, price: s.pair_price, line: s.pair_line, labels: s.pair_labels, img: s.image, ing: s.pair_ing -%}
+{%- endif -%}
+<section class="s-pdp-pair" id="{{ anchor }}" aria-labelledby="{{ anchor }}-title" data-main="{{ mk }}" data-pair="{{ pk }}" data-pct="{{ s.pct }}">
+  <script type="application/json" data-pdp-pair-strings>
+    {
+      "button": {{ s.button | json }}, "set_name": {{ s.set_name | json }}, "set_note": {{ s.set_note | json }},
+      "set_img": {% if s.set_image != blank %}{{ s.set_image | image_url: width: 400 | json }}{% else %}""{% endif %}
+    }
+  </script>
+  <div class="wrap s-pdp-pair__layout">
+    <figure class="s-pdp-pair__photo" data-rv="settle">
+      {%- if photo != blank -%}
+        {{ photo | image_url: width: 1320 | image_tag: widths: '660, 880, 1320', sizes: '(max-width: 760px) 100vw, 50vw', loading: 'lazy', alt: photo_alt, width: 880, height: 1100 }}
+      {%- else -%}
+        {{ 'product-1' | placeholder_svg_tag: 'blko-lv3-ph' }}
+      {%- endif -%}
+    </figure>
+    <div class="s-pdp-pair__body">
+      <h2 class="h2" id="{{ anchor }}-title" data-rv="line">
+        {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
+        {%- if s.heading_2 != blank -%}<span class="ln"><span>{{ s.heading_2 }}</span></span>{%- endif -%}
+      </h2>
+      {%- if s.text != blank -%}<p>{{ s.text | escape }}</p>{%- endif -%}
+      <ul class="s-pdp-pair__items"><li><span>{{ m_label | escape }}</span><span data-pdp-pair-wash>{{ m_cents | money_without_trailing_zeros }}</span></li><li><span>{{ p_label | escape }}</span><span data-pdp-pair-lotion>{{ p_cents | money_without_trailing_zeros }}</span></li></ul>
+      <p class="s-pdp-pair__sum"><span class="price" data-pdp-set-price>{{ set_str }} <s>{{ total | money_without_trailing_zeros }}</s></span><span>{{ save_text | escape }}</span></p>
+      <button class="btn btn--light" type="button" data-pdp-add-set>{{ btn_text | escape }}</button>
+      {%- if s.small_text != blank -%}<p class="small">{{ s.small_text | escape }}</p>{%- endif -%}
+      {%- if s.quick_label != blank -%}<button class="s-pdp-pair__single" type="button" data-quick="{{ pk }}">{{ s.quick_label | escape }}</button>{%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lather product pair",
+  "class": "blko-lv3-section-product-pair",
+  "settings": [
+    { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "Wash, then" },
+    { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "<em>lotion.</em>", "info": "Italic text shows in the accent style." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "The Calm routine. Two fragrance-free products, one place beside the shower." },
+    { "type": "image_picker", "id": "image", "label": "Photo (demo)", "info": "A picked paired product shows its own image." },
+    { "type": "text", "id": "image_alt", "label": "Photo alt text", "default": "Calm lotion, 250 ml oat bottle with a moss pump" },
+    { "type": "header", "content": "Set" },
+    { "type": "range", "id": "pct", "label": "Set discount", "min": 5, "max": 50, "step": 5, "unit": "%", "default": 15, "info": "Shown on the page. For real products also create a matching automatic discount." },
+    { "type": "text", "id": "save_text", "label": "Discount text", "default": "[pct]% off together" },
+    { "type": "text", "id": "button", "label": "Button", "default": "Add the Calm routine, [amount]" },
+    { "type": "text", "id": "set_name", "label": "Set name", "default": "Calm routine set", "info": "Bag line name (demo) and the Set line property (real products)." },
+    { "type": "text", "id": "set_note", "label": "Set note in the bag (demo)", "default": "Calm wash 400 ml + Calm lotion 250 ml, 15% off" },
+    { "type": "image_picker", "id": "set_image", "label": "Set image in the bag (demo)" },
+    { "type": "text", "id": "small_text", "label": "Small print", "default": "One 400 ml wash and one 250 ml lotion. No subscription." },
+    { "type": "text", "id": "quick_label", "label": "Quick view link", "default": "Just looking for the lotion? Quick view" },
+    { "type": "header", "content": "Paired product" },
+    { "type": "product", "id": "pair_product", "label": "Paired product", "info": "Empty: the product's custom.pairs_with metafield, else the demo below." },
+    { "type": "text", "id": "pair_labels", "label": "Labels", "default": "ff", "info": "Comma list of best, ff, new, sale." },
+    { "type": "text", "id": "pair_key", "label": "Demo key", "default": "lotion" },
+    { "type": "text", "id": "pair_name", "label": "Demo name", "default": "Calm lotion" },
+    { "type": "text", "id": "pair_size", "label": "Demo size", "default": "250 ml" },
+    { "type": "text", "id": "pair_price", "label": "Demo price in cents", "default": "2200" },
+    { "type": "textarea", "id": "pair_line", "label": "Demo short line", "default": "Light lotion for damp skin, straight after the wash." },
+    { "type": "textarea", "id": "pair_ing", "label": "Demo ingredients", "default": "Water, glycerin, shea butter, colloidal oat, squalane, ceramide NP, cetearyl alcohol, xanthan gum." },
+    { "type": "header", "content": "Main product (no product on the page)" },
+    { "type": "text", "id": "main_key", "label": "Key", "default": "calm", "info": "Same as the buy box's product key." },
+    { "type": "text", "id": "main_name", "label": "Demo name", "default": "Calm wash" },
+    { "type": "text", "id": "main_size", "label": "Demo size", "default": "400 ml" },
+    { "type": "text", "id": "main_price", "label": "Demo price in cents", "default": "1800" },
+    { "type": "header", "content": "Section" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "pdp-pair" }
+  ],
+  "presets": [{ "name": "Lather product pair" }]
+}
+{% endschema %}

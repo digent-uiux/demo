@@ -1,0 +1,150 @@
+{%- comment -%}
+  Lather v3, Reels (home-v3/parts/70-reels.html). Deep-moss rail of 9:16 customer clips; the centred clip is the large one.
+  Each reel: poster image, an optional clip (Shopify video, or an .mp4 URL) that plays muted only while centred and in view,
+  a caption and a product chip that opens quick view. Product chips use a real product when picked, demo settings otherwise.
+{%- endcomment -%}
+{{ 'blko-lv3-reels.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-reels.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+  assign start = s.start | minus: 1
+-%}
+<section class="s-reels" id="{{ s.anchor | default: 'reels' | handleize }}" aria-label="{{ s.label | escape }}" data-lv3-reels data-start="{{ start }}">
+  <div class="wrap s-reels__top">
+    <h2 class="h2" data-rv="line">
+      {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
+      {%- if s.heading_2 != blank -%}<span class="ln"><span>{{ s.heading_2 }}</span></span>{%- endif -%}
+    </h2>
+    <div class="s-reels__side" data-rv="blur" data-rv-delay="1">
+      {%- if s.text != blank -%}<p class="s-reels__line">{{ s.text | escape }}</p>{%- endif -%}
+      <div class="s-reels__nav">
+        <button type="button" data-reels="-1" aria-label="{{ s.prev_label | escape }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <button type="button" data-reels="1" aria-label="{{ s.next_label | escape }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="s-reels__rail" role="list" aria-label="{{ s.rail_label | escape }}">
+    {%- for block in section.blocks -%}
+      {%- liquid
+        assign b = block.settings
+        assign p = b.product
+        assign key = b.key | default: block.id | handleize
+        if p != blank
+          assign key = p.handle
+          assign p_name = p.title
+          assign p_price = p.price | money_without_trailing_zeros
+          assign p_img = p.featured_image
+        else
+          assign p_name = b.name
+          assign p_price = b.price | plus: 0 | money_without_trailing_zeros
+          assign p_img = b.thumb
+        endif
+        assign has_chip = false
+        if p != blank or b.name != blank
+          assign has_chip = true
+        endif
+        assign poster_class = 's-reels__poster'
+        if b.warm
+          assign poster_class = poster_class | append: ' s-reels__poster--warm'
+        endif
+      -%}
+      <article class="s-reels__card" role="listitem" aria-label="{{ b.caption | default: p_name | escape }}" {{ block.shopify_attributes }}>
+        <div class="s-reels__media">
+          {%- if b.poster != blank -%}
+            {%- assign pos = 'object-position: ' | append: b.poster.presentation.focal_point -%}
+            {{ b.poster | image_url: width: 900 | image_tag: widths: '360, 540, 720, 900', sizes: '(max-width: 760px) 64vw, 320px', loading: 'lazy', class: poster_class, alt: b.poster.alt, style: pos }}
+          {%- else -%}
+            {%- assign ph_class = 'blko-lv3-ph ' | append: poster_class -%}
+            {{ 'image' | placeholder_svg_tag: ph_class }}
+          {%- endif -%}
+          {%- if b.video != blank -%}
+            {{ b.video | video_tag: muted: true, loop: true, playsinline: true, preload: 'none', class: 's-reels__video', image_size: '720x' }}
+          {%- elsif b.video_src != blank -%}
+            {%- liquid
+              assign vsrc = b.video_src | strip
+              unless vsrc contains '/'
+                assign vsrc = vsrc | file_url
+              endunless
+            -%}
+            <video class="s-reels__video" muted playsinline loop preload="none" aria-hidden="true" data-src="{{ vsrc | escape }}"></video>
+          {%- endif -%}
+        </div>
+        {%- if b.caption != blank -%}<p class="s-reels__cap">{{ b.caption | escape }}</p>{%- endif -%}
+        {%- if has_chip -%}
+          {%- if p != blank -%}
+            {%- render 'blko-lv3-product-data', key: key, product: p -%}
+          {%- else -%}
+            {%- render 'blko-lv3-product-data', key: key, name: b.name, size: b.size, price: b.price, line: b.line, labels: b.labels, img: b.thumb -%}
+          {%- endif -%}
+          <button class="s-reels__chip" type="button" data-quick="{{ key }}" aria-label="{{ s.quick_label | escape }}: {{ p_name | escape }}, {{ p_price | strip_html }}">
+            {%- if p_img -%}
+              {{ p_img | image_url: width: 96 | image_tag: class: 's-reels__thumb', alt: '', loading: 'lazy', width: 44, height: 44 }}
+            {%- else -%}
+              {{ 'product-1' | placeholder_svg_tag: 'blko-lv3-ph s-reels__thumb' }}
+            {%- endif -%}
+            <span><b data-n>{{ p_name | escape }}</b><span class="price" data-p>{{ p_price }}</span></span>
+            <span class="s-reels__plus" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span>
+          </button>
+        {%- endif -%}
+      </article>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lather reels",
+  "class": "blko-lv3-section-reels",
+  "max_blocks": 8,
+  "settings": [
+    { "type": "header", "content": "Content" },
+    { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "Real showers," },
+    { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "<em>real</em> skin.", "info": "Italic text shows in the accent style." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "How people use it, in under a minute. Tap a product to see what's in it." },
+    { "type": "range", "id": "start", "label": "Clip centred on load", "min": 1, "max": 8, "step": 1, "default": 2 },
+    { "type": "header", "content": "Labels" },
+    { "type": "text", "id": "quick_label", "label": "Product chip label (screen readers)", "default": "Quick view" },
+    { "type": "text", "id": "prev_label", "label": "Previous button (screen readers)", "default": "Previous clip" },
+    { "type": "text", "id": "next_label", "label": "Next button (screen readers)", "default": "Next clip" },
+    { "type": "text", "id": "label", "label": "Section label (screen readers)", "default": "Customer clips" },
+    { "type": "text", "id": "rail_label", "label": "Clip list label (screen readers)", "default": "Clips" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "reels" }
+  ],
+  "blocks": [
+    {
+      "type": "reel",
+      "name": "Clip",
+      "settings": [
+        { "type": "image_picker", "id": "poster", "label": "Poster image", "info": "Shows until the clip plays, and when motion is reduced. 9:16." },
+        { "type": "checkbox", "id": "warm", "label": "Soften poster colour", "default": false },
+        { "type": "video", "id": "video", "label": "Clip", "info": "Muted, looping. Plays only while centred and in view." },
+        { "type": "text", "id": "video_src", "label": "Clip URL (.mp4)", "info": "Used when no clip is uploaded above. A bare file name (reel-1.mp4) is read from Content > Files." },
+        { "type": "text", "id": "caption", "label": "Caption", "default": "Robe on, skin still damp" },
+        { "type": "header", "content": "Product" },
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "paragraph", "content": "Demo product, shown while no product is picked." },
+        { "type": "image_picker", "id": "thumb", "label": "Image" },
+        { "type": "text", "id": "key", "label": "Demo id", "default": "rich" },
+        { "type": "text", "id": "name", "label": "Name", "default": "Rich wash" },
+        { "type": "text", "id": "size", "label": "Size", "default": "400 ml" },
+        { "type": "text", "id": "price", "label": "Price in cents", "default": "2000" },
+        { "type": "text", "id": "line", "label": "Short line", "default": "Very dry or winter skin. Thicker, almost a lotion." },
+        { "type": "text", "id": "labels", "label": "Labels", "info": "Comma list: best, ff, new, sale", "default": "ff" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather reels",
+      "blocks": [
+        { "type": "reel", "settings": { "caption": "Robe on, skin still damp", "key": "rich", "name": "Rich wash", "size": "400 ml", "price": "2000", "line": "Very dry or winter skin. Thicker, almost a lotion.", "labels": "ff" } },
+        { "type": "reel", "settings": { "caption": "Soft foam, rinsed in seconds", "warm": true, "key": "calm", "name": "Calm wash", "size": "400 ml", "price": "1800", "line": "Everyday, eczema-prone skin. Colloidal oat and glycerin.", "labels": "best,ff" } },
+        { "type": "reel", "settings": { "caption": "Pat dry, then moisturise", "key": "cream", "name": "Rich cream", "size": "200 ml", "price": "2400", "line": "Thick cream for shins, elbows and hands.", "labels": "ff" } },
+        { "type": "reel", "settings": { "caption": "Lotion between damp hands", "key": "lotion", "name": "Calm lotion", "size": "250 ml", "price": "2200", "line": "Light lotion for damp skin, straight after the wash.", "labels": "ff" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

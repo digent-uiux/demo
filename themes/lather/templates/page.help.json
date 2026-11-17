@@ -1,0 +1,172 @@
+{
+  "sections": {
+    "support": {
+      "type": "blko-lv3-help-support",
+      "settings": {
+        "kicker": "Customer care",
+        "heading": "A little <em>help.</em>",
+        "text": "Choosing a formula, checking a delivery, or asking about a reaction. Start here.",
+        "search_label": "What can we help with?",
+        "placeholder": "Try shipping, fragrance or returns",
+        "results": "Browse questions by topic below.",
+        "result_one": "[n] matching question",
+        "result_many": "[n] matching questions",
+        "anchor": "help"
+      }
+    },
+    "answers": {
+      "type": "blko-lv3-help-answers",
+      "settings": {
+        "all_label": "All questions",
+        "topics_label": "Question topics",
+        "empty": "No matching questions yet. Try a simpler search, or use the contact form below.",
+        "label": "Frequently asked questions",
+        "anchor": "answers"
+      },
+      "blocks": {
+        "topic_1": {
+          "type": "topic",
+          "settings": {
+            "key": "choosing",
+            "label": "Choosing & ingredients"
+          }
+        },
+        "topic_2": {
+          "type": "topic",
+          "settings": {
+            "key": "shipping",
+            "label": "Shipping & orders"
+          }
+        },
+        "topic_3": {
+          "type": "topic",
+          "settings": {
+            "key": "returns",
+            "label": "Returns & reactions"
+          }
+        },
+        "question_1": {
+          "type": "question",
+          "settings": {
+            "topic": "choosing",
+            "question": "Which formula should I start with?",
+            "answer": "<p>Calm wash is our everyday wash. Rich wash has a thicker feel for very dry skin; Soft wash has a low foam. The Oat bar is the smallest way to start, at $9. <a href=\"/collections/all\">Compare the line</a>.</p>",
+            "open": true
+          }
+        },
+        "question_2": {
+          "type": "question",
+          "settings": {
+            "topic": "choosing",
+            "question": "Is everything fragrance-free?",
+            "answer": "<p>Everything except Chamomile wash has no fragrance or masking scent. Chamomile wash is our only scented formula and contains 0.2% chamomile flower oil. Check its ingredient list before choosing.</p>",
+            "open": false
+          }
+        },
+        "question_3": {
+          "type": "question",
+          "settings": {
+            "topic": "choosing",
+            "question": "Where can I see the ingredients?",
+            "answer": "<p>Open any product's quick view in the shop for its ingredient list. Calm wash also has a full ingredient section on its <a href=\"/products/calm-wash#pdp-ingredients\">product page</a>. If you have an ingredient allergy, read the complete list before use.</p>",
+            "open": false
+          }
+        },
+        "question_4": {
+          "type": "question",
+          "settings": {
+            "topic": "choosing",
+            "question": "Who is Little lotion made for?",
+            "answer": "<p>Little lotion is for ages 1 and up. For a younger baby, ask your doctor about an appropriate product.</p>",
+            "open": false
+          }
+        },
+        "question_5": {
+          "type": "question",
+          "settings": {
+            "topic": "shipping",
+            "question": "When is shipping free?",
+            "answer": "<p>Shipping is free on orders of $40 or more. Below that, the shipping charge is calculated at checkout. Tax and delivery options depend on the destination.</p>",
+            "open": false,
+            "anchor": "shipping"
+          }
+        },
+        "question_6": {
+          "type": "question",
+          "settings": {
+            "topic": "shipping",
+            "question": "How do I track or change my order?",
+            "answer": "<p>Keep your order number handy and contact customer care below. Tell us what needs changing. We can check whether it has already left; an order that has shipped may no longer be editable.</p>",
+            "open": false
+          }
+        },
+        "question_7": {
+          "type": "question",
+          "settings": {
+            "topic": "shipping",
+            "question": "Where do you ship, and how long does it take?",
+            "answer": "<p>Available destinations and delivery estimates will be shown at checkout before you pay. If your destination is unavailable, contact us before placing an order.</p>",
+            "open": false
+          }
+        },
+        "question_8": {
+          "type": "question",
+          "settings": {
+            "topic": "returns",
+            "question": "What if my skin reacts?",
+            "answer": "<p>Stop using the product. We refund your first bottle of any formula within 30 days, used or not. Send your order number and a photo of the label through customer care; you do not need to send the bottle back.</p>",
+            "open": false,
+            "anchor": "returns",
+            "title_anchor": "refund"
+          }
+        },
+        "question_9": {
+          "type": "question",
+          "settings": {
+            "topic": "returns",
+            "question": "Can I return something for another reason?",
+            "answer": "<p>Contact customer care with your order number and the item you want to return. We will explain the available options before you send anything back. The skin-reaction promise above applies to the first bottle of a formula within 30 days.</p>",
+            "open": false
+          }
+        }
+      },
+      "block_order": [
+        "topic_1",
+        "topic_2",
+        "topic_3",
+        "question_1",
+        "question_2",
+        "question_3",
+        "question_4",
+        "question_5",
+        "question_6",
+        "question_7",
+        "question_8",
+        "question_9"
+      ]
+    },
+    "contact": {
+      "type": "blko-lv3-help-contact",
+      "settings": {
+        "heading": "Ask a <em>person.</em>",
+        "text": "Tell us the product, your question, and your order number if you have one.",
+        "hours": "Customer care\nWeekdays, 9\u20135 ET",
+        "note": "Include your order number so we can find the details.",
+        "l_name": "Name",
+        "l_email": "Email",
+        "l_topic": "What is it about?",
+        "topics": "Choosing a product\nShipping or an order\nSkin-reaction refund\nSomething else",
+        "l_order": "Order number, optional",
+        "l_message": "Your message",
+        "button": "Send message",
+        "success": "Thank you. Your message has been sent. We will be in touch soon.",
+        "anchor": "contact"
+      }
+    }
+  },
+  "order": [
+    "support",
+    "answers",
+    "contact"
+  ]
+}

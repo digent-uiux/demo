@@ -1,0 +1,117 @@
+{%- comment -%}
+  One row of the Lather v3 search results (blko-lv3-search-results), markup of pages/search/20-results.html.
+  item     a search result or product (object_type 'product' | 'article' | 'page'); blank = demo product
+  demo     the demo block's settings (key, name, size, price in cents, line, ing, labels, keywords, image, url)
+  Strings: qv_aria, view_aria, add_label, add_aria ([name]), sold_label, read_label.
+  A product (real or demo) also goes to window.LATHER through blko-lv3-product-data.
+{%- endcomment -%}
+{%- liquid
+  assign kind = 'product'
+  if item != blank
+    assign kind = item.object_type
+  endif
+  assign quick = false
+  assign available = true
+  assign price = 0
+  assign img = blank
+  if item != blank and kind == 'product'
+    assign v = item.selected_or_first_available_variant
+    assign key = item.handle
+    assign name = item.title
+    assign url = item.url
+    assign price = v.price
+    assign compare = v.compare_at_price | default: 0
+    assign available = v.available
+    assign img = item.featured_media
+    assign size = ''
+    if item.metafields.custom.size != blank
+      assign size = item.metafields.custom.size.value
+    elsif item.has_only_default_variant == false
+      assign size = v.title
+    endif
+    if item.metafields.custom.short_description != blank
+      assign line = item.metafields.custom.short_description.value
+    else
+      assign line = item.description | strip_html | truncatewords: 12
+    endif
+  elsif item != blank
+    assign key = item.handle
+    assign name = item.title
+    assign url = item.url
+    if kind == 'article'
+      assign img = item.image
+      if item.excerpt != blank
+        assign line = item.excerpt | strip_html | truncatewords: 16
+      else
+        assign line = item.content | strip_html | truncatewords: 16
+      endif
+      assign size = item.published_at | date: '%B %-d, %Y'
+    else
+      assign line = item.content | strip_html | truncatewords: 16
+      assign size = ''
+    endif
+  else
+    assign d = demo
+    if d.product != blank
+      assign key = d.product.handle
+      assign name = d.product.title
+      assign url = d.product.url
+      assign price = d.product.selected_or_first_available_variant.price
+      assign available = d.product.selected_or_first_available_variant.available
+      assign img = d.image | default: d.product.featured_media
+    else
+      assign key = d.key | default: d.name | handleize
+      assign name = d.name
+      assign url = d.url
+      assign price = d.price | plus: 0
+      assign img = d.image
+      if url == blank
+        assign quick = true
+        assign url = routes.all_products_collection_url
+      endif
+    endif
+    assign size = d.size
+    assign line = d.line
+  endif
+  assign words = name | append: ' ' | append: line
+  if item == blank
+    assign words = words | append: ' ' | append: demo.ing | append: ' ' | append: demo.keywords
+  elsif kind == 'product'
+    assign tags_s = item.tags | join: ' '
+    assign words = words | append: ' ' | append: item.product_type | append: ' ' | append: tags_s
+  endif
+  assign aria_add = add_aria | replace: '[name]', name
+-%}
+{%- if kind == 'product' -%}
+  {%- if item != blank -%}
+    {%- render 'blko-lv3-product-data', key: key, product: item, size: size -%}
+  {%- else -%}
+    {%- render 'blko-lv3-product-data', key: key, product: demo.product, name: demo.name, size: demo.size, price: demo.price, line: demo.line, labels: demo.labels, ing: demo.ing, img: demo.image -%}
+  {%- endif -%}
+{%- endif -%}
+<li class="s-search-results__item" data-search-product="{{ key | escape }}" data-words="{{ words | strip_html | escape }}">
+  <a class="s-search-results__photo" href="{{ url }}"{% if quick %} data-quick="{{ key | escape }}" aria-label="{{ qv_aria | escape }} {{ name | escape }}"{% else %} aria-label="{{ view_aria | escape }} {{ name | escape }}"{% endif %}>
+    {%- if img != blank -%}
+      {{ img | image_url: width: 400 | image_tag: widths: '150, 230, 300, 400', sizes: '(max-width: 1000px) 120px, 150px', loading: 'lazy', alt: name }}
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'blko-lv3-ph' }}
+    {%- endif -%}
+  </a>
+  <div class="s-search-results__info">
+    <h3><a href="{{ url }}"{% if quick %} data-quick="{{ key | escape }}" aria-label="{{ qv_aria | escape }} {{ name | escape }}"{% endif %}>{{ name | escape }}</a></h3>
+    {%- if size != blank -%}<p class="small">{{ size | escape }}</p>{%- endif -%}
+    {%- if line != blank -%}<p class="s-search-results__line">{{ line | escape }}</p>{%- endif -%}
+    <div class="s-search-results__buy">
+      {%- if kind == 'product' -%}
+        <span class="price">{{ price | money_without_trailing_zeros }}{%- if compare > price %} <s>{{ compare | money_without_trailing_zeros }}</s>{%- endif -%}</span>
+        {%- if available -%}
+          <button class="btn btn--primary btn--sm" type="button" data-add="{{ key | escape }}" aria-label="{{ aria_add | escape }}">{{ add_label | escape }}</button>
+        {%- else -%}
+          <button class="btn btn--primary btn--sm" type="button" disabled>{{ sold_label | escape }}</button>
+        {%- endif -%}
+      {%- else -%}
+        <a class="btn btn--ghost btn--sm" href="{{ url }}">{{ read_label | escape }}</a>
+      {%- endif -%}
+    </div>
+  </div>
+</li>

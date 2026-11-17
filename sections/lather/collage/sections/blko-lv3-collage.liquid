@@ -1,0 +1,155 @@
+{%- comment -%}
+  Lather home v3, 65 Collage: shop by skin. Three photo tiles of clearly different sizes (1st wide, 2nd tall, 3rd square)
+  set as one mosaic with the heading and a note card. Each tile links to a product (quick view) or a URL.
+  Port of parts/65-collage.html; shared classes (.h2 .link, data-rv) come from blko-lv3-base.css.
+{%- endcomment -%}
+{{ 'blko-lv3-collage.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+  assign fallback = s.fallback_anchor | handleize
+  if fallback != blank
+    assign fallback = '#' | append: fallback
+  else
+    assign fallback = routes.all_products_collection_url
+  endif
+-%}
+<section class="s-col"{% if s.anchor != blank %} id="{{ s.anchor | handleize }}"{% endif %} aria-label="{{ s.label | escape }}">
+  <div class="wrap s-col__box">
+    <div class="s-col__grid">
+      <div class="s-col__head">
+        <h2 class="h2" data-rv="line">
+          {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
+          {%- if s.heading_2 != blank -%}<span class="ln"><span>{{ s.heading_2 }}</span></span>{%- endif -%}
+        </h2>
+      </div>
+
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign b = block.settings
+          case forloop.index
+            when 1
+              assign shape = 'wide'
+              assign w = 1600
+              assign sizes = '(min-width: 761px) 58vw, 100vw'
+            when 2
+              assign shape = 'tall'
+              assign w = 1200
+              assign sizes = '(min-width: 761px) 42vw, 55vw'
+            else
+              assign shape = 'square'
+              assign w = 900
+              assign sizes = '(min-width: 761px) 33vw, 45vw'
+          endcase
+          assign p = b.product
+          assign href = b.link
+          if href == blank and p != blank
+            assign href = p.url
+          endif
+          if href == blank
+            assign href = fallback
+          endif
+          assign key = b.key | strip
+          if key == blank and p != blank
+            assign key = p.handle
+          endif
+          assign has_product = false
+          if p != blank or b.name != blank
+            assign has_product = true
+          endif
+          if key == blank and has_product
+            assign key = block.id
+          endif
+          assign alt = b.image_alt | default: b.image.alt
+        -%}
+        {%- if has_product -%}
+          {%- render 'blko-lv3-product-data', key: key, product: p, name: b.name, size: b.size, price: b.price, line: b.line, labels: b.labels, img: b.image -%}
+        {%- endif -%}
+        <article class="s-col__tile s-col__tile--{{ shape }}" data-rv="settle"{% unless forloop.first %} data-rv-delay="{{ forloop.index0 }}"{% endunless %} {{ block.shopify_attributes }}>
+          {%- if b.image != blank -%}
+            {{ b.image | image_url: width: w | image_tag: alt: alt, loading: 'lazy', widths: '450, 700, 900, 1200, 1600', sizes: sizes }}
+          {%- else -%}
+            {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph' }}
+          {%- endif -%}
+          <div class="s-col__cap">
+            {%- if b.title != blank -%}<h3>{{ b.title | escape }}</h3>{%- endif -%}
+            {%- if b.link_label != blank -%}<a href="{{ href }}"{% if has_product and b.quick_view %} data-quick="{{ key | escape }}"{% endif %}>{{ b.link_label | escape }}</a>{%- endif -%}
+          </div>
+        </article>
+      {%- endfor -%}
+
+      {%- if s.note != blank or s.note_link_label != blank -%}
+        <div class="s-col__note" data-rv="blur" data-rv-delay="3">
+          {%- if s.note != blank -%}<p>{{ s.note | escape }}</p>{%- endif -%}
+          {%- if s.note_link_label != blank -%}<a class="link" href="{{ s.note_link | default: fallback }}">{{ s.note_link_label | escape }}</a>{%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Shop by skin collage",
+  "class": "blko-lv3-section-collage",
+  "max_blocks": 3,
+  "settings": [
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "by-skin" },
+    { "type": "text", "id": "label", "label": "Section name (screen readers)", "default": "Shop by skin" },
+    { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "Pick by the skin," },
+    { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "info": "Use italic for the emphasised word.", "default": "not the <em>scent.</em>" },
+    { "type": "textarea", "id": "note", "label": "Note card", "default": "Everything is fragrance-free except Chamomile wash, and that one says so on the front." },
+    { "type": "text", "id": "note_link_label", "label": "Note link label", "default": "Compare all four" },
+    { "type": "url", "id": "note_link", "label": "Note link", "info": "Blank jumps to the fallback anchor below." },
+    { "type": "text", "id": "fallback_anchor", "label": "Fallback anchor", "info": "Section id used when a link is blank, e.g. compare.", "default": "compare" }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Photo tile",
+      "settings": [
+        { "type": "paragraph", "content": "Tile 1 is wide, tile 2 tall, tile 3 square." },
+        { "type": "image_picker", "id": "image", "label": "Photo" },
+        { "type": "text", "id": "image_alt", "label": "Photo description", "default": "A toddler sitting in a kitchen sink bath, reaching for the tap" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Little lotion, ages 1 and up" },
+        { "type": "text", "id": "link_label", "label": "Link label", "default": "Shop Little lotion" },
+        { "type": "url", "id": "link", "label": "Link", "info": "Blank uses the product page, or the fallback anchor." },
+        { "type": "checkbox", "id": "quick_view", "label": "Open quick view on click", "default": true },
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "text", "id": "key", "label": "Product key", "info": "Shared with the other sections' buttons. Blank uses the product handle.", "default": "little" },
+        { "type": "header", "content": "Demo product (no product picked)" },
+        { "type": "text", "id": "name", "label": "Name", "info": "Blank with no product: a plain link, no quick view.", "default": "Little lotion" },
+        { "type": "text", "id": "size", "label": "Size", "default": "150 ml" },
+        { "type": "text", "id": "price", "label": "Price in cents", "default": "1400" },
+        { "type": "text", "id": "line", "label": "Quick view line", "default": "Soft, light oat lotion for ages 1 and up. Fragrance-free." },
+        { "type": "text", "id": "labels", "label": "Labels", "info": "Comma list: best, ff, new, sale.", "default": "new,ff" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop by skin collage",
+      "blocks": [
+        { "type": "tile" },
+        {
+          "type": "tile",
+          "settings": {
+            "image_alt": "Fingertips resting on bare neck and collarbone", "title": "For skin that flares", "link_label": "Shop Calm wash",
+            "key": "calm", "name": "Calm wash", "size": "400 ml", "price": "1800",
+            "line": "Everyday, eczema-prone skin. Colloidal oat and glycerin.", "labels": "best,ff"
+          }
+        },
+        {
+          "type": "tile",
+          "settings": {
+            "image_alt": "Two feet resting on the rim of a bath full of soft foam", "title": "Winter-dry shins", "link_label": "Shop Rich wash",
+            "key": "rich", "name": "Rich wash", "size": "400 ml", "price": "2000",
+            "line": "Very dry or winter skin. Thicker, almost a lotion.", "labels": "ff"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

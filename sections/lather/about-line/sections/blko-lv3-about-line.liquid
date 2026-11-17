@@ -1,0 +1,161 @@
+{%- comment -%}
+  Lather v3, About: the line (home-v3/pages/about/40-line.html). Product groups in columns; each row opens the
+  quick view. Blocks: a "group" starts a column, the "product" blocks after it fill that column (products before the first group are not shown). A group can end with
+  a note and an add button for its first product ([name] and [price] in the button label).
+  A picked product wins (title, price, image, variant); blank, the demo settings keep the HTML look and the demo bag.
+{%- endcomment -%}
+{{ 'blko-lv3-about-line.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+  assign uid = 'aboutLineTitle-' | append: section.id
+-%}
+{%- for block in section.blocks -%}
+  {%- if block.type == 'product' -%}
+    {%- assign b = block.settings -%}
+    {%- liquid
+      if b.product != blank
+        assign k = b.product.handle
+      else
+        assign k = b.key | default: block.id
+      endif
+    -%}
+    {%- render 'blko-lv3-product-data', key: k, product: b.product, name: b.name, size: b.size, price: b.price, line: b.line, labels: b.labels, ing: b.ing, img: b.image, hover: b.hover -%}
+  {%- endif -%}
+{%- endfor -%}
+
+<section class="s-about-line" id="{{ s.anchor | default: 'line' | handleize }}" aria-labelledby="{{ uid }}">
+  <div class="wrap">
+    <div class="s-about-line__head">
+      <h2 class="h2" id="{{ uid }}" data-rv="line">
+        {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
+        {%- if s.heading_2 != blank -%}<span class="ln"><span>{{ s.heading_2 }}</span></span>{%- endif -%}
+      </h2>
+      {%- if s.text != blank -%}<p>{{ s.text | escape }}</p>{%- endif -%}
+    </div>
+    <div class="s-about-line__groups">
+      {%- for group in section.blocks -%}
+        {%- if group.type == 'group' -%}
+          {%- liquid
+            assign start = forloop.index
+            assign g_first = ''
+            assign g_first_name = ''
+            assign g_first_price = ''
+          -%}
+          <div class="s-about-line__group" {{ group.shopify_attributes }}>
+            {%- if group.settings.title != blank -%}<h3>{{ group.settings.title | escape }}</h3>{%- endif -%}
+            <ul class="s-about-line__items">
+              {%- for block in section.blocks offset: start -%}
+                {%- if block.type == 'group' -%}{%- break -%}{%- endif -%}
+                {%- liquid
+                  assign b = block.settings
+                  if b.product != blank
+                    assign k = b.product.handle
+                    assign nm = b.product.title
+                    assign pr = b.product.selected_or_first_available_variant.price
+                    assign sz = b.size
+                    if sz == blank and b.product.has_only_default_variant == false
+                      assign sz = b.product.selected_or_first_available_variant.title
+                    endif
+                  else
+                    assign k = b.key | default: block.id
+                    assign nm = b.name
+                    assign pr = b.price | plus: 0
+                    assign sz = b.size
+                  endif
+                  if g_first == blank
+                    assign g_first = k
+                    assign g_first_name = nm
+                    assign g_first_price = pr | money_without_trailing_zeros
+                  endif
+                  assign qv = s.quick_label | replace: '[name]', nm
+                -%}
+                <li class="s-about-line__item" {{ block.shopify_attributes }}>
+                  {%- if b.image != blank -%}
+                    {{ b.image | image_url: width: 180 | image_tag: width: 60, height: 75, widths: '60, 120, 180', sizes: '60px', loading: 'lazy', alt: '' }}
+                  {%- elsif b.product != blank and b.product.featured_media != blank -%}
+                    {{ b.product.featured_media | image_url: width: 180 | image_tag: width: 60, height: 75, widths: '60, 120, 180', sizes: '60px', loading: 'lazy', alt: '' }}
+                  {%- else -%}
+                    {{ 'product-1' | placeholder_svg_tag: 'blko-lv3-ph' }}
+                  {%- endif -%}
+                  <div><strong>{{ nm | escape }}</strong>{%- if sz != blank -%}<span class="small">{{ sz | escape }}</span>{%- endif -%}</div>
+                  <button class="s-about-line__open" type="button" data-quick="{{ k | escape }}" aria-label="{{ qv | escape }}">{{ s.open_icon | default: '↗' | escape }}</button>
+                </li>
+              {%- endfor -%}
+            </ul>
+            {%- render 'blko-lv3-about-line-start', note: group.settings.note, add: group.settings.add_label, key: g_first, name: g_first_name, price: g_first_price -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+    {%- if s.footer_text != blank or s.button_label != blank -%}
+      <div class="s-about-line__footer">
+        {%- if s.footer_text != blank -%}<p>{{ s.footer_text | escape }}</p>{%- endif -%}
+        {%- if s.button_label != blank -%}<a class="btn btn--primary" href="{{ s.button_link | default: routes.all_products_collection_url }}">{{ s.button_label | escape }}</a>{%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lather about line",
+  "class": "blko-lv3-section-about-line",
+  "max_blocks": 16,
+  "settings": [
+    { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "Less on the shelf." },
+    { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "More <em>clarity.</em>", "info": "Italic text shows in the accent style." },
+    { "type": "textarea", "id": "text", "label": "Intro", "default": "Nine products. Choose a wash, then the texture that feels right after it." },
+    { "type": "text", "id": "quick_label", "label": "Quick view label ([name])", "default": "Quick view [name]" },
+    { "type": "text", "id": "open_icon", "label": "Quick view icon", "default": "↗" },
+    { "type": "header", "content": "Footer" },
+    { "type": "text", "id": "footer_text", "label": "Text", "default": "One product is a perfectly good place to begin. Find what suits your skin, and leave the rest." },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Find your body care" },
+    { "type": "url", "id": "button_link", "label": "Button link", "info": "Blank: all products." },
+    { "type": "header", "content": "Section" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "line" }
+  ],
+  "blocks": [
+    {
+      "type": "group",
+      "name": "Group",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Wash" },
+        { "type": "textarea", "id": "note", "label": "Note under the list" },
+        { "type": "text", "id": "add_label", "label": "Add button ([name], [price])", "info": "Adds the group's first product. Blank: no button." }
+      ]
+    },
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "image_picker", "id": "image", "label": "Thumbnail", "info": "Blank: the product's featured image." },
+        { "type": "image_picker", "id": "hover", "label": "Quick view second image" },
+        { "type": "header", "content": "Demo product (used while no product is picked)" },
+        { "type": "text", "id": "key", "label": "Key", "default": "calm", "info": "Matches other sections, e.g. calm, soft, rich, chamomile, lotion, cream, milk, little, bar." },
+        { "type": "text", "id": "name", "label": "Name", "default": "Calm wash" },
+        { "type": "text", "id": "size", "label": "Size", "default": "400 ml" },
+        { "type": "text", "id": "price", "label": "Price in cents", "default": "1800" },
+        { "type": "text", "id": "line", "label": "One-line description", "default": "Everyday, eczema-prone skin. Colloidal oat and glycerin." },
+        { "type": "text", "id": "labels", "label": "Labels", "default": "best,ff", "info": "Comma list: best, ff, new, sale." },
+        { "type": "textarea", "id": "ing", "label": "Ingredients", "default": "Water, glycerin, coco-glucoside, decyl glucoside, colloidal oat, shea butter, sunflower seed oil, xanthan gum, citric acid, sodium benzoate. pH 5.5." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather about line",
+      "blocks": [
+        { "type": "group" },
+        { "type": "product" },
+        { "type": "product", "settings": { "key": "soft", "name": "Soft wash", "size": "400 ml", "price": "1800", "line": "Our gentlest wash for sensitive skin. Low foam, rinses clean.", "labels": "new,ff", "ing": "Water, glycerin, coco-glucoside, colloidal oat, oat oil, sunflower seed oil, xanthan gum, citric acid, sodium benzoate. Fragrance-free. pH 5.5." } },
+        { "type": "group", "settings": { "title": "Moisturise" } },
+        { "type": "product", "settings": { "key": "lotion", "name": "Calm lotion", "size": "250 ml", "price": "2200", "line": "Light lotion for damp skin, straight after the wash.", "labels": "ff", "ing": "Water, glycerin, shea butter, colloidal oat, squalane, ceramide NP, cetearyl alcohol, xanthan gum." } },
+        { "type": "group", "settings": { "title": "Start small", "note": "A face-and-body bar, for a simpler first step. No need to change your whole shelf.", "add_label": "Add [name], [price]" } },
+        { "type": "product", "settings": { "key": "bar", "name": "Oat bar", "size": "120 g", "price": "900", "line": "Oat milk soap bar for face and body. Rich lather that rinses soft.", "labels": "best,ff", "ing": "Sodium olivate, sodium cocoate, oat milk, colloidal oat, shea butter, glycerin." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

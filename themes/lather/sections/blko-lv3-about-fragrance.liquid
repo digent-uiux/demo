@@ -1,0 +1,98 @@
+{%- comment -%}
+  Lather v3, About: fragrance (home-v3/pages/about/20-fragrance.html). Dark band: intro on the left, a list of
+  choices on the right. Each choice is a block with an optional link; a choice can also open a product's quick view
+  (pick a product, or give a product key already on the page, e.g. 'chamomile' from the line section).
+{%- endcomment -%}
+{{ 'blko-lv3-about-fragrance.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+  assign uid = 'aboutFragranceTitle-' | append: section.id
+-%}
+{%- for block in section.blocks -%}
+  {%- if block.settings.quick_product != blank -%}
+    {%- render 'blko-lv3-product-data', key: block.settings.quick_product.handle, product: block.settings.quick_product -%}
+  {%- endif -%}
+{%- endfor -%}
+
+<section class="s-about-fragrance" id="{{ s.anchor | default: 'fragrance' | handleize }}" aria-labelledby="{{ uid }}">
+  <div class="wrap s-about-fragrance__layout">
+    <div class="s-about-fragrance__intro">
+      <h2 class="h2" id="{{ uid }}" data-rv="line">
+        {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
+        {%- if s.heading_2 != blank -%}<span class="ln"><span>{{ s.heading_2 }}</span></span>{%- endif -%}
+      </h2>
+      {%- if s.text != blank -%}<p>{{ s.text | escape }}</p>{%- endif -%}
+    </div>
+    {%- if section.blocks.size > 0 -%}
+      <ul class="s-about-fragrance__choices">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign b = block.settings
+            assign d = forloop.index0 | at_most: 3
+            assign qk = b.quick_key
+            if b.quick_product != blank
+              assign qk = b.quick_product.handle
+            endif
+            assign href = b.link
+            if href == blank
+              if b.quick_product != blank
+                assign href = b.quick_product.url
+              else
+                assign href = routes.all_products_collection_url
+              endif
+            endif
+          -%}
+          <li data-rv="blur"{% if d > 0 %} data-rv-delay="{{ d }}"{% endif %} {{ block.shopify_attributes }}>
+            {%- if b.title != blank -%}<h3>{{ b.title | escape }}</h3>{%- endif -%}
+            {%- if b.text != blank -%}<p>{{ b.text | escape }}</p>{%- endif -%}
+            {%- if b.link_label != blank -%}
+              <a class="link" href="{{ href }}"{% if qk != blank %} data-quick="{{ qk | escape }}" aria-label="{{ b.quick_aria | default: b.link_label | escape }}"{% endif %}>{{ b.link_label | escape }}</a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lather about fragrance",
+  "class": "blko-lv3-section-about-fragrance",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "Fragrance-free." },
+    { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "On <em>purpose.</em>", "info": "Italic text shows in the accent style." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "A body wash doesn't need a perfume to do its job. We keep fragrance out of most of our line, so there's one less thing to think about." },
+    { "type": "header", "content": "Section" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "fragrance" }
+  ],
+  "blocks": [
+    {
+      "type": "choice",
+      "name": "Choice",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "The everyday choice" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Calm, Soft and Rich washes have no added fragrance. So do our lotions, cream, milk and Oat bar. Choose by how your skin feels and the texture you prefer." },
+        { "type": "text", "id": "link_label", "label": "Link label", "default": "Find a fragrance-free fit" },
+        { "type": "url", "id": "link", "label": "Link", "info": "Blank: all products (or the picked product)." },
+        { "type": "header", "content": "Quick view (optional)" },
+        { "type": "product", "id": "quick_product", "label": "Product", "info": "The link opens this product's quick view." },
+        { "type": "text", "id": "quick_key", "label": "Demo product key", "info": "Without a product: a key shown elsewhere on the page, e.g. chamomile." },
+        { "type": "text", "id": "quick_aria", "label": "Quick view label (screen readers)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather about fragrance",
+      "blocks": [
+        { "type": "choice" },
+        { "type": "choice", "settings": { "title": "One scented exception", "text": "Chamomile wash contains 0.2% chamomile flower oil. It's our only scented product. Its ingredient information names the oil and allergen, so you can make the choice for yourself.", "link_label": "Meet Chamomile wash", "quick_key": "chamomile", "quick_aria": "Quick view Chamomile wash" } },
+        { "type": "choice", "settings": { "title": "Your skin gets the last word", "text": "Fragrance-free doesn't mean every ingredient will suit every person. Read the list and try a small patch first. If something doesn't agree with your skin, stop using it.", "link_label": "Read our skin-reaction help" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

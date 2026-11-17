@@ -1,370 +1,399 @@
 {
   "sections": {
-    "pdp-product-main": {
-      "type": "blko-pdp-product-main",
+    "main": {
+      "type": "blko-lv3-product-buy",
       "settings": {
-        "breadcrumb_category": "Bar soap",
-        "price_note": "5 oz bar",
-        "shade_help_label": "Torn between scents? Take the quiz.",
-        "one_time_label": "One-time purchase",
-        "plan_legend": "How do you want it?",
-        "ship_note": "Free shipping over $55 · 30-day satisfaction guarantee"
+        "key": "calm",
+        "crumb_home": "Home",
+        "crumb_label": "Body wash",
+        "crumb_link": "/collections/all",
+        "crumb_aria": "Breadcrumb",
+        "show_caption": true,
+        "thumb_labels": true,
+        "thumbs_aria": "Choose product image",
+        "rating_label": "Read the skin notes",
+        "rating_link": "#pdp-reviews",
+        "unit_tpl": "[amount] per [unit]",
+        "max_qty": 20,
+        "qty_label": "Quantity",
+        "less_aria": "Decrease quantity",
+        "more_aria": "Increase quantity",
+        "add_label": "Add to bag, [amount]",
+        "sold_out": "Sold out",
+        "qty_note": "[n] bottles, [amount] total.",
+        "mobile_bar": true,
+        "mobile_add": "Add to bag",
+        "jump_aria": "Product details",
+        "name": "Calm wash",
+        "size": "400 ml",
+        "price": "1800",
+        "labels": "best,ff",
+        "line": "A soft, everyday body wash for dry, tight skin. Colloidal oat and glycerin, without the added scent.",
+        "ing": "Water, glycerin, coco-glucoside, decyl glucoside, colloidal oat, shea butter, sunflower seed oil, xanthan gum, citric acid, sodium benzoate. pH 5.5.",
+        "unit_text": "$4.50 per 100 ml",
+        "option_legend": "Size",
+        "option_label": "400 ml bottle",
+        "option2_label": "1 L refill",
+        "option2_price": "3600",
+        "option2_unit": "$3.60 per 100 ml",
+        "option2_available": false
       },
       "blocks": {
-        "block-1": {
-          "type": "accordion",
+        "buy_1": {
+          "type": "image",
           "settings": {
-            "label": "At a glance",
-            "text": "Smells like: cedar, smoke and a little suede. Grit: medium. Featuring: shea butter, coconut oil and sustainably sourced palm-free soap base."
+            "image": "shopify://shop_images/t-calm.jpg",
+            "label": "The bottle",
+            "caption": "The bottle, 400 ml",
+            "alt": "Calm wash, 400 ml clear bottle with a moss pump"
           }
         },
-        "block-2": {
-          "type": "accordion",
+        "buy_2": {
+          "type": "image",
           "settings": {
-            "label": "Ingredients",
-            "text": "Saponified coconut, olive and sunflower oils, shea butter, glycerin, essential oils and fragrance, ground pumice for the grit, and nothing from our no-go list. The full list is printed on every wrapper."
+            "image": "shopify://shop_images/h-calm.jpg",
+            "label": "The lather",
+            "caption": "Soft foam, a clean rinse",
+            "alt": "Calm wash with soft foam on wet travertine"
           }
         },
-        "block-3": {
-          "type": "accordion",
+        "buy_3": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/s-calm-set.jpg",
+            "label": "The routine",
+            "caption": "Calm wash with Calm lotion",
+            "alt": "Calm wash and Calm lotion together on wet stone"
+          }
+        },
+        "buy_4": {
+          "type": "fact",
+          "settings": {
+            "title": "Fragrance-free",
+            "text": "No added scent"
+          }
+        },
+        "buy_5": {
+          "type": "fact",
+          "settings": {
+            "title": "pH 5.5",
+            "text": "A gentle rinse"
+          }
+        },
+        "buy_6": {
+          "type": "fact",
+          "settings": {
+            "title": "400 ml",
+            "text": "One everyday bottle"
+          }
+        },
+        "buy_7": {
+          "type": "note",
+          "settings": {
+            "text": "<p>Free shipping over $40. <a href=\"/pages/help#shipping\">Shipping details</a></p>"
+          }
+        },
+        "buy_8": {
+          "type": "note",
+          "settings": {
+            "text": "<p>Skin reacted? We refund your first bottle, used or not. <a href=\"/pages/help#returns\">How it works</a></p>"
+          }
+        },
+        "buy_9": {
+          "type": "jump",
+          "settings": {
+            "label": "Every ingredient",
+            "link": "#pdp-ingredients"
+          }
+        },
+        "buy_10": {
+          "type": "jump",
           "settings": {
             "label": "How to use",
-            "text": "Wet the bar and your hands, work up a lather and rinse. Set it somewhere that drains so it dries between uses."
+            "link": "#pdp-use"
+          }
+        },
+        "buy_11": {
+          "type": "jump",
+          "settings": {
+            "label": "Make it a routine",
+            "link": "#pdp-pair"
+          }
+        },
+        "buy_sub": {
+          "type": "subscribe",
+          "settings": {
+            "qty_note_sub": "[n] bottles, [amount] each delivery.",
+            "plan_legend": "How often",
+            "once_label": "One time",
+            "sub_label": "Subscribe and save [percent]",
+            "sub_label_plain": "Subscribe",
+            "sub_terms": "Save [percent] on every refill. Skip or cancel any time.",
+            "cadence_aria": "Delivers every",
+            "sub_note": "[size], [plan], save [percent]",
+            "demo_weeks": "4,6,8",
+            "demo_default": "6",
+            "sub_percent": "10",
+            "plan_label": "Every [n] weeks"
+          }
+        },
+        "buy_notify": {
+          "type": "notify",
+          "settings": {
+            "notify_btn": "Email me when it\u2019s back",
+            "notify_note": "The [size] is sold out. Leave your email and we\u2019ll write once when it\u2019s back.",
+            "notify_label": "Email",
+            "notify_placeholder": "you@example.com",
+            "notify_submit": "Notify me",
+            "notify_bad": "Please enter a valid email.",
+            "notify_done": "Thanks. We\u2019ll email [email] once the [size] is back.",
+            "notify_posted": "Thanks. We\u2019ll email you once it\u2019s back.",
+            "notify_again": "Use another email",
+            "notify_tag": "back-in-stock",
+            "notify_field": "Back in stock"
           }
         }
       },
       "block_order": [
-        "block-1",
-        "block-2",
-        "block-3"
+        "buy_1",
+        "buy_2",
+        "buy_3",
+        "buy_4",
+        "buy_5",
+        "buy_6",
+        "buy_sub",
+        "buy_notify",
+        "buy_7",
+        "buy_8",
+        "buy_9",
+        "buy_10",
+        "buy_11"
       ]
     },
-    "pdp-ticker": {
-      "type": "blko-pdp-ticker",
-      "settings": {},
-      "blocks": {
-        "block-1": {
-          "type": "message",
-          "settings": {
-            "text": "COLD PROCESS"
-          }
-        },
-        "block-2": {
-          "type": "message",
-          "settings": {
-            "text": "PLANT OILS"
-          }
-        },
-        "block-3": {
-          "type": "message",
-          "settings": {
-            "text": "SKIN-TESTED"
-          }
-        },
-        "block-4": {
-          "type": "message",
-          "settings": {
-            "text": "RESPONSIBLY SOURCED"
-          }
-        }
-      },
-      "block_order": [
-        "block-1",
-        "block-2",
-        "block-3",
-        "block-4"
-      ]
-    },
-    "pdp-claims": {
-      "type": "blko-pdp-claims",
+    "ingredients": {
+      "type": "blko-lv3-product-ingredients",
       "settings": {
-        "kicker": "Why it works",
-        "heading": "Three things a good bar does"
+        "heading_1": "A list you",
+        "heading_2": "can <em>read.</em>",
+        "text": "What goes in matters. So does what we leave out: added fragrance, SLS and colour.",
+        "summary": "Read the complete ingredient list",
+        "full_list": "Water, glycerin, coco-glucoside, decyl glucoside, colloidal oat, shea butter, sunflower seed oil, xanthan gum, citric acid, sodium benzoate. pH 5.5.",
+        "note": "Contains oat. Check the full list against your known allergies before using.",
+        "anchor": "pdp-ingredients"
       },
       "blocks": {
-        "block-1": {
-          "type": "value",
+        "ing_1": {
+          "type": "ingredient",
           "settings": {
-            "title": "Moisture stays put",
-            "text": "Shea butter and sunflower oil cushion your skin so it does not feel tight after drying off."
+            "title": "Colloidal oat",
+            "text": "Finely milled oat, in a wash made for everyday dry skin."
           }
         },
-        "block-2": {
-          "type": "value",
+        "ing_2": {
+          "type": "ingredient",
           "settings": {
-            "number": "02",
-            "title": "A lather that lasts",
-            "text": "The bar stays firm instead of melting into mush, so one lasts two to three weeks of daily showers."
+            "title": "Glycerin",
+            "text": "A familiar humectant in the formula, for a comfortable wash."
           }
         },
-        "block-3": {
-          "type": "value",
+        "ing_3": {
+          "type": "ingredient",
           "settings": {
-            "number": "03",
-            "title": "Scent with staying power",
-            "text": "Essential oils and plant-derived fragrance linger on skin well past your first coffee."
+            "title": "Gentle cleansers",
+            "text": "Coco-glucoside and decyl glucoside make the soft foam."
+          }
+        },
+        "ing_4": {
+          "type": "ingredient",
+          "settings": {
+            "title": "No added scent",
+            "text": "Fragrance-free means no perfume or essential oil added to Calm wash."
           }
         }
       },
       "block_order": [
-        "block-1",
-        "block-2",
-        "block-3"
+        "ing_1",
+        "ing_2",
+        "ing_3",
+        "ing_4"
       ]
     },
-    "pdp-usage": {
-      "type": "blko-pdp-usage",
+    "use": {
+      "type": "blko-lv3-product-use",
       "settings": {
-        "image_alt": "A man lathering his forearms at a sink",
-        "kicker": "From the workshop",
-        "heading": "Notes on getting the most from your bar",
-        "text": "Start with a quick rinse, rub the bar between your palms and wash from the shoulders down. Rough patches like elbows and heels can take a second pass. Let the bar air dry afterward and it will keep its shape."
+        "heading_1": "Keep the shower",
+        "heading_2": "<em>simple.</em>",
+        "text": "Soft foam. A thorough rinse. Then a little lotion while skin is still damp.",
+        "use_metafield": true,
+        "note": "New to your skin? Try a small area first. Stop using if irritation occurs.",
+        "link_label": "A little help for reactive skin",
+        "link": "/pages/help#returns",
+        "anchor": "pdp-use"
+      },
+      "blocks": {
+        "step_1": {
+          "type": "step",
+          "settings": {
+            "title": "Wet, then lather",
+            "text": "Work a small amount between wet palms. Wash gently with lukewarm water."
+          }
+        },
+        "step_2": {
+          "type": "step",
+          "settings": {
+            "title": "Rinse it away",
+            "text": "Rinse the foam off fully. Skip the hard scrubbing and pat dry with a soft towel."
+          }
+        },
+        "step_3": {
+          "type": "step",
+          "settings": {
+            "title": "Follow with lotion",
+            "text": "Keep Calm lotion nearby. Smooth it over damp skin after your shower."
+          }
+        }
+      },
+      "block_order": [
+        "step_1",
+        "step_2",
+        "step_3"
+      ]
+    },
+    "pair": {
+      "type": "blko-lv3-product-pair",
+      "settings": {
+        "heading_1": "Wash, then",
+        "heading_2": "<em>lotion.</em>",
+        "text": "The Calm routine. Two fragrance-free products, one place beside the shower.",
+        "image": "shopify://shop_images/c-lotion.jpg",
+        "image_alt": "Calm lotion, 250 ml oat bottle with a moss pump",
+        "pct": 15,
+        "save_text": "[pct]% off together",
+        "button": "Add the Calm routine, [amount]",
+        "set_name": "Calm routine set",
+        "set_note": "Calm wash 400 ml + Calm lotion 250 ml, 15% off",
+        "set_image": "shopify://shop_images/s-calm-set.jpg",
+        "small_text": "One 400 ml wash and one 250 ml lotion. No subscription.",
+        "quick_label": "Just looking for the lotion? Quick view",
+        "pair_labels": "ff",
+        "pair_key": "lotion",
+        "pair_name": "Calm lotion",
+        "pair_size": "250 ml",
+        "pair_price": "2200",
+        "pair_line": "Light lotion for damp skin, straight after the wash.",
+        "pair_ing": "Water, glycerin, shea butter, colloidal oat, squalane, ceramide NP, cetearyl alcohol, xanthan gum.",
+        "main_key": "calm",
+        "main_name": "Calm wash",
+        "main_size": "400 ml",
+        "main_price": "1800",
+        "anchor": "pdp-pair"
       }
     },
-    "pdp-pillars": {
-      "type": "blko-pdp-pillars",
+    "recent": {
+      "type": "blko-lv3-recent",
       "settings": {
-        "eyebrow": "The short list",
-        "heading": "What we put in, what we leave out"
-      },
-      "blocks": {
-        "block-1": {
-          "type": "benefit",
-          "settings": {
-            "title": "Mostly plants",
-            "text": "Ninety-eight percent of what is in the bar comes from natural origins."
-          }
-        },
-        "block-2": {
-          "type": "benefit",
-          "settings": {
-            "icon": "drop",
-            "title": "Nothing sketchy",
-            "text": "No aluminum, parabens, phthalates or synthetic dyes make it past the door."
-          }
-        },
-        "block-3": {
-          "type": "benefit",
-          "settings": {
-            "icon": "peak",
-            "title": "Made for men",
-            "text": "Scented, sized and scrubbed for the way guys really wash."
-          }
-        }
-      },
-      "block_order": [
-        "block-1",
-        "block-2",
-        "block-3"
-      ]
-    },
-    "pdp-faq": {
-      "type": "blko-pdp-faq",
-      "settings": {
-        "eyebrow": "You asked",
-        "heading": "Everything about this bar"
-      },
-      "blocks": {
-        "block-1": {
-          "type": "question",
-          "settings": {
-            "label": "What makes a cold-process bar different?",
-            "text": "It is mixed at a low temperature and cured for weeks, which keeps natural glycerin in the soap and leaves skin softer than a machine-milled bar."
-          }
-        },
-        "block-2": {
-          "type": "question",
-          "settings": {
-            "label": "How long does one bar last?",
-            "text": "Used daily and kept dry, about two to three weeks."
-          }
-        },
-        "block-3": {
-          "type": "question",
-          "settings": {
-            "label": "Is it okay for sensitive skin?",
-            "text": "Many customers with sensitive skin use it daily. If you react easily, start with the zero-grit moisture bar and patch-test first."
-          }
-        },
-        "block-4": {
-          "type": "question",
-          "settings": {
-            "label": "Is it vegan?",
-            "text": "Most bars are plant-based, but a few limited editions may include beeswax or honey. Check the ingredient list on each page."
-          }
-        },
-        "block-5": {
-          "type": "question",
-          "settings": {
-            "label": "How strong is the scent?",
-            "text": "Strong enough that you will smell it in the shower and faintly through the evening. It will not announce you from across the room."
-          }
-        },
-        "block-6": {
-          "type": "question",
-          "settings": {
-            "label": "When will it arrive?",
-            "text": "Orders leave in one to two business days and take three to seven days to arrive within the United States."
-          }
-        }
-      },
-      "block_order": [
-        "block-1",
-        "block-2",
-        "block-3",
-        "block-4",
-        "block-5",
-        "block-6"
-      ]
-    },
-    "pdp-reviews": {
-      "type": "blko-pdp-reviews",
-      "settings": {
-        "eyebrow": "What guys say",
-        "average": "4.5",
-        "summary": "28,412 reviews · 88% would buy again",
-        "list_heading": "Recent reviews"
-      },
-      "blocks": {
-        "block-1": {
-          "type": "bar",
-          "settings": {
-            "percent": 71
-          }
-        },
-        "block-2": {
-          "type": "bar",
-          "settings": {
-            "label": "4 stars",
-            "percent": 17
-          }
-        },
-        "block-3": {
-          "type": "bar",
-          "settings": {
-            "label": "3 stars",
-            "percent": 7
-          }
-        },
-        "block-4": {
-          "type": "bar",
-          "settings": {
-            "label": "2 stars",
-            "percent": 3
-          }
-        },
-        "block-5": {
-          "type": "bar",
-          "settings": {
-            "label": "1 star",
-            "percent": 2
-          }
-        },
-        "block-6": {
-          "type": "filter",
-          "settings": {}
-        },
-        "block-7": {
-          "type": "filter",
-          "settings": {
-            "label": "Scent",
-            "key": "scent"
-          }
-        },
-        "block-8": {
-          "type": "filter",
-          "settings": {
-            "label": "Lather",
-            "key": "lather"
-          }
-        },
-        "block-9": {
-          "type": "filter",
-          "settings": {
-            "label": "With photos",
-            "key": "photos"
-          }
-        },
-        "block-10": {
-          "type": "filter",
-          "settings": {
-            "label": "Value",
-            "key": "value"
-          }
-        },
-        "block-11": {
-          "type": "review",
-          "settings": {
-            "title": "Smells like a lodge in the hills",
-            "text": "The scent is warm without being sweet. A week in, my towel still smells like it.",
-            "footer": "Aaron K. · 1 week ago",
-            "tags": "scent photos",
-            "caption": "Cabin Cedar · photo review"
-          }
-        },
-        "block-12": {
-          "type": "review",
-          "settings": {
-            "title": "Lathers like crazy",
-            "text": "A thick, creamy lather in about ten seconds. I stopped using body wash entirely.",
-            "footer": "Nate B. · 3 weeks ago",
-            "tags": "lather",
-            "caption": ""
-          }
-        },
-        "block-13": {
-          "type": "review",
-          "settings": {
-            "title": "A bit gritty on my back",
-            "text": "Great bar, but the medium grit is a lot for sensitive spots. I switched to the aloe bar for my chest.",
-            "footer": "Omar S. · 2 months ago",
-            "tags": "value",
-            "caption": "",
-            "rating": 4
-          }
-        }
-      },
-      "block_order": [
-        "block-1",
-        "block-2",
-        "block-3",
-        "block-4",
-        "block-5",
-        "block-6",
-        "block-7",
-        "block-8",
-        "block-9",
-        "block-10",
-        "block-11",
-        "block-12",
-        "block-13"
-      ]
-    },
-    "pdp-complete-routine": {
-      "type": "blko-pdp-complete-routine",
-      "settings": {
-        "eyebrow": "Pair it with",
-        "heading": "Wash, protect, finish",
-        "text": "A bar, a stick and a cologne that share the same scent family."
+        "heading": "Recently viewed",
+        "clear": "Clear",
+        "cleared": "Viewing history cleared.",
+        "quick": "Quick view",
+        "max": 4,
+        "editor_sample": true,
+        "demo_key": "calm",
+        "anchor": "pdp-recent"
       }
     },
-    "pdp-recently-viewed": {
-      "type": "blko-pdp-recently-viewed",
+    "reviews": {
+      "type": "blko-lv3-product-reviews",
       "settings": {
-        "eyebrow": "Still shopping?",
-        "heading": "Back where you left off"
-      }
+        "heading_1": "The feel, in",
+        "heading_2": "your <em>words.</em>",
+        "text": "Skin is personal. Read the experience alongside the ingredient list, not instead of it.",
+        "stars_aria": "[n] out of 5 stars",
+        "foot": "Every skin responds differently. Need help choosing?",
+        "foot_link_label": "Talk to us",
+        "foot_link": "/pages/help",
+        "anchor": "pdp-reviews"
+      },
+      "blocks": {
+        "review_1": {
+          "type": "review",
+          "settings": {
+            "name": "Hannah K.",
+            "detail_1": "Eczema-prone skin",
+            "detail_2": "Using it for 6 months",
+            "rating": 5,
+            "quote": "\u201cFirst wash that doesn't leave my arms tight. No smell at all, which is the whole point.\u201d"
+          }
+        }
+      },
+      "block_order": [
+        "review_1"
+      ]
+    },
+    "questions": {
+      "type": "blko-lv3-product-questions",
+      "settings": {
+        "heading_1": "Before you",
+        "heading_2": "<em>choose.</em>",
+        "text": "A few things worth knowing before the bottle reaches your shower.",
+        "link_label": "All help and answers",
+        "link": "/pages/help"
+      },
+      "blocks": {
+        "question_1": {
+          "type": "question",
+          "settings": {
+            "question": "Does fragrance-free mean it has no smell?",
+            "answer": "<p>We add no perfume or essential oils to Calm wash. You may notice a faint scent from the ingredients themselves.</p>"
+          }
+        },
+        "question_2": {
+          "type": "question",
+          "settings": {
+            "question": "Can I use it if I have an oat allergy?",
+            "answer": "<p>Calm wash contains colloidal oat. Check the full ingredient list against your known allergies, and ask your healthcare professional if you are unsure.</p>"
+          }
+        },
+        "question_3": {
+          "type": "question",
+          "settings": {
+            "question": "How is Rich wash different?",
+            "answer": "<p>Rich wash has extra shea butter and oat oil, with a thicker, almost lotion-like feel. Calm wash is the everyday starting point.</p>",
+            "quick_label": "See Rich wash",
+            "quick_key": "rich",
+            "quick_name": "Rich wash",
+            "quick_size": "400 ml",
+            "quick_price": "2000",
+            "quick_labels": "ff",
+            "quick_line": "Very dry or winter skin. Thicker, almost a lotion.",
+            "quick_ing": "Calm wash plus extra shea butter and oat oil. Fragrance-free. pH 5.5.",
+            "quick_image": "shopify://shop_images/c-rich.jpg",
+            "quick_hover": "shopify://shop_images/h-rich.jpg"
+          }
+        },
+        "question_4": {
+          "type": "question",
+          "settings": {
+            "question": "What if my skin reacts?",
+            "answer": "<p>Stop using it and contact us. We refund your first bottle, used or not. <a href=\"/pages/help#returns\">Read the skin-reaction refund details</a>.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "question_1",
+        "question_2",
+        "question_3",
+        "question_4"
+      ]
     }
   },
   "order": [
-    "pdp-product-main",
-    "pdp-ticker",
-    "pdp-claims",
-    "pdp-usage",
-    "pdp-pillars",
-    "pdp-faq",
-    "pdp-reviews",
-    "pdp-complete-routine",
-    "pdp-recently-viewed"
+    "main",
+    "ingredients",
+    "use",
+    "pair",
+    "recent",
+    "reviews",
+    "questions"
   ]
 }

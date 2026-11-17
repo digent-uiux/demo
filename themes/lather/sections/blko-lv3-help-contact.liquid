@@ -1,0 +1,83 @@
+{%- comment -%}
+  Lather v3, Help: contact (home-v3/pages/help/30-contact.html). Intro and hours beside Shopify's contact form
+  ({% form 'contact' %}): name, email, topic, order number, message. Sent messages reach the store's sender email;
+  the status line shows the thank-you text after a successful post, or the form errors.
+{%- endcomment -%}
+{{ 'blko-lv3-help-contact.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+  assign uid = 'contact-title-' | append: section.id
+  assign fid = 'contact-' | append: section.id
+  assign topics = s.topics | newline_to_br | split: '<br />'
+-%}
+<section class="s-help-contact" id="{{ s.anchor | default: 'contact' | handleize }}" aria-labelledby="{{ uid }}">
+  <div class="wrap s-help-contact__in">
+    <div class="s-help-contact__intro">
+      <h2 class="h2" id="{{ uid }}" data-rv="line"><span class="ln"><span>{{ s.heading }}</span></span></h2>
+      {%- if s.text != blank -%}<p>{{ s.text | escape }}</p>{%- endif -%}
+      {%- if s.hours != blank -%}<p>{{ s.hours | escape | newline_to_br }}</p>{%- endif -%}
+      {%- if s.note != blank -%}<p class="small">{{ s.note | escape }}</p>{%- endif -%}
+    </div>
+    {%- form 'contact', id: 'help-contact-form', class: 's-help-contact__form' -%}
+      <div class="s-help-contact__field">
+        <label for="{{ fid }}-name">{{ s.l_name | escape }}</label>
+        <input id="{{ fid }}-name" name="contact[name]" autocomplete="name" required maxlength="100" value="{{ form.name | escape }}">
+      </div>
+      <div class="s-help-contact__field">
+        <label for="{{ fid }}-email">{{ s.l_email | escape }}</label>
+        <input id="{{ fid }}-email" name="contact[email]" type="email" autocomplete="email" required value="{{ form.email | escape }}"{% if form.errors contains 'email' %} aria-invalid="true" aria-describedby="{{ fid }}-status"{% endif %}>
+      </div>
+      <div class="s-help-contact__field">
+        <label for="{{ fid }}-topic">{{ s.l_topic | escape }}</label>
+        <select id="{{ fid }}-topic" name="contact[Topic]">
+          {%- for t in topics -%}
+            {%- assign tt = t | strip -%}
+            {%- if tt != blank -%}<option>{{ tt | escape }}</option>{%- endif -%}
+          {%- endfor -%}
+        </select>
+      </div>
+      <div class="s-help-contact__field">
+        <label for="{{ fid }}-order">{{ s.l_order | escape }}</label>
+        <input id="{{ fid }}-order" name="contact[Order number]" maxlength="60" autocomplete="off">
+      </div>
+      <div class="s-help-contact__field s-help-contact__wide">
+        <label for="{{ fid }}-message">{{ s.l_message | escape }}</label>
+        <textarea id="{{ fid }}-message" name="contact[body]" minlength="10" maxlength="2000" required>{{ form.body | escape }}</textarea>
+      </div>
+      <button class="btn btn--primary s-help-contact__wide" type="submit">{{ s.button | escape }}</button>
+      <p role="status" class="s-help-contact__wide{% if form.errors %} is-error{% endif %}" id="{{ fid }}-status">
+        {%- if form.posted_successfully? -%}
+          {{ s.success | escape }}
+        {%- elsif form.errors -%}
+          {{ form.errors | default_errors }}
+        {%- endif -%}
+      </p>
+    {%- endform -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lather help contact",
+  "class": "blko-lv3-section-help-contact",
+  "settings": [
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Ask a <em>person.</em>", "info": "Italic text shows in the accent style." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Tell us the product, your question, and your order number if you have one." },
+    { "type": "textarea", "id": "hours", "label": "Hours", "default": "Customer care\nWeekdays, 9–5 ET" },
+    { "type": "text", "id": "note", "label": "Small note", "default": "Include your order number so we can find the details." },
+    { "type": "header", "content": "Form" },
+    { "type": "text", "id": "l_name", "label": "Name label", "default": "Name" },
+    { "type": "text", "id": "l_email", "label": "Email label", "default": "Email" },
+    { "type": "text", "id": "l_topic", "label": "Topic label", "default": "What is it about?" },
+    { "type": "textarea", "id": "topics", "label": "Topics", "info": "One per line.", "default": "Choosing a product\nShipping or an order\nSkin-reaction refund\nSomething else" },
+    { "type": "text", "id": "l_order", "label": "Order number label", "default": "Order number, optional" },
+    { "type": "text", "id": "l_message", "label": "Message label", "default": "Your message" },
+    { "type": "text", "id": "button", "label": "Button label", "default": "Send message" },
+    { "type": "text", "id": "success", "label": "Thank-you text", "default": "Thank you. Your message has been sent. We will be in touch soon." },
+    { "type": "header", "content": "Section" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "contact" }
+  ],
+  "presets": [{ "name": "Lather help contact" }]
+}
+{% endschema %}

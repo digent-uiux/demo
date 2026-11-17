@@ -1,0 +1,118 @@
+{%- comment -%}
+  Lather v3, after the article (home-v3/pages/article/30-continue.html). Heading, line and a button to the journal
+  beside a list of expandable notes.
+  Real article: the notes are related articles from blog.articles (same first tag first, then the newest), each with
+  its excerpt and a link. No related articles, or no article (local preview): the "Note" blocks.
+{%- endcomment -%}
+{{ 'blko-lv3-article-continue.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+  assign uid = section.id
+  assign button_link = s.button_link
+  if button_link == blank
+    if blog != blank
+      assign button_link = blog.url
+    else
+      assign button_link = routes.root_url
+    endif
+  endif
+  assign rel_ids = ','
+  assign rel_count = 0
+  if s.related and article != blank and blog != blank
+    assign tag = article.tags.first
+    if tag != blank
+      for a in blog.articles
+        if rel_count >= s.related_count
+          break
+        endif
+        if a.id != article.id and a.tags contains tag
+          assign rel_ids = rel_ids | append: a.id | append: ','
+          assign rel_count = rel_count | plus: 1
+        endif
+      endfor
+    endif
+    for a in blog.articles
+      if rel_count >= s.related_count
+        break
+      endif
+      assign aid = ',' | append: a.id | append: ','
+      if a.id != article.id
+        unless rel_ids contains aid
+          assign rel_ids = rel_ids | append: a.id | append: ','
+          assign rel_count = rel_count | plus: 1
+        endunless
+      endif
+    endfor
+  endif
+-%}
+<section class="s-art-continue" aria-labelledby="art-continue-title-{{ uid }}"><div class="wrap s-art-continue__layout">
+  <div class="s-art-continue__intro">
+    <h2 class="h2" id="art-continue-title-{{ uid }}" data-rv="line">
+      {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
+      {%- if s.heading_2 != blank -%}<span class="ln"><span>{{ s.heading_2 }}</span></span>{%- endif -%}
+    </h2>
+    {%- if s.text != blank -%}<p>{{ s.text | escape }}</p>{%- endif -%}
+    {%- if s.button_label != blank -%}<a class="btn btn--ghost" href="{{ button_link }}">{{ s.button_label | escape }}</a>{%- endif -%}
+  </div>
+  <div class="s-art-continue__notes">
+    {%- if rel_count > 0 -%}
+      {%- for a in blog.articles -%}
+        {%- assign aid = ',' | append: a.id | append: ',' -%}
+        {%- if rel_ids contains aid -%}
+          {%- liquid
+            assign ex = a.excerpt | strip_html | strip
+            if ex == blank
+              assign ex = a.content | strip_html | truncatewords: 32
+            endif
+          -%}
+          <details><summary>{{ a.title | escape }}</summary><p>{{ ex | escape }} <a href="{{ a.url }}">{{ s.read_label | escape }}</a></p></details>
+        {%- endif -%}
+      {%- endfor -%}
+    {%- else -%}
+      {%- for block in section.blocks -%}
+        <details {{ block.shopify_attributes }}><summary>{{ block.settings.title | escape }}</summary>{{ block.settings.text }}</details>
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+</div></section>
+
+{% schema %}
+{
+  "name": "Lather keep reading",
+  "class": "blko-lv3-section-article-continue",
+  "max_blocks": 8,
+  "settings": [
+    { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "A few more" },
+    { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "useful <em>notes.</em>", "info": "Italic text shows in the accent style." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Keep reading, or take a closer look at the things on your bathroom shelf." },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Browse all skin notes" },
+    { "type": "url", "id": "button_link", "label": "Button link", "info": "Empty: the article's blog." },
+    { "type": "header", "content": "Related articles" },
+    { "type": "checkbox", "id": "related", "label": "Show related articles on real articles", "default": true, "info": "Articles sharing the first tag come first. Without any, the notes below show." },
+    { "type": "range", "id": "related_count", "label": "Related articles", "min": 2, "max": 6, "step": 1, "default": 3 },
+    { "type": "text", "id": "read_label", "label": "Article link label", "default": "Read the article" }
+  ],
+  "blocks": [
+    {
+      "type": "note",
+      "name": "Note",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Fragrance-free and unscented" },
+        { "type": "richtext", "id": "text", "label": "Text", "default": "<p>These words do not always mean the same thing. For eczema-prone skin, look specifically for fragrance-free products.</p>" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather keep reading",
+      "blocks": [
+        { "type": "note" },
+        { "type": "note", "settings": { "title": "Finding your after-shower texture", "text": "<p>Our range includes a light Body milk, Calm lotion and a thicker Rich cream. Compare the full ingredient lists and choose around the routine you already use.</p>" } },
+        { "type": "note", "settings": { "title": "When a product does not suit you", "text": "<p>Stop using a product that causes a reaction and seek medical advice when needed.</p>" } }
+      ]
+    }
+  ],
+  "enabled_on": { "templates": ["article", "blog", "page"] }
+}
+{% endschema %}

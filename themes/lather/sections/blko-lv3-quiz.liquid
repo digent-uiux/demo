@@ -1,0 +1,219 @@
+{%- comment -%}
+  Lather v3, skin quiz (parts/20-quiz.html). Deep moss scene: an edge-to-edge photo on the left, a two-question quiz on
+  the right. Question 1 answers are "answer" blocks, each with its own result product; question 2 is fixed
+  (me / my kid / both) with one settable kid product. The script builds the result from window.LATHER.products.
+{%- endcomment -%}
+{{ 'blko-lv3-quiz.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-quiz.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign s = section.settings
+  assign uid = section.id
+  assign anchor = s.anchor | default: 'quiz' | handleize
+  assign answers = section.blocks | where: 'type', 'answer'
+  if s.k_product != blank
+    assign kid_key = s.k_product.handle
+    assign kid_name = s.k_product.title
+    assign kid_img = s.k_product.featured_image
+  else
+    assign kid_key = s.k_key | default: 'little'
+    assign kid_name = s.k_name
+    assign kid_img = s.k_image
+  endif
+-%}
+
+{%- render 'blko-lv3-product-data',
+  key: kid_key,
+  product: s.k_product,
+  name: s.k_name,
+  size: s.k_size,
+  price: s.k_price,
+  line: s.k_pline,
+  labels: s.k_labels,
+  ing: s.k_ing,
+  img: s.k_image
+-%}
+<template data-quiz-img="{{ kid_key | escape }}">
+  {%- if kid_img != blank -%}
+    {{ kid_img | image_url: width: 600 | image_tag: widths: '200, 400, 600', sizes: '(max-width: 900px) 96px, 176px', alt: kid_name }}
+  {%- else -%}
+    {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph' }}
+  {%- endif -%}
+</template>
+
+{%- capture map -%}{"kid":{"key":{{ kid_key | json }},"name":{{ kid_name | json }},"line":{{ s.kid_line | json }}},"feel":{
+  {%- for block in answers -%}
+    {%- assign b = block.settings -%}
+    {%- liquid
+      if b.product != blank
+        assign k = b.product.handle
+        assign nm = b.product.title
+      else
+        assign k = b.key | default: block.id
+        assign nm = b.name
+      endif
+    -%}
+    {{ block.id | json }}:{"key":{{ k | json }},"name":{{ nm | json }},"why":{{ b.why | json }},"both":{{ b.both | json }}}{% unless forloop.last %},{% endunless %}
+  {%- endfor -%}
+}}{%- endcapture -%}
+
+{%- for block in answers -%}
+  {%- assign b = block.settings -%}
+  {%- liquid
+    if b.product != blank
+      assign k = b.product.handle
+      assign im = b.product.featured_image
+      assign nm = b.product.title
+    else
+      assign k = b.key | default: block.id
+      assign im = b.image
+      assign nm = b.name
+    endif
+  -%}
+  {%- render 'blko-lv3-product-data',
+    key: k,
+    product: b.product,
+    name: b.name,
+    size: b.size,
+    price: b.price,
+    line: b.line,
+    labels: b.labels,
+    ing: b.ing,
+    img: b.image
+  -%}
+  <template data-quiz-img="{{ k | escape }}">
+    {%- if im != blank -%}
+      {{ im | image_url: width: 600 | image_tag: widths: '200, 400, 600', sizes: '(max-width: 900px) 96px, 176px', alt: nm }}
+    {%- else -%}
+      {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph' }}
+    {%- endif -%}
+  </template>
+{%- endfor -%}
+
+<section class="s-quiz" id="{{ anchor }}" aria-labelledby="quizH-{{ uid }}" data-lv3-quiz>
+  <script type="application/json" data-quiz-map>{{ map | strip_newlines }}</script>
+  <div class="s-quiz__photo">
+    {%- if s.image != blank -%}
+      {{ s.image | image_url: width: 1800 | image_tag: widths: '600, 900, 1200, 1500, 1800', sizes: '(max-width: 900px) 100vw, 46vw', loading: 'lazy', alt: s.image.alt }}
+    {%- else -%}
+      {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph' }}
+    {%- endif -%}
+  </div>
+  <div class="s-quiz__body on-dark">
+    <h2 class="h2" id="quizH-{{ uid }}" data-rv="line"><span class="ln"><span>{{ s.heading }}</span></span></h2>
+    {%- if s.sub != blank -%}<p class="s-quiz__sub" data-rv="blur" data-rv-delay="1">{{ s.sub | escape }}</p>{%- endif -%}
+    <div class="s-quiz__prog" aria-hidden="true"><i class="on"><b></b></i><i><b></b></i></div>
+    <div class="s-quiz__steps" aria-live="polite">
+      <div class="s-quiz__step is-on" data-step="feel">
+        <p class="s-quiz__q" tabindex="-1" id="quizQ1-{{ uid }}">{{ s.q1 | escape }}</p>
+        <div class="s-quiz__opts" role="group" aria-labelledby="quizQ1-{{ uid }}">
+          {%- for block in answers -%}
+            <button class="chip" type="button" aria-pressed="false" data-feel="{{ block.id }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}</button>
+          {%- endfor -%}
+        </div>
+      </div>
+      <div class="s-quiz__step" data-step="who" aria-hidden="true">
+        <p class="s-quiz__q" tabindex="-1" id="quizQ2-{{ uid }}">{{ s.q2 | escape }}</p>
+        <div class="s-quiz__opts" role="group" aria-labelledby="quizQ2-{{ uid }}">
+          <button class="chip" type="button" aria-pressed="false" data-who="me">{{ s.who_me | escape }}</button>
+          <button class="chip" type="button" aria-pressed="false" data-who="kid">{{ s.who_kid | escape }}</button>
+          <button class="chip" type="button" aria-pressed="false" data-who="both">{{ s.who_both | escape }}</button>
+        </div>
+        <button class="s-quiz__back" type="button" data-back>{{ s.back_label | escape }}</button>
+      </div>
+      <div class="s-quiz__step" data-step="res" aria-hidden="true">
+        <div class="s-quiz__res"
+          data-pre-me="{{ s.pre_me | escape }}"
+          data-pre-kid="{{ s.pre_kid | escape }}"
+          data-pre-both="{{ s.pre_both | escape }}"
+          data-add-one="{{ s.add_label | escape }}"
+          data-add-both="{{ s.add_both_label | escape }}"
+          data-again="{{ s.again_label | escape }}"></div>
+      </div>
+    </div>
+    {%- if s.foot_note != blank or s.foot_link != blank -%}
+      <div class="s-quiz__foot">
+        {%- if s.foot_note != blank -%}<span>{{ s.foot_note | escape }}</span>{%- endif -%}
+        {%- if s.foot_link != blank -%}<a class="link" href="{{ s.foot_url | default: '#quiz' }}">{{ s.foot_link | escape }}</a>{%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lather skin quiz",
+  "tag": "div",
+  "class": "blko-lv3-section-quiz",
+  "settings": [
+    { "type": "header", "content": "Content" },
+    { "type": "image_picker", "id": "image", "label": "Photo" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Find <em>your</em> match.", "info": "Italic text shows in the display font." },
+    { "type": "text", "id": "sub", "label": "Text", "default": "Two questions, one straight answer." },
+    { "type": "text", "id": "q1", "label": "Question 1", "default": "How does your skin feel ten minutes after a shower?", "info": "Its answers are the Answer blocks." },
+    { "type": "text", "id": "q2", "label": "Question 2", "default": "Who is it for?" },
+    { "type": "text", "id": "who_me", "label": "Answer: me", "default": "Me" },
+    { "type": "text", "id": "who_kid", "label": "Answer: my kid", "default": "My kid" },
+    { "type": "text", "id": "who_both", "label": "Answer: both", "default": "Both" },
+    { "type": "text", "id": "back_label", "label": "Back link", "default": "Back" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "quiz" },
+    { "type": "header", "content": "Result" },
+    { "type": "text", "id": "pre_me", "label": "Line above, for me", "default": "For you" },
+    { "type": "text", "id": "pre_kid", "label": "Line above, for my kid", "default": "For your kid" },
+    { "type": "text", "id": "pre_both", "label": "Line above, for both", "default": "For you both" },
+    { "type": "text", "id": "add_label", "label": "Add button", "default": "Add", "info": "The price is added after a comma." },
+    { "type": "text", "id": "add_both_label", "label": "Add button, two products", "default": "Add both" },
+    { "type": "text", "id": "again_label", "label": "Start over link", "default": "Start over" },
+    { "type": "header", "content": "Kid result product" },
+    { "type": "product", "id": "k_product", "label": "Product" },
+    { "type": "textarea", "id": "kid_line", "label": "Why, for my kid", "default": "Soft, light oat lotion for ages 1 and up, after the bath. Fragrance-free, with calendula oil." },
+    { "type": "paragraph", "content": "When no product is picked, the demo fields below are used." },
+    { "type": "text", "id": "k_key", "label": "Demo key", "default": "little" },
+    { "type": "text", "id": "k_name", "label": "Demo name", "default": "Little lotion" },
+    { "type": "text", "id": "k_size", "label": "Size", "default": "150 ml" },
+    { "type": "text", "id": "k_price", "label": "Demo price in cents", "default": "1400" },
+    { "type": "text", "id": "k_pline", "label": "Short line", "default": "Soft, light oat lotion for ages 1 and up. Fragrance-free." },
+    { "type": "text", "id": "k_labels", "label": "Labels", "default": "new,ff", "info": "Comma list of best, ff, new, sale." },
+    { "type": "textarea", "id": "k_ing", "label": "Ingredients", "default": "Water, glycerin, colloidal oat, calendula oil, shea butter, cetearyl alcohol, xanthan gum, sodium benzoate." },
+    { "type": "image_picker", "id": "k_image", "label": "Demo image" },
+    { "type": "header", "content": "Footer" },
+    { "type": "text", "id": "foot_note", "label": "Note", "default": "Not medical advice. Patch test on your inner arm for 48 hours." },
+    { "type": "text", "id": "foot_link", "label": "Link", "default": "Take the full skin quiz" },
+    { "type": "url", "id": "foot_url", "label": "Link target", "info": "Empty: links to this section." }
+  ],
+  "blocks": [
+    {
+      "type": "answer",
+      "name": "Answer",
+      "limit": 6,
+      "settings": [
+        { "type": "text", "id": "label", "label": "Answer", "default": "Tight" },
+        { "type": "textarea", "id": "why", "label": "Why, for me", "default": "Extra shea, thick as a lotion, for skin that feels tight after a shower." },
+        { "type": "textarea", "id": "both", "label": "Why, for both", "default": "Rich wash for you, Little lotion for them. Both fragrance-free." },
+        { "type": "header", "content": "Result product" },
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "paragraph", "content": "When no product is picked, the demo fields below are used." },
+        { "type": "text", "id": "key", "label": "Demo key", "info": "Same key as in other sections shares the product." },
+        { "type": "text", "id": "name", "label": "Demo name", "default": "Rich wash" },
+        { "type": "text", "id": "size", "label": "Size", "default": "400 ml" },
+        { "type": "text", "id": "price", "label": "Demo price in cents", "default": "2000" },
+        { "type": "text", "id": "line", "label": "Short line", "default": "Very dry or winter skin. Thicker, almost a lotion." },
+        { "type": "text", "id": "labels", "label": "Labels", "info": "Comma list of best, ff, new, sale." },
+        { "type": "textarea", "id": "ing", "label": "Ingredients" },
+        { "type": "image_picker", "id": "image", "label": "Demo image" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather skin quiz",
+      "blocks": [
+        { "type": "answer", "settings": { "label": "Tight", "why": "Extra shea, thick as a lotion, for skin that feels tight after a shower.", "both": "Rich wash for you, Little lotion for them. Both fragrance-free.", "key": "rich", "name": "Rich wash", "size": "400 ml", "price": "2000", "labels": "ff", "line": "Very dry or winter skin. Thicker, almost a lotion.", "ing": "Calm wash plus extra shea butter and oat oil. Fragrance-free. pH 5.5." } },
+        { "type": "answer", "settings": { "label": "Itchy", "why": "Fragrance-free with colloidal oat, for itchy and eczema-prone skin.", "both": "Calm wash for you, Little lotion for them. Both fragrance-free.", "key": "calm", "name": "Calm wash", "size": "400 ml", "price": "1800", "labels": "best,ff", "line": "Everyday, eczema-prone skin. Colloidal oat and glycerin.", "ing": "Water, glycerin, coco-glucoside, decyl glucoside, colloidal oat, shea butter, sunflower seed oil, xanthan gum, citric acid, sodium benzoate. pH 5.5." } },
+        { "type": "answer", "settings": { "label": "Fine", "why": "Our one light scent, allergens listed. Pick Calm if scent ever bothers you.", "both": "Chamomile wash for you, Little lotion for them. Both fragrance-free apart from the chamomile.", "key": "chamomile", "name": "Chamomile wash", "size": "400 ml", "price": "2000", "labels": "", "line": "Our only scented wash: 0.2% chamomile oil, allergens listed.", "ing": "Calm wash plus chamomile flower oil (0.2%). Allergens: bisabolol. pH 5.5." } },
+        { "type": "answer", "settings": { "label": "It depends on the season", "why": "Oat milk soap for face and body, fragrance-free. An easy $9 start while your skin changes with the weather.", "both": "Oat bar for you, Little lotion for them. Both fragrance-free.", "key": "bar", "name": "Oat bar", "size": "120 g", "price": "900", "labels": "best,ff", "line": "Oat milk soap bar for face and body. Rich lather that rinses soft.", "ing": "Sodium olivate, sodium cocoate, oat milk, colloidal oat, shea butter, glycerin." } }
+      ]
+    }
+  ]
+}
+{% endschema %}
