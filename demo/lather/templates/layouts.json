@@ -112,6 +112,13 @@
     ]
   },
   {
+    "page": "policy",
+    "title": "Policies",
+    "sectionIds": [
+      "policy"
+    ]
+  },
+  {
     "page": "404",
     "title": "Page not found",
     "sectionIds": [

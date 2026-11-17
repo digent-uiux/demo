@@ -383,7 +383,7 @@
     "templateJsBytes": {
       "home": 98739,
       "collection": 63432,
-      "product": 74782,
+      "product": 81758,
       "cart": 63427,
       "search": 62637,
       "blog": 60520,
@@ -392,6 +392,7 @@
       "help": 60580,
       "account": 61058,
       "wishlist": 59129,
+      "policy": 60356,
       "404": 59129
     }
   },

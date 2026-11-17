@@ -3,6 +3,10 @@
   Heading; average rating and count from the product's standard review metafields (reviews.rating, reviews.rating_count),
   with section settings as the fallback; skin-type chips with counts; review blocks (the first shown leads, on deep green
   with its photo); "Show more". An app block (a reviews app) replaces the built-in list and filter.
+  "Write a review" (top right, under the score on phones): with a reviews app it clicks the app's own write button;
+  without one it opens a drawer whose form is Shopify's contact form tagged "review", so the merchant gets every review
+  by email to check and add as a review block. Photos can't travel through the contact form: the photo's file name is
+  sent and the hint tells the shopper the store will ask for it by email.
   The review blocks are the merchant's own content: nothing here marks them verified.
 {%- endcomment -%}
 {{ 'blko-lv3-product-reviews.css' | asset_url | stylesheet_tag }}
@@ -31,6 +35,48 @@
   assign title = rp.title | default: s.product_fallback | escape
   assign count_b = '<b>' | append: count | append: '</b>'
 
+  assign wf = nil
+  for block in section.blocks
+    if block.type == 'write_form'
+      assign wf = block.settings
+    endif
+  endfor
+  assign w_write_heading = wf.write_heading | default: 'Write a review'
+  assign w_close_label = wf.close_label | default: 'Close'
+  assign w_label_rating = wf.label_rating | default: 'Your rating'
+  assign w_rate_text = wf.rate_text | default: '[n] out of 5'
+  assign w_label_optional = wf.label_optional | default: '(optional)'
+  assign w_show_skin = true
+  if wf != nil and wf.show_skin == false
+    assign w_show_skin = false
+  endif
+  assign w_label_skin = wf.label_skin | default: 'Skin type'
+  assign w_label_title = wf.label_title | default: 'Title'
+  assign w_ph_title = wf.ph_title | default: 'Sum it up in a few words'
+  assign w_label_text = wf.label_text | default: 'Your review'
+  assign w_ph_text = wf.ph_text | default: 'How does your skin feel after a wash? How long have you used it?'
+  assign w_label_name = wf.label_name | default: 'Name'
+  assign w_ph_name = wf.ph_name | default: 'Shown as Maya R.'
+  assign w_label_email = wf.label_email | default: 'Email'
+  assign w_ph_email = wf.ph_email | default: 'Never shown'
+  assign w_show_photo = true
+  if wf != nil and wf.show_photo == false
+    assign w_show_photo = false
+  endif
+  assign w_label_photo = wf.label_photo | default: 'Photo'
+  assign w_photo_add = wf.photo_add | default: 'Add a photo'
+  assign w_photo_remove = wf.photo_remove | default: 'Remove'
+  assign w_photo_hint = wf.photo_hint | default: "We check photos by hand, so we'll email you to ask for it."
+  assign w_submit_label = wf.submit_label | default: 'Send review'
+  assign w_privacy_note = wf.privacy_note | default: 'We read every review before it appears. Your email stays with us.'
+  assign w_err_rating = wf.err_rating | default: 'Choose from 1 to 5 stars.'
+  assign w_err_text = wf.err_text | default: 'Tell us a little more, at least 10 characters.'
+  assign w_err_name = wf.err_name | default: 'Add the name to show with your review.'
+  assign w_err_email = wf.err_email | default: 'Enter an email like name@example.com.'
+  assign w_thanks_title = wf.thanks_title | default: 'Thanks, your review will appear after a quick check'
+  assign w_thanks_text = wf.thanks_text | default: "We read each one by hand, usually within two days. If we have a question, we'll email you."
+  assign w_thanks_back = wf.thanks_back | default: 'Back to the product'
+  assign w_thanks_again = wf.thanks_again | default: 'Write another'
   assign apps = 0
   assign total = 0
   assign n_eczema = 0
@@ -73,6 +119,13 @@
       <div class="s-pdp-reviews__score" data-rv="blur" data-rv-delay="1"><span class="s-pdp-reviews__avg">{{ rating_txt }}</span><span class="s-pdp-reviews__score-text"><span class="s-pdp-reviews__meter" role="img" aria-label="{{ aria | escape }}">★★★★★<i style="width:{{ pct }}%">★★★★★</i></span>
         {%- if count != blank and count > 0 -%}<span class="s-pdp-reviews__count">{{ s.count_text | escape | replace: '[count]', count_b | replace: '[product]', title }}</span>{%- endif -%}
       </span></div>
+    {%- endif -%}
+    {%- if s.show_write and s.write_label != blank -%}
+      {%- if apps > 0 -%}
+        <button type="button" class="btn btn--ghost s-pdp-reviews__wbtn" data-rev-write="app"{% if s.app_selector != blank %} data-app-selector="{{ s.app_selector | escape }}"{% endif %}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>{{ s.write_label | escape }}</button>
+      {%- else -%}
+        <button type="button" class="btn btn--ghost s-pdp-reviews__wbtn" data-rev-write="form" aria-haspopup="dialog" aria-controls="{{ anchor }}-write"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>{{ s.write_label | escape }}</button>
+      {%- endif -%}
     {%- endif -%}
   </div>
 
@@ -176,6 +229,38 @@
     </div>
   {%- endif -%}
 
+  {%- if s.show_write and apps == 0 -%}
+    {%- liquid
+      assign w_product = rp.title | default: s.product_fallback
+      assign w_line = w_product
+      if rp != blank
+        assign w_line = w_product | append: ' (' | append: shop.url | append: rp.url | append: ')'
+      endif
+    -%}
+    <dialog class="s-pdp-reviews__dlg" id="{{ anchor }}-write" aria-labelledby="{{ anchor }}-write-title" data-rev-dialog data-rate-tpl="{{ w_rate_text | escape }}" data-err-rating="{{ w_err_rating | escape }}" data-err-text="{{ w_err_text | escape }}" data-err-name="{{ w_err_name | escape }}" data-err-email="{{ w_err_email | escape }}">
+      <div class="s-pdp-reviews__dlg-hd"><div><h2 id="{{ anchor }}-write-title">{{ w_write_heading | default: s.write_label | escape }}</h2><p>{{ w_product | escape }}</p></div><button type="button" class="icon-btn" aria-label="{{ w_close_label | escape }}" data-rev-close><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+      {%- form 'contact', id: 'pdp-review-form', class: 's-pdp-reviews__form', novalidate: 'novalidate' -%}
+        <input type="hidden" name="contact[tags]" value="{{ s.review_tag | default: 'review' | escape }}"><input type="hidden" name="contact[Product]" value="{{ w_line | escape }}"><input type="hidden" name="contact[Photo]" value="" data-rev-photo-name>
+        <div class="s-pdp-reviews__ask" data-rev-ask>
+          <div class="s-pdp-reviews__fields">
+            <fieldset class="s-pdp-reviews__f"><legend>{{ w_label_rating | escape }}</legend><div class="s-pdp-reviews__rate"><div class="s-pdp-reviews__stars" data-rev-stars aria-describedby="{{ anchor }}-err-rating">
+              {%- for n in (1..5) -%}{%- assign aria = w_rate_text | replace: '[n]', n -%}<input type="radio" name="contact[Rating]" id="{{ anchor }}-star-{{ n }}" value="{{ n }}"{% if n == 1 %} required{% endif %}><label for="{{ anchor }}-star-{{ n }}" title="{{ aria | escape }}"><span aria-hidden="true">★</span><span class="sr">{{ aria | escape }}</span></label>{%- endfor -%}
+            </div><span class="s-pdp-reviews__rate-txt" data-rev-rate-txt aria-hidden="true"></span></div><p class="s-pdp-reviews__err" id="{{ anchor }}-err-rating" data-rev-err="rating" aria-live="polite"></p></fieldset>
+            {%- if w_show_skin -%}<fieldset class="s-pdp-reviews__f"><legend>{{ w_label_skin | escape }}{%- if w_label_optional != blank %} <span class="s-pdp-reviews__opt">{{ w_label_optional | escape }}</span>{% endif -%}</legend><div class="s-pdp-reviews__chips"><input type="radio" name="contact[{{ w_label_skin | default: 'Skin type' | escape }}]" id="{{ anchor }}-skin-eczema" value="{{ s.label_eczema | escape }}"><label for="{{ anchor }}-skin-eczema">{{ s.label_eczema | escape }}</label><input type="radio" name="contact[{{ w_label_skin | default: 'Skin type' | escape }}]" id="{{ anchor }}-skin-dry" value="{{ s.label_dry | escape }}"><label for="{{ anchor }}-skin-dry">{{ s.label_dry | escape }}</label><input type="radio" name="contact[{{ w_label_skin | default: 'Skin type' | escape }}]" id="{{ anchor }}-skin-sensitive" value="{{ s.label_sensitive | escape }}"><label for="{{ anchor }}-skin-sensitive">{{ s.label_sensitive | escape }}</label><input type="radio" name="contact[{{ w_label_skin | default: 'Skin type' | escape }}]" id="{{ anchor }}-skin-little" value="{{ s.label_little | escape }}"><label for="{{ anchor }}-skin-little">{{ s.label_little | escape }}</label></div></fieldset>{%- endif -%}
+            <div class="s-pdp-reviews__f"><label for="{{ anchor }}-w-title">{{ w_label_title | escape }}{%- if w_label_optional != blank %} <span class="s-pdp-reviews__opt">{{ w_label_optional | escape }}</span>{% endif -%}</label><input type="text" id="{{ anchor }}-w-title" name="contact[Title]" maxlength="80" placeholder="{{ w_ph_title | escape }}"></div>
+            <div class="s-pdp-reviews__f"><label for="{{ anchor }}-w-text">{{ w_label_text | escape }}</label><textarea id="{{ anchor }}-w-text" name="contact[body]" rows="5" required minlength="10" maxlength="2000" placeholder="{{ w_ph_text | escape }}" data-rev-field="text" aria-describedby="{{ anchor }}-err-text"></textarea><p class="s-pdp-reviews__err" id="{{ anchor }}-err-text" data-rev-err="text" aria-live="polite"></p></div>
+            <div class="s-pdp-reviews__pair">
+              <div class="s-pdp-reviews__f"><label for="{{ anchor }}-w-name">{{ w_label_name | escape }}</label><input type="text" id="{{ anchor }}-w-name" name="contact[name]" autocomplete="given-name" required placeholder="{{ w_ph_name | escape }}" data-rev-field="name" aria-describedby="{{ anchor }}-err-name"{% if customer %} value="{{ customer.first_name | escape }}"{% endif %}><p class="s-pdp-reviews__err" id="{{ anchor }}-err-name" data-rev-err="name" aria-live="polite"></p></div>
+              <div class="s-pdp-reviews__f"><label for="{{ anchor }}-w-email">{{ w_label_email | escape }}</label><input type="email" id="{{ anchor }}-w-email" name="contact[email]" autocomplete="email" required placeholder="{{ w_ph_email | escape }}" data-rev-field="email" aria-describedby="{{ anchor }}-err-email"{% if customer %} value="{{ customer.email | escape }}"{% endif %}><p class="s-pdp-reviews__err" id="{{ anchor }}-err-email" data-rev-err="email" aria-live="polite"></p></div>
+            </div>
+            {%- if w_show_photo -%}<div class="s-pdp-reviews__f"><span class="s-pdp-reviews__flabel">{{ w_label_photo | escape }}{%- if w_label_optional != blank %} <span class="s-pdp-reviews__opt">{{ w_label_optional | escape }}</span>{% endif -%}</span><div class="s-pdp-reviews__photo"><input type="file" id="{{ anchor }}-w-photo" name="review_photo" accept="image/*" data-rev-file aria-describedby="{{ anchor }}-photo-hint"><label class="s-pdp-reviews__photo-add" for="{{ anchor }}-w-photo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>{{ w_photo_add | escape }}</label><div class="s-pdp-reviews__photo-pick" data-rev-pick hidden><img alt="" width="56" height="56"><span></span><button type="button">{{ w_photo_remove | escape }}</button></div></div>{%- if w_photo_hint != blank -%}<p class="s-pdp-reviews__hint" id="{{ anchor }}-photo-hint">{{ w_photo_hint | escape }}</p>{%- endif -%}</div>{%- endif -%}
+          </div>
+          <div class="s-pdp-reviews__dlg-ft"><button type="submit" class="btn btn--primary btn--block">{{ w_submit_label | escape }}</button>{%- if w_privacy_note != blank -%}<p>{{ w_privacy_note | escape }}</p>{%- endif -%}</div>
+        </div>
+      {%- endform -%}
+      <div class="s-pdp-reviews__done" data-rev-done tabindex="-1" role="status" hidden><h3>{{ w_thanks_title | escape }}</h3>{%- if w_thanks_text != blank -%}<p>{{ w_thanks_text | escape }}</p>{%- endif -%}<div class="s-pdp-reviews__done-row"><button type="button" class="btn btn--primary" data-rev-close>{{ w_thanks_back | escape }}</button>{%- if w_thanks_again != blank -%}<button type="button" class="btn btn--ghost" data-rev-again>{{ w_thanks_again | escape }}</button>{%- endif -%}</div></div>
+    </dialog>
+  {%- endif -%}
   <div class="s-pdp-reviews__foot">
     {%- if apps == 0 -%}
       <div class="s-pdp-reviews__more">
@@ -195,61 +280,486 @@
   "class": "blko-lv3-section-product-reviews",
   "max_blocks": 24,
   "settings": [
-    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-2" },
-    { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "The feel, in" },
-    { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "your <em>words.</em>", "info": "Italic text shows in the accent style." },
-    { "type": "header", "content": "Rating summary" },
-    { "type": "paragraph", "content": "Reads the product's review metafields (reviews.rating and reviews.rating_count), which most review apps fill. The values below show only when those are empty." },
-    { "type": "checkbox", "id": "show_summary", "label": "Show average rating", "default": true },
-    { "type": "text", "id": "rating_fallback", "label": "Average rating (fallback)", "default": "4.6", "info": "Out of 5." },
-    { "type": "number", "id": "count_fallback", "label": "Number of reviews (fallback)", "default": 318 },
-    { "type": "text", "id": "count_text", "label": "Count text", "default": "[count] reviews of [product]", "info": "[count] and [product] are filled in." },
-    { "type": "text", "id": "product_fallback", "label": "Product name (fallback)", "default": "Calm wash" },
-    { "type": "text", "id": "stars_aria", "label": "Stars label (screen readers)", "default": "[n] out of 5 stars" },
-    { "type": "header", "content": "Skin type filter" },
-    { "type": "checkbox", "id": "show_filter", "label": "Show filter", "default": true },
-    { "type": "text", "id": "filter_label", "label": "Filter label", "default": "Skin type" },
-    { "type": "text", "id": "label_all", "label": "All", "default": "All" },
-    { "type": "text", "id": "label_eczema", "label": "Skin type 1", "default": "Eczema-prone" },
-    { "type": "text", "id": "label_dry", "label": "Skin type 2", "default": "Very dry" },
-    { "type": "text", "id": "label_sensitive", "label": "Skin type 3", "default": "Sensitive" },
-    { "type": "text", "id": "label_little", "label": "Skin type 4", "default": "Little ones" },
-    { "type": "header", "content": "List" },
-    { "type": "range", "id": "page_size", "label": "Reviews shown before \"Show more\"", "min": 3, "max": 12, "step": 1, "default": 5 },
-    { "type": "text", "id": "more_label", "label": "Show more label", "default": "Show more reviews" },
-    { "type": "text", "id": "shown_text", "label": "Shown count", "default": "Showing [shown] of [total]" },
-    { "type": "header", "content": "Foot" },
-    { "type": "text", "id": "help_text", "label": "Help text", "default": "Not sure it suits your skin?" },
-    { "type": "text", "id": "help_link_label", "label": "Help link label", "default": "Ask us first" },
-    { "type": "url", "id": "help_link", "label": "Help link" },
-    { "type": "header", "content": "Section" },
-    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "pdp-reviews", "info": "The buy box's reviews link points here." },
-    { "type": "paragraph", "content": "Using a reviews app? Add its block here (Add block > Apps). It replaces the built-in list and filter." }
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading_1",
+      "label": "Heading, line 1",
+      "default": "The feel, in"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading_2",
+      "label": "Heading, line 2",
+      "default": "your <em>words.</em>",
+      "info": "Italic text shows in the accent style."
+    },
+    {
+      "type": "header",
+      "content": "Rating summary"
+    },
+    {
+      "type": "paragraph",
+      "content": "Reads the product's review metafields (reviews.rating and reviews.rating_count), which most review apps fill. The values below show only when those are empty."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_summary",
+      "label": "Show average rating",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "rating_fallback",
+      "label": "Average rating (fallback)",
+      "default": "4.6",
+      "info": "Out of 5."
+    },
+    {
+      "type": "number",
+      "id": "count_fallback",
+      "label": "Number of reviews (fallback)",
+      "default": 318
+    },
+    {
+      "type": "text",
+      "id": "count_text",
+      "label": "Count text",
+      "default": "[count] reviews of [product]",
+      "info": "[count] and [product] are filled in."
+    },
+    {
+      "type": "text",
+      "id": "product_fallback",
+      "label": "Product name (fallback)",
+      "default": "Calm wash"
+    },
+    {
+      "type": "text",
+      "id": "stars_aria",
+      "label": "Stars label (screen readers)",
+      "default": "[n] out of 5 stars"
+    },
+    {
+      "type": "header",
+      "content": "Skin type filter"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_filter",
+      "label": "Show filter",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "filter_label",
+      "label": "Filter label",
+      "default": "Skin type"
+    },
+    {
+      "type": "text",
+      "id": "label_all",
+      "label": "All",
+      "default": "All"
+    },
+    {
+      "type": "text",
+      "id": "label_eczema",
+      "label": "Skin type 1",
+      "default": "Eczema-prone"
+    },
+    {
+      "type": "text",
+      "id": "label_dry",
+      "label": "Skin type 2",
+      "default": "Very dry"
+    },
+    {
+      "type": "text",
+      "id": "label_sensitive",
+      "label": "Skin type 3",
+      "default": "Sensitive"
+    },
+    {
+      "type": "text",
+      "id": "label_little",
+      "label": "Skin type 4",
+      "default": "Little ones"
+    },
+    {
+      "type": "header",
+      "content": "List"
+    },
+    {
+      "type": "range",
+      "id": "page_size",
+      "label": "Reviews shown before \"Show more\"",
+      "min": 3,
+      "max": 12,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "text",
+      "id": "more_label",
+      "label": "Show more label",
+      "default": "Show more reviews"
+    },
+    {
+      "type": "text",
+      "id": "shown_text",
+      "label": "Shown count",
+      "default": "Showing [shown] of [total]"
+    },
+    {
+      "type": "header",
+      "content": "Write a review"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_write",
+      "label": "Show \"Write a review\"",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "write_label",
+      "label": "Button label",
+      "default": "Write a review"
+    },
+    {
+      "type": "paragraph",
+      "content": "With a reviews app block, the button opens the app's own form. Without one it opens this drawer, sent as a contact form message tagged below: you get it by email, check it, then add it as a review block. The drawer texts are in the \"Write a review form\" block."
+    },
+    {
+      "type": "text",
+      "id": "app_selector",
+      "label": "Reviews app write button (CSS selector)",
+      "info": "Optional. Left empty, the button looks for a link or button labelled \"Write a review\" inside the app block."
+    },
+    {
+      "type": "text",
+      "id": "review_tag",
+      "label": "Contact form tag",
+      "default": "review"
+    },
+    {
+      "type": "header",
+      "content": "Foot"
+    },
+    {
+      "type": "text",
+      "id": "help_text",
+      "label": "Help text",
+      "default": "Not sure it suits your skin?"
+    },
+    {
+      "type": "text",
+      "id": "help_link_label",
+      "label": "Help link label",
+      "default": "Ask us first"
+    },
+    {
+      "type": "url",
+      "id": "help_link",
+      "label": "Help link"
+    },
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anchor id",
+      "default": "pdp-reviews",
+      "info": "The buy box's reviews link points here."
+    },
+    {
+      "type": "paragraph",
+      "content": "Using a reviews app? Add its block here (Add block > Apps). It replaces the built-in list and filter."
+    }
   ],
   "blocks": [
-    { "type": "@app" },
+    {
+      "type": "@app"
+    },
     {
       "type": "review",
       "name": "Review",
       "settings": [
-        { "type": "paragraph", "content": "Your own content. The first review shown leads, on deep green; give it a photo." },
-        { "type": "text", "id": "name", "label": "Name", "default": "Hannah K." },
         {
-          "type": "select", "id": "skin", "label": "Skin type", "default": "eczema",
+          "type": "paragraph",
+          "content": "Your own content. The first review shown leads, on deep green; give it a photo."
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Hannah K."
+        },
+        {
+          "type": "select",
+          "id": "skin",
+          "label": "Skin type",
+          "default": "eczema",
           "options": [
-            { "value": "eczema", "label": "Skin type 1" },
-            { "value": "dry", "label": "Skin type 2" },
-            { "value": "sensitive", "label": "Skin type 3" },
-            { "value": "little", "label": "Skin type 4" }
+            {
+              "value": "eczema",
+              "label": "Skin type 1"
+            },
+            {
+              "value": "dry",
+              "label": "Skin type 2"
+            },
+            {
+              "value": "sensitive",
+              "label": "Skin type 3"
+            },
+            {
+              "value": "little",
+              "label": "Skin type 4"
+            }
           ],
           "info": "Names come from the section's filter settings."
         },
-        { "type": "text", "id": "duration", "label": "How long", "default": "6 months in" },
-        { "type": "text", "id": "bought", "label": "What they bought", "default": "bought Calm wash" },
-        { "type": "range", "id": "rating", "label": "Stars", "min": 1, "max": 5, "step": 1, "default": 5 },
-        { "type": "text", "id": "title", "label": "Title", "default": "No tight arms, no smell" },
-        { "type": "textarea", "id": "text", "label": "Review", "default": "First wash that doesn't leave my arms tight. No smell at all, which is the whole point." },
-        { "type": "image_picker", "id": "image", "label": "Photo (optional)" }
+        {
+          "type": "text",
+          "id": "duration",
+          "label": "How long",
+          "default": "6 months in"
+        },
+        {
+          "type": "text",
+          "id": "bought",
+          "label": "What they bought",
+          "default": "bought Calm wash"
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Stars",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "No tight arms, no smell"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Review",
+          "default": "First wash that doesn't leave my arms tight. No smell at all, which is the whole point."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo (optional)"
+        }
+      ]
+    },
+    {
+      "type": "write_form",
+      "name": "Write a review form",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Texts of the \"Write a review\" drawer. Without this block the drawer uses the English defaults."
+        },
+        {
+          "type": "text",
+          "id": "write_heading",
+          "label": "Drawer heading",
+          "default": "Write a review"
+        },
+        {
+          "type": "text",
+          "id": "close_label",
+          "label": "Close label (screen readers)",
+          "default": "Close"
+        },
+        {
+          "type": "text",
+          "id": "label_rating",
+          "label": "Rating label",
+          "default": "Your rating"
+        },
+        {
+          "type": "text",
+          "id": "rate_text",
+          "label": "Rating text",
+          "default": "[n] out of 5",
+          "info": "[n] is the number of stars."
+        },
+        {
+          "type": "text",
+          "id": "label_optional",
+          "label": "Optional mark",
+          "default": "(optional)"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_skin",
+          "label": "Ask for skin type",
+          "default": true,
+          "info": "Uses the skin type names above."
+        },
+        {
+          "type": "text",
+          "id": "label_skin",
+          "label": "Skin type label",
+          "default": "Skin type"
+        },
+        {
+          "type": "text",
+          "id": "label_title",
+          "label": "Title label",
+          "default": "Title"
+        },
+        {
+          "type": "text",
+          "id": "ph_title",
+          "label": "Title placeholder",
+          "default": "Sum it up in a few words"
+        },
+        {
+          "type": "text",
+          "id": "label_text",
+          "label": "Review label",
+          "default": "Your review"
+        },
+        {
+          "type": "text",
+          "id": "ph_text",
+          "label": "Review placeholder",
+          "default": "How does your skin feel after a wash? How long have you used it?"
+        },
+        {
+          "type": "text",
+          "id": "label_name",
+          "label": "Name label",
+          "default": "Name"
+        },
+        {
+          "type": "text",
+          "id": "ph_name",
+          "label": "Name placeholder",
+          "default": "Shown as Maya R."
+        },
+        {
+          "type": "text",
+          "id": "label_email",
+          "label": "Email label",
+          "default": "Email"
+        },
+        {
+          "type": "text",
+          "id": "ph_email",
+          "label": "Email placeholder",
+          "default": "Never shown"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_photo",
+          "label": "Ask for a photo",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "label_photo",
+          "label": "Photo label",
+          "default": "Photo"
+        },
+        {
+          "type": "text",
+          "id": "photo_add",
+          "label": "Add photo label",
+          "default": "Add a photo"
+        },
+        {
+          "type": "text",
+          "id": "photo_remove",
+          "label": "Remove photo label",
+          "default": "Remove"
+        },
+        {
+          "type": "text",
+          "id": "photo_hint",
+          "label": "Photo hint",
+          "default": "We check photos by hand, so we'll email you to ask for it.",
+          "info": "The contact form can't carry files: only the file name is sent."
+        },
+        {
+          "type": "text",
+          "id": "submit_label",
+          "label": "Send label",
+          "default": "Send review"
+        },
+        {
+          "type": "text",
+          "id": "privacy_note",
+          "label": "Note under the button",
+          "default": "We read every review before it appears. Your email stays with us."
+        },
+        {
+          "type": "text",
+          "id": "err_rating",
+          "label": "Error: no rating",
+          "default": "Choose from 1 to 5 stars."
+        },
+        {
+          "type": "text",
+          "id": "err_text",
+          "label": "Error: review too short",
+          "default": "Tell us a little more, at least 10 characters."
+        },
+        {
+          "type": "text",
+          "id": "err_name",
+          "label": "Error: no name",
+          "default": "Add the name to show with your review."
+        },
+        {
+          "type": "text",
+          "id": "err_email",
+          "label": "Error: email",
+          "default": "Enter an email like name@example.com."
+        },
+        {
+          "type": "text",
+          "id": "thanks_title",
+          "label": "Sent: heading",
+          "default": "Thanks, your review will appear after a quick check"
+        },
+        {
+          "type": "text",
+          "id": "thanks_text",
+          "label": "Sent: text",
+          "default": "We read each one by hand, usually within two days. If we have a question, we'll email you."
+        },
+        {
+          "type": "text",
+          "id": "thanks_back",
+          "label": "Sent: close label",
+          "default": "Back to the product"
+        },
+        {
+          "type": "text",
+          "id": "thanks_again",
+          "label": "Sent: write another label",
+          "default": "Write another"
+        }
       ]
     }
   ],
@@ -257,9 +767,45 @@
     {
       "name": "Lather product reviews",
       "blocks": [
-        { "type": "review", "settings": { "name": "Hannah K.", "skin": "eczema", "duration": "6 months in", "bought": "bought Calm wash", "rating": 5, "title": "No tight arms, no smell", "text": "First wash that doesn't leave my arms tight. No smell at all, which is the whole point." } },
-        { "type": "review", "settings": { "name": "Tom B.", "skin": "dry", "duration": "3 months in", "bought": "bought 2 bottles of Calm wash", "rating": 5, "title": "My shins stopped cracking", "text": "Long shifts, hot showers and very dry legs. This is the first wash I don't have to follow with a heavy cream every night." } },
-        { "type": "review", "settings": { "name": "Priya S.", "skin": "sensitive", "duration": "5 weeks in", "bought": "bought Calm wash", "rating": 4, "title": "Gentle, rinses clean", "text": "No sting and no film left on my skin. One star off because the pump gets stiff near the end of the bottle." } }
+        {
+          "type": "review",
+          "settings": {
+            "name": "Hannah K.",
+            "skin": "eczema",
+            "duration": "6 months in",
+            "bought": "bought Calm wash",
+            "rating": 5,
+            "title": "No tight arms, no smell",
+            "text": "First wash that doesn't leave my arms tight. No smell at all, which is the whole point."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "name": "Tom B.",
+            "skin": "dry",
+            "duration": "3 months in",
+            "bought": "bought 2 bottles of Calm wash",
+            "rating": 5,
+            "title": "My shins stopped cracking",
+            "text": "Long shifts, hot showers and very dry legs. This is the first wash I don't have to follow with a heavy cream every night."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "name": "Priya S.",
+            "skin": "sensitive",
+            "duration": "5 weeks in",
+            "bought": "bought Calm wash",
+            "rating": 4,
+            "title": "Gentle, rinses clean",
+            "text": "No sting and no film left on my skin. One star off because the pump gets stiff near the end of the bottle."
+          }
+        },
+        {
+          "type": "write_form"
+        }
       ]
     }
   ]

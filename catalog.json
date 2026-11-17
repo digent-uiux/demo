@@ -48750,6 +48750,21 @@
           "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to build the page \"Lather, Saved for later\" (template `wishlist`, theme `lather`; live demo: https://demo.blocko.ai/html/lather/templates/wishlist.html) in my project. It is made of these sections in order: wishlist (bundles under sections/lather/, full theme in themes/lather/). Before changing any code, ask me which project/theme it belongs to, whether it should be a new page/template or replace/extend an existing one (and which), which sections to keep or drop, and whether the target is a Shopify theme (JSON template) or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify)."
         },
         {
+          "id": "policy",
+          "name": "Lather, Policies",
+          "kind": "page",
+          "targets": {
+            "html": "ok",
+            "shopify": "ok"
+          },
+          "sections": [
+            "policy"
+          ],
+          "demo": "demo/lather/templates/policy.html",
+          "demoUrl": "https://demo.blocko.ai/html/lather/templates/policy.html",
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to build the page \"Lather, Policies\" (template `policy`, theme `lather`; live demo: https://demo.blocko.ai/html/lather/templates/policy.html) in my project. It is made of these sections in order: policy (bundles under sections/lather/, full theme in themes/lather/). Before changing any code, ask me which project/theme it belongs to, whether it should be a new page/template or replace/extend an existing one (and which), which sections to keep or drop, and whether the target is a Shopify theme (JSON template) or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify)."
+        },
+        {
           "id": "404",
           "name": "Lather, Page not found",
           "kind": "page",
@@ -50666,6 +50681,56 @@
           "blockTypes": []
         },
         {
+          "id": "policy",
+          "name": "Lather policy page",
+          "kind": "section",
+          "category": "content",
+          "description": "html), for a page with the template page.policy.",
+          "targets": {
+            "html": "gap: no HTML demo for this Liquid section",
+            "shopify": "ok"
+          },
+          "demo": null,
+          "demoUrl": null,
+          "prompt": "Use the Blocko library (https://github.com/blockoai/blocko, or the Claude Code plugin: claude plugin marketplace add blockoai/blocko && claude plugin install blocko-sections@blocko) to implement the section \"Lather policy page\" (id `policy`, theme `lather`; Shopify bundle: sections/lather/policy/ in the repo) into my project. Before changing any code, ask me where it should go — which project/theme, which page or template, and the position (e.g. after the hero) — and whether the target is a Shopify theme or a plain HTML site, unless I already said; restate the plan and wait for my OK. Then follow the repo's AGENTS.md: keep the blko- class prefix and CSS tokens (with fallbacks), keep custom elements idempotent, don't touch unrelated code, run `shopify theme check` for Shopify targets, and finish by telling me how to add/arrange it (Theme Editor steps for Shopify).",
+          "bundle": "sections/lather/policy",
+          "files": [
+            "sections/lather/policy/assets/blko-lv3-antonio-600.woff2",
+            "sections/lather/policy/assets/blko-lv3-base.css",
+            "sections/lather/policy/assets/blko-lv3-logo.png",
+            "sections/lather/policy/assets/blko-lv3-mark.png",
+            "sections/lather/policy/assets/blko-lv3-policy.css",
+            "sections/lather/policy/assets/blko-lv3-policy.js",
+            "sections/lather/policy/assets/blko-lv3-recent.js",
+            "sections/lather/policy/assets/blko-lv3-store.js",
+            "sections/lather/policy/assets/blko-lv3-urbanist.woff2",
+            "sections/lather/policy/assets/blko-lv3-wishlist.css",
+            "sections/lather/policy/assets/blko-lv3-wishlist.js",
+            "sections/lather/policy/assets/blko-lv3-yeseva-one.woff2",
+            "sections/lather/policy/sections/blko-lv3-policy.liquid",
+            "sections/lather/policy/sections/blko-lv3-theme.liquid",
+            "sections/lather/policy/snippets/blko-lv3-policy-demo.liquid",
+            "sections/lather/policy/snippets/blko-lv3-settings.liquid"
+          ],
+          "deps": [
+            "blko-lv3-antonio-600.woff2",
+            "blko-lv3-base.css",
+            "blko-lv3-logo.png",
+            "blko-lv3-mark.png",
+            "blko-lv3-policy.css",
+            "blko-lv3-policy.js",
+            "blko-lv3-recent.js",
+            "blko-lv3-store.js",
+            "blko-lv3-urbanist.woff2",
+            "blko-lv3-wishlist.css",
+            "blko-lv3-wishlist.js",
+            "blko-lv3-yeseva-one.woff2"
+          ],
+          "localeKeys": [],
+          "themeSettings": [],
+          "blockTypes": []
+        },
+        {
           "id": "popup",
           "name": "Lather popup and cookies",
           "kind": "section",
@@ -50966,7 +51031,8 @@
           "themeSettings": [],
           "blockTypes": [
             "@app",
-            "review"
+            "review",
+            "write_form"
           ]
         },
         {

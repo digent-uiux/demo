@@ -2,6 +2,9 @@
   Demo links shown while no menu is picked. lines: textarea, one link per line "Label | link".
   Link tokens: [home] [all] [search] [account] [cart]; a path starting with "/" gets the shop's root (locale) prefix,
   e.g. /pages/about, /pages/help#shipping, /blogs/journal, /products/calm-wash. "#id" stays an in-page anchor.
+  Store policies: [shipping_policy] [refund_policy] [privacy_policy] [terms_of_service] link to the policy set in
+  Settings > Policies. A path after the token is the fallback ("Shipping | [shipping_policy] /pages/help#shipping");
+  without one, the line is left out while that policy is empty.
 {%- endcomment -%}
 {%- liquid
   assign rows = lines | newline_to_br | split: '<br />'
@@ -16,12 +19,26 @@
   {%- if label != blank -%}
     {%- assign url = parts[1] | strip | default: '#' -%}
     {%- liquid
+      assign skip = false
+      if url contains '_policy]' or url contains '[terms_of_service]'
+        assign tok = url | split: ']' | first | append: ']'
+        assign fb = url | remove_first: tok | strip
+        assign key = tok | remove: '[' | remove: ']'
+        assign pol = shop[key]
+        if pol != blank and pol.url != blank
+          assign url = pol.url
+        elsif fb != blank
+          assign url = fb
+        else
+          assign skip = true
+        endif
+      endif
       assign first_char = url | slice: 0
       assign url = url | replace: '[home]', routes.root_url | replace: '[all]', routes.all_products_collection_url | replace: '[search]', routes.search_url | replace: '[account]', routes.account_url | replace: '[cart]', routes.cart_url
       if first_char == '/'
         assign url = root | append: url
       endif
     -%}
-    <a href="{{ url }}">{{ label | escape }}</a>
+    {%- unless skip %}<a href="{{ url }}">{{ label | escape }}</a>{% endunless -%}
   {%- endif -%}
 {%- endfor -%}

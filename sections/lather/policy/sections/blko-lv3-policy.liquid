@@ -1,0 +1,202 @@
+{%- comment -%}
+  Lather v3, policy page (home-v3/pages/policy/10-policy.html), for a page with the template page.policy.
+  Reads page.content: every <h2> becomes an entry of "On this page" (left, sticky at desktop; a panel above the text on
+  phones) and gets an id for the link. A page with no content shows the demo policies (snippets/blko-lv3-policy-demo).
+  Shopify's own /policies/* pages use the same reading styles through .shopify-policy__container (layout/theme.liquid).
+{%- endcomment -%}
+{{ 'blko-lv3-policy.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-policy.js' | asset_url }}" defer></script>
+{%- liquid
+  assign s = section.settings
+  assign root = routes.root_url
+  if root == '/'
+    assign root = ''
+  endif
+  assign help_url = s.contact_link | default: s.card_link
+  if help_url == blank
+    assign help_url = root | append: '/pages/help#contact'
+  endif
+  assign src = page.content
+  if src == blank
+    capture src
+      render 'blko-lv3-policy-demo', help_url: help_url
+    endcapture
+  endif
+  assign parts = src | split: '<h2'
+  assign body = parts[0]
+  assign toc = ''
+  assign n = 0
+  for chunk in parts offset: 1
+    assign head = chunk | split: '</h2>' | first
+    assign title = '<h2' | append: head | strip_html | strip
+    if head contains ' id="'
+      assign hid = head | split: ' id="' | last | split: '"' | first
+      assign body = body | append: '<h2' | append: chunk
+    else
+      assign hid = title | handleize
+      assign body = body | append: '<h2 id="' | append: hid | append: '"' | append: chunk
+    endif
+    if title != blank
+      assign n = n | plus: 1
+      assign toc = toc | append: '<li><a href="#' | append: hid | append: '">' | append: title | append: '</a></li>'
+    endif
+  endfor
+  assign updated = s.updated_date
+  if updated == blank and page.published_at != blank
+    assign updated = page.published_at | date: '%-d %B %Y'
+  endif
+-%}
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-1' -%}
+<section class="s-policy{%- if lv3_sid != 'scheme-1' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" aria-labelledby="{{ section.id }}-title" data-lv3-policy><div class="wrap">
+  <div class="s-policy__intro"><div>
+    <h1 class="h1" id="{{ section.id }}-title" data-rv="line">
+      {%- if s.heading_1 != blank or s.heading_2 != blank -%}
+        {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
+        {%- if s.heading_2 != blank -%}<span class="ln"><span>{{ s.heading_2 }}</span></span>{%- endif -%}
+      {%- else -%}<span class="ln"><span>{{ page.title | escape }}</span></span>{%- endif -%}
+    </h1>
+    {%- if s.intro != blank -%}<p class="s-policy__lead" data-rv="blur" data-rv-delay="1">{{ s.intro | escape }}</p>{%- endif -%}
+    {%- if updated != blank or s.contact_label != blank -%}
+      <p class="s-policy__meta" data-rv="blur" data-rv-delay="2">
+        {%- if updated != blank -%}<span>{{ s.updated_label | escape }} {{ updated | escape }}</span>{%- endif -%}
+        {%- if s.contact_label != blank -%}<span>{{ s.contact_text | escape }} <a href="{{ help_url }}" class="link">{{ s.contact_label | escape }}</a></span>{%- endif -%}
+      </p>
+    {%- endif -%}
+  </div></div>
+  <div class="s-policy__grid">
+    {%- if s.show_toc and n > 1 -%}
+      <nav class="s-policy__toc" aria-labelledby="{{ section.id }}-toc"><h2 id="{{ section.id }}-toc">{{ s.toc_label | escape }}</h2><ol>{{ toc }}</ol></nav>
+    {%- endif -%}
+    <div class="s-policy__main">
+      <div class="s-policy__body">{{ body }}</div>
+      {%- if s.card_heading != blank or s.card_label != blank -%}
+        <aside class="s-policy__card" aria-labelledby="{{ section.id }}-card"><div><h2 id="{{ section.id }}-card">{{ s.card_heading | escape }}</h2>{%- if s.card_text != blank -%}<p>{{ s.card_text | escape }}</p>{%- endif -%}</div>{%- if s.card_label != blank -%}<a href="{{ s.card_link | default: help_url }}" class="btn btn--primary">{{ s.card_label | escape }}</a>{%- endif -%}</aside>
+      {%- endif -%}
+    </div>
+  </div>
+</div></section>
+
+{% schema %}
+{
+  "name": "Lather policy page",
+  "class": "blko-lv3-section-policy",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "paragraph",
+      "content": "Shows the page's content. Write each policy under a Heading 2: it becomes a link in \"On this page\". An empty page shows the demo policies."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading_1",
+      "label": "Heading, line 1",
+      "default": "The small print,",
+      "info": "Both lines empty: the page title is used."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading_2",
+      "label": "Heading, line 2",
+      "default": "kept <em>plain.</em>",
+      "info": "Italic text shows in the accent style."
+    },
+    {
+      "type": "textarea",
+      "id": "intro",
+      "label": "Intro",
+      "default": "How we ship, what happens if your skin reacts, what we do with your details and the terms of buying from us."
+    },
+    {
+      "type": "text",
+      "id": "updated_label",
+      "label": "Updated label",
+      "default": "Updated"
+    },
+    {
+      "type": "text",
+      "id": "updated_date",
+      "label": "Updated date",
+      "default": "17 November 2026",
+      "info": "Change it whenever you edit a policy. Empty: the page's publish date."
+    },
+    {
+      "type": "text",
+      "id": "contact_text",
+      "label": "Contact text",
+      "default": "Questions?"
+    },
+    {
+      "type": "text",
+      "id": "contact_label",
+      "label": "Contact link label",
+      "default": "Ask customer care"
+    },
+    {
+      "type": "url",
+      "id": "contact_link",
+      "label": "Contact link",
+      "info": "Empty: /pages/help#contact."
+    },
+    {
+      "type": "header",
+      "content": "On this page"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_toc",
+      "label": "Show \"On this page\"",
+      "default": true,
+      "info": "Shown when the page has two or more Heading 2s."
+    },
+    {
+      "type": "text",
+      "id": "toc_label",
+      "label": "Label",
+      "default": "On this page"
+    },
+    {
+      "type": "header",
+      "content": "Closing card"
+    },
+    {
+      "type": "text",
+      "id": "card_heading",
+      "label": "Heading",
+      "default": "Still unsure about something?"
+    },
+    {
+      "type": "text",
+      "id": "card_text",
+      "label": "Text",
+      "default": "Customer care reads every message and replies by email."
+    },
+    {
+      "type": "text",
+      "id": "card_label",
+      "label": "Button label",
+      "default": "Contact customer care"
+    },
+    {
+      "type": "url",
+      "id": "card_link",
+      "label": "Button link",
+      "info": "Empty: the contact link."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lather policy page"
+    }
+  ],
+  "enabled_on": {
+    "templates": [
+      "page"
+    ]
+  }
+}
+{% endschema %}

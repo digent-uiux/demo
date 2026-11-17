@@ -167,7 +167,7 @@ html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
 
 <style>
 /* Lather v3 product page, reviews (pages/product/50-reviews.html).
-   Rating summary under the heading (the space beside the heading stays empty on purpose), skin-type chips with counts, one lead review on deep green with a customer photo,
+   Rating summary under the heading, "Write a review" top right (under the score on phones), skin-type chips with counts, one lead review on deep green with a customer photo,
    the rest on oat panels in a 7/5 rhythm, "Show more" below. 390 has its own stack with an edge-to-edge lead. */
 .s-pdp-reviews{padding:104px 0 96px;background:var(--raised)}
 .s-pdp-reviews__head{display:flex;flex-direction:column;align-items:flex-start;gap:30px;margin-bottom:40px}
@@ -282,12 +282,93 @@ html.motion .s-pdp-reviews__item.is-lead[data-rv]:not(.in) .s-pdp-reviews__media
   .s-pdp-reviews__more .btn{width:100%}
   .s-pdp-reviews__help{margin-top:22px;text-align:center}
 }
+
+/* "Write a review": the button sits top right, level with the heading (under the score on phones).
+   It opens a drawer in the Lather bag style (a native <dialog>: Esc closes, focus stays inside, back to the button after). */
+.s-pdp-reviews__head{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:30px 32px}
+.s-pdp-reviews__head > .h2{grid-column:1;grid-row:1}
+.s-pdp-reviews__head > .s-pdp-reviews__score{grid-column:1;grid-row:2}
+.s-pdp-reviews__wbtn{grid-column:2;grid-row:1;justify-self:end;margin-top:6px}
+.s-pdp-reviews__wbtn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+
+.s-pdp-reviews__dlg{position:fixed;inset:0 0 0 auto;margin:0;width:min(520px,100%);max-width:100%;height:100%;max-height:none;border:0;padding:0;background:var(--raised);color:var(--ink);flex-direction:column;overflow:hidden;transform:translateX(102%);transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
+.s-pdp-reviews__dlg[open]{display:flex}
+.s-pdp-reviews__dlg.is-in{transform:none;box-shadow:-20px 0 60px rgba(38,43,34,.18)}
+.s-pdp-reviews__dlg::backdrop{background:rgba(38,43,34,.38);opacity:0;transition:opacity .4s var(--ease)}
+.s-pdp-reviews__dlg.is-in::backdrop{opacity:1}
+.s-pdp-reviews__dlg-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding:22px 24px 18px;box-shadow:0 1px 0 var(--line)}
+.s-pdp-reviews__dlg-hd h2{font:500 24px/1.15 var(--f-body);letter-spacing:-.015em}
+.s-pdp-reviews__dlg-hd p{margin-top:6px;font-size:15px;color:var(--muted)}
+.s-pdp-reviews__dlg-hd .icon-btn{flex:none;margin:-6px -8px 0 0}
+.s-pdp-reviews__dlg-hd .icon-btn svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round}
+.s-pdp-reviews__form{flex:1;min-height:0;display:flex;flex-direction:column}
+.s-pdp-reviews__fields{flex:1;overflow:auto;overscroll-behavior:contain;padding:22px 24px 28px;display:flex;flex-direction:column;gap:22px}
+.s-pdp-reviews__f{display:flex;flex-direction:column;gap:8px;min-width:0;border:0;padding:0;margin:0}
+.s-pdp-reviews__f > label,.s-pdp-reviews__f > legend{font:600 15px/1.3 var(--f-body);color:var(--ink);padding:0}
+.s-pdp-reviews__f > legend{margin-bottom:8px}
+.s-pdp-reviews__opt{font-weight:400;color:var(--muted)}
+.s-pdp-reviews__pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.s-pdp-reviews__f input[type="text"],.s-pdp-reviews__f input[type="email"],.s-pdp-reviews__f textarea{width:100%;height:50px;border-radius:var(--r-input,var(--r-btn));border:1.5px solid var(--line);background:var(--oat);padding:0 16px;font:400 16px/1.4 var(--f-body);color:var(--ink)}
+.s-pdp-reviews__f textarea{height:auto;min-height:132px;padding:13px 16px;resize:vertical}
+.s-pdp-reviews__f input:focus-visible,.s-pdp-reviews__f textarea:focus-visible{outline:2px solid var(--moss);outline-offset:1px}
+.s-pdp-reviews__f [aria-invalid="true"]{border-color:var(--sale)}
+.s-pdp-reviews__err{font-size:14px;line-height:1.35;color:var(--sale)}
+.s-pdp-reviews__err:empty{display:none}
+.s-pdp-reviews__hint{font-size:14px;line-height:1.45;color:var(--muted)}
+/* stars: real radios, so arrow keys and screen readers work; only colour changes */
+.s-pdp-reviews__rate{display:flex;align-items:center;gap:14px}
+.s-pdp-reviews__stars{display:flex;gap:2px}
+.s-pdp-reviews__stars input,.s-pdp-reviews__chips input,.s-pdp-reviews__photo input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.s-pdp-reviews__stars label{width:44px;height:44px;display:grid;place-items:center;border-radius:var(--r-btn);font-size:30px;line-height:1;color:var(--stone);cursor:pointer;transition:color .2s,background-color .2s}
+.s-pdp-reviews__stars label.on{color:var(--moss)}
+.s-pdp-reviews__stars input:focus-visible + label{outline:2px solid var(--moss);outline-offset:1px}
+.s-pdp-reviews__stars.is-bad label{color:color-mix(in srgb,var(--sale) 40%,var(--stone))}
+.s-pdp-reviews__rate-txt{font-size:15px;color:var(--muted);min-width:7ch}
+.s-pdp-reviews__chips{display:flex;flex-wrap:wrap;gap:8px}
+.s-pdp-reviews__chips label{display:inline-flex;align-items:center;height:42px;padding:0 18px;border-radius:999px;background:var(--oat);font:500 15px/1 var(--f-body);cursor:pointer;transition:background-color .25s,color .25s}
+.s-pdp-reviews__chips label:hover{background:var(--stone)}
+.s-pdp-reviews__chips input:checked + label{background:var(--deep);color:var(--oat)}
+.s-pdp-reviews__chips input:focus-visible + label{outline:2px solid var(--moss);outline-offset:3px}
+.s-pdp-reviews__photo{display:flex;align-items:center;gap:14px}
+.s-pdp-reviews__photo-add{display:inline-flex;align-items:center;gap:10px;height:50px;padding:0 18px;border-radius:var(--r-btn);background:var(--oat);font:500 15px/1 var(--f-body);cursor:pointer;transition:background-color .25s}
+.s-pdp-reviews__photo-add:hover{background:var(--stone)}
+.s-pdp-reviews__photo-add svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.s-pdp-reviews__photo input:focus-visible + .s-pdp-reviews__photo-add{outline:2px solid var(--moss);outline-offset:3px}
+.s-pdp-reviews__photo-pick{display:flex;align-items:center;gap:12px;min-width:0}
+.s-pdp-reviews__photo-pick[hidden]{display:none}
+.s-pdp-reviews__photo-pick img{width:56px;height:56px;border-radius:var(--r-img);object-fit:cover;background:var(--oat)}
+.s-pdp-reviews__photo-pick span{font-size:14px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:16ch}
+.s-pdp-reviews__photo-pick button{font-size:14px;text-decoration:underline;color:var(--ink)}
+.s-pdp-reviews__dlg-ft{padding:18px 24px 24px;box-shadow:0 -1px 0 var(--line);display:flex;flex-direction:column;gap:12px}
+.s-pdp-reviews__dlg-ft .btn[aria-busy="true"]{opacity:.7;cursor:progress}
+.s-pdp-reviews__dlg-ft p{font-size:14px;line-height:1.45;color:var(--muted);text-align:center}
+.s-pdp-reviews__done{flex:1;display:flex;flex-direction:column;justify-content:flex-start;gap:14px;padding:48px 24px}
+.s-pdp-reviews__done[hidden]{display:none}
+.s-pdp-reviews__done h3{font:500 clamp(26px,2.2vw,30px)/1.18 var(--f-body);letter-spacing:-.02em;max-width:16ch}
+.s-pdp-reviews__done p{font-size:16px;line-height:1.55;color:var(--muted);max-width:36ch}
+.s-pdp-reviews__ask{display:contents}
+.s-pdp-reviews__ask[hidden]{display:none}
+.s-pdp-reviews__flabel{font:600 15px/1.3 var(--f-body);color:var(--ink)}
+.s-pdp-reviews__done-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+html:not(.motion) .s-pdp-reviews__dlg,html:not(.motion) .s-pdp-reviews__dlg::backdrop{transition:none}
+@media (prefers-reduced-motion:reduce){.s-pdp-reviews__dlg,.s-pdp-reviews__dlg::backdrop{transition:none!important}}
+@media (max-width:760px){
+  .s-pdp-reviews__head{display:block}
+  .s-pdp-reviews__wbtn{display:inline-flex;margin-top:24px}
+  .s-pdp-reviews__dlg{width:100%}
+  .s-pdp-reviews__dlg-hd{padding:18px 16px 16px}
+  .s-pdp-reviews__fields{padding:20px 16px 24px}
+  .s-pdp-reviews__pair{grid-template-columns:1fr;gap:22px}
+  .s-pdp-reviews__dlg-ft{padding:14px 16px 18px}
+  .s-pdp-reviews__done{padding:36px 16px}
+}
 </style>
 <noscript><style>.s-pdp-reviews__item.is-off{display:grid}.s-pdp-reviews__more,.s-pdp-reviews__bar{display:none}</style></noscript>
-<section class="s-pdp-reviews" id="pdp-reviews" aria-labelledby="pdp-reviews-title" data-lv3-pdp-reviews data-page="5"><div class="wrap">
+<section class="s-pdp-reviews" id="pdp-reviews" aria-labelledby="pdp-reviews-title" data-lv3-pdp-reviews data-page="5" data-demo><div class="wrap">
  <div class="s-pdp-reviews__head">
   <h2 class="h2" id="pdp-reviews-title" data-rv="line"><span class="ln"><span>The feel, in</span></span><span class="ln"><span>your <em>words.</em></span></span></h2>
   <div class="s-pdp-reviews__score" data-rv="blur" data-rv-delay="1"><span class="s-pdp-reviews__avg">4.6</span><span class="s-pdp-reviews__score-text"><span class="s-pdp-reviews__meter" role="img" aria-label="4.6 out of 5 stars">★★★★★<i style="width:92%">★★★★★</i></span><span class="s-pdp-reviews__count"><b>318</b> reviews of Calm wash</span></span></div>
+  <button type="button" class="btn btn--ghost s-pdp-reviews__wbtn" data-rev-write="form" aria-haspopup="dialog" aria-controls="pdp-reviews-write"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>Write a review</button>
  </div>
  <div class="s-pdp-reviews__bar" role="group" aria-label="Filter reviews by skin type" data-rv="blur" data-rv-delay="2"><span class="s-pdp-reviews__bar-label">Skin type</span><div class="s-pdp-reviews__filters"><button type="button" class="chip" data-rev-filter="all" aria-pressed="true">All<span class="n" data-n>9</span></button><button type="button" class="chip" data-rev-filter="eczema" aria-pressed="false">Eczema-prone<span class="n" data-n>3</span></button><button type="button" class="chip" data-rev-filter="dry" aria-pressed="false">Very dry<span class="n" data-n>2</span></button><button type="button" class="chip" data-rev-filter="sensitive" aria-pressed="false">Sensitive<span class="n" data-n>2</span></button><button type="button" class="chip" data-rev-filter="little" aria-pressed="false">Little ones<span class="n" data-n>2</span></button></div></div>
  <div class="s-pdp-reviews__list" data-rev-list aria-live="polite">
@@ -346,6 +427,27 @@ html.motion .s-pdp-reviews__item.is-lead[data-rv]:not(.in) .s-pdp-reviews__media
    <p class="s-pdp-reviews__who"><b>Dev P.</b>6 weeks in, bought Calm wash</p>
   </div></article>
  </div>
+ <dialog class="s-pdp-reviews__dlg" id="pdp-reviews-write" aria-labelledby="pdp-reviews-write-title" data-rev-dialog data-rate-tpl="[n] out of 5" data-err-rating="Choose from 1 to 5 stars." data-err-text="Tell us a little more, at least 10 characters." data-err-name="Add the name to show with your review." data-err-email="Enter an email like name@example.com.">
+  <div class="s-pdp-reviews__dlg-hd"><div><h2 id="pdp-reviews-write-title">Write a review</h2><p>Calm wash, 400 ml</p></div><button type="button" class="icon-btn" aria-label="Close" data-rev-close><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <form class="s-pdp-reviews__form" id="pdp-review-form" action="#" method="post" novalidate>
+   <input type="hidden" name="contact[tags]" value="review"><input type="hidden" name="contact[Product]" value="Calm wash"><input type="hidden" name="contact[Photo]" value="" data-rev-photo-name>
+   <div class="s-pdp-reviews__ask" data-rev-ask>
+    <div class="s-pdp-reviews__fields">
+     <fieldset class="s-pdp-reviews__f"><legend>Your rating</legend><div class="s-pdp-reviews__rate"><div class="s-pdp-reviews__stars" data-rev-stars aria-describedby="pdp-reviews-err-rating"><input type="radio" name="contact[Rating]" id="pdp-reviews-star-1" value="1" required><label for="pdp-reviews-star-1" title="1 out of 5"><span aria-hidden="true">★</span><span class="sr">1 out of 5</span></label><input type="radio" name="contact[Rating]" id="pdp-reviews-star-2" value="2"><label for="pdp-reviews-star-2" title="2 out of 5"><span aria-hidden="true">★</span><span class="sr">2 out of 5</span></label><input type="radio" name="contact[Rating]" id="pdp-reviews-star-3" value="3"><label for="pdp-reviews-star-3" title="3 out of 5"><span aria-hidden="true">★</span><span class="sr">3 out of 5</span></label><input type="radio" name="contact[Rating]" id="pdp-reviews-star-4" value="4"><label for="pdp-reviews-star-4" title="4 out of 5"><span aria-hidden="true">★</span><span class="sr">4 out of 5</span></label><input type="radio" name="contact[Rating]" id="pdp-reviews-star-5" value="5"><label for="pdp-reviews-star-5" title="5 out of 5"><span aria-hidden="true">★</span><span class="sr">5 out of 5</span></label></div><span class="s-pdp-reviews__rate-txt" data-rev-rate-txt aria-hidden="true"></span></div><p class="s-pdp-reviews__err" id="pdp-reviews-err-rating" data-rev-err="rating" aria-live="polite"></p></fieldset>
+     <fieldset class="s-pdp-reviews__f"><legend>Skin type <span class="s-pdp-reviews__opt">(optional)</span></legend><div class="s-pdp-reviews__chips"><input type="radio" name="contact[Skin type]" id="pdp-reviews-skin-eczema" value="Eczema-prone"><label for="pdp-reviews-skin-eczema">Eczema-prone</label><input type="radio" name="contact[Skin type]" id="pdp-reviews-skin-dry" value="Very dry"><label for="pdp-reviews-skin-dry">Very dry</label><input type="radio" name="contact[Skin type]" id="pdp-reviews-skin-sensitive" value="Sensitive"><label for="pdp-reviews-skin-sensitive">Sensitive</label><input type="radio" name="contact[Skin type]" id="pdp-reviews-skin-little" value="Little ones"><label for="pdp-reviews-skin-little">Little ones</label></div></fieldset>
+     <div class="s-pdp-reviews__f"><label for="pdp-reviews-w-title">Title <span class="s-pdp-reviews__opt">(optional)</span></label><input type="text" id="pdp-reviews-w-title" name="contact[Title]" maxlength="80" placeholder="Sum it up in a few words"></div>
+     <div class="s-pdp-reviews__f"><label for="pdp-reviews-w-text">Your review</label><textarea id="pdp-reviews-w-text" name="contact[body]" rows="5" required minlength="10" maxlength="2000" placeholder="How does your skin feel after a wash? How long have you used it?" data-rev-field="text" aria-describedby="pdp-reviews-err-text"></textarea><p class="s-pdp-reviews__err" id="pdp-reviews-err-text" data-rev-err="text" aria-live="polite"></p></div>
+     <div class="s-pdp-reviews__pair">
+      <div class="s-pdp-reviews__f"><label for="pdp-reviews-w-name">Name</label><input type="text" id="pdp-reviews-w-name" name="contact[name]" autocomplete="given-name" required placeholder="Shown as Maya R." data-rev-field="name" aria-describedby="pdp-reviews-err-name"><p class="s-pdp-reviews__err" id="pdp-reviews-err-name" data-rev-err="name" aria-live="polite"></p></div>
+      <div class="s-pdp-reviews__f"><label for="pdp-reviews-w-email">Email</label><input type="email" id="pdp-reviews-w-email" name="contact[email]" autocomplete="email" required placeholder="Never shown" data-rev-field="email" aria-describedby="pdp-reviews-err-email"><p class="s-pdp-reviews__err" id="pdp-reviews-err-email" data-rev-err="email" aria-live="polite"></p></div>
+     </div>
+     <div class="s-pdp-reviews__f"><span id="pdp-reviews-photo-label" class="s-pdp-reviews__flabel">Photo <span class="s-pdp-reviews__opt">(optional)</span></span><div class="s-pdp-reviews__photo"><input type="file" id="pdp-reviews-w-photo" name="review_photo" accept="image/*" data-rev-file aria-describedby="pdp-reviews-photo-hint"><label class="s-pdp-reviews__photo-add" for="pdp-reviews-w-photo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Add a photo</label><div class="s-pdp-reviews__photo-pick" data-rev-pick hidden><img alt="" width="56" height="56"><span></span><button type="button">Remove</button></div></div><p class="s-pdp-reviews__hint" id="pdp-reviews-photo-hint">We check photos by hand, so we'll email you to ask for it.</p></div>
+    </div>
+    <div class="s-pdp-reviews__dlg-ft"><button type="submit" class="btn btn--primary btn--block">Send review</button><p>We read every review before it appears. Your email stays with us.</p></div>
+   </div>
+  </form>
+  <div class="s-pdp-reviews__done" data-rev-done tabindex="-1" role="status" hidden><h3>Thanks, your review will appear after a quick check</h3><p>We read each one by hand, usually within two days. If we have a question, we'll email you.</p><div class="s-pdp-reviews__done-row"><button type="button" class="btn btn--primary" data-rev-close>Back to the product</button><button type="button" class="btn btn--ghost" data-rev-again>Write another</button></div></div>
+ </dialog>
  <div class="s-pdp-reviews__foot">
   <div class="s-pdp-reviews__more"><button type="button" class="btn btn--ghost" data-rev-more>Show more reviews</button><span class="s-pdp-reviews__shown" data-rev-shown data-tpl="Showing [shown] of [total]">Showing 5 of 9</span></div>
   <p class="s-pdp-reviews__help">Not sure it suits your skin?<a href="../templates/help.html" class="link">Ask us first</a></p>
@@ -435,6 +537,124 @@ html.motion .s-pdp-reviews__item.is-lead[data-rv]:not(.in) .s-pdp-reviews__media
     layout();
   }
   const all = r => (r || document).querySelectorAll('[data-lv3-pdp-reviews]').forEach(init);
+  if (document.readyState !== 'loading') all(); else document.addEventListener('DOMContentLoaded', () => all());
+  document.addEventListener('shopify:section:load', e => all(e.target));
+})();
+/* "Write a review": opens the form drawer (<dialog>), checks it, sends it, says it will appear after a check.
+   data-rev-write="form": the drawer in this section. Sends through the form's own action (Shopify contact form, tag
+   "review") with fetch; a captcha or an error falls back to a normal submit. The static demo (data-demo) sends nothing.
+   data-rev-write="app": a reviews app owns the form; the button clicks the app's own "Write a review" control. */
+(() => {
+  const motion = () => document.documentElement.classList.contains('motion') && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function init(root) {
+    const btn = root.querySelector('[data-rev-write]');
+    if (!btn || btn.dataset.lv3Ready) return; btn.dataset.lv3Ready = '1';
+
+    if (btn.dataset.revWrite === 'app') {
+      btn.addEventListener('click', () => {
+        const box = root.querySelector('.s-pdp-reviews__apps'); if (!box) return;
+        let t = btn.dataset.appSelector ? document.querySelector(btn.dataset.appSelector) : null;
+        if (!t) t = [...box.querySelectorAll('button, a, [role="button"]')].find(el => /write\s+(a\s+)?review/i.test(el.textContent || el.getAttribute('aria-label') || ''));
+        if (t) t.click(); else { box.scrollIntoView({ behavior: motion() ? 'smooth' : 'auto', block: 'start' }); }
+      });
+      return;
+    }
+
+    const dlg = root.querySelector('[data-rev-dialog]'); if (!dlg || !dlg.showModal) return;
+    const form = dlg.querySelector('form');
+    const ask = dlg.querySelector('[data-rev-ask]'), done = dlg.querySelector('[data-rev-done]');
+    const stars = [...dlg.querySelectorAll('[data-rev-stars] input')], starBox = dlg.querySelector('[data-rev-stars]');
+    const rateTxt = dlg.querySelector('[data-rev-rate-txt]');
+    const file = dlg.querySelector('[data-rev-file]'), pick = dlg.querySelector('[data-rev-pick]');
+    const photoNote = dlg.querySelector('[data-rev-photo-name]');
+    const submit = dlg.querySelector('[type="submit"]');
+    const T = dlg.dataset;
+    let url = null;
+
+    const paint = n => stars.forEach((s, i) => s.nextElementSibling.classList.toggle('on', i < n));
+    const val = () => { const c = stars.find(s => s.checked); return c ? +c.value : 0; };
+    const sayRate = () => { const n = val(); if (rateTxt) rateTxt.textContent = n ? (T.rateTpl || '[n] out of 5').replace('[n]', n) : ''; };
+    stars.forEach((s, i) => {
+      const l = s.nextElementSibling;
+      l.addEventListener('mouseenter', () => paint(i + 1));
+      l.addEventListener('mouseleave', () => paint(val()));
+      s.addEventListener('change', () => { paint(val()); sayRate(); setErr('rating', ''); });
+    });
+
+    function setErr(name, msg) {
+      const out = dlg.querySelector(`[data-rev-err="${name}"]`); if (out) out.textContent = msg;
+      if (name === 'rating') { starBox.classList.toggle('is-bad', !!msg); return; }
+      const f = form.querySelector(`[data-rev-field="${name}"]`);
+      if (f) { if (msg) f.setAttribute('aria-invalid', 'true'); else f.removeAttribute('aria-invalid'); }
+    }
+    function check() {
+      const bad = [];
+      if (!val()) { setErr('rating', T.errRating); bad.push(stars[0]); }
+      [['text', T.errText], ['name', T.errName], ['email', T.errEmail]].forEach(([n, m]) => {
+        const f = form.querySelector(`[data-rev-field="${n}"]`); if (!f) return;
+        const v = f.value.trim();
+        const ok = n === 'email' ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) : v.length > (n === 'text' ? 9 : 0);
+        setErr(n, ok ? '' : m); if (!ok) bad.push(f);
+      });
+      if (bad.length) bad[0].focus();
+      return !bad.length;
+    }
+    form.querySelectorAll('[data-rev-field]').forEach(f => f.addEventListener('input', () => { if (f.getAttribute('aria-invalid')) setErr(f.dataset.revField, ''); }));
+
+    if (file) file.addEventListener('change', () => {
+      const f = file.files && file.files[0];
+      if (url) { URL.revokeObjectURL(url); url = null; }
+      if (!f) { pick.hidden = true; if (photoNote) photoNote.value = ''; return; }
+      url = URL.createObjectURL(f);
+      pick.querySelector('img').src = url; pick.querySelector('span').textContent = f.name; pick.hidden = false;
+      if (photoNote) photoNote.value = f.name;
+    });
+    if (pick) pick.querySelector('button').addEventListener('click', () => { file.value = ''; file.dispatchEvent(new Event('change')); file.focus(); });
+
+    function open() {
+      if (dlg.open) return;
+      dlg.showModal(); document.documentElement.style.overflow = 'hidden';
+      requestAnimationFrame(() => requestAnimationFrame(() => dlg.classList.add('is-in')));
+      const first = done && !done.hidden ? done : (stars.find(s => s.checked) || stars[0]);
+      if (first) first.focus({ preventScroll: true });
+    }
+    function close() {
+      if (!dlg.open) return;
+      dlg.classList.remove('is-in');
+      const end = () => { dlg.close(); document.documentElement.style.overflow = ''; };
+      if (motion()) setTimeout(end, 420); else end();
+    }
+    function thanks() {
+      ask.hidden = true; done.hidden = false; done.focus();
+      form.reset(); paint(0); sayRate(); if (file) file.dispatchEvent(new Event('change'));
+    }
+    function again() { done.hidden = true; ask.hidden = false; (stars[0] || form).focus(); }
+
+    btn.addEventListener('click', open);
+    dlg.addEventListener('cancel', e => { e.preventDefault(); close(); });
+    dlg.addEventListener('click', e => { if (e.target === dlg) close(); });
+    dlg.querySelectorAll('[data-rev-close]').forEach(b => b.addEventListener('click', close));
+    dlg.querySelectorAll('[data-rev-again]').forEach(b => b.addEventListener('click', again));
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      if (!check()) return;
+      submit.setAttribute('aria-busy', 'true'); submit.disabled = true;
+      const fin = () => { submit.removeAttribute('aria-busy'); submit.disabled = false; };
+      if (root.hasAttribute('data-demo')) { setTimeout(() => { fin(); thanks(); }, 600); return; }
+      const body = new FormData(form); body.delete('review_photo');
+      fetch(form.action, { method: 'POST', body, headers: { Accept: 'text/html' } })
+        .then(r => {
+          if (r.ok && /contact_posted=true/.test(r.url)) { fin(); thanks(); return; }
+          throw new Error('fallback');
+        })
+        .catch(() => { fin(); if (file) file.disabled = true; HTMLFormElement.prototype.submit.call(form); });
+    });
+
+    // back from a normal submit (captcha): Shopify returns with ?contact_posted=true#<form id>
+    if (/[?&]contact_posted=true/.test(location.search) && form.id && location.hash === '#' + form.id) { ask.hidden = true; done.hidden = false; open(); }
+  }
+  const all = r => (r || document).querySelectorAll('.s-pdp-reviews').forEach(init);
   if (document.readyState !== 'loading') all(); else document.addEventListener('DOMContentLoaded', () => all());
   document.addEventListener('shopify:section:load', e => all(e.target));
 })();
@@ -1269,7 +1489,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
         <p class="ftr__ok" id="ftrOk" aria-live="polite"></p>
         <div class="ftr__cols">
           <nav aria-label="Shop"><h3>Shop</h3><a href="../templates/collection.html">Shop all</a><a href="../templates/product.html">Calm wash</a><a href="../templates/home.html#bundle">Build a set</a><a href="../templates/search.html">Search</a></nav>
-          <nav aria-label="Help"><h3>Help</h3><a href="../templates/help.html">FAQ</a><a href="../templates/help.html#shipping">Shipping</a><a href="../templates/help.html#returns">Skin-reaction refund</a><a href="../templates/help.html#contact">Contact</a></nav>
+          <nav aria-label="Help"><h3>Help</h3><a href="../templates/help.html">FAQ</a><a href="../templates/policy.html#shipping">Shipping</a><a href="../templates/policy.html#returns">Returns and refunds</a><a href="../templates/policy.html#privacy">Privacy</a><a href="../templates/policy.html#terms">Terms</a><a href="../templates/help.html#contact">Contact</a></nav>
           <nav aria-label="About"><h3>About</h3><a href="../templates/about.html">Our story</a><a href="../templates/blog.html">Journal</a><a href="../templates/article.html">Washing eczema-prone skin</a><a href="../templates/account.html">Account</a></nav>
         </div>
       </div>

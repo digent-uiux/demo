@@ -9,7 +9,7 @@ Live demo: https://demo.blocko.ai/html/lather/templates/home.html
 
 Home, collection (filters, sort, pages), product (buy box with subscribe and save and back-in-stock, ingredients,
 how to use, pairs well with, recently viewed, reviews, questions), cart, search, journal, article, about, help,
-wishlist, account (sign in, register, orders, order, reset, activate), 404, password, gift card and a generic page.
+wishlist, policies, account (sign in, register, orders, order, reset, activate), 404, password, gift card and a generic page.
 
 Store features: bag drawer with one progress bar for free shipping and a free gift, quick view, predictive search
 overlay, wishlist (saved on the device), recently viewed, sign-up popup and cookie bar.
@@ -37,6 +37,12 @@ With the Shopify CLI: `shopify theme push --path themes/lather --store <your-sto
   (Buy X get Y, minimum purchase = the threshold, 1 gift product at 100% off) so the gift line costs $0.
 - **Subscribe and save:** shows the product's selling plans, so install a subscription app first.
 - **Back in stock:** requests arrive as contact form messages tagged `back-in-stock`.
+- **Reviews:** "Write a review" opens a drawer form. Without a reviews app, reviews arrive as contact form messages tagged
+  `review` (the photo can't be attached; the shopper is told you'll ask for it by email). With a reviews app block in the
+  reviews section, the button opens the app's own form. Turn it off or rename it in the section settings.
+- **Policies:** write them in Settings > Policies; `/policies/*` pages use the Lather reading styles and the footer's Help
+  menu links them. For one page with all policies, create a page with the template `page.policy`: each Heading 2
+  becomes a link in "On this page".
 - **Wishlist:** create a page with the handle `wishlist` and the template `page.wishlist`.
 - **Pages:** create `about` and `help` pages with the templates `page.about` and `page.help`; the journal is the blog
   with the handle `journal`.

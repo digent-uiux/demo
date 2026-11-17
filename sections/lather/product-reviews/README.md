@@ -67,6 +67,10 @@ Do not use a zip.
 | `page_size` | range | Reviews shown before "Show more" | 5 |
 | `more_label` | text | Show more label | Show more reviews |
 | `shown_text` | text | Shown count | Showing [shown] of [total] |
+| `show_write` | checkbox | Show "Write a review" | True |
+| `write_label` | text | Button label | Write a review |
+| `app_selector` | text | Reviews app write button (CSS selector) |  |
+| `review_tag` | text | Contact form tag | review |
 | `help_text` | text | Help text | Not sure it suits your skin? |
 | `help_link_label` | text | Help link label | Ask us first |
 | `help_link` | url | Help link |  |

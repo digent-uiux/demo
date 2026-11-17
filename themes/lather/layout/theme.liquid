@@ -34,6 +34,7 @@
   <body class="lv3 template-{{ template.name | handle }}{% if template.suffix != blank %} template-{{ template.name | handle }}--{{ template.suffix | handle }}{% endif %}">
     <a class="lv3-skip" href="#MainContent">{{ 'accessibility.skip_to_content' | t }}</a>
     {% sections 'header-group' %}
+    {%- if request.page_type == 'policy' -%}{{ 'blko-lv3-policy.css' | asset_url | stylesheet_tag }}{%- endif -%}
     <main id="MainContent" role="main" tabindex="-1">
       {{ content_for_layout }}
     </main>
