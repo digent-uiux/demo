@@ -41,12 +41,14 @@ Do not use a zip.
    - `assets/blko-lv3-yeseva-one.woff2`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/scrolltext/assets/blko-lv3-yeseva-one.woff2
    - `sections/blko-lv3-scrolltext.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/scrolltext/sections/blko-lv3-scrolltext.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/scrolltext/sections/blko-lv3-theme.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/scrolltext/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-5 |
 | `label` | text | Section label (screen readers) | What every bottle promises |
 | `sr_text` | textarea | Text for screen readers | Fragrance-free. Ten ingredients. Soft foam. pH 5.5. Made wit |
 | `chip_a` | image_picker | Chip photo A |  |

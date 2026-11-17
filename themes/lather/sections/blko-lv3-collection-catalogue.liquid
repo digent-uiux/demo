@@ -96,7 +96,8 @@
   {%- endcapture -%}
 {%- endif -%}
 
-<section class="s-shop-catalogue" id="shopCatalogue-{{ uid }}" aria-label="{{ s.label | escape }}" data-lv3-catalogue data-mode="{{ mode }}" data-total="{{ total }}" data-count-one="{{ s.count_one | escape }}" data-count-other="{{ s.count_other | escape }}" data-remove="{{ s.remove_label | escape }}">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-1' -%}
+<section class="s-shop-catalogue{%- if lv3_sid != 'scheme-1' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="shopCatalogue-{{ uid }}" aria-label="{{ s.label | escape }}" data-lv3-catalogue data-mode="{{ mode }}" data-total="{{ total }}" data-count-one="{{ s.count_one | escape }}" data-count-other="{{ s.count_other | escape }}" data-remove="{{ s.remove_label | escape }}">
 <div class="wrap s-shop-catalogue__layout">
   <details class="s-shop-catalogue__filters" open data-filters>
     <summary>{{ s.filter_title | escape }}</summary>
@@ -210,6 +211,7 @@
   "class": "blko-lv3-section-collection-catalogue",
   "enabled_on": { "templates": ["collection"] },
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
     { "type": "text", "id": "label", "label": "Section label (screen readers)", "default": "Shop all products" },
     { "type": "range", "id": "per_page", "label": "Products per page", "min": 8, "max": 48, "step": 4, "default": 24 },
     { "type": "header", "content": "Filters" },

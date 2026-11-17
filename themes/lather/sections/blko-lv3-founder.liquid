@@ -6,7 +6,8 @@
 <script src="{{ 'blko-lv3-founder.js' | asset_url }}" defer></script>
 
 {%- assign s = section.settings -%}
-<section class="s-founder" id="{{ s.anchor | default: 'founder' | handleize }}" aria-label="{{ s.label | escape }}" data-lv3-founder>
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-5' -%}
+<section class="s-founder{%- if lv3_sid != 'scheme-5' %} color-{{ lv3_sid }} lv3-scheme-pick lv3-scheme-pick--dark{% endif %}" id="{{ s.anchor | default: 'founder' | handleize }}" aria-label="{{ s.label | escape }}" data-lv3-founder>
   {%- if s.image != blank -%}
     {%- assign pos = 'object-position: ' | append: s.image.presentation.focal_point -%}
     {{ s.image | image_url: width: 2400 | image_tag: widths: '750, 1100, 1500, 2000, 2400', sizes: '100vw', loading: 'lazy', class: 's-founder__img', alt: s.image.alt, style: pos }}
@@ -40,6 +41,7 @@
   "class": "blko-lv3-section-founder",
   "max_blocks": 6,
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-5" },
     { "type": "image_picker", "id": "image", "label": "Photo", "info": "Full width. Keep the face on the left; the text sits on the right." },
     { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "We kept crossing" },
     { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "things <em>out.</em>", "info": "Italic text shows in the accent style." },

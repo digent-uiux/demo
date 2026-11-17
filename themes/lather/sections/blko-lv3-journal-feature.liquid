@@ -18,7 +18,8 @@
     assign kicker = blog.title
   endif
 -%}
-<section class="s-jr-feature" aria-labelledby="journalTitle-{{ uid }}"><div class="wrap">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-3' -%}
+<section class="s-jr-feature{%- if lv3_sid != 'scheme-3' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" aria-labelledby="journalTitle-{{ uid }}"><div class="wrap">
   <div class="s-jr-feature__top">
     {%- if s.back_label != blank -%}<a href="{{ s.back_link | default: routes.root_url }}">{{ s.back_label | escape }}</a>{%- endif -%}
     {%- if kicker != blank -%}<p>{{ kicker | escape }}</p>{%- endif -%}
@@ -78,6 +79,7 @@
   "name": "Lather journal opening",
   "class": "blko-lv3-section-journal-feature",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-3" },
     { "type": "text", "id": "back_label", "label": "Back link label", "default": "Back to home" },
     { "type": "url", "id": "back_link", "label": "Back link", "info": "Empty: the home page." },
     { "type": "text", "id": "kicker", "label": "Text on the right", "default": "The Lather journal", "info": "Empty: the blog's title." },

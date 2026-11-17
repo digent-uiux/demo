@@ -11,7 +11,8 @@
   assign s = section.settings
   assign topics = section.blocks | where: 'type', 'topic'
 -%}
-<section class="s-help-answers" id="{{ s.anchor | default: 'answers' | handleize }}" aria-label="{{ s.label | escape }}" data-lv3-help-answers>
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-1' -%}
+<section class="s-help-answers{%- if lv3_sid != 'scheme-1' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="{{ s.anchor | default: 'answers' | handleize }}" aria-label="{{ s.label | escape }}" data-lv3-help-answers>
   <div class="wrap s-help-answers__layout">
     <nav class="s-help-answers__topics" aria-label="{{ s.topics_label | escape }}">
       {%- if s.all_label != blank -%}<button type="button" data-topic="all" aria-pressed="true">{{ s.all_label | escape }}</button>{%- endif -%}
@@ -40,6 +41,7 @@
   "class": "blko-lv3-section-help-answers",
   "max_blocks": 40,
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
     { "type": "text", "id": "all_label", "label": "All topics button", "default": "All questions" },
     { "type": "text", "id": "topics_label", "label": "Topic list label (screen readers)", "default": "Question topics" },
     { "type": "text", "id": "empty", "label": "No results text", "default": "No matching questions yet. Try a simpler search, or use the contact form below." },

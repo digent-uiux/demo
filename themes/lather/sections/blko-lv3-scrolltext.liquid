@@ -12,7 +12,8 @@
   assign link_href = s.link_url | default: '#compare'
   assign rows = '1,2' | split: ','
 -%}
-<section class="s-scrolltext on-dark" aria-label="{{ s.label | escape }}" data-speed="{{ s.speed }}">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-5' -%}
+<section class="s-scrolltext on-dark{%- if lv3_sid != 'scheme-5' %} color-{{ lv3_sid }} lv3-scheme-pick lv3-scheme-pick--dark{% endif %}" aria-label="{{ s.label | escape }}" data-speed="{{ s.speed }}">
   {%- if s.sr_text != blank -%}<p class="sr">{{ s.sr_text | escape }}</p>{%- endif -%}
   {%- for r in rows -%}
     {%- liquid
@@ -64,6 +65,7 @@
   "tag": "div",
   "class": "blko-lv3-scrolltext",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-5" },
     { "type": "text", "id": "label", "label": "Section label (screen readers)", "default": "What every bottle promises" },
     { "type": "textarea", "id": "sr_text", "label": "Text for screen readers", "info": "The moving rows are hidden from screen readers; this sentence is read instead.", "default": "Fragrance-free. Ten ingredients. Soft foam. pH 5.5. Made with oat." },
     { "type": "image_picker", "id": "chip_a", "label": "Chip photo A" },

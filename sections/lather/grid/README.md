@@ -41,7 +41,9 @@ Do not use a zip.
    - `assets/blko-lv3-yeseva-one.woff2`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/grid/assets/blko-lv3-yeseva-one.woff2
    - `sections/blko-lv3-grid.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/grid/sections/blko-lv3-grid.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/grid/sections/blko-lv3-theme.liquid
+   - `snippets/blko-lv3-card-meta.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/grid/snippets/blko-lv3-card-meta.liquid
    - `snippets/blko-lv3-product-data.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/grid/snippets/blko-lv3-product-data.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/grid/snippets/blko-lv3-settings.liquid
    - `snippets/blko-lv3-wishlist-heart.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/grid/snippets/blko-lv3-wishlist-heart.liquid
 3. Add the section in the Theme Editor and pick your products.
 
@@ -49,6 +51,7 @@ Do not use a zip.
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-1 |
 | `heading_1` | inline_richtext | Heading, line 1 | Eight products, one |
 | `heading_2` | inline_richtext | Heading, line 2 | <em>short</em> list. |
 | `anchor` | text | Anchor id | all |

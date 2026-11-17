@@ -41,12 +41,14 @@ Do not use a zip.
    - `sections/blko-lv3-product-questions.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/product-questions/sections/blko-lv3-product-questions.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/product-questions/sections/blko-lv3-theme.liquid
    - `snippets/blko-lv3-product-data.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/product-questions/snippets/blko-lv3-product-data.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/product-questions/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-1 |
 | `heading_1` | inline_richtext | Heading, line 1 | Before you |
 | `heading_2` | inline_richtext | Heading, line 2 | <em>choose.</em> |
 | `text` | textarea | Intro | A few things worth knowing before the bottle reaches your sh |

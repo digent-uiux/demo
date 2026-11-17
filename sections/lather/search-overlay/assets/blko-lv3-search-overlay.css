@@ -28,9 +28,9 @@ html.motion .srch{transform:translateY(-14px)}
 .srch__top .srch__h{margin:0}
 .srch__status{font-size:14px;color:var(--muted)}
 .srch__list{list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px 20px}
-.srch__card{display:flex;flex-direction:column;gap:12px;text-decoration:none;border-radius:var(--r-img)}
+.srch__card{display:flex;flex-direction:column;gap:12px;text-decoration:none;border-radius:var(--r-card,var(--r-img))}
 .srch__card:focus-visible{outline:2px solid var(--moss);outline-offset:4px}
-.srch__img{display:block;aspect-ratio:4/5;border-radius:var(--r-img);overflow:hidden;background:var(--sage-wash)}
+.srch__img{display:block;aspect-ratio:var(--card-ratio,4/5);border-radius:var(--r-img);overflow:hidden;background:var(--sage-wash)}
 .srch__img img,.srch__img svg{width:100%;height:100%;object-fit:cover;transition:filter .25s var(--ease)}
 .srch__card:hover .srch__img img{filter:brightness(.95)}
 .srch__txt{display:flex;flex-direction:column;gap:6px;min-width:0}

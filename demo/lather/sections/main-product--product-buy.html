@@ -87,7 +87,7 @@ html.motion [data-rv="blur"]:not(.in){opacity:0;transform:translateY(12px);filte
 html.motion [data-rv="settle"]:not(.in){opacity:0;transform:scale(.96)}
 html.motion [data-rv="draw"]{transform-origin:left center}
 html.motion [data-rv="draw"]:not(.in){transform:scaleX(0)}
-html.motion [data-rv="line"] .ln{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
+[data-rv="line"] .ln{display:block}html.motion [data-rv="line"] .ln{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
 html.motion [data-rv="line"] .ln>span{display:block;transition:transform .9s cubic-bezier(.22,1,.36,1)}
 html.motion [data-rv="line"]:not(.in) .ln>span{transform:translateY(105%)}
 html.motion [data-rv="line"] .ln:nth-child(2)>span{transition-delay:.09s}
@@ -132,6 +132,13 @@ html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
 .mnav.open{transform:none}
 .mnav a{font:500 26px/1.3 var(--f-body);text-decoration:none;padding:10px 0;border-bottom:1px solid var(--line)}
 .mnav__top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+/* product links on cards and chips: image + name go to the product page; buttons inside stay on top */
+.lv3-plink{display:block;color:inherit;text-decoration:none;border-radius:inherit}
+.lv3-plink--fill{position:absolute;inset:0;z-index:0}
+.lv3-plink:focus-visible{outline:2px solid var(--moss);outline-offset:-3px}
+.lv3-pname{color:inherit;text-decoration:none;text-underline-offset:4px;text-decoration-thickness:1px}
+.lv3-pname:hover{text-decoration-line:underline}
+.lv3-pname:focus-visible{outline:2px solid var(--moss);outline-offset:3px;border-radius:2px}
 </style>
 </head>
 <body class="pg-product">
@@ -271,18 +278,36 @@ html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
 </section>
 <script>
 document.addEventListener('DOMContentLoaded',()=>{
- const root=document.querySelector('.s-pdp-buy');if(!root||!window.LATHER)return;const L=window.LATHER,p=L.products.calm,input=root.querySelector('#pdp-qty'),mobile=root.querySelector('#pdp-mobile-buy');
+ const root=document.querySelector('.s-pdp-buy');if(!root||!window.LATHER)return;const L=window.LATHER,id=L.pid?L.pid():'calm',p=L.products[id],input=root.querySelector('#pdp-qty'),mobile=root.querySelector('#pdp-mobile-buy');
+ /* one product page in the demo: product.html?p=<id> shows that product (unknown ids fall back to calm) */
+ const WASH=['calm','soft','rich','chamomile'],isWash=WASH.includes(id),unitOf=/\bg$/.test(p.size)?'g':'ml',amount=parseFloat(p.size)||100;
+ if(id!=='calm'){
+  const noun={bar:'bar',cream:'jar',little:'tube'}[id]||'bottle',cat=isWash?['Body wash','collection.html?type=wash']:id==='bar'?['Soap bar','collection.html?type=bar']:['Lotion & cream','collection.html?type=moisturiser'];
+  const crumb=root.querySelector('.s-pdp-buy__crumb'),cl=crumb.querySelectorAll('a')[1];cl.textContent=cat[0];cl.href=cat[1];crumb.querySelector('[aria-current]').textContent=p.name;
+  root.querySelector('#pdp-title').textContent=p.name;
+  root.querySelector('.s-pdp-buy__line').textContent=p.line;
+  const alt=p.name+', '+p.size,im=root.querySelector('#pdp-main-image');im.src=p.img;im.alt=alt;root.querySelector('#pdp-image-caption').textContent='The '+noun+', '+p.size;
+  const shots=[{img:p.img,label:'The '+noun,cap:'The '+noun+', '+p.size,alt}].concat(p.hover?[{img:p.hover,label:'Up close',cap:p.name+', up close',alt:p.name+', up close'}]:[]);
+  root.querySelectorAll('[data-pdp-image]').forEach((b,i)=>{const s=shots[i];b.hidden=!s;if(!s)return;b.dataset.pdpImage=s.img;b.dataset.caption=s.cap;b.dataset.alt=s.alt;b.querySelector('img').src=s.img;b.querySelector('span').textContent=s.label;b.setAttribute('aria-pressed',String(i===0))});
+  if(shots.length<2)root.querySelector('.s-pdp-buy__thumbs').hidden=true;
+  const ff=(p.labels||[]).includes('ff'),ph=/pH 5\.5/.test(p.ing||'');
+  root.querySelector('.s-pdp-buy__facts').innerHTML=(ff?'<span><b>Fragrance-free</b>No added scent</span>':'<span><b>Lightly scented</b>0.2% chamomile oil</span>')+(ph?'<span><b>pH 5.5</b>A gentle rinse</span>':'<span><b>Colloidal oat</b>For dry skin</span>')+'<span><b>'+p.size+'</b>One '+noun+'</span>';
+  const opts=root.querySelectorAll('.s-pdp-buy__size label');opts[0].lastChild.textContent=p.size+' '+noun;if(!isWash)opts[1].style.display='none';
+  const heart=root.querySelector('#pdp-purchase [data-wish]');heart.dataset.wish=id;heart.setAttribute('aria-label','Save '+p.name);
+  const rc=document.querySelector('[data-recent-current]');if(rc)rc.setAttribute('data-recent-current',id);
+ }
+ document.title=p.name+', '+p.size+' | Lather';
  /* sizes: the 1 L refill is sold out in this demo, so the back-in-stock form can be seen */
- const sizes={'400':{title:'400 ml bottle',short:'400 ml',ml:400,price:p.price,available:true},'1000':{title:'1 L refill',short:'1 L refill',ml:1000,price:36,available:false}};
+ const sizes={'400':{title:p.size,short:p.size,ml:amount,price:p.price,available:true},'1000':{title:'1 L refill',short:'1 L refill',ml:1000,price:p.price*2,available:false}};
  const PCT=10,buyBtn=root.querySelector('#pdp-purchase [data-pdp-add]'),notify=root.querySelector('#pdp-notify'),nForm=notify.querySelector('form'),nEmail=root.querySelector('#pdp-notify-email'),nMsg=root.querySelector('#pdp-notify-msg'),nDone=notify.querySelector('[data-pdp-notify-done]');
  const $=s=>root.querySelector(s),set=(s,v,h)=>{const el=$(s);if(el)el[h?'innerHTML':'textContent']=v};
- const round=n=>Math.round(n*100)/100,unit=v=>L.fmt(round(v.price/v.ml*100))+' per 100 ml';
+ const round=n=>Math.round(n*100)/100,unit=v=>L.fmt(round(v.price/v.ml*100))+' per 100 '+(v.ml===1000?'ml':unitOf);
  const qty=()=>Math.max(1,Math.min(20,Math.floor(Number(input.value)||1)));
  const size=()=>sizes[(root.querySelector('[data-pdp-variant]:checked')||{}).value||'400'];
  const plan=()=>{const r=root.querySelector('input[name="selling_plan"]:checked');return r&&r.value?r:null};
  const each=()=>{const v=size(),pl=plan();return pl?round(v.price*(100-PCT)/100):v.price};
  const ls={get(){try{return JSON.parse(localStorage.getItem('lather-notify')||'{}')}catch(e){return{}}},set(o){try{localStorage.setItem('lather-notify',JSON.stringify(o))}catch(e){}}};
- const sizeKey=()=>'calm-'+((root.querySelector('[data-pdp-variant]:checked')||{}).value||'400');
+ const sizeKey=()=>id+'-'+((root.querySelector('[data-pdp-variant]:checked')||{}).value||'400');
  function update(){
   const v=size(),q=qty(),pl=plan(),total=L.fmt(round(each()*q)),out=!v.available;
   input.value=q;$('[data-pdp-qty="-1"]').disabled=q===1;$('[data-pdp-qty="1"]').disabled=q===20;
@@ -291,7 +316,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   set('[data-plan-once]',L.fmt(v.price));set('[data-plan-sub]',L.fmt(round(v.price*(100-PCT)/100)));
   buyBtn.textContent=out?'Email me when it’s back':'Add to bag, '+total;
   if(out)buyBtn.setAttribute('aria-expanded',String(!notify.hidden));else buyBtn.removeAttribute('aria-expanded');
-  set('[data-pdp-mobile-name]','Calm wash, '+v.short);set('[data-pdp-mobile-price]',out?'Sold out':total);
+  set('[data-pdp-mobile-name]',p.name+', '+v.short);set('[data-pdp-mobile-price]',out?'Sold out':total);
   const mb=mobile.querySelector('[data-pdp-add]');mb.textContent=out?'Email me when it’s back':'Add to bag';
   set('#pdp-quantity-note',out||q<2?'':q+' bottles, '+total+(pl?' each delivery.':' total.'));
   if(!out){closeNotify(false);}
@@ -314,7 +339,7 @@ document.addEventListener('DOMContentLoaded',()=>{
  function buy(from){update();const v=size();
   if(!v.available){if(from===mobile.querySelector('[data-pdp-add]'))$('#pdp-purchase').scrollIntoView({block:'center',behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'});openNotify();return}
   const pl=plan(),q=qty();
-  if(pl)L.add('calm',q,{key:'calm-sub-'+pl.dataset.weeks,price:each(),note:v.short+', every '+pl.dataset.weeks+' weeks, save '+PCT+'%'});else L.add('calm',q);
+  if(pl)L.add(id,q,{key:id+'-sub-'+pl.dataset.weeks,price:each(),note:v.short+', every '+pl.dataset.weeks+' weeks, save '+PCT+'%'});else L.add(id,q);
  }
  root.querySelectorAll('[data-pdp-qty]').forEach(b=>b.addEventListener('click',()=>{input.value=qty()+Number(b.dataset.pdpQty);update();}));input.addEventListener('change',update);
  root.querySelectorAll('[data-pdp-add]').forEach(b=>b.addEventListener('click',()=>buy(b)));
@@ -523,7 +548,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
 
     /* ---------- local index (window.LATHER.products) ---------- */
     function hitOf(k, p) {
-      var url = p.url || (C.pages || {})[k] || '';
+      var url = p.url || (C.pages || {})[k] || (L().url ? L().url(k) : '') || '';
       return { key: k, name: p.name, size: p.size || '', price: +p.price || 0, compare: +p.compare || 0, img: p.img || '', url: url || C.fallbackUrl || '#', quick: !url };
     }
     function index() {
@@ -715,6 +740,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
   'use strict';
   if (window.LatherRecent) return;
   var K = 'lather-recent', MAX = 12;
+  var EYE = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg>';
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
   var handleOf = function (url) { var m = /\/products\/([^\/?#]+)/.exec(url || ''); return m ? decodeURIComponent(m[1]) : ''; };
 
@@ -791,11 +817,16 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
       var L = window.LATHER;
       /* an entry viewed on another page: hand it to the runtime so its quick view works here */
       if (!e.url && L && L.products && !L.products[e.k]) L.products[e.k] = { name: e.name, size: e.size, price: e.price, compare: null, img: e.img, hover: '', labels: [], line: '', ing: '', variant: null, available: true, url: '' };
-      var name = e.url
-        ? '<a class="s-pdp-recent__name" href="' + esc(e.url) + '">' + esc(e.name) + '</a>'
+      /* the name is the product link (stretched over the card, so the image opens it too); quick view is its own button */
+      var u = e.url || (L && L.url ? L.url(e.k) : '');
+      var canQuick = !!(L && L.products && L.products[e.k]);
+      var name = u
+        ? '<a class="s-pdp-recent__name" href="' + esc(u) + '">' + esc(e.name) + '</a>'
         : '<button class="s-pdp-recent__name" type="button" data-quick="' + esc(e.k) + '" aria-label="' + esc(S.quick + ': ' + e.name) + '">' + esc(e.name) + '</button>';
+      var qv = u && canQuick ? '<button class="s-pdp-recent__qv" type="button" data-quick="' + esc(e.k) + '" aria-label="' + esc(S.quick + ': ' + e.name) + '">' + EYE + '</button>' : '';
       var img = e.img ? '<img src="' + esc(thumb(e.img)) + '" alt="" width="120" height="150" loading="lazy">' : '<span class="blko-lv3-ph" aria-hidden="true"></span>';
-      return '<li class="s-pdp-recent__card">' + img + '<div class="s-pdp-recent__text">' + name + (e.size ? '<span class="small">' + esc(e.size) + '</span>' : '') + '</div><span class="price">' + esc(fmt(e.price)) + '</span></li>';
+      if (u) img = '<a class="lv3-plink s-pdp-recent__img" href="' + esc(u) + '" tabindex="-1" aria-hidden="true">' + img + '</a>';
+      return '<li class="s-pdp-recent__card">' + img + '<div class="s-pdp-recent__text">' + name + (e.size ? '<span class="small">' + esc(e.size) + '</span>' : '') + '</div><span class="price">' + esc(fmt(e.price)) + '</span>' + qv + '</li>';
     }
     function render() {
       if (!list) return;
@@ -974,7 +1005,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
       one: d.countOne || '1 saved product.', many: d.countMany || '[count] saved products.', zero: d.countZero || '',
       add: d.addLabel || 'Add to bag', add_aria: d.addAria || 'Add [name] to bag', rm: d.removeLabel || 'Remove',
       rm_aria: d.removeAria || 'Remove [name] from wishlist', sold: d.soldLabel || 'Sold out', removed: d.removedLabel || 'Removed [name].',
-      undo: d.undoLabel || 'Undo', save_aria: d.saveAria || 'Save [name]'
+      undo: d.undoLabel || 'Undo', save_aria: d.saveAria || 'Save [name]', qv_aria: d.quickAria || 'Quick view [name]'
     };
     var ul = root.querySelector('[data-wish-list]'), empty = root.querySelector('[data-wish-empty]'), status = root.querySelector('[data-wish-status]');
     var undoBox = root.querySelector('[data-wish-undo]'), sugg = root.querySelector('[data-wish-suggest]');
@@ -992,10 +1023,17 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     }
     function media(src, alt) { return src ? '<img src="' + esc(src) + '" alt="' + esc(alt) + '" loading="lazy">' : ph; }
     function labels(ids) { var l = L(); return l.labelsHTML ? l.labelsHTML(ids || []) : ''; }
+    /* product page link: a real product's own url, else the demo page for that key (LATHER.url) */
+    function urlOf(e, key) { return (e && e.url) || (L().url ? L().url(key) : '') || ''; }
     function nameHTML(e, key) {
-      if (e.url) return '<a href="' + esc(e.url) + '">' + esc(e.name) + '</a>';
+      var u = urlOf(e, key);
+      if (u) return '<a class="lv3-pname" href="' + esc(u) + '">' + esc(e.name) + '</a>';
       if (L().products[key]) return '<button type="button" data-quick="' + esc(key) + '">' + esc(e.name) + '</button>';
       return esc(e.name);
+    }
+    function linked(u, html) { return u ? '<a class="lv3-plink lv3-plink--fill" href="' + esc(u) + '" tabindex="-1" aria-hidden="true">' + html + '</a>' : html; }
+    function qvHTML(key, name) {
+      return L().products[key] ? '<button class="s-wish__qv" type="button" data-quick="' + esc(key) + '" aria-label="' + esc(T.qv_aria.replace('[name]', name)) + '">' + eyeSVG + '</button>' : '';
     }
     function priceHTML(e) { return esc(fmt(e.price)) + (e.compare > e.price ? ' <s>' + esc(fmt(e.compare)) + '</s>' : ''); }
     function card(e) {
@@ -1004,7 +1042,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
         ? '<button class="btn btn--light btn--sm s-wish__add" type="button" disabled>' + esc(T.sold) + '</button>'
         : '<button class="btn btn--primary btn--sm s-wish__add" type="button" data-wish-add="' + esc(e.id) + '" aria-label="' + esc(tpl(T.add_aria, { name: e.name })) + '">' + esc(T.add) + '</button>';
       return '<li class="s-wish__card">' +
-        '<div class="s-wish__media">' + media(e.img, alt) + '<div class="labels">' + labels(e.labels) + '</div></div>' +
+        '<div class="s-wish__media">' + linked(urlOf(e, e.key), media(e.img, alt)) + '<div class="labels">' + labels(e.labels) + '</div>' + qvHTML(e.key, e.name) + '</div>' +
         '<div class="s-wish__info"><h2 class="s-wish__name">' + nameHTML(e, e.key) + '</h2>' +
         (e.size ? '<p class="s-wish__size">' + esc(e.size) + '</p>' : '') +
         '<p class="price s-wish__price">' + priceHTML(e) + '</p></div>' +
@@ -1016,9 +1054,9 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
       var p = L().products[key]; if (!p) return '';
       var alt = p.size ? p.name + ', ' + p.size : p.name;
       return '<li class="s-wish__card s-wish__card--sugg">' +
-        '<div class="s-wish__media">' + media(p.img, alt) + '<div class="labels">' + labels(p.labels) + '</div>' +
+        '<div class="s-wish__media">' + linked(urlOf(p, key), media(p.img, alt)) + '<div class="labels">' + labels(p.labels) + '</div>' + qvHTML(key, p.name) +
         '<button class="lv3-heart" type="button" data-wish="' + esc(key) + '" aria-pressed="false" aria-label="' + esc(tpl(T.save_aria, { name: p.name })) + '">' + heartSVG + '</button></div>' +
-        '<div class="s-wish__info"><h3 class="s-wish__name"><button type="button" data-quick="' + esc(key) + '">' + esc(p.name) + '</button></h3>' +
+        '<div class="s-wish__info"><h3 class="s-wish__name">' + nameHTML(p, key) + '</h3>' +
         (p.size ? '<p class="s-wish__size">' + esc(p.size) + '</p>' : '') +
         '<p class="price s-wish__price">' + priceHTML({ price: +p.price || 0, compare: +p.compare || 0 }) + '</p></div>' +
         '<div class="s-wish__acts"><button class="btn btn--ghost btn--sm s-wish__add" type="button" data-add="' + esc(key) + '" aria-label="' + esc(tpl(T.add_aria, { name: p.name })) + '">' + esc(T.add) + '</button></div>' +
@@ -1080,6 +1118,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     render();
   }
 
+  var eyeSVG = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg>';
   var heartSVG = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg>';
 
   function init() {
@@ -1187,6 +1226,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
 @media (prefers-reduced-motion:reduce){.ship__bar i{transition:none}.line--gift.is-new,.s-cart-bag__line--gift.is-new{animation:none}}
 .drawer__list{flex:1;overflow:auto;padding:4px 24px}
 .line{display:grid;grid-template-columns:72px 1fr auto;gap:14px;padding:14px 0;border-top:1px solid var(--line);align-items:center}
+.line .lv3-plink{width:72px;border-radius:var(--r-img)}
 .line img{width:72px;height:88px;object-fit:cover;border-radius:var(--r-img);background:var(--oat)}
 .line h3{font:600 15px/1.25 var(--f-body)}
 .line .small{margin:2px 0 8px}
@@ -1283,6 +1323,11 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     little:{name:'Little lotion',size:'150 ml',price:14,img:'../img/c-little-lotion.jpg',hover:'../img/h-little.jpg',labels:['new','ff'],line:'Soft, light oat lotion for ages 1 and up. Fragrance-free.',ing:'Water, glycerin, colloidal oat, calendula oil, shea butter, cetearyl alcohol, xanthan gum, sodium benzoate.'},
     bar:{name:'Oat bar',size:'120 g',price:9,img:'../img/c-oat-bar.jpg',hover:'../img/h-bar.jpg',labels:['best','ff'],line:'Oat milk soap bar for face and body. Rich lather that rinses soft.',ing:'Sodium olivate, sodium cocoate, oat milk, colloidal oat, shea butter, glycerin.'}
   };
+  /* product page links: one product page in the demo; calm is product.html, the others product.html?p=<id>.
+     Relative links on purpose: blocko.ai 308-redirects product.html to /product and keeps the query. */
+  const CAT=Object.keys(products);
+  const url=id=>CAT.includes(id)?(id==='calm'?'product.html':'product.html?p='+encodeURIComponent(id)):'';
+  const pid=()=>{let q='';try{q=new URLSearchParams(location.search).get('p')||''}catch(e){}return CAT.includes(q)?q:'calm'};
   const LBL={best:['label--best','Best seller'],ff:['label--ff','Fragrance-free'],new:['label--new','New'],sale:['label--sale','Sale']};
   const fmt=n=>'$'+(Math.round(n*100)/100).toFixed(n%1?2:0);
   const labelsHTML=ids=>ids.map(k=>`<span class="label ${LBL[k][0]}">${LBL[k][1]}</span>`).join('');
@@ -1345,6 +1390,8 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
       el.querySelector('.ship__add').hidden=!P.offer;
     });
   }
+  /* bag line image and name link to the product page (custom lines such as sets stay plain) */
+  const lnk=(l,h,img)=>{const u=url(l.id);return u?`<a class="${img?'lv3-plink':'lv3-pname'}" href="${u}"${img?' tabindex="-1" aria-hidden="true"':''}>${h}</a>`:h};
   function render(){
     syncGift(); save();
     const n=count(), st=subtotal();
@@ -1355,8 +1402,8 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     const list=$('#drawerList'); let h='';
     if(removed) h+=`<div class="undo"><span>Removed ${removed.name}.</span><button type="button" id="undoBtn">Undo</button></div>`;
     if(!cart.length && !removed) h+=`<p class="drawer__empty">Nothing here yet. Most people start with the Oat bar, $9.</p>`;
-    cart.forEach((l,i)=>{if(l.gift){h+=`<div class="line line--gift${fresh?' is-new':''}"><img src="${l.img}" alt=""><div><h3>${l.name}</h3><p class="small">${l.note}</p></div><div style="text-align:right"><p class="price" style="font-size:18px">Free</p><button class="rm" type="button" data-rm="${i}" aria-label="Remove free ${l.name}">Remove</button></div></div>`;return}
-      h+=`<div class="line"><img src="${l.img}" alt=""><div><h3>${l.name}</h3><p class="small">${l.note||l.size}</p><div class="qty"><button type="button" aria-label="Less" data-q="${i}" data-d="-1">−</button><span>${l.qty}</span><button type="button" aria-label="More" data-q="${i}" data-d="1">+</button></div></div><div style="text-align:right"><p class="price" style="font-size:18px">${fmt(l.qty*l.price)}</p><button class="rm" type="button" data-rm="${i}">Remove</button></div></div>`});
+    cart.forEach((l,i)=>{if(l.gift){h+=`<div class="line line--gift${fresh?' is-new':''}">${lnk(l,`<img src="${l.img}" alt="">`,1)}<div><h3>${lnk(l,l.name)}</h3><p class="small">${l.note}</p></div><div style="text-align:right"><p class="price" style="font-size:18px">Free</p><button class="rm" type="button" data-rm="${i}" aria-label="Remove free ${l.name}">Remove</button></div></div>`;return}
+      h+=`<div class="line">${lnk(l,`<img src="${l.img}" alt="">`,1)}<div><h3>${lnk(l,l.name)}</h3><p class="small">${l.note||l.size}</p><div class="qty"><button type="button" aria-label="Less" data-q="${i}" data-d="-1">−</button><span>${l.qty}</span><button type="button" aria-label="More" data-q="${i}" data-d="1">+</button></div></div><div style="text-align:right"><p class="price" style="font-size:18px">${fmt(l.qty*l.price)}</p><button class="rm" type="button" data-rm="${i}">Remove</button></div></div>`});
     if(cart.length && !cart.some(l=>l.id==='bar')) h+=`<div class="drawer__up"><img src="${products.bar.img}" alt=""><span style="flex:1">Add the Oat bar for face and hands, $9.</span><button class="btn btn--light btn--sm" type="button" data-add="bar">Add</button></div>`;
     list.innerHTML=h;
     $('#checkoutBtn').textContent= st?`Check out, ${fmt(st)}`:'Check out';
@@ -1411,7 +1458,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     /* free gift: settings, live state, and bring a declined gift back */
     gift:{...GIFT,state:()=>progress()}, addGift(){setGiftOff(false);render()}
   };
-  window.LATHER={products,add,quick,fmt,labelsHTML,U,openLayer,closeAll,cart:cartApi};
+  window.LATHER={products,add,quick,fmt,labelsHTML,U,openLayer,closeAll,cart:cartApi,url,pid};
   render();
 
   /* header: over the hero until scrolled */

@@ -42,18 +42,19 @@ Do not use a zip.
    - `sections/blko-lv3-social.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/social/sections/blko-lv3-social.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/social/sections/blko-lv3-theme.liquid
    - `snippets/blko-lv3-product-data.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/social/snippets/blko-lv3-product-data.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/social/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-2 |
 | `heading_1` | inline_richtext | Heading, line 1 | Shared by <em>you.</em> |
 | `heading_2` | inline_richtext | Heading, line 2 (optional) |  |
 | `handle` | text | Account | @lather.skin |
 | `tagline` | text | Account line | Tag us to be featured |
 | `button_label` | text | Button label | Follow |
 | `button_link` | url | Button link |  |
-| `quick_label` | text | Product chip label (screen readers) | Quick view |
 | `label` | text | Section label (screen readers) | Customer photos |
 | `anchor` | text | Anchor id | social |

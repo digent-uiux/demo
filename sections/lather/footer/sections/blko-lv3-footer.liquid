@@ -3,11 +3,16 @@
   links while the menu is empty), the small logo above the promise, country/language ({% form 'localization' %}), payment line, ©.
 {%- endcomment -%}
 {%- liquid
+  # Theme settings > Logo first, then this section's own logo.
+  assign lg = settings.logo | default: section.settings.logo
+  assign wordmark = settings.logo_text | default: shop.name
+-%}
+{%- liquid
   assign logo_class = 'logo'
   assign logo_style = ''
-  if section.settings.logo != blank
+  if lg != blank
     if section.settings.logo_tint
-      assign logo_style = section.settings.logo | image_url: width: 360 | prepend: '--lv3-logo:url(' | append: ')'
+      assign logo_style = lg | image_url: width: 360 | prepend: '--lv3-logo:url(' | append: ')'
     else
       assign logo_class = 'logo logo--img'
     endif
@@ -15,17 +20,18 @@
     assign logo_class = 'logo logo--text'
   endif
 -%}
-<footer class="ftr" id="footer">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-4' -%}
+<footer class="ftr{%- if lv3_sid != 'scheme-4' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="footer">
   <div class="wrap">
     <div class="ftr__top">
       <div>
         {%- if section.settings.show_mark -%}
           <a class="ftr__mark" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }}">
             <span class="{{ logo_class }}"{% if logo_style != blank %} style="{{ logo_style }}"{% endif %}>
-              {%- if section.settings.logo != blank and section.settings.logo_tint == false -%}
-                {{ section.settings.logo | image_url: width: 360 | image_tag: alt: '', widths: '180, 360', sizes: '180px', loading: 'lazy' }}
-              {%- elsif section.settings.logo == blank and section.settings.brand_logo == false -%}
-                {{ shop.name | escape }}
+              {%- if lg != blank and section.settings.logo_tint == false -%}
+                {{ lg | image_url: width: 360 | image_tag: alt: '', widths: '180, 360', sizes: '180px', loading: 'lazy' }}
+              {%- elsif lg == blank and section.settings.brand_logo == false -%}
+                {{ wordmark | escape }}
               {%- endif -%}
             </span>
           </a>
@@ -64,6 +70,7 @@
     </div>
     <div class="ftr__base">
       <span>© {{ 'now' | date: '%Y' }} {{ shop.name | escape }}.</span>
+      {%- render 'blko-lv3-social-links' -%}
       {%- if section.settings.show_country or section.settings.show_language -%}
         <div class="ftr__loc">
           {%- form 'localization', id: 'lv3-loc' -%}
@@ -98,6 +105,7 @@
   "tag": "div",
   "class": "lv3-ftr-sec",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-4" },
     {
       "type": "header",
       "content": "Promise"
@@ -159,7 +167,8 @@
     {
       "type": "image_picker",
       "id": "logo",
-      "label": "Logo image"
+      "label": "Logo image",
+      "info": "Theme settings > Logo > Logo image is used first when set."
     },
     {
       "type": "checkbox",

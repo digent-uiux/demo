@@ -13,7 +13,8 @@
     assign letter = page.content
   endif
 -%}
-<section class="s-about-story" id="{{ s.anchor | default: 'story' | handleize }}" aria-labelledby="{{ uid }}">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-1' -%}
+<section class="s-about-story{%- if lv3_sid != 'scheme-1' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="{{ s.anchor | default: 'story' | handleize }}" aria-labelledby="{{ uid }}">
   <div class="wrap">
     <h1 class="h1 s-about-story__title" id="{{ uid }}" data-rv="line">
       {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
@@ -46,6 +47,7 @@
   "name": "Lather about story",
   "class": "blko-lv3-section-about-story",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
     { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "It began after" },
     { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "the <em>shower.</em>", "info": "Italic text shows in the accent style." },
     { "type": "checkbox", "id": "use_page_content", "label": "Use page content as the letter", "default": true, "info": "When the page has content (Online Store > Pages), it replaces the letter below." },

@@ -48793,7 +48793,8 @@
             "sections/lather/404-lost/assets/blko-lv3-wishlist.js",
             "sections/lather/404-lost/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/404-lost/sections/blko-lv3-404-lost.liquid",
-            "sections/lather/404-lost/sections/blko-lv3-theme.liquid"
+            "sections/lather/404-lost/sections/blko-lv3-theme.liquid",
+            "sections/lather/404-lost/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-404-lost.css",
@@ -48840,7 +48841,8 @@
             "sections/lather/about-fragrance/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/about-fragrance/sections/blko-lv3-about-fragrance.liquid",
             "sections/lather/about-fragrance/sections/blko-lv3-theme.liquid",
-            "sections/lather/about-fragrance/snippets/blko-lv3-product-data.liquid"
+            "sections/lather/about-fragrance/snippets/blko-lv3-product-data.liquid",
+            "sections/lather/about-fragrance/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-about-fragrance.css",
@@ -48890,7 +48892,8 @@
             "sections/lather/about-line/sections/blko-lv3-about-line.liquid",
             "sections/lather/about-line/sections/blko-lv3-theme.liquid",
             "sections/lather/about-line/snippets/blko-lv3-about-line-start.liquid",
-            "sections/lather/about-line/snippets/blko-lv3-product-data.liquid"
+            "sections/lather/about-line/snippets/blko-lv3-product-data.liquid",
+            "sections/lather/about-line/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-about-line.css",
@@ -48939,7 +48942,8 @@
             "sections/lather/about-making/assets/blko-lv3-wishlist.js",
             "sections/lather/about-making/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/about-making/sections/blko-lv3-about-making.liquid",
-            "sections/lather/about-making/sections/blko-lv3-theme.liquid"
+            "sections/lather/about-making/sections/blko-lv3-theme.liquid",
+            "sections/lather/about-making/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-about-making.css",
@@ -48987,7 +48991,8 @@
             "sections/lather/about-story/assets/blko-lv3-wishlist.js",
             "sections/lather/about-story/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/about-story/sections/blko-lv3-about-story.liquid",
-            "sections/lather/about-story/sections/blko-lv3-theme.liquid"
+            "sections/lather/about-story/sections/blko-lv3-theme.liquid",
+            "sections/lather/about-story/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-about-story.css",
@@ -49035,7 +49040,8 @@
             "sections/lather/account-access/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/account-access/sections/blko-lv3-account-access.liquid",
             "sections/lather/account-access/sections/blko-lv3-theme.liquid",
-            "sections/lather/account-access/snippets/blko-lv3-account-intro.liquid"
+            "sections/lather/account-access/snippets/blko-lv3-account-intro.liquid",
+            "sections/lather/account-access/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-account-access.css",
@@ -49083,7 +49089,8 @@
             "sections/lather/account-orders/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/account-orders/sections/blko-lv3-account-orders.liquid",
             "sections/lather/account-orders/sections/blko-lv3-theme.liquid",
-            "sections/lather/account-orders/snippets/blko-lv3-account-intro.liquid"
+            "sections/lather/account-orders/snippets/blko-lv3-account-intro.liquid",
+            "sections/lather/account-orders/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-account-access.css",
@@ -49128,7 +49135,8 @@
             "sections/lather/announcement/assets/blko-lv3-wishlist.js",
             "sections/lather/announcement/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/announcement/sections/blko-lv3-announcement.liquid",
-            "sections/lather/announcement/sections/blko-lv3-theme.liquid"
+            "sections/lather/announcement/sections/blko-lv3-theme.liquid",
+            "sections/lather/announcement/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -49175,7 +49183,8 @@
             "sections/lather/article-continue/assets/blko-lv3-wishlist.js",
             "sections/lather/article-continue/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/article-continue/sections/blko-lv3-article-continue.liquid",
-            "sections/lather/article-continue/sections/blko-lv3-theme.liquid"
+            "sections/lather/article-continue/sections/blko-lv3-theme.liquid",
+            "sections/lather/article-continue/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -49223,7 +49232,8 @@
             "sections/lather/article-opening/assets/blko-lv3-wishlist.js",
             "sections/lather/article-opening/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/article-opening/sections/blko-lv3-article-opening.liquid",
-            "sections/lather/article-opening/sections/blko-lv3-theme.liquid"
+            "sections/lather/article-opening/sections/blko-lv3-theme.liquid",
+            "sections/lather/article-opening/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -49271,7 +49281,8 @@
             "sections/lather/article-reading/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/article-reading/sections/blko-lv3-article-reading.liquid",
             "sections/lather/article-reading/sections/blko-lv3-theme.liquid",
-            "sections/lather/article-reading/snippets/blko-lv3-product-data.liquid"
+            "sections/lather/article-reading/snippets/blko-lv3-product-data.liquid",
+            "sections/lather/article-reading/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -49328,7 +49339,8 @@
             "sections/lather/bundle/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/bundle/sections/blko-lv3-bundle.liquid",
             "sections/lather/bundle/sections/blko-lv3-theme.liquid",
-            "sections/lather/bundle/snippets/blko-lv3-product-data.liquid"
+            "sections/lather/bundle/snippets/blko-lv3-product-data.liquid",
+            "sections/lather/bundle/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -49380,7 +49392,8 @@
             "sections/lather/cart-bag/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/cart-bag/sections/blko-lv3-cart-bag.liquid",
             "sections/lather/cart-bag/sections/blko-lv3-theme.liquid",
-            "sections/lather/cart-bag/snippets/blko-lv3-free-gift-progress.liquid"
+            "sections/lather/cart-bag/snippets/blko-lv3-free-gift-progress.liquid",
+            "sections/lather/cart-bag/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -49430,7 +49443,8 @@
             "sections/lather/cart-finish/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/cart-finish/sections/blko-lv3-cart-finish.liquid",
             "sections/lather/cart-finish/sections/blko-lv3-theme.liquid",
-            "sections/lather/cart-finish/snippets/blko-lv3-product-data.liquid"
+            "sections/lather/cart-finish/snippets/blko-lv3-product-data.liquid",
+            "sections/lather/cart-finish/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -49478,7 +49492,8 @@
             "sections/lather/collage/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/collage/sections/blko-lv3-collage.liquid",
             "sections/lather/collage/sections/blko-lv3-theme.liquid",
-            "sections/lather/collage/snippets/blko-lv3-product-data.liquid"
+            "sections/lather/collage/snippets/blko-lv3-product-data.liquid",
+            "sections/lather/collage/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -49528,8 +49543,10 @@
             "sections/lather/collection-catalogue/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/collection-catalogue/sections/blko-lv3-collection-catalogue.liquid",
             "sections/lather/collection-catalogue/sections/blko-lv3-theme.liquid",
+            "sections/lather/collection-catalogue/snippets/blko-lv3-card-meta.liquid",
             "sections/lather/collection-catalogue/snippets/blko-lv3-collection-card.liquid",
             "sections/lather/collection-catalogue/snippets/blko-lv3-product-data.liquid",
+            "sections/lather/collection-catalogue/snippets/blko-lv3-settings.liquid",
             "sections/lather/collection-catalogue/snippets/blko-lv3-wishlist-heart.liquid"
           ],
           "deps": [
@@ -49581,7 +49598,8 @@
             "sections/lather/collection-choosing/assets/blko-lv3-wishlist.js",
             "sections/lather/collection-choosing/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/collection-choosing/sections/blko-lv3-collection-choosing.liquid",
-            "sections/lather/collection-choosing/sections/blko-lv3-theme.liquid"
+            "sections/lather/collection-choosing/sections/blko-lv3-theme.liquid",
+            "sections/lather/collection-choosing/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -49627,7 +49645,8 @@
             "sections/lather/collection-intro/assets/blko-lv3-wishlist.js",
             "sections/lather/collection-intro/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/collection-intro/sections/blko-lv3-collection-intro.liquid",
-            "sections/lather/collection-intro/sections/blko-lv3-theme.liquid"
+            "sections/lather/collection-intro/sections/blko-lv3-theme.liquid",
+            "sections/lather/collection-intro/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -49677,7 +49696,8 @@
             "sections/lather/compare/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/compare/sections/blko-lv3-compare.liquid",
             "sections/lather/compare/sections/blko-lv3-theme.liquid",
-            "sections/lather/compare/snippets/blko-lv3-product-data.liquid"
+            "sections/lather/compare/snippets/blko-lv3-product-data.liquid",
+            "sections/lather/compare/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -49727,7 +49747,8 @@
             "sections/lather/faq/assets/blko-lv3-wishlist.js",
             "sections/lather/faq/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/faq/sections/blko-lv3-faq.liquid",
-            "sections/lather/faq/sections/blko-lv3-theme.liquid"
+            "sections/lather/faq/sections/blko-lv3-theme.liquid",
+            "sections/lather/faq/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -49778,8 +49799,10 @@
             "sections/lather/featured/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/featured/sections/blko-lv3-featured.liquid",
             "sections/lather/featured/sections/blko-lv3-theme.liquid",
+            "sections/lather/featured/snippets/blko-lv3-card-meta.liquid",
             "sections/lather/featured/snippets/blko-lv3-featured-card.liquid",
             "sections/lather/featured/snippets/blko-lv3-product-data.liquid",
+            "sections/lather/featured/snippets/blko-lv3-settings.liquid",
             "sections/lather/featured/snippets/blko-lv3-wishlist-heart.liquid"
           ],
           "deps": [
@@ -49830,7 +49853,9 @@
             "sections/lather/footer/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/footer/sections/blko-lv3-footer.liquid",
             "sections/lather/footer/sections/blko-lv3-theme.liquid",
-            "sections/lather/footer/snippets/blko-lv3-demo-links.liquid"
+            "sections/lather/footer/snippets/blko-lv3-demo-links.liquid",
+            "sections/lather/footer/snippets/blko-lv3-settings.liquid",
+            "sections/lather/footer/snippets/blko-lv3-social-links.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -49878,7 +49903,8 @@
             "sections/lather/founder/assets/blko-lv3-wishlist.js",
             "sections/lather/founder/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/founder/sections/blko-lv3-founder.liquid",
-            "sections/lather/founder/sections/blko-lv3-theme.liquid"
+            "sections/lather/founder/sections/blko-lv3-theme.liquid",
+            "sections/lather/founder/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -49929,7 +49955,9 @@
             "sections/lather/grid/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/grid/sections/blko-lv3-grid.liquid",
             "sections/lather/grid/sections/blko-lv3-theme.liquid",
+            "sections/lather/grid/snippets/blko-lv3-card-meta.liquid",
             "sections/lather/grid/snippets/blko-lv3-product-data.liquid",
+            "sections/lather/grid/snippets/blko-lv3-settings.liquid",
             "sections/lather/grid/snippets/blko-lv3-wishlist-heart.liquid"
           ],
           "deps": [
@@ -49980,7 +50008,8 @@
             "sections/lather/header/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/header/sections/blko-lv3-header.liquid",
             "sections/lather/header/sections/blko-lv3-theme.liquid",
-            "sections/lather/header/snippets/blko-lv3-demo-links.liquid"
+            "sections/lather/header/snippets/blko-lv3-demo-links.liquid",
+            "sections/lather/header/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -50026,7 +50055,8 @@
             "sections/lather/help-answers/assets/blko-lv3-wishlist.js",
             "sections/lather/help-answers/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/help-answers/sections/blko-lv3-help-answers.liquid",
-            "sections/lather/help-answers/sections/blko-lv3-theme.liquid"
+            "sections/lather/help-answers/sections/blko-lv3-theme.liquid",
+            "sections/lather/help-answers/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -50076,7 +50106,8 @@
             "sections/lather/help-contact/assets/blko-lv3-wishlist.js",
             "sections/lather/help-contact/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/help-contact/sections/blko-lv3-help-contact.liquid",
-            "sections/lather/help-contact/sections/blko-lv3-theme.liquid"
+            "sections/lather/help-contact/sections/blko-lv3-theme.liquid",
+            "sections/lather/help-contact/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -50122,7 +50153,8 @@
             "sections/lather/help-support/assets/blko-lv3-wishlist.js",
             "sections/lather/help-support/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/help-support/sections/blko-lv3-help-support.liquid",
-            "sections/lather/help-support/sections/blko-lv3-theme.liquid"
+            "sections/lather/help-support/sections/blko-lv3-theme.liquid",
+            "sections/lather/help-support/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -50170,7 +50202,8 @@
             "sections/lather/hero/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/hero/sections/blko-lv3-hero.liquid",
             "sections/lather/hero/sections/blko-lv3-theme.liquid",
-            "sections/lather/hero/snippets/blko-lv3-product-data.liquid"
+            "sections/lather/hero/snippets/blko-lv3-product-data.liquid",
+            "sections/lather/hero/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -50220,7 +50253,8 @@
             "sections/lather/highlight/assets/blko-lv3-wishlist.js",
             "sections/lather/highlight/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/highlight/sections/blko-lv3-highlight.liquid",
-            "sections/lather/highlight/sections/blko-lv3-theme.liquid"
+            "sections/lather/highlight/sections/blko-lv3-theme.liquid",
+            "sections/lather/highlight/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -50271,7 +50305,8 @@
             "sections/lather/hotspots/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/hotspots/sections/blko-lv3-hotspots.liquid",
             "sections/lather/hotspots/sections/blko-lv3-theme.liquid",
-            "sections/lather/hotspots/snippets/blko-lv3-product-data.liquid"
+            "sections/lather/hotspots/snippets/blko-lv3-product-data.liquid",
+            "sections/lather/hotspots/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -50320,7 +50355,8 @@
             "sections/lather/journal-feature/assets/blko-lv3-wishlist.js",
             "sections/lather/journal-feature/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/journal-feature/sections/blko-lv3-journal-feature.liquid",
-            "sections/lather/journal-feature/sections/blko-lv3-theme.liquid"
+            "sections/lather/journal-feature/sections/blko-lv3-theme.liquid",
+            "sections/lather/journal-feature/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -50367,7 +50403,8 @@
             "sections/lather/journal-reading/assets/blko-lv3-wishlist.js",
             "sections/lather/journal-reading/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/journal-reading/sections/blko-lv3-journal-reading.liquid",
-            "sections/lather/journal-reading/sections/blko-lv3-theme.liquid"
+            "sections/lather/journal-reading/sections/blko-lv3-theme.liquid",
+            "sections/lather/journal-reading/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -50416,7 +50453,8 @@
             "sections/lather/list-collections/assets/blko-lv3-wishlist.js",
             "sections/lather/list-collections/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/list-collections/sections/blko-lv3-list-collections.liquid",
-            "sections/lather/list-collections/sections/blko-lv3-theme.liquid"
+            "sections/lather/list-collections/sections/blko-lv3-theme.liquid",
+            "sections/lather/list-collections/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -50460,7 +50498,8 @@
             "sections/lather/main-page/assets/blko-lv3-wishlist.js",
             "sections/lather/main-page/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/main-page/sections/blko-lv3-main-page.liquid",
-            "sections/lather/main-page/sections/blko-lv3-theme.liquid"
+            "sections/lather/main-page/sections/blko-lv3-theme.liquid",
+            "sections/lather/main-page/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -50507,7 +50546,8 @@
             "sections/lather/marquee/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/marquee/sections/blko-lv3-marquee.liquid",
             "sections/lather/marquee/sections/blko-lv3-theme.liquid",
-            "sections/lather/marquee/snippets/blko-lv3-marquee-icon.liquid"
+            "sections/lather/marquee/snippets/blko-lv3-marquee-icon.liquid",
+            "sections/lather/marquee/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -50558,7 +50598,8 @@
             "sections/lather/overlays/sections/blko-lv3-overlays.liquid",
             "sections/lather/overlays/sections/blko-lv3-theme.liquid",
             "sections/lather/overlays/snippets/blko-lv3-free-gift-progress.liquid",
-            "sections/lather/overlays/snippets/blko-lv3-product-data.liquid"
+            "sections/lather/overlays/snippets/blko-lv3-product-data.liquid",
+            "sections/lather/overlays/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -50605,7 +50646,8 @@
             "sections/lather/password/assets/blko-lv3-wishlist.js",
             "sections/lather/password/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/password/sections/blko-lv3-password.liquid",
-            "sections/lather/password/sections/blko-lv3-theme.liquid"
+            "sections/lather/password/sections/blko-lv3-theme.liquid",
+            "sections/lather/password/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -50649,7 +50691,8 @@
             "sections/lather/popup/assets/blko-lv3-wishlist.js",
             "sections/lather/popup/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/popup/sections/blko-lv3-popup.liquid",
-            "sections/lather/popup/sections/blko-lv3-theme.liquid"
+            "sections/lather/popup/sections/blko-lv3-theme.liquid",
+            "sections/lather/popup/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -50697,6 +50740,7 @@
             "sections/lather/product-buy/sections/blko-lv3-product-buy.liquid",
             "sections/lather/product-buy/sections/blko-lv3-theme.liquid",
             "sections/lather/product-buy/snippets/blko-lv3-product-data.liquid",
+            "sections/lather/product-buy/snippets/blko-lv3-settings.liquid",
             "sections/lather/product-buy/snippets/blko-lv3-wishlist-heart.liquid"
           ],
           "deps": [
@@ -50729,7 +50773,7 @@
           "name": "Lather PDP ingredients",
           "kind": "section",
           "category": "main-product",
-          "description": "ingredients Two-line heading and intro; ingredient blocks in a two-column list; a details toggle with the complete list.",
+          "description": "ingredients One photo bleeds off the left edge (image picker, Shopify placeholder until set); heading and intro beside it; ingredient blocks in a two-column list, each with a line icon from the theme'",
           "targets": {
             "html": "ok",
             "shopify": "ok"
@@ -50751,7 +50795,8 @@
             "sections/lather/product-ingredients/assets/blko-lv3-wishlist.js",
             "sections/lather/product-ingredients/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/product-ingredients/sections/blko-lv3-product-ingredients.liquid",
-            "sections/lather/product-ingredients/sections/blko-lv3-theme.liquid"
+            "sections/lather/product-ingredients/sections/blko-lv3-theme.liquid",
+            "sections/lather/product-ingredients/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -50801,7 +50846,8 @@
             "sections/lather/product-pair/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/product-pair/sections/blko-lv3-product-pair.liquid",
             "sections/lather/product-pair/sections/blko-lv3-theme.liquid",
-            "sections/lather/product-pair/snippets/blko-lv3-product-data.liquid"
+            "sections/lather/product-pair/snippets/blko-lv3-product-data.liquid",
+            "sections/lather/product-pair/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -50849,7 +50895,8 @@
             "sections/lather/product-questions/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/product-questions/sections/blko-lv3-product-questions.liquid",
             "sections/lather/product-questions/sections/blko-lv3-theme.liquid",
-            "sections/lather/product-questions/snippets/blko-lv3-product-data.liquid"
+            "sections/lather/product-questions/snippets/blko-lv3-product-data.liquid",
+            "sections/lather/product-questions/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -50875,7 +50922,7 @@
           "name": "Lather product reviews",
           "kind": "section",
           "category": "main-product",
-          "description": "reviews Heading and intro; review blocks (name, two detail lines, stars, quote); a foot line with a help link.",
+          "description": "reviews Heading; average rating and count from the product's standard review metafields (reviews.rating, reviews.rating_count), with section settings as the fallback; skin-type chips with counts; revi",
           "targets": {
             "html": "ok",
             "shopify": "ok"
@@ -50890,6 +50937,7 @@
             "sections/lather/product-reviews/assets/blko-lv3-logo.png",
             "sections/lather/product-reviews/assets/blko-lv3-mark.png",
             "sections/lather/product-reviews/assets/blko-lv3-product-reviews.css",
+            "sections/lather/product-reviews/assets/blko-lv3-product-reviews.js",
             "sections/lather/product-reviews/assets/blko-lv3-recent.js",
             "sections/lather/product-reviews/assets/blko-lv3-store.js",
             "sections/lather/product-reviews/assets/blko-lv3-urbanist.woff2",
@@ -50897,7 +50945,8 @@
             "sections/lather/product-reviews/assets/blko-lv3-wishlist.js",
             "sections/lather/product-reviews/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/product-reviews/sections/blko-lv3-product-reviews.liquid",
-            "sections/lather/product-reviews/sections/blko-lv3-theme.liquid"
+            "sections/lather/product-reviews/sections/blko-lv3-theme.liquid",
+            "sections/lather/product-reviews/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -50905,6 +50954,7 @@
             "blko-lv3-logo.png",
             "blko-lv3-mark.png",
             "blko-lv3-product-reviews.css",
+            "blko-lv3-product-reviews.js",
             "blko-lv3-recent.js",
             "blko-lv3-store.js",
             "blko-lv3-urbanist.woff2",
@@ -50915,6 +50965,7 @@
           "localeKeys": [],
           "themeSettings": [],
           "blockTypes": [
+            "@app",
             "review"
           ]
         },
@@ -50923,7 +50974,7 @@
           "name": "Lather product how to use",
           "kind": "section",
           "category": "main-product",
-          "description": "how to use Heading and intro; numbered step blocks; a note with a link.",
+          "description": "how to use Heading and intro; numbered step blocks, each with its own photo (image picker, Shopify placeholder until set); a note with a link.",
           "targets": {
             "html": "ok",
             "shopify": "ok"
@@ -50945,7 +50996,8 @@
             "sections/lather/product-use/assets/blko-lv3-wishlist.js",
             "sections/lather/product-use/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/product-use/sections/blko-lv3-product-use.liquid",
-            "sections/lather/product-use/sections/blko-lv3-theme.liquid"
+            "sections/lather/product-use/sections/blko-lv3-theme.liquid",
+            "sections/lather/product-use/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -50995,7 +51047,8 @@
             "sections/lather/quiz/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/quiz/sections/blko-lv3-quiz.liquid",
             "sections/lather/quiz/sections/blko-lv3-theme.liquid",
-            "sections/lather/quiz/snippets/blko-lv3-product-data.liquid"
+            "sections/lather/quiz/snippets/blko-lv3-product-data.liquid",
+            "sections/lather/quiz/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -51044,7 +51097,8 @@
             "sections/lather/recent/assets/blko-lv3-wishlist.js",
             "sections/lather/recent/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/recent/sections/blko-lv3-recent.liquid",
-            "sections/lather/recent/sections/blko-lv3-theme.liquid"
+            "sections/lather/recent/sections/blko-lv3-theme.liquid",
+            "sections/lather/recent/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -51092,7 +51146,8 @@
             "sections/lather/reels/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/reels/sections/blko-lv3-reels.liquid",
             "sections/lather/reels/sections/blko-lv3-theme.liquid",
-            "sections/lather/reels/snippets/blko-lv3-product-data.liquid"
+            "sections/lather/reels/snippets/blko-lv3-product-data.liquid",
+            "sections/lather/reels/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -51143,7 +51198,8 @@
             "sections/lather/reviews/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/reviews/sections/blko-lv3-reviews.liquid",
             "sections/lather/reviews/sections/blko-lv3-theme.liquid",
-            "sections/lather/reviews/snippets/blko-lv3-product-data.liquid"
+            "sections/lather/reviews/snippets/blko-lv3-product-data.liquid",
+            "sections/lather/reviews/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -51194,7 +51250,8 @@
             "sections/lather/routine/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/routine/sections/blko-lv3-routine.liquid",
             "sections/lather/routine/sections/blko-lv3-theme.liquid",
-            "sections/lather/routine/snippets/blko-lv3-product-data.liquid"
+            "sections/lather/routine/snippets/blko-lv3-product-data.liquid",
+            "sections/lather/routine/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -51244,7 +51301,8 @@
             "sections/lather/scrolltext/assets/blko-lv3-wishlist.js",
             "sections/lather/scrolltext/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/scrolltext/sections/blko-lv3-scrolltext.liquid",
-            "sections/lather/scrolltext/sections/blko-lv3-theme.liquid"
+            "sections/lather/scrolltext/sections/blko-lv3-theme.liquid",
+            "sections/lather/scrolltext/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -51293,7 +51351,8 @@
             "sections/lather/search-find/assets/blko-lv3-wishlist.js",
             "sections/lather/search-find/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/search-find/sections/blko-lv3-search-find.liquid",
-            "sections/lather/search-find/sections/blko-lv3-theme.liquid"
+            "sections/lather/search-find/sections/blko-lv3-theme.liquid",
+            "sections/lather/search-find/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -51343,7 +51402,8 @@
             "sections/lather/search-overlay/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/search-overlay/sections/blko-lv3-search-overlay.liquid",
             "sections/lather/search-overlay/sections/blko-lv3-theme.liquid",
-            "sections/lather/search-overlay/snippets/blko-lv3-product-data.liquid"
+            "sections/lather/search-overlay/snippets/blko-lv3-product-data.liquid",
+            "sections/lather/search-overlay/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -51394,8 +51454,10 @@
             "sections/lather/search-results/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/search-results/sections/blko-lv3-search-results.liquid",
             "sections/lather/search-results/sections/blko-lv3-theme.liquid",
+            "sections/lather/search-results/snippets/blko-lv3-card-meta.liquid",
             "sections/lather/search-results/snippets/blko-lv3-product-data.liquid",
-            "sections/lather/search-results/snippets/blko-lv3-search-item.liquid"
+            "sections/lather/search-results/snippets/blko-lv3-search-item.liquid",
+            "sections/lather/search-results/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -51446,7 +51508,8 @@
             "sections/lather/social/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/social/sections/blko-lv3-social.liquid",
             "sections/lather/social/sections/blko-lv3-theme.liquid",
-            "sections/lather/social/snippets/blko-lv3-product-data.liquid"
+            "sections/lather/social/snippets/blko-lv3-product-data.liquid",
+            "sections/lather/social/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -51493,7 +51556,8 @@
             "sections/lather/theme/assets/blko-lv3-wishlist.css",
             "sections/lather/theme/assets/blko-lv3-wishlist.js",
             "sections/lather/theme/assets/blko-lv3-yeseva-one.woff2",
-            "sections/lather/theme/sections/blko-lv3-theme.liquid"
+            "sections/lather/theme/sections/blko-lv3-theme.liquid",
+            "sections/lather/theme/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",
@@ -51538,7 +51602,8 @@
             "sections/lather/wishlist/assets/blko-lv3-yeseva-one.woff2",
             "sections/lather/wishlist/sections/blko-lv3-theme.liquid",
             "sections/lather/wishlist/sections/blko-lv3-wishlist.liquid",
-            "sections/lather/wishlist/snippets/blko-lv3-product-data.liquid"
+            "sections/lather/wishlist/snippets/blko-lv3-product-data.liquid",
+            "sections/lather/wishlist/snippets/blko-lv3-settings.liquid"
           ],
           "deps": [
             "blko-lv3-antonio-600.woff2",

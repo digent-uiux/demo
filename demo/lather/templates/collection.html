@@ -87,7 +87,7 @@ html.motion [data-rv="blur"]:not(.in){opacity:0;transform:translateY(12px);filte
 html.motion [data-rv="settle"]:not(.in){opacity:0;transform:scale(.96)}
 html.motion [data-rv="draw"]{transform-origin:left center}
 html.motion [data-rv="draw"]:not(.in){transform:scaleX(0)}
-html.motion [data-rv="line"] .ln{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
+[data-rv="line"] .ln{display:block}html.motion [data-rv="line"] .ln{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
 html.motion [data-rv="line"] .ln>span{display:block;transition:transform .9s cubic-bezier(.22,1,.36,1)}
 html.motion [data-rv="line"]:not(.in) .ln>span{transform:translateY(105%)}
 html.motion [data-rv="line"] .ln:nth-child(2)>span{transition-delay:.09s}
@@ -132,6 +132,13 @@ html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
 .mnav.open{transform:none}
 .mnav a{font:500 26px/1.3 var(--f-body);text-decoration:none;padding:10px 0;border-bottom:1px solid var(--line)}
 .mnav__top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+/* product links on cards and chips: image + name go to the product page; buttons inside stay on top */
+.lv3-plink{display:block;color:inherit;text-decoration:none;border-radius:inherit}
+.lv3-plink--fill{position:absolute;inset:0;z-index:0}
+.lv3-plink:focus-visible{outline:2px solid var(--moss);outline-offset:-3px}
+.lv3-pname{color:inherit;text-decoration:none;text-underline-offset:4px;text-decoration-thickness:1px}
+.lv3-pname:hover{text-decoration-line:underline}
+.lv3-pname:focus-visible{outline:2px solid var(--moss);outline-offset:3px;border-radius:2px}
 </style>
 </head>
 <body class="pg-collection">
@@ -186,13 +193,13 @@ html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
 .s-shop-catalogue__fieldset{border:0;padding:22px 0;border-bottom:1px solid var(--line)}.s-shop-catalogue__fieldset legend{font-weight:600;font-size:15px;padding-top:20px}.s-shop-catalogue__option{display:flex;align-items:center;gap:10px;line-height:1.4;font-size:14px;min-height:36px;cursor:pointer}.s-shop-catalogue__option input{width:17px;height:17px;accent-color:var(--moss);flex:none}.s-shop-catalogue__option input:focus-visible{outline:2px solid var(--moss);outline-offset:3px}.s-shop-catalogue__reset{margin-top:18px;font-size:14px;text-decoration:underline;text-underline-offset:4px;color:var(--muted)}
 .s-shop-catalogue__toolbar{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:24px;min-height:42px}.s-shop-catalogue__count{color:var(--muted);font-size:14px}.s-shop-catalogue__sort{display:flex;align-items:center;gap:10px;font-size:14px}.s-shop-catalogue__sort select{border:1px solid var(--line);background:var(--raised);border-radius:var(--r-btn);padding:10px 30px 10px 12px;max-width:190px;cursor:pointer}.s-shop-catalogue__sort select:focus-visible{outline:2px solid var(--moss);outline-offset:3px}
 .s-shop-catalogue__active{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}.s-shop-catalogue__active:empty{display:none}.s-shop-catalogue__active button{font-size:13px;line-height:1.3;min-height:34px;padding:7px 12px;border:1px solid var(--line);border-radius:var(--r-btn);background:var(--raised);transition:background-color .2s}.s-shop-catalogue__active button:hover{background:var(--stone)}
-.s-shop-catalogue__list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:34px 20px;list-style:none}.s-shop-catalogue__card{min-width:0;display:flex;flex-direction:column}.s-shop-catalogue__media{position:relative;aspect-ratio:4/5;border-radius:var(--r-img);overflow:hidden;background:var(--sage-wash)}.s-shop-catalogue__view{display:block;width:100%;height:100%;text-align:left}.s-shop-catalogue__media img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;transition:opacity .4s var(--ease)}.s-shop-catalogue__hover{opacity:0}.s-shop-catalogue__view:hover .s-shop-catalogue__hover,.s-shop-catalogue__view:focus-visible .s-shop-catalogue__hover{opacity:1}.s-shop-catalogue__view:focus-visible{outline:3px solid var(--moss);outline-offset:-3px}.s-shop-catalogue__labels{position:absolute;top:10px;left:10px;pointer-events:none}.s-shop-catalogue__view-hint{position:absolute;bottom:12px;left:12px;padding:6px 10px;background:var(--raised);border-radius:4px;font-size:13px;opacity:0;transition:opacity .2s}.s-shop-catalogue__view:hover .s-shop-catalogue__view-hint,.s-shop-catalogue__view:focus-visible .s-shop-catalogue__view-hint{opacity:1}
-.s-shop-catalogue__info{padding:14px 0 0;display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:baseline}.s-shop-catalogue__name{font-size:17px;font-weight:600;line-height:1.25}.s-shop-catalogue__name button{text-align:left;text-decoration:none}.s-shop-catalogue__name button:hover{text-decoration:underline;text-underline-offset:4px}.s-shop-catalogue__size{font-size:13px;color:var(--muted);margin-top:4px}.s-shop-catalogue__price{grid-column:2;grid-row:1}.s-shop-catalogue__desc{grid-column:1/-1;color:var(--muted);font-size:14px;line-height:1.45;min-height:2.9em}.s-shop-catalogue__add{margin-top:14px;width:100%;background:var(--raised);box-shadow:inset 0 0 0 1px var(--line)}.s-shop-catalogue__add:hover{background:var(--deep);color:var(--oat)}
+.s-shop-catalogue__list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-flow:row dense;gap:34px 20px;list-style:none}.s-shop-catalogue__card{min-width:0;display:flex;flex-direction:column}.s-shop-catalogue__media{position:relative;aspect-ratio:4/5;border-radius:var(--r-img);overflow:hidden;background:var(--sage-wash)}.s-shop-catalogue__view{display:block;width:100%;height:100%;text-align:left}.s-shop-catalogue__media img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;transition:opacity .4s var(--ease)}.s-shop-catalogue__hover{opacity:0}.s-shop-catalogue__media:hover .s-shop-catalogue__hover{opacity:1}.s-shop-catalogue__view:focus-visible{outline:3px solid var(--moss);outline-offset:-3px}.s-shop-catalogue__labels{position:absolute;top:10px;left:10px;pointer-events:none}.s-shop-catalogue__view-hint{position:absolute;bottom:12px;left:12px;z-index:2;padding:6px 10px;background:var(--raised);border-radius:4px;font-size:13px;opacity:0;transition:opacity .2s,background-color .2s}.s-shop-catalogue__view-hint:hover{background:var(--oat)}.s-shop-catalogue__media:hover .s-shop-catalogue__view-hint,.s-shop-catalogue__view-hint:focus-visible{opacity:1}.s-shop-catalogue__view-hint:focus-visible{outline:2px solid var(--moss);outline-offset:2px}@media(hover:none){.s-shop-catalogue__view-hint{opacity:1}}
+.s-shop-catalogue__info{padding:14px 0 0;display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:baseline}.s-shop-catalogue__name{font-size:17px;font-weight:600;line-height:1.25}.s-shop-catalogue__size{font-size:13px;color:var(--muted);margin-top:4px}.s-shop-catalogue__price{grid-column:2;grid-row:1}.s-shop-catalogue__desc{grid-column:1/-1;color:var(--muted);font-size:14px;line-height:1.45;min-height:2.9em}.s-shop-catalogue__add{margin-top:14px;width:100%;background:var(--raised);box-shadow:inset 0 0 0 1px var(--line)}.s-shop-catalogue__add:hover{background:var(--deep);color:var(--oat)}
 .s-shop-catalogue__editorial{grid-column:span 2;position:relative;min-height:380px;background:var(--deep);border-radius:var(--r-img);overflow:hidden;color:var(--oat);display:grid;grid-template-columns:1fr 1fr;align-items:stretch}.s-shop-catalogue__editorial img{position:static;grid-column:2;grid-row:1;width:100%;height:100%;object-fit:cover;object-position:62% 55%;background:var(--sage-wash)}.s-shop-catalogue__editorial-copy{grid-column:1;grid-row:1;position:relative;width:100%;padding:30px;align-self:center}.s-shop-catalogue__editorial-copy .h2{font-size:30px;max-width:10ch}.s-shop-catalogue__editorial-copy p{margin:16px 0 22px;font-size:15px;max-width:23ch}.s-shop-catalogue__editorial-copy .price{font-size:26px;display:block;margin-top:14px}
 .s-shop-catalogue__empty{padding:76px 28px;text-align:center;background:var(--raised);border-radius:var(--r-img);border:1px solid var(--line)}.s-shop-catalogue__empty .h3{margin-bottom:14px}.s-shop-catalogue__empty p{color:var(--muted);max-width:36ch;margin:0 auto 24px}.s-shop-catalogue__footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
 @media(min-width:761px){.s-shop-catalogue__filters>summary{pointer-events:none}.s-shop-catalogue__filters>summary:after{display:none}}
 @media(max-width:1100px){.s-shop-catalogue__layout{grid-template-columns:166px minmax(0,1fr);gap:24px}.s-shop-catalogue__list{grid-template-columns:repeat(2,minmax(0,1fr))}.s-shop-catalogue__editorial{min-height:320px}.s-shop-catalogue__editorial-copy{width:100%;padding:24px}}
-@media(max-width:760px){.s-shop-catalogue{padding:24px 0 54px}.s-shop-catalogue__layout{display:block}.s-shop-catalogue__filters{position:static;margin-bottom:20px;border:1px solid var(--line);border-radius:var(--r-btn);background:var(--raised);padding:0 16px}.s-shop-catalogue__filters>summary{font-size:15px;min-height:48px;padding:0;border:0}.s-shop-catalogue__filter-body{padding-bottom:16px}.s-shop-catalogue__fieldset{padding:8px 0 15px}.s-shop-catalogue__fieldset legend{padding-top:10px}.s-shop-catalogue__option{display:inline-flex;margin-right:16px;font-size:14px}.s-shop-catalogue__toolbar{gap:10px;margin-bottom:20px}.s-shop-catalogue__sort{gap:6px}.s-shop-catalogue__sort select{max-width:158px;padding-right:22px;font-size:13px}.s-shop-catalogue__sort>span{display:none}.s-shop-catalogue__list{gap:28px 12px}.s-shop-catalogue__info{gap:5px 8px}.s-shop-catalogue__name{font-size:15px}.s-shop-catalogue__price{font-size:20px}.s-shop-catalogue__desc{font-size:13px;min-height:3em}.s-shop-catalogue__add{height:40px;padding:0 10px;font-size:13px}.s-shop-catalogue__labels .label{height:23px;padding:0 7px;font-size:13px}.s-shop-catalogue__view-hint{display:none}.s-shop-catalogue__editorial{min-height:310px}.s-shop-catalogue__editorial-copy{padding:24px 16px;width:100%}.s-shop-catalogue__editorial-copy .h2{font-size:28px}.s-shop-catalogue__editorial-copy p{font-size:14px}.s-shop-catalogue__editorial-copy .btn{padding:0 13px;font-size:13px}.s-shop-catalogue__footer{font-size:13px}}
+@media(max-width:760px){.s-shop-catalogue{padding:24px 0 54px}.s-shop-catalogue__layout{display:block}.s-shop-catalogue__filters{position:static;margin-bottom:20px;border:1px solid var(--line);border-radius:var(--r-btn);background:var(--raised);padding:0 16px}.s-shop-catalogue__filters>summary{font-size:15px;min-height:48px;padding:0;border:0}.s-shop-catalogue__filter-body{padding-bottom:16px}.s-shop-catalogue__fieldset{padding:8px 0 15px}.s-shop-catalogue__fieldset legend{padding-top:10px}.s-shop-catalogue__option{display:inline-flex;margin-right:16px;font-size:14px}.s-shop-catalogue__toolbar{gap:10px;margin-bottom:20px}.s-shop-catalogue__sort{gap:6px}.s-shop-catalogue__sort select{max-width:158px;padding-right:22px;font-size:13px}.s-shop-catalogue__sort>span{display:none}.s-shop-catalogue__list{gap:28px 12px}.s-shop-catalogue__info{gap:5px 8px}.s-shop-catalogue__name{font-size:15px}.s-shop-catalogue__price{font-size:20px}.s-shop-catalogue__desc{font-size:13px;min-height:3em}.s-shop-catalogue__add{height:40px;padding:0 10px;font-size:13px}.s-shop-catalogue__labels .label{height:23px;padding:0 7px;font-size:13px}.s-shop-catalogue__view-hint{bottom:8px;left:8px;padding:5px 8px;opacity:1}.s-shop-catalogue__editorial{min-height:310px}.s-shop-catalogue__editorial-copy{padding:24px 16px;width:100%}.s-shop-catalogue__editorial-copy .h2{font-size:28px}.s-shop-catalogue__editorial-copy p{font-size:14px}.s-shop-catalogue__editorial-copy .btn{padding:0 13px;font-size:13px}.s-shop-catalogue__footer{font-size:13px}}
 @media(prefers-reduced-motion:reduce){.s-shop-catalogue__media img{transition:none}}
 </style>
 <section class="s-shop-catalogue" id="shopCatalogue" aria-label="Shop all products">
@@ -223,49 +230,49 @@ html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
     <div class="s-shop-catalogue__active" id="shopActive" aria-label="Active filters"></div>
     <ul class="s-shop-catalogue__list" id="shopProducts">
       <li class="s-shop-catalogue__card" data-product="calm" data-need="everyday sensitive" data-type="wash" data-scent="free" data-price="18" data-name="Calm wash" data-order="0">
-        <div class="s-shop-catalogue__media"><button class="s-shop-catalogue__view" type="button" data-quick="calm" aria-label="Quick view Calm wash"><img class="s-shop-catalogue__main" src="../img/t-calm.jpg" alt="Calm wash, 400 ml" width="880" height="1100" loading="lazy"><img class="s-shop-catalogue__hover" src="../img/h-calm.jpg" alt="" width="880" height="1100" loading="lazy"><span class="s-shop-catalogue__labels label label--best">Best seller</span><span class="s-shop-catalogue__view-hint" aria-hidden="true">Quick view</span></button><button class="lv3-heart" type="button" data-wish="calm" aria-pressed="false" aria-label="Save Calm wash"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg></button></div>
-        <div class="s-shop-catalogue__info"><div><h2 class="s-shop-catalogue__name"><button type="button" data-quick="calm">Calm wash</button></h2><p class="s-shop-catalogue__size">400 ml</p></div><p class="price s-shop-catalogue__price" data-shop-price="calm">$18</p><p class="s-shop-catalogue__desc">Soft foam for everyday dry skin.</p></div>
+        <div class="s-shop-catalogue__media"><a class="s-shop-catalogue__view" href="../templates/product.html" tabindex="-1" aria-hidden="true"><img class="s-shop-catalogue__main" src="../img/t-calm.jpg" alt="Calm wash, 400 ml" width="880" height="1100" loading="lazy"><img class="s-shop-catalogue__hover" src="../img/h-calm.jpg" alt="" width="880" height="1100" loading="lazy"><span class="s-shop-catalogue__labels label label--best">Best seller</span></a><button class="s-shop-catalogue__view-hint" type="button" data-quick="calm" aria-label="Quick view Calm wash">Quick view</button><button class="lv3-heart" type="button" data-wish="calm" aria-pressed="false" aria-label="Save Calm wash"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg></button></div>
+        <div class="s-shop-catalogue__info"><div><h2 class="s-shop-catalogue__name"><a class="lv3-pname" href="../templates/product.html">Calm wash</a></h2><p class="s-shop-catalogue__size">400 ml</p></div><p class="price s-shop-catalogue__price" data-shop-price="calm">$18</p><p class="s-shop-catalogue__desc">Soft foam for everyday dry skin.</p></div>
         <button class="btn s-shop-catalogue__add" type="button" data-add="calm" aria-label="Add Calm wash to bag">Add to bag</button>
       </li>
       <li class="s-shop-catalogue__card" data-product="soft" data-need="sensitive" data-type="wash" data-scent="free" data-price="18" data-name="Soft wash" data-order="1">
-        <div class="s-shop-catalogue__media"><button class="s-shop-catalogue__view" type="button" data-quick="soft" aria-label="Quick view Soft wash"><img class="s-shop-catalogue__main" src="../img/c-soft.jpg" alt="Soft wash, 400 ml" width="880" height="1100" loading="lazy"><img class="s-shop-catalogue__hover" src="../img/h-soft.jpg" alt="" width="880" height="1100" loading="lazy"><span class="s-shop-catalogue__labels label label--new">New</span><span class="s-shop-catalogue__view-hint" aria-hidden="true">Quick view</span></button><button class="lv3-heart" type="button" data-wish="soft" aria-pressed="false" aria-label="Save Soft wash"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg></button></div>
-        <div class="s-shop-catalogue__info"><div><h2 class="s-shop-catalogue__name"><button type="button" data-quick="soft">Soft wash</button></h2><p class="s-shop-catalogue__size">400 ml</p></div><p class="price s-shop-catalogue__price" data-shop-price="soft">$18</p><p class="s-shop-catalogue__desc">Low foam. A gentle place to start.</p></div>
+        <div class="s-shop-catalogue__media"><a class="s-shop-catalogue__view" href="../templates/product.html?p=soft" tabindex="-1" aria-hidden="true"><img class="s-shop-catalogue__main" src="../img/c-soft.jpg" alt="Soft wash, 400 ml" width="880" height="1100" loading="lazy"><img class="s-shop-catalogue__hover" src="../img/h-soft.jpg" alt="" width="880" height="1100" loading="lazy"><span class="s-shop-catalogue__labels label label--new">New</span></a><button class="s-shop-catalogue__view-hint" type="button" data-quick="soft" aria-label="Quick view Soft wash">Quick view</button><button class="lv3-heart" type="button" data-wish="soft" aria-pressed="false" aria-label="Save Soft wash"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg></button></div>
+        <div class="s-shop-catalogue__info"><div><h2 class="s-shop-catalogue__name"><a class="lv3-pname" href="../templates/product.html?p=soft">Soft wash</a></h2><p class="s-shop-catalogue__size">400 ml</p></div><p class="price s-shop-catalogue__price" data-shop-price="soft">$18</p><p class="s-shop-catalogue__desc">Low foam. A gentle place to start.</p></div>
         <button class="btn s-shop-catalogue__add" type="button" data-add="soft" aria-label="Add Soft wash to bag">Add to bag</button>
       </li>
       <li class="s-shop-catalogue__card" data-product="chamomile" data-need="everyday sensitive" data-type="wash" data-scent="chamomile" data-price="20" data-name="Chamomile wash" data-order="2">
-        <div class="s-shop-catalogue__media"><button class="s-shop-catalogue__view" type="button" data-quick="chamomile" aria-label="Quick view Chamomile wash"><img class="s-shop-catalogue__main" src="../img/t-chamomile.jpg" alt="Chamomile wash, 400 ml" width="880" height="1100" loading="lazy"><img class="s-shop-catalogue__hover" src="../img/h-chamomile.jpg" alt="" width="880" height="1100" loading="lazy"><span class="s-shop-catalogue__view-hint" aria-hidden="true">Quick view</span></button><button class="lv3-heart" type="button" data-wish="chamomile" aria-pressed="false" aria-label="Save Chamomile wash"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg></button></div>
-        <div class="s-shop-catalogue__info"><div><h2 class="s-shop-catalogue__name"><button type="button" data-quick="chamomile">Chamomile wash</button></h2><p class="s-shop-catalogue__size">400 ml</p></div><p class="price s-shop-catalogue__price" data-shop-price="chamomile">$20</p><p class="s-shop-catalogue__desc">Our only scented wash. Chamomile oil.</p></div>
+        <div class="s-shop-catalogue__media"><a class="s-shop-catalogue__view" href="../templates/product.html?p=chamomile" tabindex="-1" aria-hidden="true"><img class="s-shop-catalogue__main" src="../img/t-chamomile.jpg" alt="Chamomile wash, 400 ml" width="880" height="1100" loading="lazy"><img class="s-shop-catalogue__hover" src="../img/h-chamomile.jpg" alt="" width="880" height="1100" loading="lazy"></a><button class="s-shop-catalogue__view-hint" type="button" data-quick="chamomile" aria-label="Quick view Chamomile wash">Quick view</button><button class="lv3-heart" type="button" data-wish="chamomile" aria-pressed="false" aria-label="Save Chamomile wash"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg></button></div>
+        <div class="s-shop-catalogue__info"><div><h2 class="s-shop-catalogue__name"><a class="lv3-pname" href="../templates/product.html?p=chamomile">Chamomile wash</a></h2><p class="s-shop-catalogue__size">400 ml</p></div><p class="price s-shop-catalogue__price" data-shop-price="chamomile">$20</p><p class="s-shop-catalogue__desc">Our only scented wash. Chamomile oil.</p></div>
         <button class="btn s-shop-catalogue__add" type="button" data-add="chamomile" aria-label="Add Chamomile wash to bag">Add to bag</button>
       </li>
       <li class="s-shop-catalogue__card" data-product="rich" data-need="verydry" data-type="wash" data-scent="free" data-price="20" data-name="Rich wash" data-order="3">
-        <div class="s-shop-catalogue__media"><button class="s-shop-catalogue__view" type="button" data-quick="rich" aria-label="Quick view Rich wash"><img class="s-shop-catalogue__main" src="../img/c-rich.jpg" alt="Rich wash, 400 ml" width="880" height="1100" loading="lazy"><img class="s-shop-catalogue__hover" src="../img/h-rich.jpg" alt="" width="880" height="1100" loading="lazy"><span class="s-shop-catalogue__view-hint" aria-hidden="true">Quick view</span></button><button class="lv3-heart" type="button" data-wish="rich" aria-pressed="false" aria-label="Save Rich wash"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg></button></div>
-        <div class="s-shop-catalogue__info"><div><h2 class="s-shop-catalogue__name"><button type="button" data-quick="rich">Rich wash</button></h2><p class="s-shop-catalogue__size">400 ml</p></div><p class="price s-shop-catalogue__price" data-shop-price="rich">$20</p><p class="s-shop-catalogue__desc">A thicker wash for very dry skin.</p></div>
+        <div class="s-shop-catalogue__media"><a class="s-shop-catalogue__view" href="../templates/product.html?p=rich" tabindex="-1" aria-hidden="true"><img class="s-shop-catalogue__main" src="../img/c-rich.jpg" alt="Rich wash, 400 ml" width="880" height="1100" loading="lazy"><img class="s-shop-catalogue__hover" src="../img/h-rich.jpg" alt="" width="880" height="1100" loading="lazy"></a><button class="s-shop-catalogue__view-hint" type="button" data-quick="rich" aria-label="Quick view Rich wash">Quick view</button><button class="lv3-heart" type="button" data-wish="rich" aria-pressed="false" aria-label="Save Rich wash"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg></button></div>
+        <div class="s-shop-catalogue__info"><div><h2 class="s-shop-catalogue__name"><a class="lv3-pname" href="../templates/product.html?p=rich">Rich wash</a></h2><p class="s-shop-catalogue__size">400 ml</p></div><p class="price s-shop-catalogue__price" data-shop-price="rich">$20</p><p class="s-shop-catalogue__desc">A thicker wash for very dry skin.</p></div>
         <button class="btn s-shop-catalogue__add" type="button" data-add="rich" aria-label="Add Rich wash to bag">Add to bag</button>
       </li>
       <li class="s-shop-catalogue__card" data-product="lotion" data-need="everyday sensitive" data-type="moisturiser" data-scent="free" data-price="22" data-name="Calm lotion" data-order="4">
-        <div class="s-shop-catalogue__media"><button class="s-shop-catalogue__view" type="button" data-quick="lotion" aria-label="Quick view Calm lotion"><img class="s-shop-catalogue__main" src="../img/c-lotion.jpg" alt="Calm lotion, 250 ml" width="880" height="1100" loading="lazy"><span class="s-shop-catalogue__view-hint" aria-hidden="true">Quick view</span></button><button class="lv3-heart" type="button" data-wish="lotion" aria-pressed="false" aria-label="Save Calm lotion"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg></button></div>
-        <div class="s-shop-catalogue__info"><div><h2 class="s-shop-catalogue__name"><button type="button" data-quick="lotion">Calm lotion</button></h2><p class="s-shop-catalogue__size">250 ml</p></div><p class="price s-shop-catalogue__price" data-shop-price="lotion">$22</p><p class="s-shop-catalogue__desc">Light lotion, straight after the shower.</p></div>
+        <div class="s-shop-catalogue__media"><a class="s-shop-catalogue__view" href="../templates/product.html?p=lotion" tabindex="-1" aria-hidden="true"><img class="s-shop-catalogue__main" src="../img/c-lotion.jpg" alt="Calm lotion, 250 ml" width="880" height="1100" loading="lazy"></a><button class="s-shop-catalogue__view-hint" type="button" data-quick="lotion" aria-label="Quick view Calm lotion">Quick view</button><button class="lv3-heart" type="button" data-wish="lotion" aria-pressed="false" aria-label="Save Calm lotion"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg></button></div>
+        <div class="s-shop-catalogue__info"><div><h2 class="s-shop-catalogue__name"><a class="lv3-pname" href="../templates/product.html?p=lotion">Calm lotion</a></h2><p class="s-shop-catalogue__size">250 ml</p></div><p class="price s-shop-catalogue__price" data-shop-price="lotion">$22</p><p class="s-shop-catalogue__desc">Light lotion, straight after the shower.</p></div>
         <button class="btn s-shop-catalogue__add" type="button" data-add="lotion" aria-label="Add Calm lotion to bag">Add to bag</button>
       </li>
       <li class="s-shop-catalogue__editorial" id="shopEditorial"><img src="../img/c-oat-bar-wide.jpg" alt="Oat soap bar with its moss carton on a sage backdrop" width="1600" height="900" loading="lazy"><div class="s-shop-catalogue__editorial-copy"><h2 class="h2">A <em>small</em> place to start.</h2><p>One oat milk bar. Face, hands and body.</p><span class="price" data-shop-price="bar">$9</span><button class="btn btn--light btn--sm" type="button" data-add="bar" style="margin-top:20px">Try the Oat bar</button></div></li>
       <li class="s-shop-catalogue__card" data-product="cream" data-need="verydry" data-type="moisturiser" data-scent="free" data-price="24" data-name="Rich cream" data-order="5">
-        <div class="s-shop-catalogue__media"><button class="s-shop-catalogue__view" type="button" data-quick="cream" aria-label="Quick view Rich cream"><img class="s-shop-catalogue__main" src="../img/c-cream.jpg" alt="Rich cream, 200 ml" width="880" height="1100" loading="lazy"><span class="s-shop-catalogue__view-hint" aria-hidden="true">Quick view</span></button><button class="lv3-heart" type="button" data-wish="cream" aria-pressed="false" aria-label="Save Rich cream"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg></button></div>
-        <div class="s-shop-catalogue__info"><div><h2 class="s-shop-catalogue__name"><button type="button" data-quick="cream">Rich cream</button></h2><p class="s-shop-catalogue__size">200 ml</p></div><p class="price s-shop-catalogue__price" data-shop-price="cream">$24</p><p class="s-shop-catalogue__desc">Thick cream for shins, elbows and hands.</p></div>
+        <div class="s-shop-catalogue__media"><a class="s-shop-catalogue__view" href="../templates/product.html?p=cream" tabindex="-1" aria-hidden="true"><img class="s-shop-catalogue__main" src="../img/c-cream.jpg" alt="Rich cream, 200 ml" width="880" height="1100" loading="lazy"></a><button class="s-shop-catalogue__view-hint" type="button" data-quick="cream" aria-label="Quick view Rich cream">Quick view</button><button class="lv3-heart" type="button" data-wish="cream" aria-pressed="false" aria-label="Save Rich cream"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg></button></div>
+        <div class="s-shop-catalogue__info"><div><h2 class="s-shop-catalogue__name"><a class="lv3-pname" href="../templates/product.html?p=cream">Rich cream</a></h2><p class="s-shop-catalogue__size">200 ml</p></div><p class="price s-shop-catalogue__price" data-shop-price="cream">$24</p><p class="s-shop-catalogue__desc">Thick cream for shins, elbows and hands.</p></div>
         <button class="btn s-shop-catalogue__add" type="button" data-add="cream" aria-label="Add Rich cream to bag">Add to bag</button>
       </li>
       <li class="s-shop-catalogue__card" data-product="milk" data-need="everyday" data-type="moisturiser" data-scent="free" data-price="20" data-name="Body milk" data-order="6">
-        <div class="s-shop-catalogue__media"><button class="s-shop-catalogue__view" type="button" data-quick="milk" aria-label="Quick view Body milk"><img class="s-shop-catalogue__main" src="../img/c-body-milk.jpg" alt="Body milk, 300 ml" width="880" height="1100" loading="lazy"><img class="s-shop-catalogue__hover" src="../img/h-milk.jpg" alt="" width="880" height="1100" loading="lazy"><span class="s-shop-catalogue__view-hint" aria-hidden="true">Quick view</span></button><button class="lv3-heart" type="button" data-wish="milk" aria-pressed="false" aria-label="Save Body milk"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg></button></div>
-        <div class="s-shop-catalogue__info"><div><h2 class="s-shop-catalogue__name"><button type="button" data-quick="milk">Body milk</button></h2><p class="s-shop-catalogue__size">300 ml</p></div><p class="price s-shop-catalogue__price" data-shop-price="milk">$20</p><p class="s-shop-catalogue__desc">Light, quick and never sticky.</p></div>
+        <div class="s-shop-catalogue__media"><a class="s-shop-catalogue__view" href="../templates/product.html?p=milk" tabindex="-1" aria-hidden="true"><img class="s-shop-catalogue__main" src="../img/c-body-milk.jpg" alt="Body milk, 300 ml" width="880" height="1100" loading="lazy"><img class="s-shop-catalogue__hover" src="../img/h-milk.jpg" alt="" width="880" height="1100" loading="lazy"></a><button class="s-shop-catalogue__view-hint" type="button" data-quick="milk" aria-label="Quick view Body milk">Quick view</button><button class="lv3-heart" type="button" data-wish="milk" aria-pressed="false" aria-label="Save Body milk"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg></button></div>
+        <div class="s-shop-catalogue__info"><div><h2 class="s-shop-catalogue__name"><a class="lv3-pname" href="../templates/product.html?p=milk">Body milk</a></h2><p class="s-shop-catalogue__size">300 ml</p></div><p class="price s-shop-catalogue__price" data-shop-price="milk">$20</p><p class="s-shop-catalogue__desc">Light, quick and never sticky.</p></div>
         <button class="btn s-shop-catalogue__add" type="button" data-add="milk" aria-label="Add Body milk to bag">Add to bag</button>
       </li>
       <li class="s-shop-catalogue__card" data-product="little" data-need="little" data-type="moisturiser" data-scent="free" data-price="14" data-name="Little lotion" data-order="7">
-        <div class="s-shop-catalogue__media"><button class="s-shop-catalogue__view" type="button" data-quick="little" aria-label="Quick view Little lotion"><img class="s-shop-catalogue__main" src="../img/c-little-lotion.jpg" alt="Little lotion, 150 ml" width="880" height="1100" loading="lazy"><img class="s-shop-catalogue__hover" src="../img/h-little.jpg" alt="" width="880" height="1100" loading="lazy"><span class="s-shop-catalogue__view-hint" aria-hidden="true">Quick view</span></button><button class="lv3-heart" type="button" data-wish="little" aria-pressed="false" aria-label="Save Little lotion"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg></button></div>
-        <div class="s-shop-catalogue__info"><div><h2 class="s-shop-catalogue__name"><button type="button" data-quick="little">Little lotion</button></h2><p class="s-shop-catalogue__size">150 ml</p></div><p class="price s-shop-catalogue__price" data-shop-price="little">$14</p><p class="s-shop-catalogue__desc">Soft oat lotion for ages 1 and up.</p></div>
+        <div class="s-shop-catalogue__media"><a class="s-shop-catalogue__view" href="../templates/product.html?p=little" tabindex="-1" aria-hidden="true"><img class="s-shop-catalogue__main" src="../img/c-little-lotion.jpg" alt="Little lotion, 150 ml" width="880" height="1100" loading="lazy"><img class="s-shop-catalogue__hover" src="../img/h-little.jpg" alt="" width="880" height="1100" loading="lazy"></a><button class="s-shop-catalogue__view-hint" type="button" data-quick="little" aria-label="Quick view Little lotion">Quick view</button><button class="lv3-heart" type="button" data-wish="little" aria-pressed="false" aria-label="Save Little lotion"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg></button></div>
+        <div class="s-shop-catalogue__info"><div><h2 class="s-shop-catalogue__name"><a class="lv3-pname" href="../templates/product.html?p=little">Little lotion</a></h2><p class="s-shop-catalogue__size">150 ml</p></div><p class="price s-shop-catalogue__price" data-shop-price="little">$14</p><p class="s-shop-catalogue__desc">Soft oat lotion for ages 1 and up.</p></div>
         <button class="btn s-shop-catalogue__add" type="button" data-add="little" aria-label="Add Little lotion to bag">Add to bag</button>
       </li>
       <li class="s-shop-catalogue__card" data-product="bar" data-need="everyday" data-type="bar" data-scent="free" data-price="9" data-name="Oat bar" data-order="8">
-        <div class="s-shop-catalogue__media"><button class="s-shop-catalogue__view" type="button" data-quick="bar" aria-label="Quick view Oat bar"><img class="s-shop-catalogue__main" src="../img/c-oat-bar.jpg" alt="Oat bar, 120 g" width="880" height="1100" loading="lazy"><img class="s-shop-catalogue__hover" src="../img/h-bar.jpg" alt="" width="880" height="1100" loading="lazy"><span class="s-shop-catalogue__labels label label--best">Best seller</span><span class="s-shop-catalogue__view-hint" aria-hidden="true">Quick view</span></button><button class="lv3-heart" type="button" data-wish="bar" aria-pressed="false" aria-label="Save Oat bar"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg></button></div>
-        <div class="s-shop-catalogue__info"><div><h2 class="s-shop-catalogue__name"><button type="button" data-quick="bar">Oat bar</button></h2><p class="s-shop-catalogue__size">120 g</p></div><p class="price s-shop-catalogue__price" data-shop-price="bar">$9</p><p class="s-shop-catalogue__desc">Oat milk soap for face and body.</p></div>
+        <div class="s-shop-catalogue__media"><a class="s-shop-catalogue__view" href="../templates/product.html?p=bar" tabindex="-1" aria-hidden="true"><img class="s-shop-catalogue__main" src="../img/c-oat-bar.jpg" alt="Oat bar, 120 g" width="880" height="1100" loading="lazy"><img class="s-shop-catalogue__hover" src="../img/h-bar.jpg" alt="" width="880" height="1100" loading="lazy"><span class="s-shop-catalogue__labels label label--best">Best seller</span></a><button class="s-shop-catalogue__view-hint" type="button" data-quick="bar" aria-label="Quick view Oat bar">Quick view</button><button class="lv3-heart" type="button" data-wish="bar" aria-pressed="false" aria-label="Save Oat bar"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg></button></div>
+        <div class="s-shop-catalogue__info"><div><h2 class="s-shop-catalogue__name"><a class="lv3-pname" href="../templates/product.html?p=bar">Oat bar</a></h2><p class="s-shop-catalogue__size">120 g</p></div><p class="price s-shop-catalogue__price" data-shop-price="bar">$9</p><p class="s-shop-catalogue__desc">Oat milk soap for face and body.</p></div>
         <button class="btn s-shop-catalogue__add" type="button" data-add="bar" aria-label="Add Oat bar to bag">Add to bag</button>
       </li>
     </ul>
@@ -299,7 +306,7 @@ html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
         card.dataset.price = p.price;
         card.dataset.name = p.name;
         card.querySelector('.s-shop-catalogue__main').src = p.img;
-        card.querySelector('.s-shop-catalogue__name button').textContent = p.name;
+        card.querySelector('.s-shop-catalogue__name a').textContent = p.name;
         card.querySelector('.s-shop-catalogue__size').textContent = p.size;
         card.querySelector('.s-shop-catalogue__price').textContent = L.fmt(p.price);
       });
@@ -559,7 +566,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
 
     /* ---------- local index (window.LATHER.products) ---------- */
     function hitOf(k, p) {
-      var url = p.url || (C.pages || {})[k] || '';
+      var url = p.url || (C.pages || {})[k] || (L().url ? L().url(k) : '') || '';
       return { key: k, name: p.name, size: p.size || '', price: +p.price || 0, compare: +p.compare || 0, img: p.img || '', url: url || C.fallbackUrl || '#', quick: !url };
     }
     function index() {
@@ -752,6 +759,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
   'use strict';
   if (window.LatherRecent) return;
   var K = 'lather-recent', MAX = 12;
+  var EYE = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg>';
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
   var handleOf = function (url) { var m = /\/products\/([^\/?#]+)/.exec(url || ''); return m ? decodeURIComponent(m[1]) : ''; };
 
@@ -828,11 +836,16 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
       var L = window.LATHER;
       /* an entry viewed on another page: hand it to the runtime so its quick view works here */
       if (!e.url && L && L.products && !L.products[e.k]) L.products[e.k] = { name: e.name, size: e.size, price: e.price, compare: null, img: e.img, hover: '', labels: [], line: '', ing: '', variant: null, available: true, url: '' };
-      var name = e.url
-        ? '<a class="s-pdp-recent__name" href="' + esc(e.url) + '">' + esc(e.name) + '</a>'
+      /* the name is the product link (stretched over the card, so the image opens it too); quick view is its own button */
+      var u = e.url || (L && L.url ? L.url(e.k) : '');
+      var canQuick = !!(L && L.products && L.products[e.k]);
+      var name = u
+        ? '<a class="s-pdp-recent__name" href="' + esc(u) + '">' + esc(e.name) + '</a>'
         : '<button class="s-pdp-recent__name" type="button" data-quick="' + esc(e.k) + '" aria-label="' + esc(S.quick + ': ' + e.name) + '">' + esc(e.name) + '</button>';
+      var qv = u && canQuick ? '<button class="s-pdp-recent__qv" type="button" data-quick="' + esc(e.k) + '" aria-label="' + esc(S.quick + ': ' + e.name) + '">' + EYE + '</button>' : '';
       var img = e.img ? '<img src="' + esc(thumb(e.img)) + '" alt="" width="120" height="150" loading="lazy">' : '<span class="blko-lv3-ph" aria-hidden="true"></span>';
-      return '<li class="s-pdp-recent__card">' + img + '<div class="s-pdp-recent__text">' + name + (e.size ? '<span class="small">' + esc(e.size) + '</span>' : '') + '</div><span class="price">' + esc(fmt(e.price)) + '</span></li>';
+      if (u) img = '<a class="lv3-plink s-pdp-recent__img" href="' + esc(u) + '" tabindex="-1" aria-hidden="true">' + img + '</a>';
+      return '<li class="s-pdp-recent__card">' + img + '<div class="s-pdp-recent__text">' + name + (e.size ? '<span class="small">' + esc(e.size) + '</span>' : '') + '</div><span class="price">' + esc(fmt(e.price)) + '</span>' + qv + '</li>';
     }
     function render() {
       if (!list) return;
@@ -1012,7 +1025,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
       one: d.countOne || '1 saved product.', many: d.countMany || '[count] saved products.', zero: d.countZero || '',
       add: d.addLabel || 'Add to bag', add_aria: d.addAria || 'Add [name] to bag', rm: d.removeLabel || 'Remove',
       rm_aria: d.removeAria || 'Remove [name] from wishlist', sold: d.soldLabel || 'Sold out', removed: d.removedLabel || 'Removed [name].',
-      undo: d.undoLabel || 'Undo', save_aria: d.saveAria || 'Save [name]'
+      undo: d.undoLabel || 'Undo', save_aria: d.saveAria || 'Save [name]', qv_aria: d.quickAria || 'Quick view [name]'
     };
     var ul = root.querySelector('[data-wish-list]'), empty = root.querySelector('[data-wish-empty]'), status = root.querySelector('[data-wish-status]');
     var undoBox = root.querySelector('[data-wish-undo]'), sugg = root.querySelector('[data-wish-suggest]');
@@ -1030,10 +1043,17 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     }
     function media(src, alt) { return src ? '<img src="' + esc(src) + '" alt="' + esc(alt) + '" loading="lazy">' : ph; }
     function labels(ids) { var l = L(); return l.labelsHTML ? l.labelsHTML(ids || []) : ''; }
+    /* product page link: a real product's own url, else the demo page for that key (LATHER.url) */
+    function urlOf(e, key) { return (e && e.url) || (L().url ? L().url(key) : '') || ''; }
     function nameHTML(e, key) {
-      if (e.url) return '<a href="' + esc(e.url) + '">' + esc(e.name) + '</a>';
+      var u = urlOf(e, key);
+      if (u) return '<a class="lv3-pname" href="' + esc(u) + '">' + esc(e.name) + '</a>';
       if (L().products[key]) return '<button type="button" data-quick="' + esc(key) + '">' + esc(e.name) + '</button>';
       return esc(e.name);
+    }
+    function linked(u, html) { return u ? '<a class="lv3-plink lv3-plink--fill" href="' + esc(u) + '" tabindex="-1" aria-hidden="true">' + html + '</a>' : html; }
+    function qvHTML(key, name) {
+      return L().products[key] ? '<button class="s-wish__qv" type="button" data-quick="' + esc(key) + '" aria-label="' + esc(T.qv_aria.replace('[name]', name)) + '">' + eyeSVG + '</button>' : '';
     }
     function priceHTML(e) { return esc(fmt(e.price)) + (e.compare > e.price ? ' <s>' + esc(fmt(e.compare)) + '</s>' : ''); }
     function card(e) {
@@ -1042,7 +1062,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
         ? '<button class="btn btn--light btn--sm s-wish__add" type="button" disabled>' + esc(T.sold) + '</button>'
         : '<button class="btn btn--primary btn--sm s-wish__add" type="button" data-wish-add="' + esc(e.id) + '" aria-label="' + esc(tpl(T.add_aria, { name: e.name })) + '">' + esc(T.add) + '</button>';
       return '<li class="s-wish__card">' +
-        '<div class="s-wish__media">' + media(e.img, alt) + '<div class="labels">' + labels(e.labels) + '</div></div>' +
+        '<div class="s-wish__media">' + linked(urlOf(e, e.key), media(e.img, alt)) + '<div class="labels">' + labels(e.labels) + '</div>' + qvHTML(e.key, e.name) + '</div>' +
         '<div class="s-wish__info"><h2 class="s-wish__name">' + nameHTML(e, e.key) + '</h2>' +
         (e.size ? '<p class="s-wish__size">' + esc(e.size) + '</p>' : '') +
         '<p class="price s-wish__price">' + priceHTML(e) + '</p></div>' +
@@ -1054,9 +1074,9 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
       var p = L().products[key]; if (!p) return '';
       var alt = p.size ? p.name + ', ' + p.size : p.name;
       return '<li class="s-wish__card s-wish__card--sugg">' +
-        '<div class="s-wish__media">' + media(p.img, alt) + '<div class="labels">' + labels(p.labels) + '</div>' +
+        '<div class="s-wish__media">' + linked(urlOf(p, key), media(p.img, alt)) + '<div class="labels">' + labels(p.labels) + '</div>' + qvHTML(key, p.name) +
         '<button class="lv3-heart" type="button" data-wish="' + esc(key) + '" aria-pressed="false" aria-label="' + esc(tpl(T.save_aria, { name: p.name })) + '">' + heartSVG + '</button></div>' +
-        '<div class="s-wish__info"><h3 class="s-wish__name"><button type="button" data-quick="' + esc(key) + '">' + esc(p.name) + '</button></h3>' +
+        '<div class="s-wish__info"><h3 class="s-wish__name">' + nameHTML(p, key) + '</h3>' +
         (p.size ? '<p class="s-wish__size">' + esc(p.size) + '</p>' : '') +
         '<p class="price s-wish__price">' + priceHTML({ price: +p.price || 0, compare: +p.compare || 0 }) + '</p></div>' +
         '<div class="s-wish__acts"><button class="btn btn--ghost btn--sm s-wish__add" type="button" data-add="' + esc(key) + '" aria-label="' + esc(tpl(T.add_aria, { name: p.name })) + '">' + esc(T.add) + '</button></div>' +
@@ -1118,6 +1138,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     render();
   }
 
+  var eyeSVG = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg>';
   var heartSVG = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg>';
 
   function init() {
@@ -1225,6 +1246,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
 @media (prefers-reduced-motion:reduce){.ship__bar i{transition:none}.line--gift.is-new,.s-cart-bag__line--gift.is-new{animation:none}}
 .drawer__list{flex:1;overflow:auto;padding:4px 24px}
 .line{display:grid;grid-template-columns:72px 1fr auto;gap:14px;padding:14px 0;border-top:1px solid var(--line);align-items:center}
+.line .lv3-plink{width:72px;border-radius:var(--r-img)}
 .line img{width:72px;height:88px;object-fit:cover;border-radius:var(--r-img);background:var(--oat)}
 .line h3{font:600 15px/1.25 var(--f-body)}
 .line .small{margin:2px 0 8px}
@@ -1321,6 +1343,11 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     little:{name:'Little lotion',size:'150 ml',price:14,img:'../img/c-little-lotion.jpg',hover:'../img/h-little.jpg',labels:['new','ff'],line:'Soft, light oat lotion for ages 1 and up. Fragrance-free.',ing:'Water, glycerin, colloidal oat, calendula oil, shea butter, cetearyl alcohol, xanthan gum, sodium benzoate.'},
     bar:{name:'Oat bar',size:'120 g',price:9,img:'../img/c-oat-bar.jpg',hover:'../img/h-bar.jpg',labels:['best','ff'],line:'Oat milk soap bar for face and body. Rich lather that rinses soft.',ing:'Sodium olivate, sodium cocoate, oat milk, colloidal oat, shea butter, glycerin.'}
   };
+  /* product page links: one product page in the demo; calm is product.html, the others product.html?p=<id>.
+     Relative links on purpose: blocko.ai 308-redirects product.html to /product and keeps the query. */
+  const CAT=Object.keys(products);
+  const url=id=>CAT.includes(id)?(id==='calm'?'product.html':'product.html?p='+encodeURIComponent(id)):'';
+  const pid=()=>{let q='';try{q=new URLSearchParams(location.search).get('p')||''}catch(e){}return CAT.includes(q)?q:'calm'};
   const LBL={best:['label--best','Best seller'],ff:['label--ff','Fragrance-free'],new:['label--new','New'],sale:['label--sale','Sale']};
   const fmt=n=>'$'+(Math.round(n*100)/100).toFixed(n%1?2:0);
   const labelsHTML=ids=>ids.map(k=>`<span class="label ${LBL[k][0]}">${LBL[k][1]}</span>`).join('');
@@ -1383,6 +1410,8 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
       el.querySelector('.ship__add').hidden=!P.offer;
     });
   }
+  /* bag line image and name link to the product page (custom lines such as sets stay plain) */
+  const lnk=(l,h,img)=>{const u=url(l.id);return u?`<a class="${img?'lv3-plink':'lv3-pname'}" href="${u}"${img?' tabindex="-1" aria-hidden="true"':''}>${h}</a>`:h};
   function render(){
     syncGift(); save();
     const n=count(), st=subtotal();
@@ -1393,8 +1422,8 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     const list=$('#drawerList'); let h='';
     if(removed) h+=`<div class="undo"><span>Removed ${removed.name}.</span><button type="button" id="undoBtn">Undo</button></div>`;
     if(!cart.length && !removed) h+=`<p class="drawer__empty">Nothing here yet. Most people start with the Oat bar, $9.</p>`;
-    cart.forEach((l,i)=>{if(l.gift){h+=`<div class="line line--gift${fresh?' is-new':''}"><img src="${l.img}" alt=""><div><h3>${l.name}</h3><p class="small">${l.note}</p></div><div style="text-align:right"><p class="price" style="font-size:18px">Free</p><button class="rm" type="button" data-rm="${i}" aria-label="Remove free ${l.name}">Remove</button></div></div>`;return}
-      h+=`<div class="line"><img src="${l.img}" alt=""><div><h3>${l.name}</h3><p class="small">${l.note||l.size}</p><div class="qty"><button type="button" aria-label="Less" data-q="${i}" data-d="-1">−</button><span>${l.qty}</span><button type="button" aria-label="More" data-q="${i}" data-d="1">+</button></div></div><div style="text-align:right"><p class="price" style="font-size:18px">${fmt(l.qty*l.price)}</p><button class="rm" type="button" data-rm="${i}">Remove</button></div></div>`});
+    cart.forEach((l,i)=>{if(l.gift){h+=`<div class="line line--gift${fresh?' is-new':''}">${lnk(l,`<img src="${l.img}" alt="">`,1)}<div><h3>${lnk(l,l.name)}</h3><p class="small">${l.note}</p></div><div style="text-align:right"><p class="price" style="font-size:18px">Free</p><button class="rm" type="button" data-rm="${i}" aria-label="Remove free ${l.name}">Remove</button></div></div>`;return}
+      h+=`<div class="line">${lnk(l,`<img src="${l.img}" alt="">`,1)}<div><h3>${lnk(l,l.name)}</h3><p class="small">${l.note||l.size}</p><div class="qty"><button type="button" aria-label="Less" data-q="${i}" data-d="-1">−</button><span>${l.qty}</span><button type="button" aria-label="More" data-q="${i}" data-d="1">+</button></div></div><div style="text-align:right"><p class="price" style="font-size:18px">${fmt(l.qty*l.price)}</p><button class="rm" type="button" data-rm="${i}">Remove</button></div></div>`});
     if(cart.length && !cart.some(l=>l.id==='bar')) h+=`<div class="drawer__up"><img src="${products.bar.img}" alt=""><span style="flex:1">Add the Oat bar for face and hands, $9.</span><button class="btn btn--light btn--sm" type="button" data-add="bar">Add</button></div>`;
     list.innerHTML=h;
     $('#checkoutBtn').textContent= st?`Check out, ${fmt(st)}`:'Check out';
@@ -1449,7 +1478,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     /* free gift: settings, live state, and bring a declined gift back */
     gift:{...GIFT,state:()=>progress()}, addGift(){setGiftOff(false);render()}
   };
-  window.LATHER={products,add,quick,fmt,labelsHTML,U,openLayer,closeAll,cart:cartApi};
+  window.LATHER={products,add,quick,fmt,labelsHTML,U,openLayer,closeAll,cart:cartApi,url,pid};
   render();
 
   /* header: over the hero until scrolled */

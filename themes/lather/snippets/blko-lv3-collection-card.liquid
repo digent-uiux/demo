@@ -1,7 +1,7 @@
 {%- comment -%}
   One product card of the Lather v3 collection grid (blko-lv3-collection-catalogue), same markup as
   pages/collection/20-catalogue.html. Also hands the product to window.LATHER (blko-lv3-product-data).
-  product   optional real product: wins for key (handle), name, price, compare, images, availability, URL
+  product   optional real product: wins for key (handle), name, price, compare, images, availability, URL (image + name link to it; a demo card links to the all-products collection)
   key, name, size, price (cents), img, hover   demo values (size, img, hover also override a real product's)
   badge     'best' | 'new' | 'sale' | blank. A real product: 'sale' when on sale, else its tag label:best / label:new
   desc      card text. A real product: metafield custom.short_description, else the description, shortened
@@ -96,10 +96,14 @@
     assign alt = c_name | append: ', ' | append: c_size
   endif
   assign aria_add = add_aria | replace: '[name]', c_name
+  assign c_url = routes.all_products_collection_url
+  if product != blank
+    assign c_url = product.url
+  endif
 -%}
 {%- render 'blko-lv3-product-data', key: c_key, product: product, name: name, size: c_size, price: price, line: line, labels: c_labels, ing: ing, img: img, hover: hover -%}
 <li class="s-shop-catalogue__card" data-product="{{ c_key | escape }}" data-facets="{{ c_facets | escape }}" data-price="{{ c_price | divided_by: 100.0 }}" data-name="{{ c_name | escape }}" data-order="{{ order }}" {{ attrs }}>
-  <div class="s-shop-catalogue__media"><button class="s-shop-catalogue__view" type="button" data-quick="{{ c_key | escape }}" aria-label="{{ qv_label | escape }} {{ c_name | escape }}">
+  <div class="s-shop-catalogue__media"><a class="s-shop-catalogue__view" href="{{ c_url }}" tabindex="-1" aria-hidden="true">
     {%- if c_img != blank -%}
       {{ c_img | image_url: width: 900 | image_tag: class: 's-shop-catalogue__main', widths: '360, 540, 720, 900', sizes: '(max-width: 760px) 50vw, (max-width: 1100px) 38vw, 27vw', loading: 'lazy', alt: alt }}
     {%- else -%}
@@ -109,8 +113,8 @@
       {{ c_hover | image_url: width: 900 | image_tag: class: 's-shop-catalogue__hover', widths: '360, 540, 720, 900', sizes: '(max-width: 760px) 50vw, (max-width: 1100px) 38vw, 27vw', loading: 'lazy', alt: '' }}
     {%- endif -%}
     {%- if badge_text != blank -%}<span class="s-shop-catalogue__labels label label--{{ c_badge }}">{{ badge_text | escape }}</span>{%- endif -%}
-    <span class="s-shop-catalogue__view-hint" aria-hidden="true">{{ qv_label | escape }}</span></button>{%- render 'blko-lv3-wishlist-heart', key: c_key, name: c_name, label: wish_label -%}</div>
-  <div class="s-shop-catalogue__info"><div><h2 class="s-shop-catalogue__name"><button type="button" data-quick="{{ c_key | escape }}">{{ c_name | escape }}</button></h2>{%- if c_size != blank -%}<p class="s-shop-catalogue__size">{{ c_size | escape }}</p>{%- endif -%}</div><p class="price s-shop-catalogue__price">{{ c_price | money_without_trailing_zeros }}{%- if c_compare > c_price %} <s>{{ c_compare | money_without_trailing_zeros }}</s>{%- endif -%}</p>{%- if c_desc != blank -%}<p class="s-shop-catalogue__desc">{{ c_desc | escape }}</p>{%- endif -%}</div>
+</a><button class="s-shop-catalogue__view-hint" type="button" data-quick="{{ c_key | escape }}" aria-label="{{ qv_label | escape }} {{ c_name | escape }}">{{ qv_label | escape }}</button>{%- render 'blko-lv3-wishlist-heart', key: c_key, name: c_name, label: wish_label -%}</div>
+  <div class="s-shop-catalogue__info"><div><h2 class="s-shop-catalogue__name"><a class="lv3-pname" href="{{ c_url }}">{{ c_name | escape }}</a></h2>{%- render 'blko-lv3-card-meta', product: product -%}{%- if c_size != blank -%}<p class="s-shop-catalogue__size">{{ c_size | escape }}</p>{%- endif -%}</div><p class="price s-shop-catalogue__price">{{ c_price | money_without_trailing_zeros }}{%- if c_compare > c_price %} <s>{{ c_compare | money_without_trailing_zeros }}</s>{%- endif -%}</p>{%- if c_desc != blank -%}<p class="s-shop-catalogue__desc">{{ c_desc | escape }}</p>{%- endif -%}</div>
   {%- if c_available -%}
     <button class="btn s-shop-catalogue__add" type="button" data-add="{{ c_key | escape }}" aria-label="{{ aria_add | escape }}">{{ add_label | escape }}</button>
   {%- else -%}

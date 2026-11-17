@@ -87,7 +87,7 @@ html.motion [data-rv="blur"]:not(.in){opacity:0;transform:translateY(12px);filte
 html.motion [data-rv="settle"]:not(.in){opacity:0;transform:scale(.96)}
 html.motion [data-rv="draw"]{transform-origin:left center}
 html.motion [data-rv="draw"]:not(.in){transform:scaleX(0)}
-html.motion [data-rv="line"] .ln{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
+[data-rv="line"] .ln{display:block}html.motion [data-rv="line"] .ln{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
 html.motion [data-rv="line"] .ln>span{display:block;transition:transform .9s cubic-bezier(.22,1,.36,1)}
 html.motion [data-rv="line"]:not(.in) .ln>span{transform:translateY(105%)}
 html.motion [data-rv="line"] .ln:nth-child(2)>span{transition-delay:.09s}
@@ -132,6 +132,13 @@ html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
 .mnav.open{transform:none}
 .mnav a{font:500 26px/1.3 var(--f-body);text-decoration:none;padding:10px 0;border-bottom:1px solid var(--line)}
 .mnav__top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+/* product links on cards and chips: image + name go to the product page; buttons inside stay on top */
+.lv3-plink{display:block;color:inherit;text-decoration:none;border-radius:inherit}
+.lv3-plink--fill{position:absolute;inset:0;z-index:0}
+.lv3-plink:focus-visible{outline:2px solid var(--moss);outline-offset:-3px}
+.lv3-pname{color:inherit;text-decoration:none;text-underline-offset:4px;text-decoration-thickness:1px}
+.lv3-pname:hover{text-decoration-line:underline}
+.lv3-pname:focus-visible{outline:2px solid var(--moss);outline-offset:3px;border-radius:2px}
 </style>
 </head>
 <body class="pg-product">
@@ -272,18 +279,36 @@ html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
 </section>
 <script>
 document.addEventListener('DOMContentLoaded',()=>{
- const root=document.querySelector('.s-pdp-buy');if(!root||!window.LATHER)return;const L=window.LATHER,p=L.products.calm,input=root.querySelector('#pdp-qty'),mobile=root.querySelector('#pdp-mobile-buy');
+ const root=document.querySelector('.s-pdp-buy');if(!root||!window.LATHER)return;const L=window.LATHER,id=L.pid?L.pid():'calm',p=L.products[id],input=root.querySelector('#pdp-qty'),mobile=root.querySelector('#pdp-mobile-buy');
+ /* one product page in the demo: product.html?p=<id> shows that product (unknown ids fall back to calm) */
+ const WASH=['calm','soft','rich','chamomile'],isWash=WASH.includes(id),unitOf=/\bg$/.test(p.size)?'g':'ml',amount=parseFloat(p.size)||100;
+ if(id!=='calm'){
+  const noun={bar:'bar',cream:'jar',little:'tube'}[id]||'bottle',cat=isWash?['Body wash','collection.html?type=wash']:id==='bar'?['Soap bar','collection.html?type=bar']:['Lotion & cream','collection.html?type=moisturiser'];
+  const crumb=root.querySelector('.s-pdp-buy__crumb'),cl=crumb.querySelectorAll('a')[1];cl.textContent=cat[0];cl.href=cat[1];crumb.querySelector('[aria-current]').textContent=p.name;
+  root.querySelector('#pdp-title').textContent=p.name;
+  root.querySelector('.s-pdp-buy__line').textContent=p.line;
+  const alt=p.name+', '+p.size,im=root.querySelector('#pdp-main-image');im.src=p.img;im.alt=alt;root.querySelector('#pdp-image-caption').textContent='The '+noun+', '+p.size;
+  const shots=[{img:p.img,label:'The '+noun,cap:'The '+noun+', '+p.size,alt}].concat(p.hover?[{img:p.hover,label:'Up close',cap:p.name+', up close',alt:p.name+', up close'}]:[]);
+  root.querySelectorAll('[data-pdp-image]').forEach((b,i)=>{const s=shots[i];b.hidden=!s;if(!s)return;b.dataset.pdpImage=s.img;b.dataset.caption=s.cap;b.dataset.alt=s.alt;b.querySelector('img').src=s.img;b.querySelector('span').textContent=s.label;b.setAttribute('aria-pressed',String(i===0))});
+  if(shots.length<2)root.querySelector('.s-pdp-buy__thumbs').hidden=true;
+  const ff=(p.labels||[]).includes('ff'),ph=/pH 5\.5/.test(p.ing||'');
+  root.querySelector('.s-pdp-buy__facts').innerHTML=(ff?'<span><b>Fragrance-free</b>No added scent</span>':'<span><b>Lightly scented</b>0.2% chamomile oil</span>')+(ph?'<span><b>pH 5.5</b>A gentle rinse</span>':'<span><b>Colloidal oat</b>For dry skin</span>')+'<span><b>'+p.size+'</b>One '+noun+'</span>';
+  const opts=root.querySelectorAll('.s-pdp-buy__size label');opts[0].lastChild.textContent=p.size+' '+noun;if(!isWash)opts[1].style.display='none';
+  const heart=root.querySelector('#pdp-purchase [data-wish]');heart.dataset.wish=id;heart.setAttribute('aria-label','Save '+p.name);
+  const rc=document.querySelector('[data-recent-current]');if(rc)rc.setAttribute('data-recent-current',id);
+ }
+ document.title=p.name+', '+p.size+' | Lather';
  /* sizes: the 1 L refill is sold out in this demo, so the back-in-stock form can be seen */
- const sizes={'400':{title:'400 ml bottle',short:'400 ml',ml:400,price:p.price,available:true},'1000':{title:'1 L refill',short:'1 L refill',ml:1000,price:36,available:false}};
+ const sizes={'400':{title:p.size,short:p.size,ml:amount,price:p.price,available:true},'1000':{title:'1 L refill',short:'1 L refill',ml:1000,price:p.price*2,available:false}};
  const PCT=10,buyBtn=root.querySelector('#pdp-purchase [data-pdp-add]'),notify=root.querySelector('#pdp-notify'),nForm=notify.querySelector('form'),nEmail=root.querySelector('#pdp-notify-email'),nMsg=root.querySelector('#pdp-notify-msg'),nDone=notify.querySelector('[data-pdp-notify-done]');
  const $=s=>root.querySelector(s),set=(s,v,h)=>{const el=$(s);if(el)el[h?'innerHTML':'textContent']=v};
- const round=n=>Math.round(n*100)/100,unit=v=>L.fmt(round(v.price/v.ml*100))+' per 100 ml';
+ const round=n=>Math.round(n*100)/100,unit=v=>L.fmt(round(v.price/v.ml*100))+' per 100 '+(v.ml===1000?'ml':unitOf);
  const qty=()=>Math.max(1,Math.min(20,Math.floor(Number(input.value)||1)));
  const size=()=>sizes[(root.querySelector('[data-pdp-variant]:checked')||{}).value||'400'];
  const plan=()=>{const r=root.querySelector('input[name="selling_plan"]:checked');return r&&r.value?r:null};
  const each=()=>{const v=size(),pl=plan();return pl?round(v.price*(100-PCT)/100):v.price};
  const ls={get(){try{return JSON.parse(localStorage.getItem('lather-notify')||'{}')}catch(e){return{}}},set(o){try{localStorage.setItem('lather-notify',JSON.stringify(o))}catch(e){}}};
- const sizeKey=()=>'calm-'+((root.querySelector('[data-pdp-variant]:checked')||{}).value||'400');
+ const sizeKey=()=>id+'-'+((root.querySelector('[data-pdp-variant]:checked')||{}).value||'400');
  function update(){
   const v=size(),q=qty(),pl=plan(),total=L.fmt(round(each()*q)),out=!v.available;
   input.value=q;$('[data-pdp-qty="-1"]').disabled=q===1;$('[data-pdp-qty="1"]').disabled=q===20;
@@ -292,7 +317,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   set('[data-plan-once]',L.fmt(v.price));set('[data-plan-sub]',L.fmt(round(v.price*(100-PCT)/100)));
   buyBtn.textContent=out?'Email me when it’s back':'Add to bag, '+total;
   if(out)buyBtn.setAttribute('aria-expanded',String(!notify.hidden));else buyBtn.removeAttribute('aria-expanded');
-  set('[data-pdp-mobile-name]','Calm wash, '+v.short);set('[data-pdp-mobile-price]',out?'Sold out':total);
+  set('[data-pdp-mobile-name]',p.name+', '+v.short);set('[data-pdp-mobile-price]',out?'Sold out':total);
   const mb=mobile.querySelector('[data-pdp-add]');mb.textContent=out?'Email me when it’s back':'Add to bag';
   set('#pdp-quantity-note',out||q<2?'':q+' bottles, '+total+(pl?' each delivery.':' total.'));
   if(!out){closeNotify(false);}
@@ -315,7 +340,7 @@ document.addEventListener('DOMContentLoaded',()=>{
  function buy(from){update();const v=size();
   if(!v.available){if(from===mobile.querySelector('[data-pdp-add]'))$('#pdp-purchase').scrollIntoView({block:'center',behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'});openNotify();return}
   const pl=plan(),q=qty();
-  if(pl)L.add('calm',q,{key:'calm-sub-'+pl.dataset.weeks,price:each(),note:v.short+', every '+pl.dataset.weeks+' weeks, save '+PCT+'%'});else L.add('calm',q);
+  if(pl)L.add(id,q,{key:id+'-sub-'+pl.dataset.weeks,price:each(),note:v.short+', every '+pl.dataset.weeks+' weeks, save '+PCT+'%'});else L.add(id,q);
  }
  root.querySelectorAll('[data-pdp-qty]').forEach(b=>b.addEventListener('click',()=>{input.value=qty()+Number(b.dataset.pdpQty);update();}));input.addEventListener('change',update);
  root.querySelectorAll('[data-pdp-add]').forEach(b=>b.addEventListener('click',()=>buy(b)));
@@ -328,31 +353,100 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 <!-- part: 20-ingredients.html -->
 <style>
-.s-pdp-ingredients{background:var(--raised);padding:88px 0}.s-pdp-ingredients__layout{display:grid;grid-template-columns:.85fr 1.15fr;gap:80px}.s-pdp-ingredients__intro .h2{max-width:11ch;margin-bottom:24px}.s-pdp-ingredients__intro p{max-width:34ch;color:var(--muted)}.s-pdp-ingredients__list{display:grid;grid-template-columns:1fr 1fr;gap:30px}.s-pdp-ingredients__item{border-top:1px solid var(--line);padding-top:18px}.s-pdp-ingredients__item h3{font-size:21px;font-weight:500;margin-bottom:7px}.s-pdp-ingredients__item p{font-size:15px;color:var(--muted);max-width:30ch}.s-pdp-ingredients__full{grid-column:1/-1;border-top:1px solid var(--line);padding-top:18px}.s-pdp-ingredients__full summary{font-weight:600;cursor:pointer;padding:6px 0;min-height:40px}.s-pdp-ingredients__full p{font-size:15px;line-height:1.7;margin-top:12px;color:var(--muted)}.s-pdp-ingredients__full summary:focus-visible{outline:2px solid var(--moss);outline-offset:4px}
-@media(max-width:760px){.s-pdp-ingredients{padding:56px 0}.s-pdp-ingredients__layout{grid-template-columns:1fr;gap:32px}.s-pdp-ingredients__intro .h2{max-width:13ch}.s-pdp-ingredients__list{gap:24px 18px}.s-pdp-ingredients__item h3{font-size:19px}}
+/* One full-height oat photo bleeds off the left edge; the list sits beside it, each ingredient with a line icon in the theme's stroke (1.6, round). */
+.s-pdp-ingredients{background:var(--raised)}
+.s-pdp-ingredients__layout{display:grid;grid-template-columns:minmax(0,44%) minmax(0,1fr);grid-template-rows:auto 1fr}
+.s-pdp-ingredients__media{grid-column:1;grid-row:1/span 2;position:relative;overflow:hidden;min-height:640px;background:var(--stone)}
+.s-pdp-ingredients__media img,.s-pdp-ingredients__media svg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;filter:saturate(.88) contrast(.98)}
+.s-pdp-ingredients__intro{grid-column:2;padding:88px var(--gut) 0 80px}
+.s-pdp-ingredients__intro .h2{max-width:11ch;margin-bottom:24px}
+.s-pdp-ingredients__intro p{max-width:40ch;color:var(--muted)}
+.s-pdp-ingredients__list{grid-column:2;align-self:start;display:grid;grid-template-columns:1fr 1fr;gap:36px 40px;padding:48px var(--gut) 88px 80px;max-width:820px}
+.s-pdp-ingredients__item{display:grid;grid-template-columns:44px 1fr;gap:0 16px;align-items:start}
+.s-pdp-ingredients__icon{width:44px;height:44px;border-radius:var(--r-btn);background:var(--oat);color:var(--moss);display:grid;place-items:center}
+.s-pdp-ingredients__icon svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.s-pdp-ingredients__item h3{font-size:21px;font-weight:500;line-height:1.25;margin:9px 0 7px}
+.s-pdp-ingredients__item p{font-size:15px;color:var(--muted);max-width:30ch}
+.s-pdp-ingredients__full{grid-column:1/-1;border-top:1px solid var(--line);padding-top:18px;margin-top:4px}
+.s-pdp-ingredients__full summary{font-weight:600;cursor:pointer;padding:6px 0;min-height:40px}
+.s-pdp-ingredients__full p{font-size:15px;line-height:1.7;margin-top:12px;color:var(--muted)}
+.s-pdp-ingredients__full summary:focus-visible{outline:2px solid var(--moss);outline-offset:4px}
+.s-pdp-ingredients .h2 .ln{display:block}/* two-line heading also without html.motion */
+/* motion: the photo settles from a slight zoom; the final frame is the default */
+html.motion .s-pdp-ingredients__media[data-rv] img{transition:transform 1.4s var(--ease),opacity .9s var(--ease)}
+html.motion .s-pdp-ingredients__media[data-rv]:not(.in) img{transform:scale(1.07);opacity:.001}
+@media(max-width:1100px){.s-pdp-ingredients__intro{padding-left:48px}.s-pdp-ingredients__list{padding-left:48px;gap:32px 28px}}
+/* 390: heading, then a square photo edge to edge, then a single list of icon rows */
+@media(max-width:760px){
+ .s-pdp-ingredients__layout{grid-template-columns:1fr;grid-template-rows:none}
+ .s-pdp-ingredients__intro{grid-column:1;padding:56px var(--gut) 28px}
+ .s-pdp-ingredients__intro .h2{max-width:13ch;margin-bottom:18px}
+ .s-pdp-ingredients__media{grid-column:1;grid-row:auto;min-height:0;aspect-ratio:1/1}
+ .s-pdp-ingredients__list{grid-column:1;grid-template-columns:1fr;gap:22px;padding:30px var(--gut) 56px;max-width:none}
+ .s-pdp-ingredients__item h3{font-size:19px;margin-top:10px}
+ .s-pdp-ingredients__item p{max-width:none}
+}
 </style>
 <section class="s-pdp-ingredients" id="pdp-ingredients" aria-labelledby="pdp-ingredients-title">
- <div class="wrap s-pdp-ingredients__layout">
+ <div class="s-pdp-ingredients__layout">
   <div class="s-pdp-ingredients__intro"><h2 class="h2" id="pdp-ingredients-title" data-rv="line"><span class="ln"><span>A list you</span></span><span class="ln"><span>can <em>read.</em></span></span></h2><p>What goes in matters. So does what we leave out: added fragrance, SLS and colour.</p></div>
+  <figure class="s-pdp-ingredients__media" data-rv="zoom"><img src="https://images.unsplash.com/photo-1598048851887-0263d4f43e73?w=1400&q=72&auto=format&fit=crop" alt="A bowl of rolled oats seen from above on a pale stone surface" loading="lazy"></figure>
   <div class="s-pdp-ingredients__list">
-   <article class="s-pdp-ingredients__item" data-rv="blur"><h3>Colloidal oat</h3><p>Finely milled oat, in a wash made for everyday dry skin.</p></article>
-   <article class="s-pdp-ingredients__item" data-rv="blur" data-rv-delay="1"><h3>Glycerin</h3><p>A familiar humectant in the formula, for a comfortable wash.</p></article>
-   <article class="s-pdp-ingredients__item" data-rv="blur"><h3>Gentle cleansers</h3><p>Coco-glucoside and decyl glucoside make the soft foam.</p></article>
-   <article class="s-pdp-ingredients__item" data-rv="blur" data-rv-delay="1"><h3>No added scent</h3><p>Fragrance-free means no perfume or essential oil added to Calm wash.</p></article>
+   <article class="s-pdp-ingredients__item" data-rv="blur"><span class="s-pdp-ingredients__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21v-9"/><path d="M12 12.5c-.2-3.6.4-6.4 2.2-8.5 1.2 2.7.6 5.6-2.2 8.5z"/><path d="M12 15.5c-2.4-.4-4.4-1.8-5.4-4.3 2.6-.2 4.5.9 5.4 4.3z"/><path d="M12 18.5c2.4-.4 4.4-1.8 5.4-4.3-2.6-.2-4.5.9-5.4 4.3z"/></svg></span><div><h3>Colloidal oat</h3><p>Finely milled oat, in a wash made for everyday dry skin.</p></div></article>
+   <article class="s-pdp-ingredients__item" data-rv="blur" data-rv-delay="1"><span class="s-pdp-ingredients__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.5c3.4 4.2 5.5 7.4 5.5 10.2a5.5 5.5 0 0 1-11 0c0-2.8 2.1-6 5.5-10.2z"/><path d="M9.6 14.4a2.5 2.5 0 0 0 2 2.3"/></svg></span><div><h3>Glycerin</h3><p>A familiar humectant in the formula, for a comfortable wash.</p></div></article>
+   <article class="s-pdp-ingredients__item" data-rv="blur"><span class="s-pdp-ingredients__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9.5" cy="14" r="4.5"/><circle cx="16.8" cy="8.6" r="2.7"/><circle cx="17.2" cy="16.6" r="1.7"/><path d="M7.4 12.6a2.4 2.4 0 0 1 1.6-1.2"/></svg></span><div><h3>Gentle cleansers</h3><p>Coco-glucoside and decyl glucoside make the soft foam.</p></div></article>
+   <article class="s-pdp-ingredients__item" data-rv="blur" data-rv-delay="1"><span class="s-pdp-ingredients__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 10.5h8a1 1 0 0 1 1 1V19a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2v-7.5a1 1 0 0 1 1-1z"/><path d="M10 10.5V8h4v2.5M9.5 5h5"/><path d="M4.5 4.5l15 15"/></svg></span><div><h3>No added scent</h3><p>Fragrance-free means no perfume or essential oil added to Calm wash.</p></div></article>
    <details class="s-pdp-ingredients__full"><summary>Read the complete ingredient list</summary><p id="pdp-full-ingredients">Water, glycerin, coco-glucoside, decyl glucoside, colloidal oat, shea butter, sunflower seed oil, xanthan gum, citric acid, sodium benzoate. pH 5.5.</p><p>Contains oat. Check the full list against your known allergies before using.</p></details>
   </div>
  </div>
 </section>
-<script>document.addEventListener('DOMContentLoaded',()=>{if(window.LATHER)document.querySelector('#pdp-full-ingredients').textContent=window.LATHER.products.calm.ing;});</script>
+<script>document.addEventListener('DOMContentLoaded',()=>{const L=window.LATHER;if(!L)return;const id=L.pid?L.pid():'calm',p=L.products[id];
+ document.querySelector('#pdp-full-ingredients').textContent=p.ing;
+ if(id==='calm')return;
+ /* product.html?p=<id>: the four notes follow that product */
+ const it=[...document.querySelectorAll('.s-pdp-ingredients__item')];
+ if(!/glucoside/.test(p.ing)&&!/Calm wash plus/.test(p.ing)){it[2].querySelector('h3').textContent=id==='bar'?'Oat milk soap':'Shea and squalane';it[2].querySelector('p').textContent=id==='bar'?'Saponified olive and coconut oils with oat milk, for a rich lather.':'Softening butters and oils that stay on the skin after you rinse.';
+  /* icon follows the note: a soap bar, or a leaf for the plant butters and oils */
+  it[2].querySelector('svg').innerHTML=id==='bar'?'<rect x="4" y="9" width="16" height="10" rx="3"/><circle cx="9" cy="5.5" r="1.8"/><circle cx="14.5" cy="4.5" r="1.1"/>':'<path d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14z"/><path d="M5 19c3-4 6-7 9-9"/>';}
+ if(!(p.labels||[]).includes('ff')){it[3].querySelector('h3').textContent='One light scent';it[3].querySelector('p').textContent='0.2% chamomile flower oil, with the allergen named on the label.';
+  /* a scented product gets the flower icon instead of the crossed-out bottle */
+  it[3].querySelector('svg').innerHTML='<circle cx="12" cy="9" r="2.2"/><path d="M12 6.8c-.9-2.4-.5-3.6 0-4.3.5.7.9 1.9 0 4.3zM14.2 9c2.4-.9 3.6-.5 4.3 0-.7.5-1.9.9-4.3 0zM9.8 9c-2.4.9-3.6.5-4.3 0 .7-.5 1.9-.9 4.3 0zM12 11.2V21M12 17c-1.8-.2-3.2-1.2-3.8-3 1.9-.1 3.2.9 3.8 3z"/>';}
+ else it[3].querySelector('p').textContent='Fragrance-free means no perfume or essential oil added to '+p.name+'.';
+});</script>
 
 <!-- part: 30-use.html -->
 <style>
-.s-pdp-use{background:var(--sage-wash);padding:88px 0}.s-pdp-use__head{display:flex;align-items:end;justify-content:space-between;gap:32px;margin-bottom:44px}.s-pdp-use__head p{max-width:34ch;color:var(--muted)}.s-pdp-use__steps{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:40px;counter-reset:pdp-step}.s-pdp-use__steps li{counter-increment:pdp-step;position:relative;border-top:1px solid var(--moss);padding-top:24px}.s-pdp-use__steps li:before{content:counter(pdp-step);font:600 28px/1 var(--f-price);display:block;margin-bottom:26px;color:var(--moss)}.s-pdp-use__steps h3{font-size:23px;font-weight:500;margin-bottom:10px}.s-pdp-use__steps p{max-width:30ch;color:var(--muted)}.s-pdp-use__note{display:flex;justify-content:space-between;gap:24px;margin-top:46px;padding-top:22px;border-top:1px solid var(--line);font-size:14px}.s-pdp-use__note a{flex:none}
-@media(max-width:760px){.s-pdp-use{padding:56px 0}.s-pdp-use__head{display:block;margin-bottom:30px}.s-pdp-use__head p{margin-top:18px}.s-pdp-use__steps{display:block}.s-pdp-use__steps li{padding:20px 0 24px 48px}.s-pdp-use__steps li:before{position:absolute;left:0;top:23px;font-size:24px}.s-pdp-use__steps p{max-width:none}.s-pdp-use__note{display:block;margin-top:8px}.s-pdp-use__note a{display:inline-block;margin-top:12px}}
+/* Three steps, each with its own real photo (square frames at desktop, 4:5 thumbs at 390; one shared grade). 390: photo rows, thumb left and text right. */
+.s-pdp-use{background:var(--sage-wash);padding:88px 0}.s-pdp-use__head{display:flex;align-items:end;justify-content:space-between;gap:32px;margin-bottom:44px}.s-pdp-use__head p{max-width:34ch;color:var(--muted)}
+.s-pdp-use__steps{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:40px;counter-reset:pdp-step}
+.s-pdp-use__steps li{counter-increment:pdp-step;position:relative}
+.s-pdp-use__media{aspect-ratio:1/1;border-radius:var(--r-img);overflow:hidden;background:var(--stone);margin-bottom:24px}
+.s-pdp-use__media img,.s-pdp-use__media svg{width:100%;height:100%;object-fit:cover;filter:saturate(.84) sepia(.08) contrast(.97)}
+.s-pdp-use__steps h3{font-size:23px;font-weight:500;margin-bottom:10px;display:flex;align-items:baseline;gap:14px}
+.s-pdp-use__steps h3:before{content:counter(pdp-step);font:600 26px/1 var(--f-price);color:var(--moss)}
+.s-pdp-use__steps p{max-width:32ch;color:var(--muted)}
+.s-pdp-use__note{display:flex;justify-content:space-between;gap:24px;margin-top:46px;padding-top:22px;border-top:1px solid var(--line);font-size:14px}.s-pdp-use__note a{flex:none}
+.s-pdp-use .h2 .ln{display:block}/* two-line heading also without html.motion */
+/* motion: each photo settles in turn, the text follows; final frame is the default */
+html.motion .s-pdp-use__media[data-rv="settle"]{transition-duration:.9s}
+@media(max-width:760px){
+ .s-pdp-use{padding:56px 0}.s-pdp-use__head{display:block;margin-bottom:30px}.s-pdp-use__head p{margin-top:18px}
+ .s-pdp-use__steps{display:grid;grid-template-columns:1fr;gap:22px}
+ .s-pdp-use__steps li{display:grid;grid-template-columns:38% 1fr;gap:18px;align-items:center}
+ .s-pdp-use__media{margin-bottom:0;aspect-ratio:4/5}
+ .s-pdp-use__steps h3{font-size:20px;gap:10px;margin-bottom:6px}
+ .s-pdp-use__steps h3:before{font-size:22px}
+ .s-pdp-use__steps p{max-width:none;font-size:15px;line-height:1.5}
+ .s-pdp-use__note{display:block;margin-top:30px}.s-pdp-use__note a{display:inline-block;margin-top:12px}
+}
 </style>
 <section class="s-pdp-use" id="pdp-use" aria-labelledby="pdp-use-title"><div class="wrap">
  <div class="s-pdp-use__head"><h2 class="h2" id="pdp-use-title" data-rv="line"><span class="ln"><span>Keep the shower</span></span><span class="ln"><span><em>simple.</em></span></span></h2><p>Soft foam. A thorough rinse. Then a little lotion while skin is still damp.</p></div>
- <ol class="s-pdp-use__steps"><li data-rv="blur"><h3>Wet, then lather</h3><p>Work a small amount between wet palms. Wash gently with lukewarm water.</p></li><li data-rv="blur" data-rv-delay="1"><h3>Rinse it away</h3><p>Rinse the foam off fully. Skip the hard scrubbing and pat dry with a soft towel.</p></li><li data-rv="blur" data-rv-delay="2"><h3>Follow with lotion</h3><p>Keep Calm lotion nearby. Smooth it over damp skin after your shower.</p></li></ol>
+ <ol class="s-pdp-use__steps">
+  <li><figure class="s-pdp-use__media" data-rv="settle"><img src="https://images.unsplash.com/photo-1634043319737-e4df206ab5b9?w=900&q=72&auto=format&fit=crop" alt="Hands working a soft white foam between the palms" loading="lazy"></figure><div data-rv="blur"><h3>Wet, then lather</h3><p>Work a small amount between wet palms. Wash gently with lukewarm water.</p></div></li>
+  <li><figure class="s-pdp-use__media" data-rv="settle" data-rv-delay="1"><img src="https://images.unsplash.com/photo-1584961503022-d19acee0af7b?w=900&q=72&auto=format&fit=crop" alt="Cupped hands rinsing under a running tap" loading="lazy"></figure><div data-rv="blur" data-rv-delay="1"><h3>Rinse it away</h3><p>Rinse the foam off fully. Skip the hard scrubbing and pat dry with a soft towel.</p></div></li>
+  <li><figure class="s-pdp-use__media" data-rv="settle" data-rv-delay="2"><img src="https://images.unsplash.com/photo-1672763057474-cce3af40cf4f?w=900&q=72&auto=format&fit=crop" alt="Fingers taking a little cream from a tin in a bathroom" loading="lazy"></figure><div data-rv="blur" data-rv-delay="2"><h3>Follow with lotion</h3><p>Keep Calm lotion nearby. Smooth it over damp skin after your shower.</p></div></li>
+ </ol>
  <div class="s-pdp-use__note"><p>New to your skin? Try a small area first. Stop using if irritation occurs.</p><a href="../templates/help.html#refund" class="link">A little help for reactive skin</a></div>
 </div></section>
 
@@ -362,8 +456,8 @@ document.addEventListener('DOMContentLoaded',()=>{
 @media(max-width:760px){.s-pdp-pair{padding:56px 0}.s-pdp-pair__layout{grid-template-columns:1fr;gap:30px}.s-pdp-pair__photo{aspect-ratio:4/5}.s-pdp-pair__body .h2{max-width:13ch}.s-pdp-pair__body .btn{width:100%}}
 </style>
 <section class="s-pdp-pair" id="pdp-pair" aria-labelledby="pdp-pair-title"><div class="wrap s-pdp-pair__layout">
- <figure class="s-pdp-pair__photo" data-rv="settle"><img src="../img/c-lotion.jpg" alt="Calm lotion, 250 ml oat bottle with a moss pump" width="880" height="1100" loading="lazy"></figure>
- <div class="s-pdp-pair__body"><h2 class="h2" id="pdp-pair-title" data-rv="line"><span class="ln"><span>Wash, then</span></span><span class="ln"><span><em>lotion.</em></span></span></h2><p>The Calm routine. Two fragrance-free products, one place beside the shower.</p><ul class="s-pdp-pair__items"><li><span>Calm wash, 400 ml</span><span data-pdp-pair-wash>$18</span></li><li><span>Calm lotion, 250 ml</span><span data-pdp-pair-lotion>$22</span></li></ul><p class="s-pdp-pair__sum"><span class="price" id="pdp-set-price">$34 <s>$40</s></span><span>15% off together</span></p><button class="btn btn--light" type="button" id="pdp-add-set">Add the Calm routine, $34</button><p class="small">One 400 ml wash and one 250 ml lotion. No subscription.</p><button class="s-pdp-pair__single" type="button" data-quick="lotion">Just looking for the lotion? Quick view</button></div>
+ <figure class="s-pdp-pair__photo" data-rv="settle"><a class="lv3-plink" href="../templates/product.html?p=lotion" style="height:100%" tabindex="-1" aria-hidden="true"><img src="../img/c-lotion.jpg" alt="Calm lotion, 250 ml oat bottle with a moss pump" width="880" height="1100" loading="lazy"></a></figure>
+ <div class="s-pdp-pair__body"><h2 class="h2" id="pdp-pair-title" data-rv="line"><span class="ln"><span>Wash, then</span></span><span class="ln"><span><em>lotion.</em></span></span></h2><p>The Calm routine. Two fragrance-free products, one place beside the shower.</p><ul class="s-pdp-pair__items"><li><a class="lv3-pname" href="../templates/product.html">Calm wash, 400 ml</a><span data-pdp-pair-wash>$18</span></li><li><a class="lv3-pname" href="../templates/product.html?p=lotion">Calm lotion, 250 ml</a><span data-pdp-pair-lotion>$22</span></li></ul><p class="s-pdp-pair__sum"><span class="price" id="pdp-set-price">$34 <s>$40</s></span><span>15% off together</span></p><button class="btn btn--light" type="button" id="pdp-add-set">Add the Calm routine, $34</button><p class="small">One 400 ml wash and one 250 ml lotion. No subscription.</p><button class="s-pdp-pair__single" type="button" data-quick="lotion">Just looking for the lotion? Quick view</button></div>
 </div></section>
 <script>document.addEventListener('DOMContentLoaded',()=>{const L=window.LATHER;if(!L)return;const total=L.products.calm.price+L.products.lotion.price,price=Math.round(total*85)/100;document.querySelector('[data-pdp-pair-wash]').textContent=L.fmt(L.products.calm.price);document.querySelector('[data-pdp-pair-lotion]').textContent=L.fmt(L.products.lotion.price);document.querySelector('#pdp-set-price').innerHTML=L.fmt(price)+' <s>'+L.fmt(total)+'</s>';const b=document.querySelector('#pdp-add-set');b.textContent='Add the Calm routine, '+L.fmt(price);b.addEventListener('click',()=>L.add('set',1,{key:'pdp-calm-routine',name:'Calm routine set',price,img:'../img/s-calm-set.jpg',note:'Calm wash 400 ml + Calm lotion 250 ml, 15% off'}));});</script>
 
@@ -376,7 +470,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 .s-pdp-recent__clear{font-size:14px;color:var(--muted);text-decoration:underline;text-underline-offset:4px;padding:6px 0;transition:color .25s var(--ease)}
 .s-pdp-recent__clear:hover{color:var(--ink)}
 .s-pdp-recent__list{list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.s-pdp-recent__card{position:relative;display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;padding:10px 16px 10px 10px;border-radius:var(--r-img);background:var(--raised);transition:background-color .25s var(--ease)}
+.s-pdp-recent__card{position:relative;display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:14px;align-items:center;padding:10px 16px 10px 10px;border-radius:var(--r-img);background:var(--raised);transition:background-color .25s var(--ease)}
 .s-pdp-recent__card:hover{background:#fbf8f1}
 .s-pdp-recent__card img,.s-pdp-recent__card .blko-lv3-ph{width:64px;height:80px;object-fit:cover;border-radius:4px;background:var(--oat)}
 .s-pdp-recent__text{display:flex;flex-direction:column;gap:2px;min-width:0}
@@ -385,6 +479,12 @@ document.addEventListener('DOMContentLoaded',()=>{
 .s-pdp-recent__name:focus-visible{outline:none}
 .s-pdp-recent__card:has(.s-pdp-recent__name:focus-visible){outline:2px solid var(--moss);outline-offset:2px}
 .s-pdp-recent__card .price{font-size:18px}
+.s-pdp-recent__img{position:relative;z-index:1;border-radius:4px}
+.s-pdp-recent__qv{position:relative;z-index:1;width:36px;height:36px;border-radius:999px;display:grid;place-items:center;background:var(--oat);color:var(--ink);transition:background-color .25s var(--ease),color .25s var(--ease)}
+.s-pdp-recent__qv:hover{background:var(--stone);color:var(--moss)}
+.s-pdp-recent__qv:focus-visible{outline:2px solid var(--moss);outline-offset:2px}
+.s-pdp-recent__qv svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.s-pdp-recent__card:has(.s-pdp-recent__qv){grid-template-columns:64px minmax(0,1fr) auto 36px;gap:12px;padding-right:12px}
 .s-pdp-recent__clear:focus-visible{outline:2px solid var(--moss);outline-offset:3px}
 @media (max-width:1080px){.s-pdp-recent__list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:760px){
@@ -392,7 +492,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   .s-pdp-recent__title{font-size:21px}
   .s-pdp-recent__list{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 calc(-1*var(--gut));padding:2px var(--gut) 4px;scroll-padding:0 var(--gut)}
   .s-pdp-recent__list::-webkit-scrollbar{display:none}
-  .s-pdp-recent__card{flex:0 0 76%;scroll-snap-align:start}
+  .s-pdp-recent__card{flex:0 0 84%;scroll-snap-align:start}
 }
 </style>
 <!-- Recently viewed (FEATURES-BRIEF #4). The tracker and renderer live in shared/40-recent.html.
@@ -404,10 +504,10 @@ document.addEventListener('DOMContentLoaded',()=>{
  <div class="wrap">
   <div class="s-pdp-recent__head"><h2 class="s-pdp-recent__title" id="pdp-recent-title">Recently viewed</h2><button class="s-pdp-recent__clear" type="button" data-recent-clear>Clear</button></div>
   <ul class="s-pdp-recent__list" data-recent-list>
-  <li class="s-pdp-recent__card"><img src="../img/c-rich.jpg" alt="" width="120" height="150" loading="lazy"><div class="s-pdp-recent__text"><button class="s-pdp-recent__name" type="button" data-quick="rich" aria-label="Quick view: Rich wash">Rich wash</button><span class="small">400 ml</span></div><span class="price">$20</span></li>
-  <li class="s-pdp-recent__card"><img src="../img/c-lotion.jpg" alt="" width="120" height="150" loading="lazy"><div class="s-pdp-recent__text"><button class="s-pdp-recent__name" type="button" data-quick="lotion" aria-label="Quick view: Calm lotion">Calm lotion</button><span class="small">250 ml</span></div><span class="price">$22</span></li>
-  <li class="s-pdp-recent__card"><img src="../img/c-oat-bar.jpg" alt="" width="120" height="150" loading="lazy"><div class="s-pdp-recent__text"><button class="s-pdp-recent__name" type="button" data-quick="bar" aria-label="Quick view: Oat bar">Oat bar</button><span class="small">120 g</span></div><span class="price">$9</span></li>
-  <li class="s-pdp-recent__card"><img src="../img/c-soft.jpg" alt="" width="120" height="150" loading="lazy"><div class="s-pdp-recent__text"><button class="s-pdp-recent__name" type="button" data-quick="soft" aria-label="Quick view: Soft wash">Soft wash</button><span class="small">400 ml</span></div><span class="price">$18</span></li>
+  <li class="s-pdp-recent__card"><a class="lv3-plink s-pdp-recent__img" href="../templates/product.html?p=rich" tabindex="-1" aria-hidden="true"><img src="../img/c-rich.jpg" alt="" width="120" height="150" loading="lazy"></a><div class="s-pdp-recent__text"><a class="s-pdp-recent__name" href="../templates/product.html?p=rich">Rich wash</a><span class="small">400 ml</span></div><span class="price">$20</span><button class="s-pdp-recent__qv" type="button" data-quick="rich" aria-label="Quick view: Rich wash"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg></button></li>
+  <li class="s-pdp-recent__card"><a class="lv3-plink s-pdp-recent__img" href="../templates/product.html?p=lotion" tabindex="-1" aria-hidden="true"><img src="../img/c-lotion.jpg" alt="" width="120" height="150" loading="lazy"></a><div class="s-pdp-recent__text"><a class="s-pdp-recent__name" href="../templates/product.html?p=lotion">Calm lotion</a><span class="small">250 ml</span></div><span class="price">$22</span><button class="s-pdp-recent__qv" type="button" data-quick="lotion" aria-label="Quick view: Calm lotion"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg></button></li>
+  <li class="s-pdp-recent__card"><a class="lv3-plink s-pdp-recent__img" href="../templates/product.html?p=bar" tabindex="-1" aria-hidden="true"><img src="../img/c-oat-bar.jpg" alt="" width="120" height="150" loading="lazy"></a><div class="s-pdp-recent__text"><a class="s-pdp-recent__name" href="../templates/product.html?p=bar">Oat bar</a><span class="small">120 g</span></div><span class="price">$9</span><button class="s-pdp-recent__qv" type="button" data-quick="bar" aria-label="Quick view: Oat bar"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg></button></li>
+  <li class="s-pdp-recent__card"><a class="lv3-plink s-pdp-recent__img" href="../templates/product.html?p=soft" tabindex="-1" aria-hidden="true"><img src="../img/c-soft.jpg" alt="" width="120" height="150" loading="lazy"></a><div class="s-pdp-recent__text"><a class="s-pdp-recent__name" href="../templates/product.html?p=soft">Soft wash</a><span class="small">400 ml</span></div><span class="price">$18</span><button class="s-pdp-recent__qv" type="button" data-quick="soft" aria-label="Quick view: Soft wash"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg></button></li>
   </ul>
   <p class="sr" aria-live="polite" data-recent-status></p>
  </div>
@@ -415,14 +515,279 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 <!-- part: 50-reviews.html -->
 <style>
-.s-pdp-reviews{padding:88px 0;background:var(--raised)}.s-pdp-reviews__head{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:end;margin-bottom:38px}.s-pdp-reviews__head p{max-width:37ch;color:var(--muted)}.s-pdp-reviews__row{display:grid;grid-template-columns:180px 1fr;gap:40px;border-top:1px solid var(--line);padding:32px 0}.s-pdp-reviews__person{font-size:14px;color:var(--muted)}.s-pdp-reviews__person b{display:block;font-size:16px;color:var(--ink);margin-bottom:5px}.s-pdp-reviews__quote{font-size:clamp(22px,2.4vw,32px);font-weight:400;line-height:1.45;max-width:36ch}.s-pdp-reviews__quote .stars{display:block;font-size:15px;margin-bottom:12px}.s-pdp-reviews__foot{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:20px}.s-pdp-reviews__foot a{margin-left:10px}
-@media(max-width:760px){.s-pdp-reviews{padding:56px 0}.s-pdp-reviews__head{grid-template-columns:1fr;gap:20px}.s-pdp-reviews__row{grid-template-columns:1fr;gap:18px;padding:24px 0}.s-pdp-reviews__quote{font-size:23px}.s-pdp-reviews__foot a{display:block;margin:10px 0 0}}
+/* Lather v3 product page, reviews (pages/product/50-reviews.html).
+   Rating summary under the heading (the space beside the heading stays empty on purpose), skin-type chips with counts, one lead review on deep green with a customer photo,
+   the rest on oat panels in a 7/5 rhythm, "Show more" below. 390 has its own stack with an edge-to-edge lead. */
+.s-pdp-reviews{padding:104px 0 96px;background:var(--raised)}
+.s-pdp-reviews__head{display:flex;flex-direction:column;align-items:flex-start;gap:30px;margin-bottom:40px}
+.s-pdp-reviews__head .h2{max-width:12ch}
+.s-pdp-reviews__score{display:flex;align-items:center;gap:20px}
+.s-pdp-reviews__avg{font:300 72px/.86 var(--f-body);letter-spacing:-.04em;color:var(--ink)}
+.s-pdp-reviews__score-text{display:flex;flex-direction:column;gap:8px}
+.s-pdp-reviews__meter{position:relative;display:inline-block;font-size:20px;line-height:1;letter-spacing:3px;color:var(--stone);white-space:nowrap}
+.s-pdp-reviews__meter i{position:absolute;inset:0 auto 0 0;overflow:hidden;color:var(--moss);font-style:normal}
+.s-pdp-reviews__count{font-size:15px;line-height:1.4;color:var(--muted)}
+.s-pdp-reviews__count b{color:var(--ink);font-weight:600}
+
+.s-pdp-reviews__bar{display:flex;align-items:center;gap:12px 10px;flex-wrap:wrap;margin-bottom:24px}
+.s-pdp-reviews__bar-label{font-size:15px;color:var(--muted);margin-right:8px}
+.s-pdp-reviews__filters{display:flex;gap:8px;flex-wrap:wrap}
+.s-pdp-reviews .chip{background:var(--oat);height:42px;padding:0 18px;font-size:15px}
+.s-pdp-reviews .chip:hover{background:var(--stone)}
+.s-pdp-reviews .chip[aria-pressed="true"]{background:var(--deep);color:var(--oat)}
+.s-pdp-reviews .chip .n{margin-left:8px;font-weight:400;opacity:.62}
+.s-pdp-reviews .chip[hidden]{display:none}
+
+.s-pdp-reviews__list{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;align-items:start}
+.s-pdp-reviews__item{grid-column:8 / span 5;position:relative;background:var(--oat);border-radius:var(--r-img);padding:28px 30px 26px;display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-self:stretch}
+/* after the lead the rows swing: wide left + narrow right, then narrow left + wide right */
+.s-pdp-reviews__item.is-nl{grid-column:1 / span 5}
+.s-pdp-reviews__item.is-wide{grid-column:1 / span 7}
+.s-pdp-reviews__item.is-wide.is-r{grid-column:6 / span 7}
+.s-pdp-reviews__item.is-off{display:none}
+.s-pdp-reviews__item:focus-visible{outline:2px solid var(--moss);outline-offset:3px}
+.s-pdp-reviews__body{display:flex;flex-direction:column;gap:12px;min-width:0}
+.s-pdp-reviews__top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.s-pdp-reviews__top .stars{font-size:15px;letter-spacing:2px}
+.s-pdp-reviews__top .stars s{text-decoration:none;opacity:.28}
+.s-pdp-reviews__skin{font:600 14px/1.2 var(--f-body);color:var(--moss)}
+.s-pdp-reviews__title{font:600 19px/1.3 var(--f-body);letter-spacing:-.01em}
+.s-pdp-reviews__text{font-size:16px;line-height:1.55;color:var(--ink)}
+.s-pdp-reviews__who{margin-top:auto;padding-top:6px;font-size:14px;line-height:1.45;color:var(--muted)}
+.s-pdp-reviews__who b{display:block;font-size:15px;color:var(--ink);font-weight:600}
+.s-pdp-reviews__media{margin:0;border-radius:4px;overflow:hidden;background:var(--stone)}
+.s-pdp-reviews__media img,.s-pdp-reviews__media svg{display:block;width:100%;height:100%;object-fit:cover}
+/* a photo on a small review sits beside the words, like an attachment */
+.s-pdp-reviews__item.has-photo:not(.is-lead){grid-template-columns:minmax(0,1fr) 116px}
+.s-pdp-reviews__item.has-photo:not(.is-lead) .s-pdp-reviews__media{grid-column:2;grid-row:1;aspect-ratio:4/5;align-self:start}
+/* wide rows read like a ledger line: who and stars on the left, the words larger on the right */
+.s-pdp-reviews__item.is-wide{padding:32px 36px 30px}
+.s-pdp-reviews__item.is-wide .s-pdp-reviews__body{display:grid;grid-template-columns:minmax(210px,.38fr) minmax(0,1fr);grid-template-rows:auto auto 1fr;grid-template-areas:'top title' 'top text' 'who text';gap:12px 32px}
+.s-pdp-reviews__item.is-wide .s-pdp-reviews__top{grid-area:top;align-self:start;flex-direction:column;align-items:flex-start;gap:8px}
+.s-pdp-reviews__item.is-wide .s-pdp-reviews__who{grid-area:who;align-self:end}
+.s-pdp-reviews__item.is-wide .s-pdp-reviews__title{grid-area:title;font-size:24px;font-weight:500;letter-spacing:-.015em;line-height:1.22}
+.s-pdp-reviews__item.is-wide .s-pdp-reviews__text{grid-area:text;align-self:start;font-size:17px;max-width:48ch}
+
+/* the lead: deep green, photo bleeding the full height */
+.s-pdp-reviews__item.is-lead{grid-column:1 / span 7;grid-row:span 2;background:var(--deep);color:var(--oat);padding:0;gap:0;overflow:hidden}
+.s-pdp-reviews__item.is-lead.is-pair{grid-row:auto}
+.s-pdp-reviews__item.is-lead.is-pair .s-pdp-reviews__media{min-height:400px}
+.s-pdp-reviews__item.is-lead.is-solo{grid-column:1 / -1;grid-row:auto}
+.s-pdp-reviews__item.is-lead.has-photo{grid-template-columns:minmax(0,.86fr) minmax(0,1fr)}
+.s-pdp-reviews__item.is-lead .s-pdp-reviews__media{border-radius:0;min-height:480px;height:100%;position:relative}
+.s-pdp-reviews__item.is-lead .s-pdp-reviews__media img,.s-pdp-reviews__item.is-lead .s-pdp-reviews__media svg{position:absolute;inset:0}
+.s-pdp-reviews__item.is-lead .s-pdp-reviews__body{padding:40px 40px 36px;gap:18px}
+.s-pdp-reviews__item.is-lead .stars{color:var(--sage);font-size:17px}
+.s-pdp-reviews__item.is-lead .s-pdp-reviews__skin{color:var(--sage)}
+.s-pdp-reviews__item.is-lead .s-pdp-reviews__title{font-weight:500;font-size:clamp(26px,2.3vw,32px);line-height:1.18;letter-spacing:-.02em}
+.s-pdp-reviews__item.is-lead .s-pdp-reviews__text{color:var(--oat);opacity:.84;font-size:17px}
+.s-pdp-reviews__item.is-lead .s-pdp-reviews__who{color:var(--sage)}
+.s-pdp-reviews__item.is-lead .s-pdp-reviews__who b{color:var(--oat)}
+.s-pdp-reviews__item.is-lead.is-solo .s-pdp-reviews__title{max-width:24ch}
+
+.s-pdp-reviews__foot{display:flex;align-items:center;justify-content:space-between;gap:16px 32px;flex-wrap:wrap;margin-top:32px}
+.s-pdp-reviews__more{display:flex;align-items:center;gap:20px}
+.s-pdp-reviews__more .btn[hidden]{display:none}
+.s-pdp-reviews__shown{font-size:14px;color:var(--muted)}
+.s-pdp-reviews__help{font-size:15px;color:var(--muted)}
+.s-pdp-reviews__help a{margin-left:8px;color:var(--ink)}
+.s-pdp-reviews__apps{margin-top:8px}
+
+/* motion: the lead photo settles from a slight zoom as the panel arrives (transform only) */
+html.motion .s-pdp-reviews__item.is-lead[data-rv] .s-pdp-reviews__media img{transition:transform 1.2s cubic-bezier(.22,1,.36,1)}
+html.motion .s-pdp-reviews__item.is-lead[data-rv]:not(.in) .s-pdp-reviews__media img{transform:scale(1.08)}
+@media (prefers-reduced-motion:reduce){.s-pdp-reviews *{transition:none!important}}
+
+@media (max-width:900px){
+  .s-pdp-reviews__item.is-lead.has-photo{grid-template-columns:minmax(0,.8fr) minmax(0,1fr)}
+  .s-pdp-reviews__item.is-lead .s-pdp-reviews__body{padding:32px 28px 28px}
+}
+@media (max-width:760px){
+  .s-pdp-reviews{padding:64px 0 72px}
+  .s-pdp-reviews__head{display:block;margin-bottom:28px}
+  .s-pdp-reviews__score{margin-top:24px;gap:16px}
+  .s-pdp-reviews__avg{font-size:56px}
+  .s-pdp-reviews__meter{font-size:18px}
+  .s-pdp-reviews__bar{display:block;margin-bottom:20px}
+  .s-pdp-reviews__bar-label{display:block;font-size:14px;margin:0 0 10px}
+  .s-pdp-reviews__filters{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 calc(-1 * var(--gut));padding:0 var(--gut)}
+  .s-pdp-reviews__filters::-webkit-scrollbar{display:none}
+  .s-pdp-reviews .chip{flex:none;height:40px;padding:0 16px}
+  .s-pdp-reviews__list{display:flex;flex-direction:column;gap:12px}
+  .s-pdp-reviews__item,.s-pdp-reviews__item.is-wide{padding:24px 20px 22px}
+  .s-pdp-reviews__item.is-wide .s-pdp-reviews__body{display:flex}
+  .s-pdp-reviews__item.is-wide .s-pdp-reviews__top{flex-direction:row;align-items:center;align-self:stretch}
+  .s-pdp-reviews__item.is-wide .s-pdp-reviews__who,.s-pdp-reviews__item.is-wide .s-pdp-reviews__text{align-self:auto}
+  .s-pdp-reviews__item.is-wide .s-pdp-reviews__title{font-size:20px;font-weight:600}
+  .s-pdp-reviews__item.is-wide .s-pdp-reviews__text{font-size:16px}
+  .s-pdp-reviews__item.has-photo:not(.is-lead){grid-template-columns:minmax(0,1fr) 88px;gap:16px}
+  /* lead runs edge to edge: photo on top, words on deep green below */
+  .s-pdp-reviews__item.is-lead,.s-pdp-reviews__item.is-lead.has-photo{display:block;margin:0 calc(-1 * var(--gut)) 4px;border-radius:0;padding:0}
+  .s-pdp-reviews__item.is-lead .s-pdp-reviews__media{min-height:0;height:auto;aspect-ratio:5/4}
+  .s-pdp-reviews__item.is-lead .s-pdp-reviews__body{padding:28px var(--gut) 32px}
+  .s-pdp-reviews__item.is-lead .s-pdp-reviews__title{font-size:26px}
+  .s-pdp-reviews__foot{display:block;margin-top:24px}
+  .s-pdp-reviews__more{flex-direction:column;align-items:stretch;gap:10px;text-align:center}
+  .s-pdp-reviews__more .btn{width:100%}
+  .s-pdp-reviews__help{margin-top:22px;text-align:center}
+}
 </style>
-<section class="s-pdp-reviews" id="pdp-reviews" aria-labelledby="pdp-reviews-title"><div class="wrap">
- <div class="s-pdp-reviews__head"><h2 class="h2" id="pdp-reviews-title" data-rv="line"><span class="ln"><span>The feel, in</span></span><span class="ln"><span>your <em>words.</em></span></span></h2><p>Skin is personal. Read the experience alongside the ingredient list, not instead of it.</p></div>
- <article class="s-pdp-reviews__row" data-rv="blur"><p class="s-pdp-reviews__person"><b>Hannah K.</b>Eczema-prone skin<br>Using it for 6 months</p><blockquote class="s-pdp-reviews__quote"><span class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</span>“First wash that doesn't leave my arms tight. No smell at all, which is the whole point.”</blockquote></article>
- <div class="s-pdp-reviews__foot">Every skin responds differently. Need help choosing?<a href="../templates/help.html" class="link">Talk to us</a></div>
+<noscript><style>.s-pdp-reviews__item.is-off{display:grid}.s-pdp-reviews__more,.s-pdp-reviews__bar{display:none}</style></noscript>
+<section class="s-pdp-reviews" id="pdp-reviews" aria-labelledby="pdp-reviews-title" data-lv3-pdp-reviews data-page="5"><div class="wrap">
+ <div class="s-pdp-reviews__head">
+  <h2 class="h2" id="pdp-reviews-title" data-rv="line"><span class="ln"><span>The feel, in</span></span><span class="ln"><span>your <em>words.</em></span></span></h2>
+  <div class="s-pdp-reviews__score" data-rv="blur" data-rv-delay="1"><span class="s-pdp-reviews__avg">4.6</span><span class="s-pdp-reviews__score-text"><span class="s-pdp-reviews__meter" role="img" aria-label="4.6 out of 5 stars">★★★★★<i style="width:92%">★★★★★</i></span><span class="s-pdp-reviews__count"><b>318</b> reviews of Calm wash</span></span></div>
+ </div>
+ <div class="s-pdp-reviews__bar" role="group" aria-label="Filter reviews by skin type" data-rv="blur" data-rv-delay="2"><span class="s-pdp-reviews__bar-label">Skin type</span><div class="s-pdp-reviews__filters"><button type="button" class="chip" data-rev-filter="all" aria-pressed="true">All<span class="n" data-n>9</span></button><button type="button" class="chip" data-rev-filter="eczema" aria-pressed="false">Eczema-prone<span class="n" data-n>3</span></button><button type="button" class="chip" data-rev-filter="dry" aria-pressed="false">Very dry<span class="n" data-n>2</span></button><button type="button" class="chip" data-rev-filter="sensitive" aria-pressed="false">Sensitive<span class="n" data-n>2</span></button><button type="button" class="chip" data-rev-filter="little" aria-pressed="false">Little ones<span class="n" data-n>2</span></button></div></div>
+ <div class="s-pdp-reviews__list" data-rev-list aria-live="polite">
+  <article class="s-pdp-reviews__item has-photo is-lead" data-skin="eczema" tabindex="-1" data-rv="settle"><figure class="s-pdp-reviews__media"><img src="https://images.unsplash.com/photo-1692776092941-b45565a5075f?w=900&q=72&auto=format&fit=crop" alt="Wet shoulder wrapped in a towel after a shower" loading="lazy"></figure><div class="s-pdp-reviews__body">
+   <div class="s-pdp-reviews__top"><span class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</span><span class="s-pdp-reviews__skin">Eczema-prone</span></div>
+   <h3 class="s-pdp-reviews__title">My shoulders stay calm after a hot shower now</h3>
+   <p class="s-pdp-reviews__text">Winter used to mean red, tight patches across my shoulders. I wash with this, pat dry and put the lotion on straight away. It barely foams, which threw me at first. Now it&#x27;s the only thing in my shower.</p>
+   <p class="s-pdp-reviews__who"><b>Maya R.</b>8 months in, bought the Calm routine set</p>
+  </div></article>
+  <article class="s-pdp-reviews__item" data-skin="eczema" tabindex="-1" data-rv="blur" data-rv-delay="1"><div class="s-pdp-reviews__body">
+   <div class="s-pdp-reviews__top"><span class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</span><span class="s-pdp-reviews__skin">Eczema-prone</span></div>
+   <h3 class="s-pdp-reviews__title">No tight arms, no smell</h3>
+   <p class="s-pdp-reviews__text">First wash that doesn&#x27;t leave my arms tight. No smell at all, which is the whole point.</p>
+   <p class="s-pdp-reviews__who"><b>Hannah K.</b>6 months in, bought Calm wash</p>
+  </div></article>
+  <article class="s-pdp-reviews__item" data-skin="dry" tabindex="-1" data-rv="blur" data-rv-delay="2"><div class="s-pdp-reviews__body">
+   <div class="s-pdp-reviews__top"><span class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</span><span class="s-pdp-reviews__skin">Very dry</span></div>
+   <h3 class="s-pdp-reviews__title">My shins stopped cracking</h3>
+   <p class="s-pdp-reviews__text">Long shifts, hot showers and very dry legs. This is the first wash I don&#x27;t have to follow with a heavy cream every night.</p>
+   <p class="s-pdp-reviews__who"><b>Tom B.</b>3 months in, bought 2 bottles of Calm wash</p>
+  </div></article>
+  <article class="s-pdp-reviews__item is-wide" data-skin="sensitive" tabindex="-1" data-rv="blur" data-rv-delay="3"><div class="s-pdp-reviews__body">
+   <div class="s-pdp-reviews__top"><span class="stars" role="img" aria-label="4 out of 5 stars">★★★★<s>★</s></span><span class="s-pdp-reviews__skin">Sensitive</span></div>
+   <h3 class="s-pdp-reviews__title">Gentle, rinses clean</h3>
+   <p class="s-pdp-reviews__text">No sting and no film left on my skin. One star off because the pump gets stiff near the end of the bottle.</p>
+   <p class="s-pdp-reviews__who"><b>Priya S.</b>5 weeks in, bought Calm wash</p>
+  </div></article>
+  <article class="s-pdp-reviews__item has-photo" data-skin="little" tabindex="-1" data-rv="blur" data-rv-delay="3"><figure class="s-pdp-reviews__media"><img src="https://images.unsplash.com/photo-1630305130592-210da48f151e?w=240&q=72&auto=format&fit=crop" alt="Baby peeking out from under a white towel after a bath" loading="lazy"></figure><div class="s-pdp-reviews__body">
+   <div class="s-pdp-reviews__top"><span class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</span><span class="s-pdp-reviews__skin">Little ones</span></div>
+   <h3 class="s-pdp-reviews__title">Bath time without the rough patches</h3>
+   <p class="s-pdp-reviews__text">A small pump for our son&#x27;s bath, then the lotion. The backs of his knees used to look rough by morning. They haven&#x27;t for weeks.</p>
+   <p class="s-pdp-reviews__who"><b>Jules M.</b>4 months in, bought Calm wash and Little lotion</p>
+  </div></article>
+  <article class="s-pdp-reviews__item is-off" data-skin="dry" tabindex="-1" data-rv="blur" data-rv-delay="3"><div class="s-pdp-reviews__body">
+   <div class="s-pdp-reviews__top"><span class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</span><span class="s-pdp-reviews__skin">Very dry</span></div>
+   <h3 class="s-pdp-reviews__title">On my fourth bottle</h3>
+   <p class="s-pdp-reviews__text">Legs feel soft rather than squeaky after the shower. One bottle lasts me about ten weeks.</p>
+   <p class="s-pdp-reviews__who"><b>Ana L.</b>1 year in, bought Calm wash</p>
+  </div></article>
+  <article class="s-pdp-reviews__item is-off" data-skin="sensitive" tabindex="-1" data-rv="blur" data-rv-delay="3"><div class="s-pdp-reviews__body">
+   <div class="s-pdp-reviews__top"><span class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</span><span class="s-pdp-reviews__skin">Sensitive</span></div>
+   <h3 class="s-pdp-reviews__title">Fragrance-free really means it</h3>
+   <p class="s-pdp-reviews__text">My partner likes the chamomile one and I can&#x27;t use anything scented, so we keep both in the shower. This one smells of nothing at all.</p>
+   <p class="s-pdp-reviews__who"><b>Sam O.</b>2 months in, bought the Calm routine set</p>
+  </div></article>
+  <article class="s-pdp-reviews__item is-off" data-skin="eczema" tabindex="-1" data-rv="blur" data-rv-delay="3"><div class="s-pdp-reviews__body">
+   <div class="s-pdp-reviews__top"><span class="stars" role="img" aria-label="4 out of 5 stars">★★★★<s>★</s></span><span class="s-pdp-reviews__skin">Eczema-prone</span></div>
+   <h3 class="s-pdp-reviews__title">Early days, but no sting</h3>
+   <p class="s-pdp-reviews__text">Too soon to say much. It doesn&#x27;t sting the patches on my hands, which is more than most washes manage.</p>
+   <p class="s-pdp-reviews__who"><b>Rachel D.</b>3 weeks in, bought Calm wash</p>
+  </div></article>
+  <article class="s-pdp-reviews__item is-off" data-skin="little" tabindex="-1" data-rv="blur" data-rv-delay="3"><div class="s-pdp-reviews__body">
+   <div class="s-pdp-reviews__top"><span class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</span><span class="s-pdp-reviews__skin">Little ones</span></div>
+   <h3 class="s-pdp-reviews__title">One bottle for two little ones</h3>
+   <p class="s-pdp-reviews__text">Our two share it at bath time. No scent to put them off, and their skin isn&#x27;t rough the next day.</p>
+   <p class="s-pdp-reviews__who"><b>Dev P.</b>6 weeks in, bought Calm wash</p>
+  </div></article>
+ </div>
+ <div class="s-pdp-reviews__foot">
+  <div class="s-pdp-reviews__more"><button type="button" class="btn btn--ghost" data-rev-more>Show more reviews</button><span class="s-pdp-reviews__shown" data-rev-shown data-tpl="Showing [shown] of [total]">Showing 5 of 9</span></div>
+  <p class="s-pdp-reviews__help">Not sure it suits your skin?<a href="../templates/help.html" class="link">Ask us first</a></p>
+ </div>
 </div></section>
+<script>
+/* Lather v3 product page, reviews: skin-type filter, "Show more", one lead review.
+   Markup carries the first state (lead, wide, hidden extras), so nothing shifts on load.
+   Filtering: leaving reviews fade out, the rest glide to their new place (transform only), new ones rise in.
+   Buttons and chips only change colour. Without html.motion every change is instant. */
+(() => {
+  const EASE = 'cubic-bezier(.22,.61,.36,1)';
+  function init(root) {
+    if (root.dataset.lv3Ready) return; root.dataset.lv3Ready = '1';
+    const list = root.querySelector('[data-rev-list]'); if (!list) return;
+    const items = [...list.querySelectorAll('[data-skin]')];
+    const chips = [...root.querySelectorAll('[data-rev-filter]')];
+    const more = root.querySelector('[data-rev-more]');
+    const shown = root.querySelector('[data-rev-shown]');
+    const page = Math.max(1, +root.dataset.page || 5);
+    let filter = 'all', limit = page, busy = false;
+    const moving = () => document.documentElement.classList.contains('motion') && !!list.animate;
+    const isOn = el => !el.classList.contains('is-off');
+
+    // counts per chip, from the reviews really on the page
+    chips.forEach(c => {
+      const f = c.dataset.revFilter, n = f === 'all' ? items.length : items.filter(el => el.dataset.skin === f).length;
+      const out = c.querySelector('[data-n]'); if (out) out.textContent = n;
+      if (f !== 'all' && !n) c.hidden = true;
+    });
+
+    function layout() {
+      const match = items.filter(el => filter === 'all' || el.dataset.skin === filter);
+      const vis = match.slice(0, limit);
+      items.forEach(el => { el.classList.remove('is-lead', 'is-solo', 'is-pair', 'is-wide', 'is-r', 'is-nl'); el.classList.add('is-off'); });
+      vis.forEach((el, i) => {
+        el.classList.remove('is-off');
+        if (i === 0) { el.classList.add('is-lead'); if (vis.length === 1) el.classList.add('is-solo'); else if (vis.length === 2) el.classList.add('is-pair'); }
+        else if (i >= 3) el.classList.add(...[['is-wide'], [], ['is-nl'], ['is-wide', 'is-r']][(i - 3) % 4]);
+      });
+      if (more) more.hidden = match.length <= limit;
+      if (shown) shown.textContent = (shown.dataset.tpl || '').replace('[shown]', vis.length).replace('[total]', match.length);
+      chips.forEach(c => c.setAttribute('aria-pressed', c.dataset.revFilter === filter ? 'true' : 'false'));
+      return vis;
+    }
+
+    function run(focusNew) {
+      if (busy) return;
+      const before = items.filter(isOn);
+      if (!moving()) {
+        const vis = layout();
+        if (focusNew) { const f = vis.find(el => !before.includes(el)); if (f) f.focus({ preventScroll: true }); }
+        return;
+      }
+      busy = true;
+      const first = new Map(before.map(el => [el, { r: el.getBoundingClientRect(), lead: el.classList.contains('is-lead') }]));
+      const match = items.filter(el => filter === 'all' || el.dataset.skin === filter).slice(0, limit);
+      const leaving = before.filter(el => !match.includes(el));
+      const out = leaving.map(el => el.animate([{ opacity: 1 }, { opacity: 0, transform: 'scale(.98)' }], { duration: 180, easing: 'ease-out', fill: 'forwards' }));
+      Promise.all(out.map(a => a.finished.catch(() => {}))).then(() => {
+        out.forEach(a => a.cancel());
+        const vis = layout();
+        let k = 0;
+        vis.forEach(el => {
+          el.classList.add('in');
+          const f = first.get(el);
+          if (f && f.lead === el.classList.contains('is-lead')) {
+            const r = el.getBoundingClientRect(), dx = f.r.left - r.left, dy = f.r.top - r.top;
+            if (Math.abs(dx) + Math.abs(dy) > 1) el.animate([{ transform: `translate(${dx}px,${dy}px)` }, { transform: 'none' }], { duration: 560, easing: EASE });
+          } else {
+            el.animate([{ opacity: 0, transform: 'translateY(16px)' }, { opacity: 1, transform: 'none' }], { duration: 520, delay: 60 * k++, easing: EASE, fill: 'backwards' });
+          }
+        });
+        if (focusNew) { const f = vis.find(el => !before.includes(el)); if (f) f.focus({ preventScroll: true }); }
+        setTimeout(() => { busy = false; }, 200);
+      });
+    }
+
+    chips.forEach(c => c.addEventListener('click', () => {
+      if (c.dataset.revFilter === filter) return;
+      filter = c.dataset.revFilter; limit = page; run(false);
+    }));
+    if (more) more.addEventListener('click', () => { limit += page; run(true); });
+    items.forEach(el => el.addEventListener('shopify:block:select', () => {
+      filter = 'all'; limit = Math.max(limit, items.indexOf(el) + 1); run(false);
+    }));
+    layout();
+  }
+  const all = r => (r || document).querySelectorAll('[data-lv3-pdp-reviews]').forEach(init);
+  if (document.readyState !== 'loading') all(); else document.addEventListener('DOMContentLoaded', () => all());
+  document.addEventListener('shopify:section:load', e => all(e.target));
+})();
+</script>
 
 <!-- part: 60-questions.html -->
 <style>
@@ -432,7 +797,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 <section class="s-pdp-questions" aria-labelledby="pdp-questions-title"><div class="wrap s-pdp-questions__layout"><div class="s-pdp-questions__intro"><h2 class="h2" id="pdp-questions-title" data-rv="line"><span class="ln"><span>Before you</span></span><span class="ln"><span><em>choose.</em></span></span></h2><p>A few things worth knowing before the bottle reaches your shower.</p><a href="../templates/help.html" class="link">All help and answers</a></div><div class="s-pdp-questions__list">
  <details><summary>Does fragrance-free mean it has no smell?</summary><p>We add no perfume or essential oils to Calm wash. You may notice a faint scent from the ingredients themselves.</p></details>
  <details><summary>Can I use it if I have an oat allergy?</summary><p>Calm wash contains colloidal oat. Check the full ingredient list against your known allergies, and ask your healthcare professional if you are unsure.</p></details>
- <details><summary>How is Rich wash different?</summary><p>Rich wash has extra shea butter and oat oil, with a thicker, almost lotion-like feel. Calm wash is the everyday starting point. <button type="button" class="link" data-quick="rich">See Rich wash</button></p></details>
+ <details><summary>How is Rich wash different?</summary><p>Rich wash has extra shea butter and oat oil, with a thicker, almost lotion-like feel. Calm wash is the everyday starting point. <a class="link" href="../templates/product.html?p=rich">See Rich wash</a></p></details>
  <details><summary>What if my skin reacts?</summary><p>Stop using it and contact us. We refund your first bottle, used or not. <a href="../templates/help.html#refund" class="link">Read the skin-reaction refund details</a>.</p></details>
 </div></div></section>
 
@@ -635,7 +1000,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
 
     /* ---------- local index (window.LATHER.products) ---------- */
     function hitOf(k, p) {
-      var url = p.url || (C.pages || {})[k] || '';
+      var url = p.url || (C.pages || {})[k] || (L().url ? L().url(k) : '') || '';
       return { key: k, name: p.name, size: p.size || '', price: +p.price || 0, compare: +p.compare || 0, img: p.img || '', url: url || C.fallbackUrl || '#', quick: !url };
     }
     function index() {
@@ -828,6 +1193,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
   'use strict';
   if (window.LatherRecent) return;
   var K = 'lather-recent', MAX = 12;
+  var EYE = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg>';
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
   var handleOf = function (url) { var m = /\/products\/([^\/?#]+)/.exec(url || ''); return m ? decodeURIComponent(m[1]) : ''; };
 
@@ -904,11 +1270,16 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
       var L = window.LATHER;
       /* an entry viewed on another page: hand it to the runtime so its quick view works here */
       if (!e.url && L && L.products && !L.products[e.k]) L.products[e.k] = { name: e.name, size: e.size, price: e.price, compare: null, img: e.img, hover: '', labels: [], line: '', ing: '', variant: null, available: true, url: '' };
-      var name = e.url
-        ? '<a class="s-pdp-recent__name" href="' + esc(e.url) + '">' + esc(e.name) + '</a>'
+      /* the name is the product link (stretched over the card, so the image opens it too); quick view is its own button */
+      var u = e.url || (L && L.url ? L.url(e.k) : '');
+      var canQuick = !!(L && L.products && L.products[e.k]);
+      var name = u
+        ? '<a class="s-pdp-recent__name" href="' + esc(u) + '">' + esc(e.name) + '</a>'
         : '<button class="s-pdp-recent__name" type="button" data-quick="' + esc(e.k) + '" aria-label="' + esc(S.quick + ': ' + e.name) + '">' + esc(e.name) + '</button>';
+      var qv = u && canQuick ? '<button class="s-pdp-recent__qv" type="button" data-quick="' + esc(e.k) + '" aria-label="' + esc(S.quick + ': ' + e.name) + '">' + EYE + '</button>' : '';
       var img = e.img ? '<img src="' + esc(thumb(e.img)) + '" alt="" width="120" height="150" loading="lazy">' : '<span class="blko-lv3-ph" aria-hidden="true"></span>';
-      return '<li class="s-pdp-recent__card">' + img + '<div class="s-pdp-recent__text">' + name + (e.size ? '<span class="small">' + esc(e.size) + '</span>' : '') + '</div><span class="price">' + esc(fmt(e.price)) + '</span></li>';
+      if (u) img = '<a class="lv3-plink s-pdp-recent__img" href="' + esc(u) + '" tabindex="-1" aria-hidden="true">' + img + '</a>';
+      return '<li class="s-pdp-recent__card">' + img + '<div class="s-pdp-recent__text">' + name + (e.size ? '<span class="small">' + esc(e.size) + '</span>' : '') + '</div><span class="price">' + esc(fmt(e.price)) + '</span>' + qv + '</li>';
     }
     function render() {
       if (!list) return;
@@ -1088,7 +1459,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
       one: d.countOne || '1 saved product.', many: d.countMany || '[count] saved products.', zero: d.countZero || '',
       add: d.addLabel || 'Add to bag', add_aria: d.addAria || 'Add [name] to bag', rm: d.removeLabel || 'Remove',
       rm_aria: d.removeAria || 'Remove [name] from wishlist', sold: d.soldLabel || 'Sold out', removed: d.removedLabel || 'Removed [name].',
-      undo: d.undoLabel || 'Undo', save_aria: d.saveAria || 'Save [name]'
+      undo: d.undoLabel || 'Undo', save_aria: d.saveAria || 'Save [name]', qv_aria: d.quickAria || 'Quick view [name]'
     };
     var ul = root.querySelector('[data-wish-list]'), empty = root.querySelector('[data-wish-empty]'), status = root.querySelector('[data-wish-status]');
     var undoBox = root.querySelector('[data-wish-undo]'), sugg = root.querySelector('[data-wish-suggest]');
@@ -1106,10 +1477,17 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     }
     function media(src, alt) { return src ? '<img src="' + esc(src) + '" alt="' + esc(alt) + '" loading="lazy">' : ph; }
     function labels(ids) { var l = L(); return l.labelsHTML ? l.labelsHTML(ids || []) : ''; }
+    /* product page link: a real product's own url, else the demo page for that key (LATHER.url) */
+    function urlOf(e, key) { return (e && e.url) || (L().url ? L().url(key) : '') || ''; }
     function nameHTML(e, key) {
-      if (e.url) return '<a href="' + esc(e.url) + '">' + esc(e.name) + '</a>';
+      var u = urlOf(e, key);
+      if (u) return '<a class="lv3-pname" href="' + esc(u) + '">' + esc(e.name) + '</a>';
       if (L().products[key]) return '<button type="button" data-quick="' + esc(key) + '">' + esc(e.name) + '</button>';
       return esc(e.name);
+    }
+    function linked(u, html) { return u ? '<a class="lv3-plink lv3-plink--fill" href="' + esc(u) + '" tabindex="-1" aria-hidden="true">' + html + '</a>' : html; }
+    function qvHTML(key, name) {
+      return L().products[key] ? '<button class="s-wish__qv" type="button" data-quick="' + esc(key) + '" aria-label="' + esc(T.qv_aria.replace('[name]', name)) + '">' + eyeSVG + '</button>' : '';
     }
     function priceHTML(e) { return esc(fmt(e.price)) + (e.compare > e.price ? ' <s>' + esc(fmt(e.compare)) + '</s>' : ''); }
     function card(e) {
@@ -1118,7 +1496,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
         ? '<button class="btn btn--light btn--sm s-wish__add" type="button" disabled>' + esc(T.sold) + '</button>'
         : '<button class="btn btn--primary btn--sm s-wish__add" type="button" data-wish-add="' + esc(e.id) + '" aria-label="' + esc(tpl(T.add_aria, { name: e.name })) + '">' + esc(T.add) + '</button>';
       return '<li class="s-wish__card">' +
-        '<div class="s-wish__media">' + media(e.img, alt) + '<div class="labels">' + labels(e.labels) + '</div></div>' +
+        '<div class="s-wish__media">' + linked(urlOf(e, e.key), media(e.img, alt)) + '<div class="labels">' + labels(e.labels) + '</div>' + qvHTML(e.key, e.name) + '</div>' +
         '<div class="s-wish__info"><h2 class="s-wish__name">' + nameHTML(e, e.key) + '</h2>' +
         (e.size ? '<p class="s-wish__size">' + esc(e.size) + '</p>' : '') +
         '<p class="price s-wish__price">' + priceHTML(e) + '</p></div>' +
@@ -1130,9 +1508,9 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
       var p = L().products[key]; if (!p) return '';
       var alt = p.size ? p.name + ', ' + p.size : p.name;
       return '<li class="s-wish__card s-wish__card--sugg">' +
-        '<div class="s-wish__media">' + media(p.img, alt) + '<div class="labels">' + labels(p.labels) + '</div>' +
+        '<div class="s-wish__media">' + linked(urlOf(p, key), media(p.img, alt)) + '<div class="labels">' + labels(p.labels) + '</div>' + qvHTML(key, p.name) +
         '<button class="lv3-heart" type="button" data-wish="' + esc(key) + '" aria-pressed="false" aria-label="' + esc(tpl(T.save_aria, { name: p.name })) + '">' + heartSVG + '</button></div>' +
-        '<div class="s-wish__info"><h3 class="s-wish__name"><button type="button" data-quick="' + esc(key) + '">' + esc(p.name) + '</button></h3>' +
+        '<div class="s-wish__info"><h3 class="s-wish__name">' + nameHTML(p, key) + '</h3>' +
         (p.size ? '<p class="s-wish__size">' + esc(p.size) + '</p>' : '') +
         '<p class="price s-wish__price">' + priceHTML({ price: +p.price || 0, compare: +p.compare || 0 }) + '</p></div>' +
         '<div class="s-wish__acts"><button class="btn btn--ghost btn--sm s-wish__add" type="button" data-add="' + esc(key) + '" aria-label="' + esc(tpl(T.add_aria, { name: p.name })) + '">' + esc(T.add) + '</button></div>' +
@@ -1194,6 +1572,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     render();
   }
 
+  var eyeSVG = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg>';
   var heartSVG = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg>';
 
   function init() {
@@ -1301,6 +1680,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
 @media (prefers-reduced-motion:reduce){.ship__bar i{transition:none}.line--gift.is-new,.s-cart-bag__line--gift.is-new{animation:none}}
 .drawer__list{flex:1;overflow:auto;padding:4px 24px}
 .line{display:grid;grid-template-columns:72px 1fr auto;gap:14px;padding:14px 0;border-top:1px solid var(--line);align-items:center}
+.line .lv3-plink{width:72px;border-radius:var(--r-img)}
 .line img{width:72px;height:88px;object-fit:cover;border-radius:var(--r-img);background:var(--oat)}
 .line h3{font:600 15px/1.25 var(--f-body)}
 .line .small{margin:2px 0 8px}
@@ -1397,6 +1777,11 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     little:{name:'Little lotion',size:'150 ml',price:14,img:'../img/c-little-lotion.jpg',hover:'../img/h-little.jpg',labels:['new','ff'],line:'Soft, light oat lotion for ages 1 and up. Fragrance-free.',ing:'Water, glycerin, colloidal oat, calendula oil, shea butter, cetearyl alcohol, xanthan gum, sodium benzoate.'},
     bar:{name:'Oat bar',size:'120 g',price:9,img:'../img/c-oat-bar.jpg',hover:'../img/h-bar.jpg',labels:['best','ff'],line:'Oat milk soap bar for face and body. Rich lather that rinses soft.',ing:'Sodium olivate, sodium cocoate, oat milk, colloidal oat, shea butter, glycerin.'}
   };
+  /* product page links: one product page in the demo; calm is product.html, the others product.html?p=<id>.
+     Relative links on purpose: blocko.ai 308-redirects product.html to /product and keeps the query. */
+  const CAT=Object.keys(products);
+  const url=id=>CAT.includes(id)?(id==='calm'?'product.html':'product.html?p='+encodeURIComponent(id)):'';
+  const pid=()=>{let q='';try{q=new URLSearchParams(location.search).get('p')||''}catch(e){}return CAT.includes(q)?q:'calm'};
   const LBL={best:['label--best','Best seller'],ff:['label--ff','Fragrance-free'],new:['label--new','New'],sale:['label--sale','Sale']};
   const fmt=n=>'$'+(Math.round(n*100)/100).toFixed(n%1?2:0);
   const labelsHTML=ids=>ids.map(k=>`<span class="label ${LBL[k][0]}">${LBL[k][1]}</span>`).join('');
@@ -1459,6 +1844,8 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
       el.querySelector('.ship__add').hidden=!P.offer;
     });
   }
+  /* bag line image and name link to the product page (custom lines such as sets stay plain) */
+  const lnk=(l,h,img)=>{const u=url(l.id);return u?`<a class="${img?'lv3-plink':'lv3-pname'}" href="${u}"${img?' tabindex="-1" aria-hidden="true"':''}>${h}</a>`:h};
   function render(){
     syncGift(); save();
     const n=count(), st=subtotal();
@@ -1469,8 +1856,8 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     const list=$('#drawerList'); let h='';
     if(removed) h+=`<div class="undo"><span>Removed ${removed.name}.</span><button type="button" id="undoBtn">Undo</button></div>`;
     if(!cart.length && !removed) h+=`<p class="drawer__empty">Nothing here yet. Most people start with the Oat bar, $9.</p>`;
-    cart.forEach((l,i)=>{if(l.gift){h+=`<div class="line line--gift${fresh?' is-new':''}"><img src="${l.img}" alt=""><div><h3>${l.name}</h3><p class="small">${l.note}</p></div><div style="text-align:right"><p class="price" style="font-size:18px">Free</p><button class="rm" type="button" data-rm="${i}" aria-label="Remove free ${l.name}">Remove</button></div></div>`;return}
-      h+=`<div class="line"><img src="${l.img}" alt=""><div><h3>${l.name}</h3><p class="small">${l.note||l.size}</p><div class="qty"><button type="button" aria-label="Less" data-q="${i}" data-d="-1">−</button><span>${l.qty}</span><button type="button" aria-label="More" data-q="${i}" data-d="1">+</button></div></div><div style="text-align:right"><p class="price" style="font-size:18px">${fmt(l.qty*l.price)}</p><button class="rm" type="button" data-rm="${i}">Remove</button></div></div>`});
+    cart.forEach((l,i)=>{if(l.gift){h+=`<div class="line line--gift${fresh?' is-new':''}">${lnk(l,`<img src="${l.img}" alt="">`,1)}<div><h3>${lnk(l,l.name)}</h3><p class="small">${l.note}</p></div><div style="text-align:right"><p class="price" style="font-size:18px">Free</p><button class="rm" type="button" data-rm="${i}" aria-label="Remove free ${l.name}">Remove</button></div></div>`;return}
+      h+=`<div class="line">${lnk(l,`<img src="${l.img}" alt="">`,1)}<div><h3>${lnk(l,l.name)}</h3><p class="small">${l.note||l.size}</p><div class="qty"><button type="button" aria-label="Less" data-q="${i}" data-d="-1">−</button><span>${l.qty}</span><button type="button" aria-label="More" data-q="${i}" data-d="1">+</button></div></div><div style="text-align:right"><p class="price" style="font-size:18px">${fmt(l.qty*l.price)}</p><button class="rm" type="button" data-rm="${i}">Remove</button></div></div>`});
     if(cart.length && !cart.some(l=>l.id==='bar')) h+=`<div class="drawer__up"><img src="${products.bar.img}" alt=""><span style="flex:1">Add the Oat bar for face and hands, $9.</span><button class="btn btn--light btn--sm" type="button" data-add="bar">Add</button></div>`;
     list.innerHTML=h;
     $('#checkoutBtn').textContent= st?`Check out, ${fmt(st)}`:'Check out';
@@ -1525,7 +1912,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     /* free gift: settings, live state, and bring a declined gift back */
     gift:{...GIFT,state:()=>progress()}, addGift(){setGiftOff(false);render()}
   };
-  window.LATHER={products,add,quick,fmt,labelsHTML,U,openLayer,closeAll,cart:cartApi};
+  window.LATHER={products,add,quick,fmt,labelsHTML,U,openLayer,closeAll,cart:cartApi,url,pid};
   render();
 
   /* header: over the hero until scrolled */

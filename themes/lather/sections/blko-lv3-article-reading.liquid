@@ -15,7 +15,8 @@
     assign real = true
   endif
 -%}
-<section class="s-art-reading" aria-label="{{ s.label | escape }}" data-lv3-article{% if real %} data-auto-toc{% endif %}><div class="wrap s-art-reading__layout">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-1' -%}
+<section class="s-art-reading{%- if lv3_sid != 'scheme-1' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" aria-label="{{ s.label | escape }}" data-lv3-article{% if real %} data-auto-toc{% endif %}><div class="wrap s-art-reading__layout">
   <nav class="s-art-reading__contents" aria-label="{{ s.toc_title | escape }}">
     {%- if s.toc_title != blank -%}<strong>{{ s.toc_title | escape }}</strong>{%- endif -%}
     {%- unless real -%}
@@ -64,13 +65,9 @@
           {%- render 'blko-lv3-product-data', key: key, product: p, name: b.name, size: b.size, price: b.price, line: b.line, labels: b.labels, img: b.image -%}
           <div class="s-art-reading__product"{% if real %} data-after="{{ b.after }}"{% endif %} {{ block.shopify_attributes }}>
             {%- capture pimg -%}{%- if img != blank -%}{{ img | image_url: width: 280 | image_tag: widths: '160, 224, 280', sizes: '112px', loading: 'lazy', alt: alt }}{%- else -%}{{ 'image' | placeholder_svg_tag: 'blko-lv3-ph' }}{%- endif -%}{%- endcapture -%}
-            {%- if b.image_action == 'quick' -%}
-              <button type="button" data-quick="{{ key | escape }}" aria-label="{{ s.quick_aria | replace: '[name]', nm | escape }}">{{ pimg }}</button>
-            {%- else -%}
-              <a href="{{ url }}" aria-label="{{ s.link_aria | replace: '[name]', nm | escape }}">{{ pimg }}</a>
-            {%- endif -%}
+            <a href="{{ url }}" aria-label="{{ s.link_aria | replace: '[name]', nm | escape }}">{{ pimg }}</a>
             <div>
-              <h3>{{ nm | escape }}</h3>
+              <h3><a href="{{ url }}">{{ nm | escape }}</a></h3>
               {%- if b.text != blank -%}<p>{{ b.text | escape }}</p>{%- endif -%}
               <span class="price" data-art-price="{{ key | escape }}">{{ cents | money_without_trailing_zeros }}</span><button class="btn btn--primary btn--sm" type="button" data-add="{{ key | escape }}">{{ s.add_label | replace: '[name]', nm | escape }}</button>
             </div>
@@ -108,10 +105,10 @@
   "class": "blko-lv3-section-article-reading",
   "max_blocks": 50,
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
     { "type": "text", "id": "toc_title", "label": "Contents heading", "default": "In this article" },
     { "type": "text", "id": "add_label", "label": "Add button", "default": "Add [name]" },
     { "type": "text", "id": "link_aria", "label": "Product photo link (screen readers)", "default": "Read about [name]" },
-    { "type": "text", "id": "quick_aria", "label": "Product photo quick view (screen readers)", "default": "Read [name] details" },
     { "type": "checkbox", "id": "show_tags", "label": "Show the article's tags below it", "default": true },
     { "type": "paragraph", "content": "A real article shows its own content; contents are built from its h2 headings. Product mention blocks show on every article; the other blocks are the demo article, shown only in a fresh install preview." },
     { "type": "text", "id": "label", "label": "Section label (screen readers)", "default": "Article" },
@@ -126,7 +123,6 @@
         { "type": "text", "id": "key", "label": "Product key", "default": "calm", "info": "Shared with the bag and quick view. Blank uses the product handle." },
         { "type": "range", "id": "after", "label": "On a real article, place after heading section", "min": 0, "max": 10, "step": 1, "default": 2, "info": "0 places it at the end." },
         { "type": "textarea", "id": "text", "label": "Text", "default": "Fragrance-free body wash with colloidal oat and glycerin. Read every ingredient before choosing." },
-        { "type": "select", "id": "image_action", "label": "Photo opens", "default": "link", "options": [{ "value": "link", "label": "Product page" }, { "value": "quick", "label": "Quick view" }] },
         { "type": "url", "id": "link", "label": "Demo photo link", "info": "A picked product links to its own page." },
         { "type": "image_picker", "id": "image", "label": "Photo", "info": "Empty: the product's image." },
         { "type": "text", "id": "image_alt", "label": "Photo description", "default": "Calm wash, 400 ml" },

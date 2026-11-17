@@ -40,12 +40,14 @@ Do not use a zip.
    - `assets/blko-lv3-yeseva-one.woff2`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/collection-choosing/assets/blko-lv3-yeseva-one.woff2
    - `sections/blko-lv3-collection-choosing.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/collection-choosing/sections/blko-lv3-collection-choosing.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/collection-choosing/sections/blko-lv3-theme.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/collection-choosing/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-4 |
 | `heading` | inline_richtext | Heading | The right texture, without the guesswork. |
 | `text` | textarea | Text | Light milk or rich cream? Scent or no scent? We can help you |
 | `button` | text | Button | Ask us a question |

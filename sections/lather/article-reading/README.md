@@ -42,16 +42,17 @@ Do not use a zip.
    - `sections/blko-lv3-article-reading.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/article-reading/sections/blko-lv3-article-reading.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/article-reading/sections/blko-lv3-theme.liquid
    - `snippets/blko-lv3-product-data.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/article-reading/snippets/blko-lv3-product-data.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/article-reading/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-1 |
 | `toc_title` | text | Contents heading | In this article |
 | `add_label` | text | Add button | Add [name] |
 | `link_aria` | text | Product photo link (screen readers) | Read about [name] |
-| `quick_aria` | text | Product photo quick view (screen readers) | Read [name] details |
 | `show_tags` | checkbox | Show the article's tags below it | True |
 | `label` | text | Section label (screen readers) | Article |
 | `demo_label` | text | Demo article label (screen readers) | Washing eczema-prone skin |

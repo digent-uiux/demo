@@ -5,7 +5,8 @@
 {%- assign st = section.settings -%}
 <script type="application/json" data-lv3-strings-pop>{"pop_delay": {{ st.pop_delay | json }}, "cookie_delay": {{ st.cookie_delay | json }}}</script>
 {%- if st.pop_enable -%}
-  <div class="pop" id="pop" role="dialog" aria-modal="true" aria-labelledby="popTitle" aria-hidden="true" data-enabled>
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-2' -%}
+  <div class="pop{%- if lv3_sid != 'scheme-2' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="pop" role="dialog" aria-modal="true" aria-labelledby="popTitle" aria-hidden="true" data-enabled>
     <button class="icon-btn pop__x" type="button" aria-label="{{ st.close_label | escape }}" data-close><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     {%- if st.pop_image != blank -%}
       {%- assign pop_alt = st.pop_image.alt | default: st.pop_alt -%}
@@ -44,6 +45,7 @@
   "tag": "div",
   "class": "lv3-popup-sec",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-2" },
     {
       "type": "header",
       "content": "Popup"

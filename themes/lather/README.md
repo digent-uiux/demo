@@ -41,5 +41,9 @@ With the Shopify CLI: `shopify theme push --path themes/lather --store <your-sto
 - **Pages:** create `about` and `help` pages with the templates `page.about` and `page.help`; the journal is the blog
   with the handle `journal`.
 
+- **Theme settings:** Logo, Colors (five schemes, and a Color scheme picker in every section), Layout, Typography
+  (bundled Urbanist + Yeseva One, or Shopify library fonts), Buttons and shapes, Social media, Products and Cart. The
+  defaults are the look of the demo; change them to put your own brand on the theme.
+
 Every file is prefixed `blko-lv3-`, so old files from your previous theme can stay.
 Run `shopify theme check` if you work locally.

@@ -10,12 +10,13 @@
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     // keep chips in sync with the store data
-    if (L && L.products) root.querySelectorAll('.s-reels__chip[data-quick]').forEach(b => {
+    if (L && L.products) root.querySelectorAll('.s-reels__chip [data-quick]').forEach(b => {
       const p = L.products[b.dataset.quick]; if (!p) return;
-      const img = b.querySelector('img'); if (img && p.img) img.src = p.img;
-      b.querySelector('[data-n]').textContent = p.name;
-      b.querySelector('[data-p]').textContent = L.fmt(p.price);
-      b.setAttribute('aria-label', `${b.getAttribute('aria-label').split(':')[0]}: ${p.name}, ${L.fmt(p.price)}`);
+      const c = b.closest('.s-reels__chip');
+      const img = c.querySelector('img'); if (img && p.img) img.src = p.img;
+      c.querySelector('[data-n]').textContent = p.name;
+      c.querySelector('[data-p]').textContent = L.fmt(p.price);
+      const u = L.url && L.url(b.dataset.quick); if (u) c.querySelector('.s-reels__plink').href = u;
     });
 
     // a clip is either a lazy <video data-src> (mp4 URL) or a Shopify video_tag (<source> inside, preload none)
@@ -57,7 +58,7 @@
     rail.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; pick(); }); }, { passive: true });
     if (prev) prev.addEventListener('click', () => go(on - 1));
     if (next) next.addEventListener('click', () => go(on + 1));
-    cards.forEach((c, i) => c.addEventListener('click', e => { if (e.target.closest('[data-quick]')) return; if (i !== on) go(i); }));
+    cards.forEach((c, i) => c.addEventListener('click', e => { if (e.target.closest('[data-quick], a')) return; if (i !== on) go(i); }));
     addEventListener('resize', () => go(on, false));
     new IntersectionObserver(es => { inView = es[0].isIntersecting; syncVideo(); }, { threshold: .25 }).observe(rail);
 

@@ -35,7 +35,8 @@
   img: s.p_image
 -%}
 
-<section class="s-hero" id="{{ anchor }}" aria-roledescription="carousel" aria-label="{{ s.label | escape }}" data-lv3-hero>
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-5' -%}
+<section class="s-hero{%- if lv3_sid != 'scheme-5' %} color-{{ lv3_sid }} lv3-scheme-pick lv3-scheme-pick--dark{% endif %}" id="{{ anchor }}" aria-roledescription="carousel" aria-label="{{ s.label | escape }}" data-lv3-hero>
   <div class="s-hero__slides">
     {%- for block in slides -%}
       {%- assign b = block.settings -%}
@@ -102,6 +103,7 @@
   "tag": "div",
   "class": "blko-lv3-section-hero",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-5" },
     { "type": "header", "content": "Content" },
     { "type": "text", "id": "label", "label": "Carousel label (screen readers)", "default": "Lather body wash" },
     { "type": "text", "id": "h1", "label": "Page heading (screen readers)", "default": "Lather, a moisturising body wash for dry, reactive skin" },

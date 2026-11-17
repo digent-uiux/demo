@@ -40,12 +40,14 @@ Do not use a zip.
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/wishlist/sections/blko-lv3-theme.liquid
    - `sections/blko-lv3-wishlist.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/wishlist/sections/blko-lv3-wishlist.liquid
    - `snippets/blko-lv3-product-data.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/wishlist/snippets/blko-lv3-product-data.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/wishlist/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-1 |
 | `heading` | inline_richtext | Heading | Saved for <em>later.</em> |
 | `count_zero` | text | Count, none | Nothing saved yet. |
 | `count_one` | text | Count, one | 1 saved product. |
@@ -61,6 +63,7 @@ Do not use a zip.
 | `removed_label` | text | Removed message | Removed [name]. |
 | `undo_label` | text | Undo button | Undo |
 | `save_aria` | text | Heart on suggestions (screen readers) | Save [name] |
+| `quick_aria` | text | Quick view button (screen readers) | Quick view [name] |
 | `list_label` | text | List label (screen readers) | Saved products |
 | `empty_text` | text | Text | Tap the heart on any product and it waits here for your next |
 | `empty_button` | text | Button | Shop all |

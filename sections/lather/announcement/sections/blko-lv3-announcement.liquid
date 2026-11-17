@@ -7,7 +7,8 @@
   assign msgs = section.blocks | where: 'type', 'message'
 -%}
 {%- if show and msgs.size > 0 -%}
-  <div class="ann" role="region" aria-label="{{ section.settings.region_label | escape }}">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-5' -%}
+  <div class="ann{%- if lv3_sid != 'scheme-5' %} color-{{ lv3_sid }} lv3-scheme-pick lv3-scheme-pick--dark{% endif %}" role="region" aria-label="{{ section.settings.region_label | escape }}">
     {%- for b in msgs -%}
       {%- capture msg -%}{{ b.settings.text }}{%- if b.settings.link_label != blank %} <a href="{{ b.settings.link | default: '#shop' }}">{{ b.settings.link_label | escape }}</a>{%- endif -%}{%- endcapture -%}
       {%- if forloop.first -%}<p class="ann__msg" id="annMsg" {{ b.shopify_attributes }}>{{ msg }}</p>{%- endif -%}
@@ -28,6 +29,7 @@
   "tag": "div",
   "class": "lv3-ann-sec",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-5" },
     { "type": "checkbox", "id": "home_only", "label": "Show on the home page only", "default": true },
     { "type": "text", "id": "region_label", "label": "Region label (screen readers)", "default": "Offers" },
     { "type": "text", "id": "prev_label", "label": "Previous button label", "default": "Previous offer" },

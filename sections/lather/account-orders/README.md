@@ -41,12 +41,14 @@ Do not use a zip.
    - `sections/blko-lv3-account-orders.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/account-orders/sections/blko-lv3-account-orders.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/account-orders/sections/blko-lv3-theme.liquid
    - `snippets/blko-lv3-account-intro.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/account-orders/snippets/blko-lv3-account-intro.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/account-orders/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-3 |
 | `view` | select | View | auto |
 | `eyebrow` | text | Small label | Your account |
 | `heading_1` | inline_richtext | Heading, line 1 | A little less |

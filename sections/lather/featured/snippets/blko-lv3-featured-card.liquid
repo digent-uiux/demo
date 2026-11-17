@@ -1,8 +1,8 @@
 {%- comment -%}
   One product card of the Lather v3 featured rail (blko-lv3-featured). Same markup the HTML builds in JS.
   Params: block (a "product" block of blko-lv3-featured), labels_text ("best:Best seller|ff:..."), qv_label, add_label, wish_label.
-  Real product (block.settings.product): title, price, featured image, second image on hover, URL.
-  Blank: the block's demo name, price (cents), image, and a Shopify placeholder.
+  Real product (block.settings.product): title, price, featured image, second image on hover, URL (image + name link to it).
+  Blank: the block's demo name, price (cents), image, and a Shopify placeholder; image + name link to the all-products collection.
 {%- endcomment -%}
 {%- liquid
   assign b = block.settings
@@ -36,7 +36,7 @@
     assign hv = b.hover
     assign size = b.size
     assign line = b.line
-    assign url = blank
+    assign url = routes.all_products_collection_url
   endif
   assign lbl_s = b.labels | remove: ' '
   if p != blank and p.selected_or_first_available_variant.compare_at_price > price
@@ -61,18 +61,20 @@
         {%- endfor -%}
       {%- endfor -%}
     </div>
-    {%- if img != blank -%}
-      {{ img | image_url: width: 800 | image_tag: widths: '300, 450, 600, 800', sizes: '(max-width: 760px) 72vw, 300px', loading: 'lazy', alt: alt }}
-    {%- else -%}
-      {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph' }}
-    {%- endif -%}
-    {%- if hv != blank -%}
-      {{ hv | image_url: width: 800 | image_tag: widths: '300, 450, 600, 800', sizes: '(max-width: 760px) 72vw, 300px', loading: 'lazy', alt: '', class: 's-feat__hv' }}
-    {%- endif -%}
+    <a class="lv3-plink lv3-plink--fill" href="{{ url }}" tabindex="-1" aria-hidden="true">
+      {%- if img != blank -%}
+        {{ img | image_url: width: 800 | image_tag: widths: '300, 450, 600, 800', sizes: '(max-width: 760px) 72vw, 300px', loading: 'lazy', alt: alt }}
+      {%- else -%}
+        {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph' }}
+      {%- endif -%}
+      {%- if hv != blank -%}
+        {{ hv | image_url: width: 800 | image_tag: widths: '300, 450, 600, 800', sizes: '(max-width: 760px) 72vw, 300px', loading: 'lazy', alt: '', class: 's-feat__hv' }}
+      {%- endif -%}
+    </a>
     <button class="s-feat__qv" type="button" data-quick="{{ key | escape }}" aria-label="{{ qv_label | escape }} {{ name | escape }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg>{{ qv_label | escape }}</button>
     {%- render 'blko-lv3-wishlist-heart', key: key, name: name, label: wish_label -%}
   </div>
-  <h3 class="s-feat__name">{%- if url != blank -%}<a href="{{ url }}">{{ name | escape }}</a>{%- else -%}{{ name | escape }}{%- endif -%}</h3>
+  <h3 class="s-feat__name"><a class="lv3-pname" href="{{ url }}">{{ name | escape }}</a></h3>{%- render 'blko-lv3-card-meta', product: p -%}
   <p class="s-feat__line">{{ line | escape }}</p>
   <div class="s-feat__buy">
     <p class="price">{{ price | money_without_trailing_zeros }}{%- if size != blank -%}<span class="size">{{ size | escape }}</span>{%- endif -%}</p>

@@ -42,12 +42,14 @@ Do not use a zip.
    - `sections/blko-lv3-cart-finish.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/cart-finish/sections/blko-lv3-cart-finish.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/cart-finish/sections/blko-lv3-theme.liquid
    - `snippets/blko-lv3-product-data.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/cart-finish/snippets/blko-lv3-product-data.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/cart-finish/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-3 |
 | `heading` | text | Heading | For the sink, too. |
 | `text` | textarea | Text | Oat bar for face and body. A simple addition, 120 g. |
 | `button` | text | Button | Add Oat bar |

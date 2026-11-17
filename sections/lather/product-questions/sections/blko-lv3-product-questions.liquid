@@ -1,7 +1,7 @@
 {%- comment -%}
   Lather v3, product page: questions (home-v3/pages/product/60-questions.html).
   Heading, intro, help link; question blocks (native details). A question can end with a quick-view button for another
-  product: pick it (real product) or fill the demo fields; the button opens the shared quick view (window.LATHER).
+  product: pick it (real product: a link to its page) or fill the demo fields (a button that opens the shared quick view).
 {%- endcomment -%}
 {{ 'blko-lv3-product-questions.css' | asset_url | stylesheet_tag }}
 {%- assign s = section.settings -%}
@@ -14,7 +14,8 @@
     {%- render 'blko-lv3-product-data', key: qk, product: nil, name: b.quick_name, size: b.quick_size, price: b.quick_price, line: b.quick_line, labels: b.quick_labels, img: b.quick_image, hover: b.quick_hover, ing: b.quick_ing -%}
   {%- endif -%}
 {%- endfor -%}
-<section class="s-pdp-questions" aria-labelledby="pdp-questions-title-{{ section.id }}"><div class="wrap s-pdp-questions__layout">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-1' -%}
+<section class="s-pdp-questions{%- if lv3_sid != 'scheme-1' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" aria-labelledby="pdp-questions-title-{{ section.id }}"><div class="wrap s-pdp-questions__layout">
   <div class="s-pdp-questions__intro">
     <h2 class="h2" id="pdp-questions-title-{{ section.id }}" data-rv="line">
       {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
@@ -38,7 +39,11 @@
         assign answer = b.answer
         if qk != blank
           assign ql = b.quick_label | escape
-          assign btn = ' <button type="button" class="link" data-quick="' | append: qk | append: '">' | append: ql | append: '</button></p>'
+          if b.quick_product != blank
+            assign btn = ' <a class="link" href="' | append: b.quick_product.url | append: '">' | append: ql | append: '</a></p>'
+          else
+            assign btn = ' <button type="button" class="link" data-quick="' | append: qk | append: '">' | append: ql | append: '</button></p>'
+          endif
           assign answer = answer | remove_last: '</p>' | append: btn
         endif
       -%}
@@ -53,6 +58,7 @@
   "class": "blko-lv3-section-product-questions",
   "max_blocks": 10,
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
     { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "Before you" },
     { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "<em>choose.</em>", "info": "Italic text shows in the accent style." },
     { "type": "textarea", "id": "text", "label": "Intro", "default": "A few things worth knowing before the bottle reaches your shower." },

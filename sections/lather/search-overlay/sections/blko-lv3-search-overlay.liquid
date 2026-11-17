@@ -26,7 +26,8 @@
     {%- render 'blko-lv3-product-data', key: b.settings.key, product: b.settings.product, name: b.settings.name, size: b.settings.size, price: b.settings.price, line: b.settings.line, labels: b.settings.labels, img: b.settings.image -%}
   {%- endif -%}
 {%- endfor -%}
-<div class="srch" id="srch" role="dialog" aria-modal="true" aria-label="{{ s.dialog_label | escape }}" aria-hidden="true">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-2' -%}
+<div class="srch{%- if lv3_sid != 'scheme-2' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="srch" role="dialog" aria-modal="true" aria-label="{{ s.dialog_label | escape }}" aria-hidden="true">
   <div class="wrap">
     <div class="srch__bar">
       <form class="srch__form" action="{{ routes.search_url }}" method="get" role="search" data-srch-form>
@@ -94,6 +95,7 @@
   "tag": "div",
   "class": "blko-lv3-section-search-overlay",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-2" },
     { "type": "paragraph", "content": "Opens from the header search icon. In a store the results come from Shopify search; products picked in the blocks below also show while nothing is typed." },
     { "type": "checkbox", "id": "live", "label": "Use Shopify predictive search", "default": true, "info": "Off: only the products in the blocks below are searched (as in the preview)." },
     {

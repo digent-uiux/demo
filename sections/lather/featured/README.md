@@ -41,8 +41,10 @@ Do not use a zip.
    - `assets/blko-lv3-yeseva-one.woff2`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/featured/assets/blko-lv3-yeseva-one.woff2
    - `sections/blko-lv3-featured.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/featured/sections/blko-lv3-featured.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/featured/sections/blko-lv3-theme.liquid
+   - `snippets/blko-lv3-card-meta.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/featured/snippets/blko-lv3-card-meta.liquid
    - `snippets/blko-lv3-featured-card.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/featured/snippets/blko-lv3-featured-card.liquid
    - `snippets/blko-lv3-product-data.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/featured/snippets/blko-lv3-product-data.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/featured/snippets/blko-lv3-settings.liquid
    - `snippets/blko-lv3-wishlist-heart.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/featured/snippets/blko-lv3-wishlist-heart.liquid
 3. Add the section in the Theme Editor and pick your products.
 
@@ -50,6 +52,7 @@ Do not use a zip.
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-1 |
 | `heading` | inline_richtext | Heading | Our <em>favourites.</em> |
 | `sub` | text | Text | Fragrance-free unless the label says otherwise. |
 | `anchor` | text | Anchor id | shop |

@@ -159,7 +159,8 @@
   {%- if img_blocks.size > 1 -%}{%- assign hover_img = img_blocks[1].settings.image -%}{%- endif -%}
   {%- render 'blko-lv3-product-data', key: key, product: nil, name: s.name, size: s.size, price: s.price, line: s.line, labels: s.labels, img: demo_img, hover: hover_img, ing: s.ing -%}
 {%- endif -%}
-<section class="s-pdp-buy{% unless available %} is-out{% if notify_on %} is-asking{% endif %}{% endunless %}" aria-labelledby="pdp-title" data-key="{{ key }}" data-max="{{ max_q }}" data-real="{% if p != blank %}1{% endif %}" data-pct="{{ pct }}">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-1' -%}
+<section class="s-pdp-buy{% unless available %} is-out{% if notify_on %} is-asking{% endif %}{% endunless %}{%- if lv3_sid != 'scheme-1' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" aria-labelledby="pdp-title" data-key="{{ key }}" data-max="{{ max_q }}" data-real="{% if p != blank %}1{% endif %}" data-pct="{{ pct }}">
   <script type="application/json" data-pdp-strings>
     {
       "add": {{ s.add_label | json }}, "mobile_add": {{ s.mobile_add | json }}, "sold_out": {{ s.sold_out | json }},
@@ -357,6 +358,8 @@
           <div class="s-pdp-buy__reassure">
             {%- for block in note_blocks -%}<div {{ block.shopify_attributes }}>{{ block.settings.text }}</div>{%- endfor -%}
           </div>
+        {%- elsif settings.free_shipping_note != blank -%}
+          <div class="s-pdp-buy__reassure"><div><p>{{ settings.free_shipping_note | escape }}</p></div></div>
         {%- endif -%}
         {%- if jump_blocks.size > 0 -%}
           <nav class="s-pdp-buy__jump" aria-label="{{ s.jump_aria | escape }}">
@@ -382,6 +385,7 @@
   },
   "max_blocks": 20,
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
     {
       "type": "paragraph",
       "content": "Shows the product of this page: title, variants, price, media, labels from the tags best-seller, fragrance-free and new. The demo settings below are only used when there is no product (fresh install, preview)."

@@ -40,12 +40,14 @@ Do not use a zip.
    - `assets/blko-lv3-yeseva-one.woff2`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/404-lost/assets/blko-lv3-yeseva-one.woff2
    - `sections/blko-lv3-404-lost.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/404-lost/sections/blko-lv3-404-lost.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/404-lost/sections/blko-lv3-theme.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/404-lost/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-3 |
 | `code` | text | Code | 404 |
 | `heading_1` | inline_richtext | Heading, line 1 | A page gone |
 | `heading_2` | inline_richtext | Heading, line 2 | <em>astray.</em> |

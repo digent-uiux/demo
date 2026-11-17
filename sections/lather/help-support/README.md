@@ -40,12 +40,14 @@ Do not use a zip.
    - `assets/blko-lv3-yeseva-one.woff2`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/help-support/assets/blko-lv3-yeseva-one.woff2
    - `sections/blko-lv3-help-support.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/help-support/sections/blko-lv3-help-support.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/help-support/sections/blko-lv3-theme.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/help-support/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-3 |
 | `kicker` | text | Small text above the heading | Customer care |
 | `heading` | inline_richtext | Heading | A little <em>help.</em> |
 | `text` | textarea | Text | Choosing a formula, checking a delivery, or asking about a r |

@@ -1,5 +1,6 @@
 {%- comment -%} All collections (templates/list-collections.json): image cards with title and product count. {%- endcomment -%}
-<div class="lv3-page">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-1' -%}
+<div class="lv3-page{%- if lv3_sid != 'scheme-1' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}">
   <div class="wrap">
     {%- if section.settings.title != blank -%}<h1 class="h1" data-rv="blur">{{ section.settings.title }}</h1>{%- endif -%}
     {%- if collections.size > 0 -%}
@@ -31,6 +32,7 @@
   "tag": "section",
   "class": "lv3-list-collections-sec",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
     { "type": "inline_richtext", "id": "title", "label": "Title", "default": "Shop by <em>need</em>" },
     { "type": "range", "id": "columns", "label": "Columns", "min": 2, "max": 5, "step": 1, "default": 3 },
     { "type": "checkbox", "id": "show_count", "label": "Show product count", "default": true },

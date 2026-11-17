@@ -1,12 +1,13 @@
 {%- comment -%}
   Lather v3, Social (home-v3/parts/90-social.html). A slow drifting strip of customer photos at different sizes; each tile
-  shows its product chip on hover or focus (always on touch). Tiles are blocks; chips use a real product when picked.
+  shows its product chip on hover or focus (always on touch). Tiles are blocks; chips link to the product page and use a real product when picked.
 {%- endcomment -%}
 {{ 'blko-lv3-social.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-lv3-social.js' | asset_url }}" defer></script>
 
 {%- assign s = section.settings -%}
-<section class="s-social" id="{{ s.anchor | default: 'social' | handleize }}" aria-label="{{ s.label | escape }}" data-lv3-social>
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-2' -%}
+<section class="s-social{%- if lv3_sid != 'scheme-2' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="{{ s.anchor | default: 'social' | handleize }}" aria-label="{{ s.label | escape }}" data-lv3-social>
   <div class="wrap s-social__top">
     <h2 class="h2" data-rv="line">
       {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
@@ -34,6 +35,10 @@
             assign p_price = b.price | plus: 0 | money_without_trailing_zeros
             assign p_img = b.thumb
           endif
+          assign p_url = routes.all_products_collection_url
+          if p != blank
+            assign p_url = p.url
+          endif
           assign img_w = b.width | times: 2
         -%}
         <figure class="s-social__tile" style="--w:{{ b.width }}px;--h:{{ b.height }}px" {{ block.shopify_attributes }}>
@@ -50,14 +55,14 @@
             {%- else -%}
               {%- render 'blko-lv3-product-data', key: key, name: b.name, size: b.size, price: b.price, line: b.line, labels: b.labels, img: b.thumb -%}
             {%- endif -%}
-            <button class="s-social__chip" type="button" data-quick="{{ key }}" aria-label="{{ s.quick_label | escape }}: {{ p_name | escape }}, {{ p_price | strip_html }}">
+            <a class="s-social__chip" href="{{ p_url }}" data-pid="{{ key }}" aria-label="{{ p_name | escape }}, {{ p_price | strip_html }}">
               {%- if p_img -%}
                 {{ p_img | image_url: width: 64 | image_tag: class: 's-social__thumb', alt: '', loading: 'lazy', width: 32, height: 32 }}
               {%- else -%}
                 {{ 'product-1' | placeholder_svg_tag: 'blko-lv3-ph s-social__thumb' }}
               {%- endif -%}
               <span data-n>{{ p_name | escape }}</span><span class="price" data-p>{{ p_price }}</span>
-            </button>
+            </a>
           {%- endif -%}
         </figure>
       {%- endfor -%}
@@ -71,13 +76,13 @@
   "class": "blko-lv3-section-social",
   "max_blocks": 12,
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-2" },
     { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "Shared by <em>you.</em>", "info": "Italic text shows in the accent style." },
     { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2 (optional)" },
     { "type": "text", "id": "handle", "label": "Account", "default": "@lather.skin" },
     { "type": "text", "id": "tagline", "label": "Account line", "default": "Tag us to be featured" },
     { "type": "text", "id": "button_label", "label": "Button label", "default": "Follow" },
     { "type": "url", "id": "button_link", "label": "Button link" },
-    { "type": "text", "id": "quick_label", "label": "Product chip label (screen readers)", "default": "Quick view" },
     { "type": "header", "content": "Section" },
     { "type": "text", "id": "label", "label": "Section label (screen readers)", "default": "Customer photos" },
     { "type": "text", "id": "anchor", "label": "Anchor id", "default": "social" }

@@ -27,10 +27,11 @@
 {%- endfor -%}
 {%- assign keys = keys | remove_first: ',' -%}
 
-<section class="s-wish" aria-labelledby="wishH-{{ uid }}" data-lv3-wishlist
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-1' -%}
+<section class="s-wish{%- if lv3_sid != 'scheme-1' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" aria-labelledby="wishH-{{ uid }}" data-lv3-wishlist
   data-count-one="{{ s.count_one | escape }}" data-count-many="{{ s.count_many | escape }}" data-count-zero="{{ s.count_zero | escape }}"
   data-add-label="{{ s.add_label | escape }}" data-add-aria="{{ s.add_aria | escape }}" data-remove-label="{{ s.remove_label | escape }}" data-remove-aria="{{ s.remove_aria | escape }}"
-  data-sold-label="{{ s.sold_label | escape }}" data-removed-label="{{ s.removed_label | escape }}" data-undo-label="{{ s.undo_label | escape }}" data-save-aria="{{ s.save_aria | escape }}">
+  data-sold-label="{{ s.sold_label | escape }}" data-removed-label="{{ s.removed_label | escape }}" data-undo-label="{{ s.undo_label | escape }}" data-save-aria="{{ s.save_aria | escape }}" data-quick-aria="{{ s.quick_aria | escape }}">
   <template data-wish-ph>{{ 'product-1' | placeholder_svg_tag: 'blko-lv3-ph' }}</template>
   <div class="wrap">
     <div class="s-wish__hd">
@@ -64,6 +65,7 @@
   "tag": "div",
   "class": "blko-lv3-section-wishlist",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
     { "type": "paragraph", "content": "Shows the products the shopper saved with the heart buttons. The list is kept in their browser, no account needed." },
     { "type": "header", "content": "Heading" },
     { "type": "inline_richtext", "id": "heading", "label": "Heading", "info": "Italic text shows in the display font.", "default": "Saved for <em>later.</em>" },
@@ -82,6 +84,7 @@
     { "type": "text", "id": "removed_label", "label": "Removed message", "info": "[name] is the product name.", "default": "Removed [name]." },
     { "type": "text", "id": "undo_label", "label": "Undo button", "default": "Undo" },
     { "type": "text", "id": "save_aria", "label": "Heart on suggestions (screen readers)", "info": "[name] is the product name.", "default": "Save [name]" },
+    { "type": "text", "id": "quick_aria", "label": "Quick view button (screen readers)", "info": "[name] is the product name.", "default": "Quick view [name]" },
     { "type": "text", "id": "list_label", "label": "List label (screen readers)", "default": "Saved products" },
     { "type": "header", "content": "Empty state" },
     { "type": "text", "id": "empty_text", "label": "Text", "default": "Tap the heart on any product and it waits here for your next order." },

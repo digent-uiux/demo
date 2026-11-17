@@ -40,12 +40,14 @@ Do not use a zip.
    - `assets/blko-lv3-yeseva-one.woff2`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/about-story/assets/blko-lv3-yeseva-one.woff2
    - `sections/blko-lv3-about-story.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/about-story/sections/blko-lv3-about-story.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/about-story/sections/blko-lv3-theme.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/about-story/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-1 |
 | `heading_1` | inline_richtext | Heading, line 1 | It began after |
 | `heading_2` | inline_richtext | Heading, line 2 | the <em>shower.</em> |
 | `use_page_content` | checkbox | Use page content as the letter | True |

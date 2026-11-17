@@ -41,12 +41,14 @@ Do not use a zip.
    - `sections/blko-lv3-collage.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/collage/sections/blko-lv3-collage.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/collage/sections/blko-lv3-theme.liquid
    - `snippets/blko-lv3-product-data.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/collage/snippets/blko-lv3-product-data.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/collage/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-1 |
 | `anchor` | text | Anchor id | by-skin |
 | `label` | text | Section name (screen readers) | Shop by skin |
 | `heading_1` | inline_richtext | Heading, line 1 | Pick by the skin, |

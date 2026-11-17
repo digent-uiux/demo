@@ -14,19 +14,24 @@
     assign over = true
   endif
 -%}
+{%- liquid
+  # Theme settings > Logo first, then this section's own logo.
+  assign lg = settings.logo | default: section.settings.logo
+  assign wordmark = settings.logo_text | default: shop.name
+-%}
 {%- capture logo_inner -%}
-  {%- if section.settings.logo != blank and section.settings.logo_tint == false -%}
-    {{ section.settings.logo | image_url: width: 480 | image_tag: alt: shop.name, widths: '160, 240, 320, 480', sizes: '160px', loading: 'eager' }}
-  {%- elsif section.settings.logo == blank and section.settings.brand_logo == false -%}
-    {{ shop.name | escape }}
+  {%- if lg != blank and section.settings.logo_tint == false -%}
+    {{ lg | image_url: width: 480 | image_tag: alt: shop.name, widths: '160, 240, 320, 480', sizes: '160px', loading: 'eager' }}
+  {%- elsif lg == blank and section.settings.brand_logo == false -%}
+    {{ wordmark | escape }}
   {%- endif -%}
 {%- endcapture -%}
 {%- liquid
   assign logo_class = 'logo'
   assign logo_style = ''
-  if section.settings.logo != blank
+  if lg != blank
     if section.settings.logo_tint
-      assign logo_style = section.settings.logo | image_url: width: 480 | prepend: '--lv3-logo:url(' | append: ')'
+      assign logo_style = lg | image_url: width: 480 | prepend: '--lv3-logo:url(' | append: ')'
     else
       assign logo_class = 'logo logo--img'
     endif
@@ -34,7 +39,8 @@
     assign logo_class = 'logo logo--text'
   endif
 -%}
-<header class="hdr{% if over %} is-over{% else %} is-inner{% endif %}" id="hdr">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-2' -%}
+<header class="hdr{% if over %} is-over{% else %} is-inner{% endif %}{%- if lv3_sid != 'scheme-2' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="hdr">
   <div class="wrap hdr__in">
     <nav class="hdr__nav" aria-label="{{ section.settings.nav_label | escape }}">
       {%- if has_menu -%}
@@ -74,6 +80,7 @@
   "tag": "div",
   "class": "lv3-hdr-sec",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-2" },
     {
       "type": "header",
       "content": "Logo"
@@ -81,7 +88,8 @@
     {
       "type": "image_picker",
       "id": "logo",
-      "label": "Logo image"
+      "label": "Logo image",
+      "info": "Theme settings > Logo > Logo image is used first when set."
     },
     {
       "type": "checkbox",

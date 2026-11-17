@@ -1,67 +1,255 @@
 {%- comment -%}
   Lather v3, product page: reviews (home-v3/pages/product/50-reviews.html).
-  Heading and intro; review blocks (name, two detail lines, stars, quote); a foot line with a help link. No app needed.
+  Heading; average rating and count from the product's standard review metafields (reviews.rating, reviews.rating_count),
+  with section settings as the fallback; skin-type chips with counts; review blocks (the first shown leads, on deep green
+  with its photo); "Show more". An app block (a reviews app) replaces the built-in list and filter.
+  The review blocks are the merchant's own content: nothing here marks them verified.
 {%- endcomment -%}
 {{ 'blko-lv3-product-reviews.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lv3-product-reviews.js' | asset_url }}" defer></script>
 {%- liquid
   assign s = section.settings
   assign anchor = s.anchor | handleize | default: 'pdp-reviews'
+  assign page_size = s.page_size | default: 5
+
+  assign rp = product
+  assign rating = s.rating_fallback | plus: 0
+  assign scale = 5
+  assign count = s.count_fallback
+  if rp.metafields.reviews.rating.value != blank
+    assign rating = rp.metafields.reviews.rating.value.rating | plus: 0
+    assign scale = rp.metafields.reviews.rating.value.scale_max | plus: 0
+    if scale > 0 and scale != 5
+      assign rating = rating | times: 5.0 | divided_by: scale
+    endif
+  endif
+  if rp.metafields.reviews.rating_count.value != blank
+    assign count = rp.metafields.reviews.rating_count.value
+  endif
+  assign rating_txt = rating | times: 10 | round | divided_by: 10.0
+  assign pct = rating | times: 20 | round
+  assign title = rp.title | default: s.product_fallback | escape
+  assign count_b = '<b>' | append: count | append: '</b>'
+
+  assign apps = 0
+  assign total = 0
+  assign n_eczema = 0
+  assign n_dry = 0
+  assign n_sensitive = 0
+  assign n_little = 0
+  for block in section.blocks
+    case block.type
+      when '@app'
+        assign apps = apps | plus: 1
+      when 'review'
+        assign total = total | plus: 1
+        case block.settings.skin
+          when 'eczema'
+            assign n_eczema = n_eczema | plus: 1
+          when 'dry'
+            assign n_dry = n_dry | plus: 1
+          when 'sensitive'
+            assign n_sensitive = n_sensitive | plus: 1
+          when 'little'
+            assign n_little = n_little | plus: 1
+        endcase
+    endcase
+  endfor
+  assign shown_n = total
+  if total > page_size
+    assign shown_n = page_size
+  endif
 -%}
-<section class="s-pdp-reviews" id="{{ anchor }}" aria-labelledby="{{ anchor }}-title"><div class="wrap">
+{%- if apps == 0 -%}<noscript><style>#{{ anchor }} .s-pdp-reviews__item.is-off{display:grid}#{{ anchor }} .s-pdp-reviews__more,#{{ anchor }} .s-pdp-reviews__bar{display:none}</style></noscript>{%- endif -%}
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-2' -%}
+<section class="s-pdp-reviews{%- if lv3_sid != 'scheme-2' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="{{ anchor }}" aria-labelledby="{{ anchor }}-title"{% if apps == 0 %} data-lv3-pdp-reviews data-page="{{ page_size }}"{% endif %}><div class="wrap">
   <div class="s-pdp-reviews__head">
     <h2 class="h2" id="{{ anchor }}-title" data-rv="line">
       {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
       {%- if s.heading_2 != blank -%}<span class="ln"><span>{{ s.heading_2 }}</span></span>{%- endif -%}
     </h2>
-    {%- if s.text != blank -%}<p>{{ s.text | escape }}</p>{%- endif -%}
+    {%- if s.show_summary and rating > 0 -%}
+      {%- assign aria = s.stars_aria | replace: '[n]', rating_txt -%}
+      <div class="s-pdp-reviews__score" data-rv="blur" data-rv-delay="1"><span class="s-pdp-reviews__avg">{{ rating_txt }}</span><span class="s-pdp-reviews__score-text"><span class="s-pdp-reviews__meter" role="img" aria-label="{{ aria | escape }}">★★★★★<i style="width:{{ pct }}%">★★★★★</i></span>
+        {%- if count != blank and count > 0 -%}<span class="s-pdp-reviews__count">{{ s.count_text | escape | replace: '[count]', count_b | replace: '[product]', title }}</span>{%- endif -%}
+      </span></div>
+    {%- endif -%}
   </div>
-  {%- for block in section.blocks -%}
-    {%- liquid
-      assign b = block.settings
-      assign r = b.rating | default: 5
-      assign stars = ''
-      for i in (1..r)
-        assign stars = stars | append: '★'
-      endfor
-      assign aria = s.stars_aria | replace: '[n]', r
-    -%}
-    <article class="s-pdp-reviews__row" data-rv="blur" {{ block.shopify_attributes }}>
-      <p class="s-pdp-reviews__person"><b>{{ b.name | escape }}</b>{{ b.detail_1 | escape }}{% if b.detail_2 != blank %}<br>{{ b.detail_2 | escape }}{% endif %}</p>
-      <blockquote class="s-pdp-reviews__quote"><span class="stars" role="img" aria-label="{{ aria | escape }}">{{ stars }}</span>{{ b.quote | escape }}</blockquote>
-    </article>
-  {%- endfor -%}
-  {%- if s.foot != blank or s.foot_link_label != blank -%}
-    <div class="s-pdp-reviews__foot">{{ s.foot | escape }}{%- if s.foot_link_label != blank -%}<a href="{{ s.foot_link | default: '#' }}" class="link">{{ s.foot_link_label | escape }}</a>{%- endif -%}</div>
+
+  {%- if apps > 0 -%}
+    <div class="s-pdp-reviews__apps">
+      {%- for block in section.blocks -%}{%- if block.type == '@app' -%}{% render block %}{%- endif -%}{%- endfor -%}
+    </div>
+  {%- else -%}
+    {%- if s.show_filter and total > 1 -%}
+      <div class="s-pdp-reviews__bar" role="group" aria-label="{{ s.filter_label | escape }}" data-rv="blur" data-rv-delay="2">
+        {%- if s.filter_label != blank -%}<span class="s-pdp-reviews__bar-label">{{ s.filter_label | escape }}</span>{%- endif -%}
+        <div class="s-pdp-reviews__filters">
+          <button type="button" class="chip" data-rev-filter="all" aria-pressed="true">{{ s.label_all | escape }}<span class="n" data-n>{{ total }}</span></button>
+          {%- if n_eczema > 0 -%}<button type="button" class="chip" data-rev-filter="eczema" aria-pressed="false">{{ s.label_eczema | escape }}<span class="n" data-n>{{ n_eczema }}</span></button>{%- endif -%}
+          {%- if n_dry > 0 -%}<button type="button" class="chip" data-rev-filter="dry" aria-pressed="false">{{ s.label_dry | escape }}<span class="n" data-n>{{ n_dry }}</span></button>{%- endif -%}
+          {%- if n_sensitive > 0 -%}<button type="button" class="chip" data-rev-filter="sensitive" aria-pressed="false">{{ s.label_sensitive | escape }}<span class="n" data-n>{{ n_sensitive }}</span></button>{%- endif -%}
+          {%- if n_little > 0 -%}<button type="button" class="chip" data-rev-filter="little" aria-pressed="false">{{ s.label_little | escape }}<span class="n" data-n>{{ n_little }}</span></button>{%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+
+    <div class="s-pdp-reviews__list" data-rev-list aria-live="polite">
+      {%- assign i = 0 -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type != 'review' -%}{%- continue -%}{%- endif -%}
+        {%- liquid
+          assign b = block.settings
+          assign r = b.rating | default: 5
+          assign cls = 's-pdp-reviews__item'
+          if b.image != blank
+            assign cls = cls | append: ' has-photo'
+          endif
+          if i == 0
+            assign cls = cls | append: ' is-lead'
+            if shown_n == 1
+              assign cls = cls | append: ' is-solo'
+            elsif shown_n == 2
+              assign cls = cls | append: ' is-pair'
+            endif
+          elsif i >= 3 and i < page_size
+            assign k = i | minus: 3 | modulo: 4
+            case k
+              when 0
+                assign cls = cls | append: ' is-wide'
+              when 2
+                assign cls = cls | append: ' is-nl'
+              when 3
+                assign cls = cls | append: ' is-wide is-r'
+            endcase
+          endif
+          if i >= page_size
+            assign cls = cls | append: ' is-off'
+          endif
+          case b.skin
+            when 'eczema'
+              assign skin_label = s.label_eczema
+            when 'dry'
+              assign skin_label = s.label_dry
+            when 'sensitive'
+              assign skin_label = s.label_sensitive
+            else
+              assign skin_label = s.label_little
+          endcase
+          assign aria = s.stars_aria | replace: '[n]', r
+          assign delay = i
+          if delay > 3
+            assign delay = 3
+          endif
+        -%}
+        <article class="{{ cls }}" data-skin="{{ b.skin }}" tabindex="-1" {% if i == 0 %}data-rv="settle"{% else %}data-rv="blur" data-rv-delay="{{ delay }}"{% endif %} {{ block.shopify_attributes }}>
+          {%- if b.image != blank -%}
+            <figure class="s-pdp-reviews__media">
+              {%- if i == 0 -%}
+                {{ b.image | image_url: width: 1100 | image_tag: widths: '450, 700, 900, 1100', sizes: '(max-width: 760px) 100vw, 26vw', loading: 'lazy', alt: b.image.alt }}
+              {%- else -%}
+                {{ b.image | image_url: width: 480 | image_tag: widths: '240, 480', sizes: '120px', loading: 'lazy', alt: b.image.alt }}
+              {%- endif -%}
+            </figure>
+          {%- endif -%}
+          <div class="s-pdp-reviews__body">
+            <div class="s-pdp-reviews__top"><span class="stars" role="img" aria-label="{{ aria | escape }}">{% for n in (1..r) %}★{% endfor %}{% if r < 5 %}<s>{% for n in (r..4) %}★{% endfor %}</s>{% endif %}</span>{%- if skin_label != blank -%}<span class="s-pdp-reviews__skin">{{ skin_label | escape }}</span>{%- endif -%}</div>
+            {%- if b.title != blank -%}<h3 class="s-pdp-reviews__title">{{ b.title | escape }}</h3>{%- endif -%}
+            {%- if b.text != blank -%}<p class="s-pdp-reviews__text">{{ b.text | escape }}</p>{%- endif -%}
+            <p class="s-pdp-reviews__who"><b>{{ b.name | escape }}</b>
+              {%- liquid
+                assign meta = ''
+                if b.duration != blank
+                  assign meta = b.duration
+                endif
+                if b.bought != blank
+                  if meta != blank
+                    assign meta = meta | append: ', '
+                  endif
+                  assign meta = meta | append: b.bought
+                endif
+              -%}{{ meta | escape }}</p>
+          </div>
+        </article>
+        {%- assign i = i | plus: 1 -%}
+      {%- endfor -%}
+    </div>
   {%- endif -%}
+
+  <div class="s-pdp-reviews__foot">
+    {%- if apps == 0 -%}
+      <div class="s-pdp-reviews__more">
+        <button type="button" class="btn btn--ghost" data-rev-more{% if total <= page_size %} hidden{% endif %}>{{ s.more_label | escape }}</button>
+        {%- if total > 0 -%}<span class="s-pdp-reviews__shown" data-rev-shown data-tpl="{{ s.shown_text | escape }}">{{ s.shown_text | replace: '[shown]', shown_n | replace: '[total]', total | escape }}</span>{%- endif -%}
+      </div>
+    {%- endif -%}
+    {%- if s.help_text != blank or s.help_link_label != blank -%}
+      <p class="s-pdp-reviews__help">{{ s.help_text | escape }}{%- if s.help_link_label != blank -%}<a href="{{ s.help_link | default: '#' }}" class="link">{{ s.help_link_label | escape }}</a>{%- endif -%}</p>
+    {%- endif -%}
+  </div>
 </div></section>
 
 {% schema %}
 {
   "name": "Lather product reviews",
   "class": "blko-lv3-section-product-reviews",
-  "max_blocks": 10,
+  "max_blocks": 24,
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-2" },
     { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "The feel, in" },
     { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "your <em>words.</em>", "info": "Italic text shows in the accent style." },
-    { "type": "textarea", "id": "text", "label": "Intro", "default": "Skin is personal. Read the experience alongside the ingredient list, not instead of it." },
+    { "type": "header", "content": "Rating summary" },
+    { "type": "paragraph", "content": "Reads the product's review metafields (reviews.rating and reviews.rating_count), which most review apps fill. The values below show only when those are empty." },
+    { "type": "checkbox", "id": "show_summary", "label": "Show average rating", "default": true },
+    { "type": "text", "id": "rating_fallback", "label": "Average rating (fallback)", "default": "4.6", "info": "Out of 5." },
+    { "type": "number", "id": "count_fallback", "label": "Number of reviews (fallback)", "default": 318 },
+    { "type": "text", "id": "count_text", "label": "Count text", "default": "[count] reviews of [product]", "info": "[count] and [product] are filled in." },
+    { "type": "text", "id": "product_fallback", "label": "Product name (fallback)", "default": "Calm wash" },
     { "type": "text", "id": "stars_aria", "label": "Stars label (screen readers)", "default": "[n] out of 5 stars" },
+    { "type": "header", "content": "Skin type filter" },
+    { "type": "checkbox", "id": "show_filter", "label": "Show filter", "default": true },
+    { "type": "text", "id": "filter_label", "label": "Filter label", "default": "Skin type" },
+    { "type": "text", "id": "label_all", "label": "All", "default": "All" },
+    { "type": "text", "id": "label_eczema", "label": "Skin type 1", "default": "Eczema-prone" },
+    { "type": "text", "id": "label_dry", "label": "Skin type 2", "default": "Very dry" },
+    { "type": "text", "id": "label_sensitive", "label": "Skin type 3", "default": "Sensitive" },
+    { "type": "text", "id": "label_little", "label": "Skin type 4", "default": "Little ones" },
+    { "type": "header", "content": "List" },
+    { "type": "range", "id": "page_size", "label": "Reviews shown before \"Show more\"", "min": 3, "max": 12, "step": 1, "default": 5 },
+    { "type": "text", "id": "more_label", "label": "Show more label", "default": "Show more reviews" },
+    { "type": "text", "id": "shown_text", "label": "Shown count", "default": "Showing [shown] of [total]" },
     { "type": "header", "content": "Foot" },
-    { "type": "text", "id": "foot", "label": "Text", "default": "Every skin responds differently. Need help choosing?" },
-    { "type": "text", "id": "foot_link_label", "label": "Link label", "default": "Talk to us" },
-    { "type": "url", "id": "foot_link", "label": "Link" },
+    { "type": "text", "id": "help_text", "label": "Help text", "default": "Not sure it suits your skin?" },
+    { "type": "text", "id": "help_link_label", "label": "Help link label", "default": "Ask us first" },
+    { "type": "url", "id": "help_link", "label": "Help link" },
     { "type": "header", "content": "Section" },
-    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "pdp-reviews", "info": "The buy box's reviews link points here." }
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "pdp-reviews", "info": "The buy box's reviews link points here." },
+    { "type": "paragraph", "content": "Using a reviews app? Add its block here (Add block > Apps). It replaces the built-in list and filter." }
   ],
   "blocks": [
+    { "type": "@app" },
     {
       "type": "review",
       "name": "Review",
       "settings": [
+        { "type": "paragraph", "content": "Your own content. The first review shown leads, on deep green; give it a photo." },
         { "type": "text", "id": "name", "label": "Name", "default": "Hannah K." },
-        { "type": "text", "id": "detail_1", "label": "Detail, line 1", "default": "Eczema-prone skin" },
-        { "type": "text", "id": "detail_2", "label": "Detail, line 2", "default": "Using it for 6 months" },
+        {
+          "type": "select", "id": "skin", "label": "Skin type", "default": "eczema",
+          "options": [
+            { "value": "eczema", "label": "Skin type 1" },
+            { "value": "dry", "label": "Skin type 2" },
+            { "value": "sensitive", "label": "Skin type 3" },
+            { "value": "little", "label": "Skin type 4" }
+          ],
+          "info": "Names come from the section's filter settings."
+        },
+        { "type": "text", "id": "duration", "label": "How long", "default": "6 months in" },
+        { "type": "text", "id": "bought", "label": "What they bought", "default": "bought Calm wash" },
         { "type": "range", "id": "rating", "label": "Stars", "min": 1, "max": 5, "step": 1, "default": 5 },
-        { "type": "textarea", "id": "quote", "label": "Quote", "default": "“First wash that doesn't leave my arms tight. No smell at all, which is the whole point.”" }
+        { "type": "text", "id": "title", "label": "Title", "default": "No tight arms, no smell" },
+        { "type": "textarea", "id": "text", "label": "Review", "default": "First wash that doesn't leave my arms tight. No smell at all, which is the whole point." },
+        { "type": "image_picker", "id": "image", "label": "Photo (optional)" }
       ]
     }
   ],
@@ -69,7 +257,9 @@
     {
       "name": "Lather product reviews",
       "blocks": [
-        { "type": "review", "settings": { "name": "Hannah K.", "detail_1": "Eczema-prone skin", "detail_2": "Using it for 6 months", "rating": 5, "quote": "“First wash that doesn't leave my arms tight. No smell at all, which is the whole point.”" } }
+        { "type": "review", "settings": { "name": "Hannah K.", "skin": "eczema", "duration": "6 months in", "bought": "bought Calm wash", "rating": 5, "title": "No tight arms, no smell", "text": "First wash that doesn't leave my arms tight. No smell at all, which is the whole point." } },
+        { "type": "review", "settings": { "name": "Tom B.", "skin": "dry", "duration": "3 months in", "bought": "bought 2 bottles of Calm wash", "rating": 5, "title": "My shins stopped cracking", "text": "Long shifts, hot showers and very dry legs. This is the first wash I don't have to follow with a heavy cream every night." } },
+        { "type": "review", "settings": { "name": "Priya S.", "skin": "sensitive", "duration": "5 weeks in", "bought": "bought Calm wash", "rating": 4, "title": "Gentle, rinses clean", "text": "No sting and no film left on my skin. One star off because the pump gets stiff near the end of the bottle." } }
       ]
     }
   ]

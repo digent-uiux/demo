@@ -90,7 +90,8 @@
   </template>
 {%- endfor -%}
 
-<section class="s-quiz" id="{{ anchor }}" aria-labelledby="quizH-{{ uid }}" data-lv3-quiz>
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-5' -%}
+<section class="s-quiz{%- if lv3_sid != 'scheme-5' %} color-{{ lv3_sid }} lv3-scheme-pick lv3-scheme-pick--dark{% endif %}" id="{{ anchor }}" aria-labelledby="quizH-{{ uid }}" data-lv3-quiz>
   <script type="application/json" data-quiz-map>{{ map | strip_newlines }}</script>
   <div class="s-quiz__photo">
     {%- if s.image != blank -%}
@@ -146,6 +147,7 @@
   "tag": "div",
   "class": "blko-lv3-section-quiz",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-5" },
     { "type": "header", "content": "Content" },
     { "type": "image_picker", "id": "image", "label": "Photo" },
     { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Find <em>your</em> match.", "info": "Italic text shows in the display font." },

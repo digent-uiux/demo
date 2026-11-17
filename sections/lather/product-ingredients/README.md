@@ -1,6 +1,6 @@
 # Lather PDP ingredients
 
-ingredients Two-line heading and intro; ingredient blocks in a two-column list; a details toggle with the complete list.
+ingredients One photo bleeds off the left edge (image picker, Shopify placeholder until set); heading and intro beside it; ingredient blocks in a two-column list, each with a line icon from the theme'
 
 - Category: main-product
 - Kind: section
@@ -40,15 +40,19 @@ Do not use a zip.
    - `assets/blko-lv3-yeseva-one.woff2`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/product-ingredients/assets/blko-lv3-yeseva-one.woff2
    - `sections/blko-lv3-product-ingredients.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/product-ingredients/sections/blko-lv3-product-ingredients.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/product-ingredients/sections/blko-lv3-theme.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/product-ingredients/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-2 |
 | `heading_1` | inline_richtext | Heading, line 1 | A list you |
 | `heading_2` | inline_richtext | Heading, line 2 | can <em>read.</em> |
 | `text` | textarea | Intro | What goes in matters. So does what we leave out: added fragr |
+| `image` | image_picker | Ingredient photo |  |
+| `image_alt` | text | Photo alt text | A bowl of rolled oats seen from above on a pale stone surfac |
 | `summary` | text | Toggle label | Read the complete ingredient list |
 | `full_list` | textarea | Complete list | Water, glycerin, coco-glucoside, decyl glucoside, colloidal  |
 | `note` | textarea | Allergy note | Contains oat. Check the full list against your known allergi |

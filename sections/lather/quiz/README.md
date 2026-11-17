@@ -42,12 +42,14 @@ Do not use a zip.
    - `sections/blko-lv3-quiz.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/quiz/sections/blko-lv3-quiz.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/quiz/sections/blko-lv3-theme.liquid
    - `snippets/blko-lv3-product-data.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/quiz/snippets/blko-lv3-product-data.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/quiz/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-5 |
 | `image` | image_picker | Photo |  |
 | `heading` | inline_richtext | Heading | Find <em>your</em> match. |
 | `sub` | text | Text | Two questions, one straight answer. |

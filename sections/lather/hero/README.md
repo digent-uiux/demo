@@ -42,12 +42,14 @@ Do not use a zip.
    - `sections/blko-lv3-hero.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/hero/sections/blko-lv3-hero.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/hero/sections/blko-lv3-theme.liquid
    - `snippets/blko-lv3-product-data.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/hero/snippets/blko-lv3-product-data.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/hero/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-5 |
 | `label` | text | Carousel label (screen readers) | Lather body wash |
 | `h1` | text | Page heading (screen readers) | Lather, a moisturising body wash for dry, reactive skin |
 | `lead` | text | Lead | A moisturising body wash for dry, reactive skin. |

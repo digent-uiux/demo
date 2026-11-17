@@ -24,7 +24,8 @@
   {%- endif -%}
 {%- endfor -%}
 
-<section class="s-about-line" id="{{ s.anchor | default: 'line' | handleize }}" aria-labelledby="{{ uid }}">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-3' -%}
+<section class="s-about-line{%- if lv3_sid != 'scheme-3' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="{{ s.anchor | default: 'line' | handleize }}" aria-labelledby="{{ uid }}">
   <div class="wrap">
     <div class="s-about-line__head">
       <h2 class="h2" id="{{ uid }}" data-rv="line">
@@ -69,8 +70,13 @@
                     assign g_first_price = pr | money_without_trailing_zeros
                   endif
                   assign qv = s.quick_label | replace: '[name]', nm
+                  assign u = routes.all_products_collection_url
+                  if b.product != blank
+                    assign u = b.product.url
+                  endif
                 -%}
                 <li class="s-about-line__item" {{ block.shopify_attributes }}>
+                  <a class="lv3-plink" href="{{ u }}" tabindex="-1" aria-hidden="true">
                   {%- if b.image != blank -%}
                     {{ b.image | image_url: width: 180 | image_tag: width: 60, height: 75, widths: '60, 120, 180', sizes: '60px', loading: 'lazy', alt: '' }}
                   {%- elsif b.product != blank and b.product.featured_media != blank -%}
@@ -78,7 +84,8 @@
                   {%- else -%}
                     {{ 'product-1' | placeholder_svg_tag: 'blko-lv3-ph' }}
                   {%- endif -%}
-                  <div><strong>{{ nm | escape }}</strong>{%- if sz != blank -%}<span class="small">{{ sz | escape }}</span>{%- endif -%}</div>
+                  </a>
+                  <div><strong><a class="lv3-pname" href="{{ u }}">{{ nm | escape }}</a></strong>{%- if sz != blank -%}<span class="small">{{ sz | escape }}</span>{%- endif -%}</div>
                   <button class="s-about-line__open" type="button" data-quick="{{ k | escape }}" aria-label="{{ qv | escape }}">{{ s.open_icon | default: '↗' | escape }}</button>
                 </li>
               {%- endfor -%}
@@ -103,6 +110,7 @@
   "class": "blko-lv3-section-about-line",
   "max_blocks": 16,
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-3" },
     { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "Less on the shelf." },
     { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "More <em>clarity.</em>", "info": "Italic text shows in the accent style." },
     { "type": "textarea", "id": "text", "label": "Intro", "default": "Nine products. Choose a wash, then the texture that feels right after it." },

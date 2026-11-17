@@ -3,7 +3,8 @@
 {%- endcomment -%}
 {{ 'blko-lv3-collection-choosing.css' | asset_url | stylesheet_tag }}
 {%- assign s = section.settings -%}
-<section class="s-shop-choosing" aria-labelledby="shopChooseTitle-{{ section.id }}"><div class="wrap s-shop-choosing__row">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-4' -%}
+<section class="s-shop-choosing{%- if lv3_sid != 'scheme-4' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" aria-labelledby="shopChooseTitle-{{ section.id }}"><div class="wrap s-shop-choosing__row">
   <h2 class="h3" id="shopChooseTitle-{{ section.id }}">{{ s.heading }}</h2>
   {%- if s.text != blank -%}<p>{{ s.text | escape }}</p>{%- endif -%}
   {%- if s.button != blank -%}<a class="btn btn--ghost" href="{{ s.button_link | default: routes.root_url }}">{{ s.button | escape }}</a>{%- endif -%}
@@ -15,6 +16,7 @@
   "tag": "div",
   "class": "blko-lv3-section-collection-choosing",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-4" },
     { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "The right texture, without the guesswork." },
     { "type": "textarea", "id": "text", "label": "Text", "default": "Light milk or rich cream? Scent or no scent? We can help you narrow it down." },
     { "type": "text", "id": "button", "label": "Button", "default": "Ask us a question" },

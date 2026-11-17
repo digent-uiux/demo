@@ -17,7 +17,8 @@
   assign total_set = 0
   assign total_orig = 0
 -%}
-<section class="s-routine" id="{{ anchor }}" aria-labelledby="routineH-{{ uid }}"
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-3' -%}
+<section class="s-routine{%- if lv3_sid != 'scheme-3' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="{{ anchor }}" aria-labelledby="routineH-{{ uid }}"
   data-off="{{ off }}"
   data-cd-mode="{{ s.countdown_mode }}" data-cd-day="{{ s.end_weekday }}" data-cd-hour="{{ s.end_hour }}" data-cd-min="{{ s.end_minute }}" data-cd-date="{{ s.end_date | escape }}"
   data-fine="{{ s.fine_text | escape }}" data-note="{{ s.note_text | escape }}">
@@ -178,6 +179,7 @@
   "name": "Routine set",
   "class": "blko-lv3-section-routine",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-3" },
     { "type": "header", "content": "Content" },
     { "type": "text", "id": "anchor", "label": "Anchor id", "info": "Links like #routine jump here.", "default": "routine" },
     { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "The after-shower" },

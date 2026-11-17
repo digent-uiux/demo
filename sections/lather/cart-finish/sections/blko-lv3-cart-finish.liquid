@@ -18,7 +18,8 @@
   endif
 -%}
 {%- render 'blko-lv3-product-data', key: key, product: p, name: s.name, size: s.size, price: s.price, line: s.line, labels: 'best,ff', img: s.image -%}
-<section class="s-cart-finish" aria-labelledby="cart-finish-title-{{ section.id }}" data-lv3-cart-finish>
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-3' -%}
+<section class="s-cart-finish{%- if lv3_sid != 'scheme-3' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" aria-labelledby="cart-finish-title-{{ section.id }}" data-lv3-cart-finish>
   <div class="wrap s-cart-finish__in">
     <div class="s-cart-finish__product">
       {%- if s.image != blank -%}
@@ -47,6 +48,7 @@
   "name": "Lather bag add-on",
   "class": "blko-lv3-section-cart-finish",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-3" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "For the sink, too." },
     { "type": "textarea", "id": "text", "label": "Text", "default": "Oat bar for face and body. A simple addition, 120 g." },
     { "type": "text", "id": "button", "label": "Button", "default": "Add Oat bar" },

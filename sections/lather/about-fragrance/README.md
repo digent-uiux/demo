@@ -41,12 +41,14 @@ Do not use a zip.
    - `sections/blko-lv3-about-fragrance.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/about-fragrance/sections/blko-lv3-about-fragrance.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/about-fragrance/sections/blko-lv3-theme.liquid
    - `snippets/blko-lv3-product-data.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/about-fragrance/snippets/blko-lv3-product-data.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/about-fragrance/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-5 |
 | `heading_1` | inline_richtext | Heading, line 1 | Fragrance-free. |
 | `heading_2` | inline_richtext | Heading, line 2 | On <em>purpose.</em> |
 | `text` | textarea | Text | A body wash doesn't need a perfume to do its job. We keep fr |

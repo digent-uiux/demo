@@ -27,7 +27,8 @@
   endfor
 -%}
 
-<section class="s-hl" id="{{ anchor }}" aria-label="{{ s.label | escape }}" data-lv3-hl>
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-3' -%}
+<section class="s-hl{%- if lv3_sid != 'scheme-3' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="{{ anchor }}" aria-label="{{ s.label | escape }}" data-lv3-hl>
   <div class="wrap s-hl__in">
     <p class="s-hl__txt">{{ out }}</p>
     {%- if s.side_text != blank or s.link_label != blank -%}
@@ -45,6 +46,7 @@
   "tag": "div",
   "class": "blko-lv3-section-highlight",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-3" },
     { "type": "text", "id": "label", "label": "Section label (screen readers)", "default": "What's in the wash" },
     { "type": "textarea", "id": "text", "label": "Sentence", "default": "Oat [1], shea and glycerin wash you clean [2] and leave skin soft [3], not tight [4].", "info": "[1], [2]... place the photo pills, in block order." },
     { "type": "textarea", "id": "side_text", "label": "Side note", "default": "The other seven: two sugar cleansers, sunflower oil, xanthan gum, citric acid, a preservative and water." },

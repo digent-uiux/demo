@@ -1,0 +1,18 @@
+{%- comment -%}
+  Vendor and rating under a product card name, from Theme settings > Products (Show vendor / Show rating on cards).
+  Renders nothing for demo cards (no product) or when both are off. Rating reads the reviews.rating metafield.
+  Accepts: product
+{%- endcomment -%}
+{%- if product != blank -%}
+  {%- if settings.card_show_vendor and product.vendor != blank -%}<p class="lv3-card-vendor">{{ product.vendor | escape }}</p>{%- endif -%}
+  {%- if settings.card_show_rating and product.metafields.reviews.rating != blank -%}
+    {%- liquid
+      assign r = product.metafields.reviews.rating.value
+      assign rv = r.rating | default: r | plus: 0
+      assign rmax = r.scale_max | default: 5 | plus: 0
+      assign pct = rv | times: 100.0 | divided_by: rmax | round
+      assign cnt = product.metafields.reviews.rating_count.value
+    -%}
+    <p class="lv3-card-rating"><span class="lv3-card-rating__stars" style="--pct:{{ pct }}%" aria-hidden="true">★★★★★</span><span class="sr">{{ rv }} / {{ rmax }}</span>{%- if cnt != blank -%}<span class="lv3-card-rating__count">({{ cnt }})</span>{%- endif -%}</p>
+  {%- endif -%}
+{%- endif -%}

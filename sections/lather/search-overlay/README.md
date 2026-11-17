@@ -42,12 +42,14 @@ Do not use a zip.
    - `sections/blko-lv3-search-overlay.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/search-overlay/sections/blko-lv3-search-overlay.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/search-overlay/sections/blko-lv3-theme.liquid
    - `snippets/blko-lv3-product-data.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/search-overlay/snippets/blko-lv3-product-data.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/search-overlay/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-2 |
 | `live` | checkbox | Use Shopify predictive search | True |
 | `types` | select | Search page shows | product,article |
 | `show_articles` | checkbox | Suggest journal articles | True |

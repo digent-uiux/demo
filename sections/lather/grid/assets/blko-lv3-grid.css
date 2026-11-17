@@ -10,12 +10,12 @@
 .s-grid .s-grid__card[hidden]{display:none}
 html.motion .s-grid .s-grid__card{transition:opacity .34s var(--ease),filter .34s var(--ease),transform .34s var(--ease)}
 html.motion .s-grid .s-grid__card.is-out{opacity:0;filter:blur(8px);transform:scale(.985)}
-.s-grid .s-grid__media{position:relative;border-radius:var(--r-img);overflow:hidden;background:var(--raised);aspect-ratio:4/5}
+.s-grid .s-grid__media{position:relative;border-radius:var(--r-img);overflow:hidden;background:var(--raised);aspect-ratio:var(--card-ratio,4/5)}
 .s-grid .s-grid__media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .45s var(--ease),transform .6s var(--ease)}
 .s-grid .s-grid__media .b{opacity:0}
 .s-grid .s-grid__card:hover .s-grid__media:has(.b) .a{opacity:0}
 .s-grid .s-grid__card:hover .s-grid__media .b{opacity:1}
-.s-grid .s-grid__media .labels{position:absolute;top:12px;left:12px;z-index:2}
+.s-grid .s-grid__media .labels{position:absolute;top:12px;left:12px;z-index:2;pointer-events:none}
 .s-grid .s-grid__qv{position:absolute;left:12px;right:12px;bottom:12px;z-index:2;opacity:0;transition:opacity .3s var(--ease),background-color .25s var(--ease)}
 .s-grid .s-grid__card:hover .s-grid__qv,.s-grid .s-grid__card:focus-within .s-grid__qv{opacity:1}
 @media (hover:none){.s-grid__qv{display:none}}
@@ -79,3 +79,11 @@ html.motion .s-grid .s-grid__card.is-out{opacity:0;filter:blur(8px);transform:sc
 .s-grid .s-grid__list{margin:0;padding:0}
 .s-grid .s-grid__media .blko-lv3-ph{position:absolute;inset:0;width:100%;height:100%}
 @media (prefers-reduced-motion:reduce){.s-grid .s-grid__media img{transition:none}}
+/* cards in a row line up: same image ratio per row, name at the top, price + Add at the card foot */
+.s-grid .s-grid__info{grid-template-rows:auto auto 1fr}
+.s-grid .s-grid__nm{grid-row:1}
+.s-grid .s-grid__line{grid-row:2}
+.s-grid .s-grid__price{grid-row:3;align-self:end}
+.s-grid .s-grid__card:not(.s-grid__card--feat):not(.s-grid__card--wide) .s-grid__info{flex:1}
+.s-grid .s-grid__card:not(.s-grid__card--feat):not(.s-grid__card--wide) .s-grid__line{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+@media (max-width:760px){.s-grid .s-grid__card:not(.s-grid__card--feat):not(.s-grid__card--wide) .s-grid__line{display:none}}

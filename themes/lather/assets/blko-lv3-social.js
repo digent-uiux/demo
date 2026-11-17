@@ -6,12 +6,13 @@
     const strip = root.querySelector('.s-social__strip'), track = root.querySelector('.s-social__track');
     if (!strip || !track || !track.children.length) return;
     const L = window.LATHER;
-    if (L && L.products) root.querySelectorAll('.s-social__chip[data-quick]').forEach(b => {
-      const p = L.products[b.dataset.quick]; if (!p) return;
+    if (L && L.products) root.querySelectorAll('.s-social__chip[data-pid]').forEach(b => {
+      const p = L.products[b.dataset.pid]; if (!p) return;
       const img = b.querySelector('img'); if (img && p.img) img.src = p.img;
       b.querySelector('[data-n]').textContent = p.name;
       b.querySelector('[data-p]').textContent = L.fmt(p.price);
-      b.setAttribute('aria-label', `${b.getAttribute('aria-label').split(':')[0]}: ${p.name}, ${L.fmt(p.price)}`);
+      const u = L.url && L.url(b.dataset.pid); if (u) b.href = u;
+      b.setAttribute('aria-label', `${p.name}, ${L.fmt(p.price)}`);
     });
     const wide = matchMedia('(min-width: 761px)');
     const reduce = matchMedia('(prefers-reduced-motion: reduce)');
@@ -23,7 +24,7 @@
           const c = t.cloneNode(true);
           c.removeAttribute('data-shopify-editor-block');
           c.setAttribute('aria-hidden', 'true'); c.setAttribute('inert', '');
-          c.querySelectorAll('button').forEach(b => b.tabIndex = -1);
+          c.querySelectorAll('a, button').forEach(b => b.tabIndex = -1);
           track.appendChild(c);
         });
         doubled = true;

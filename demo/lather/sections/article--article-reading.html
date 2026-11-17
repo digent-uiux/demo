@@ -87,7 +87,7 @@ html.motion [data-rv="blur"]:not(.in){opacity:0;transform:translateY(12px);filte
 html.motion [data-rv="settle"]:not(.in){opacity:0;transform:scale(.96)}
 html.motion [data-rv="draw"]{transform-origin:left center}
 html.motion [data-rv="draw"]:not(.in){transform:scaleX(0)}
-html.motion [data-rv="line"] .ln{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
+[data-rv="line"] .ln{display:block}html.motion [data-rv="line"] .ln{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
 html.motion [data-rv="line"] .ln>span{display:block;transition:transform .9s cubic-bezier(.22,1,.36,1)}
 html.motion [data-rv="line"]:not(.in) .ln>span{transform:translateY(105%)}
 html.motion [data-rv="line"] .ln:nth-child(2)>span{transition-delay:.09s}
@@ -132,6 +132,13 @@ html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
 .mnav.open{transform:none}
 .mnav a{font:500 26px/1.3 var(--f-body);text-decoration:none;padding:10px 0;border-bottom:1px solid var(--line)}
 .mnav__top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+/* product links on cards and chips: image + name go to the product page; buttons inside stay on top */
+.lv3-plink{display:block;color:inherit;text-decoration:none;border-radius:inherit}
+.lv3-plink--fill{position:absolute;inset:0;z-index:0}
+.lv3-plink:focus-visible{outline:2px solid var(--moss);outline-offset:-3px}
+.lv3-pname{color:inherit;text-decoration:none;text-underline-offset:4px;text-decoration-thickness:1px}
+.lv3-pname:hover{text-decoration-line:underline}
+.lv3-pname:focus-visible{outline:2px solid var(--moss);outline-offset:3px;border-radius:2px}
 </style>
 </head>
 <body class="pg-article">
@@ -162,7 +169,7 @@ html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
 .s-art-reading{padding:64px 0 80px;background:var(--oat)}.s-art-reading__layout{display:grid;grid-template-columns:220px minmax(0,710px);gap:70px;justify-content:center;align-items:start}.s-art-reading__contents{position:sticky;top:110px;font-size:14px}.s-art-reading__contents strong{font-weight:600;display:block;margin-bottom:18px}.s-art-reading__contents a{display:block;color:var(--muted);text-decoration:none;border-left:2px solid var(--line);padding:8px 0 8px 14px;transition:color .2s,border-color .2s}.s-art-reading__contents a:hover,.s-art-reading__contents a[aria-current="location"]{color:var(--ink);border-color:var(--moss)}.s-art-reading__body{min-width:0;font-size:18px;line-height:1.75}.s-art-reading__body p{margin:0 0 22px}.s-art-reading__body h2{font:500 clamp(27px,2.8vw,36px)/1.2 var(--f-body);letter-spacing:-.02em;margin:48px 0 20px;scroll-margin-top:110px}.s-art-reading__body h2:first-child{margin-top:0}.s-art-reading__body a{font-weight:500;text-underline-offset:4px;text-decoration-thickness:1px}.s-art-reading__note{padding:22px 24px;background:var(--raised);border-left:3px solid var(--moss);font-size:15px;line-height:1.6;margin:30px 0}.s-art-reading__note p:last-child{margin-bottom:0}.s-art-reading__pull{font:400 clamp(25px,2.7vw,35px)/1.4 var(--f-display);letter-spacing:-.01em;max-width:24ch;padding:16px 0 22px;margin:16px 0 25px;color:var(--moss)}.s-art-reading__checklist{padding-left:22px;margin:20px 0 28px}.s-art-reading__checklist li{margin-bottom:12px;padding-left:6px}.s-art-reading__product{display:grid;grid-template-columns:112px minmax(0,1fr);gap:22px;padding:22px;background:var(--sage-wash);border-radius:var(--r-img);margin:34px 0}.s-art-reading__product img{width:112px;height:140px;object-fit:cover;border-radius:4px}.s-art-reading__product h3{font:600 20px/1.2 var(--f-body);margin:0 0 6px}.s-art-reading__product p{font-size:15px;line-height:1.5;margin:0 0 14px}.s-art-reading__product .btn{height:40px;font-size:14px}.s-art-reading__product .price{display:inline-block;font-size:21px;margin-right:10px}.s-art-reading__sources{margin-top:44px;border-top:1px solid var(--line);padding-top:25px;font-size:14px;line-height:1.55}.s-art-reading__sources h2{font-size:22px;margin:0 0 16px}.s-art-reading__sources ol{padding-left:20px}.s-art-reading__sources li{margin:0 0 13px}.s-art-reading__sources p{color:var(--muted)}
 @media(max-width:1000px){.s-art-reading__layout{grid-template-columns:180px minmax(0,1fr);gap:32px}}
 @media(max-width:760px){.s-art-reading{padding:28px 0 52px}.s-art-reading__layout{display:block}.s-art-reading__contents{position:static;border-bottom:1px solid var(--line);padding-bottom:24px;margin-bottom:34px}.s-art-reading__contents strong{margin-bottom:12px}.s-art-reading__contents a{display:inline-block;border:0;text-decoration:underline;padding:5px 15px 5px 0;text-underline-offset:3px}.s-art-reading__body{font-size:17px;line-height:1.75}.s-art-reading__body h2{margin-top:36px;scroll-margin-top:85px}.s-art-reading__note{padding:18px}.s-art-reading__product{grid-template-columns:80px minmax(0,1fr);gap:15px;padding:16px}.s-art-reading__product img{width:80px;height:110px}.s-art-reading__product h3{font-size:19px}.s-art-reading__product .btn{padding:0 12px}.s-art-reading__sources{font-size:14px}}
-</style>
+.s-art-reading__product h3 a{color:inherit;text-decoration:none}.s-art-reading__product h3 a:hover{text-decoration:underline;text-underline-offset:3px}</style>
 <section class="s-art-reading" aria-label="Article"><div class="wrap s-art-reading__layout">
  <nav class="s-art-reading__contents" aria-label="In this article"><strong>In this article</strong><a href="#art-water">Start with the water</a><a href="#art-cleanser">Choose the cleanser</a><a href="#art-after">After the shower</a><a href="#art-change">One change at a time</a><a href="#art-support">When to ask for help</a><a href="#art-sources">Sources</a></nav>
  <article class="s-art-reading__body" aria-label="Washing eczema-prone skin">
@@ -174,11 +181,11 @@ html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
   <p>Read the ingredient list, even when the front of a bottle sounds reassuring. The AAD recommends fragrance-free products; “unscented” can still contain ingredients used to mask a smell. A pleasant scent does not tell you how your skin will respond.</p>
   <p>The NHS advises using an emollient soap substitute for dry, itchy skin. These wash products do not need a big foam to clean. If you have diagnosed eczema, ask your pharmacist or clinician which wash fits your existing care plan. <a href="https://www.nhs.uk/tests-and-treatments/emollients/">Read the NHS guide to emollients</a>.</p>
   <aside class="s-art-reading__note"><p><strong>Where Lather fits</strong></p><p>Our body care is cosmetic, not an eczema treatment. Calm wash contains oat; check it against known allergies. A fragrance-free label does not guarantee that a product will suit every skin.</p></aside>
-  <div class="s-art-reading__product"><a href="../templates/product.html" aria-label="Read about Calm wash"><img src="../img/t-calm.jpg" alt="Calm wash, 400 ml" width="112" height="140" loading="lazy"></a><div><h3>Calm wash</h3><p>Fragrance-free body wash with colloidal oat and glycerin. Read every ingredient before choosing.</p><span class="price" data-art-price="calm">$18</span><button class="btn btn--primary btn--sm" type="button" data-add="calm">Add Calm wash</button></div></div>
+  <div class="s-art-reading__product"><a href="../templates/product.html" aria-label="Read about Calm wash"><img src="../img/t-calm.jpg" alt="Calm wash, 400 ml" width="112" height="140" loading="lazy"></a><div><h3><a href="../templates/product.html">Calm wash</a></h3><p>Fragrance-free body wash with colloidal oat and glycerin. Read every ingredient before choosing.</p><span class="price" data-art-price="calm">$18</span><button class="btn btn--primary btn--sm" type="button" data-add="calm">Add Calm wash</button></div></div>
   <h2 id="art-after">After the shower, keep it gentle</h2>
   <p>Rinse and pat your skin dry rather than rubbing it. The NHS recommends applying an emollient soon after washing. The AAD also advises moisturising while skin is still damp, and notes that creams or ointments can be more helpful than lighter lotions for eczema-prone skin.</p>
   <p>Use the moisturiser that works for you and follow your clinician’s instructions for prescribed treatments. A new body-care routine should sit alongside that plan, not replace it. <a href="https://www.aad.org/news/how-to-treat-eczema-at-home">More on moisturising from the AAD</a>.</p>
-  <div class="s-art-reading__product"><button type="button" data-quick="cream" aria-label="Read Rich cream details"><img src="../img/c-cream.jpg" alt="Rich cream, 200 ml" width="112" height="140" loading="lazy"></button><div><h3>Rich cream</h3><p>A thick, fragrance-free body cream with shea butter and oat. Full ingredients are in quick view.</p><span class="price" data-art-price="cream">$24</span><button class="btn btn--primary btn--sm" type="button" data-add="cream">Add Rich cream</button></div></div>
+  <div class="s-art-reading__product"><a href="../templates/product.html?p=cream" aria-label="Read about Rich cream"><img src="../img/c-cream.jpg" alt="Rich cream, 200 ml" width="112" height="140" loading="lazy"></a><div><h3><a href="../templates/product.html?p=cream">Rich cream</a></h3><p>A thick, fragrance-free body cream with shea butter and oat. Full ingredients are on its page.</p><span class="price" data-art-price="cream">$24</span><button class="btn btn--primary btn--sm" type="button" data-add="cream">Add Rich cream</button></div></div>
   <h2 id="art-change">Make one change at a time</h2>
   <p>It is easier to understand a routine when you know what changed. Keep a simple note of what you used and how your skin felt, rather than judging everything from one shower.</p>
   <ul class="s-art-reading__checklist"><li>Keep the water warm and the wash short.</li><li>Check the complete ingredient list, including any known allergens.</li><li>Have a soft towel and your usual moisturiser ready.</li><li>Ask for guidance before replacing prescribed care.</li></ul>
@@ -396,7 +403,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
 
     /* ---------- local index (window.LATHER.products) ---------- */
     function hitOf(k, p) {
-      var url = p.url || (C.pages || {})[k] || '';
+      var url = p.url || (C.pages || {})[k] || (L().url ? L().url(k) : '') || '';
       return { key: k, name: p.name, size: p.size || '', price: +p.price || 0, compare: +p.compare || 0, img: p.img || '', url: url || C.fallbackUrl || '#', quick: !url };
     }
     function index() {
@@ -588,6 +595,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
   'use strict';
   if (window.LatherRecent) return;
   var K = 'lather-recent', MAX = 12;
+  var EYE = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg>';
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
   var handleOf = function (url) { var m = /\/products\/([^\/?#]+)/.exec(url || ''); return m ? decodeURIComponent(m[1]) : ''; };
 
@@ -664,11 +672,16 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
       var L = window.LATHER;
       /* an entry viewed on another page: hand it to the runtime so its quick view works here */
       if (!e.url && L && L.products && !L.products[e.k]) L.products[e.k] = { name: e.name, size: e.size, price: e.price, compare: null, img: e.img, hover: '', labels: [], line: '', ing: '', variant: null, available: true, url: '' };
-      var name = e.url
-        ? '<a class="s-pdp-recent__name" href="' + esc(e.url) + '">' + esc(e.name) + '</a>'
+      /* the name is the product link (stretched over the card, so the image opens it too); quick view is its own button */
+      var u = e.url || (L && L.url ? L.url(e.k) : '');
+      var canQuick = !!(L && L.products && L.products[e.k]);
+      var name = u
+        ? '<a class="s-pdp-recent__name" href="' + esc(u) + '">' + esc(e.name) + '</a>'
         : '<button class="s-pdp-recent__name" type="button" data-quick="' + esc(e.k) + '" aria-label="' + esc(S.quick + ': ' + e.name) + '">' + esc(e.name) + '</button>';
+      var qv = u && canQuick ? '<button class="s-pdp-recent__qv" type="button" data-quick="' + esc(e.k) + '" aria-label="' + esc(S.quick + ': ' + e.name) + '">' + EYE + '</button>' : '';
       var img = e.img ? '<img src="' + esc(thumb(e.img)) + '" alt="" width="120" height="150" loading="lazy">' : '<span class="blko-lv3-ph" aria-hidden="true"></span>';
-      return '<li class="s-pdp-recent__card">' + img + '<div class="s-pdp-recent__text">' + name + (e.size ? '<span class="small">' + esc(e.size) + '</span>' : '') + '</div><span class="price">' + esc(fmt(e.price)) + '</span></li>';
+      if (u) img = '<a class="lv3-plink s-pdp-recent__img" href="' + esc(u) + '" tabindex="-1" aria-hidden="true">' + img + '</a>';
+      return '<li class="s-pdp-recent__card">' + img + '<div class="s-pdp-recent__text">' + name + (e.size ? '<span class="small">' + esc(e.size) + '</span>' : '') + '</div><span class="price">' + esc(fmt(e.price)) + '</span>' + qv + '</li>';
     }
     function render() {
       if (!list) return;
@@ -847,7 +860,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
       one: d.countOne || '1 saved product.', many: d.countMany || '[count] saved products.', zero: d.countZero || '',
       add: d.addLabel || 'Add to bag', add_aria: d.addAria || 'Add [name] to bag', rm: d.removeLabel || 'Remove',
       rm_aria: d.removeAria || 'Remove [name] from wishlist', sold: d.soldLabel || 'Sold out', removed: d.removedLabel || 'Removed [name].',
-      undo: d.undoLabel || 'Undo', save_aria: d.saveAria || 'Save [name]'
+      undo: d.undoLabel || 'Undo', save_aria: d.saveAria || 'Save [name]', qv_aria: d.quickAria || 'Quick view [name]'
     };
     var ul = root.querySelector('[data-wish-list]'), empty = root.querySelector('[data-wish-empty]'), status = root.querySelector('[data-wish-status]');
     var undoBox = root.querySelector('[data-wish-undo]'), sugg = root.querySelector('[data-wish-suggest]');
@@ -865,10 +878,17 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     }
     function media(src, alt) { return src ? '<img src="' + esc(src) + '" alt="' + esc(alt) + '" loading="lazy">' : ph; }
     function labels(ids) { var l = L(); return l.labelsHTML ? l.labelsHTML(ids || []) : ''; }
+    /* product page link: a real product's own url, else the demo page for that key (LATHER.url) */
+    function urlOf(e, key) { return (e && e.url) || (L().url ? L().url(key) : '') || ''; }
     function nameHTML(e, key) {
-      if (e.url) return '<a href="' + esc(e.url) + '">' + esc(e.name) + '</a>';
+      var u = urlOf(e, key);
+      if (u) return '<a class="lv3-pname" href="' + esc(u) + '">' + esc(e.name) + '</a>';
       if (L().products[key]) return '<button type="button" data-quick="' + esc(key) + '">' + esc(e.name) + '</button>';
       return esc(e.name);
+    }
+    function linked(u, html) { return u ? '<a class="lv3-plink lv3-plink--fill" href="' + esc(u) + '" tabindex="-1" aria-hidden="true">' + html + '</a>' : html; }
+    function qvHTML(key, name) {
+      return L().products[key] ? '<button class="s-wish__qv" type="button" data-quick="' + esc(key) + '" aria-label="' + esc(T.qv_aria.replace('[name]', name)) + '">' + eyeSVG + '</button>' : '';
     }
     function priceHTML(e) { return esc(fmt(e.price)) + (e.compare > e.price ? ' <s>' + esc(fmt(e.compare)) + '</s>' : ''); }
     function card(e) {
@@ -877,7 +897,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
         ? '<button class="btn btn--light btn--sm s-wish__add" type="button" disabled>' + esc(T.sold) + '</button>'
         : '<button class="btn btn--primary btn--sm s-wish__add" type="button" data-wish-add="' + esc(e.id) + '" aria-label="' + esc(tpl(T.add_aria, { name: e.name })) + '">' + esc(T.add) + '</button>';
       return '<li class="s-wish__card">' +
-        '<div class="s-wish__media">' + media(e.img, alt) + '<div class="labels">' + labels(e.labels) + '</div></div>' +
+        '<div class="s-wish__media">' + linked(urlOf(e, e.key), media(e.img, alt)) + '<div class="labels">' + labels(e.labels) + '</div>' + qvHTML(e.key, e.name) + '</div>' +
         '<div class="s-wish__info"><h2 class="s-wish__name">' + nameHTML(e, e.key) + '</h2>' +
         (e.size ? '<p class="s-wish__size">' + esc(e.size) + '</p>' : '') +
         '<p class="price s-wish__price">' + priceHTML(e) + '</p></div>' +
@@ -889,9 +909,9 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
       var p = L().products[key]; if (!p) return '';
       var alt = p.size ? p.name + ', ' + p.size : p.name;
       return '<li class="s-wish__card s-wish__card--sugg">' +
-        '<div class="s-wish__media">' + media(p.img, alt) + '<div class="labels">' + labels(p.labels) + '</div>' +
+        '<div class="s-wish__media">' + linked(urlOf(p, key), media(p.img, alt)) + '<div class="labels">' + labels(p.labels) + '</div>' + qvHTML(key, p.name) +
         '<button class="lv3-heart" type="button" data-wish="' + esc(key) + '" aria-pressed="false" aria-label="' + esc(tpl(T.save_aria, { name: p.name })) + '">' + heartSVG + '</button></div>' +
-        '<div class="s-wish__info"><h3 class="s-wish__name"><button type="button" data-quick="' + esc(key) + '">' + esc(p.name) + '</button></h3>' +
+        '<div class="s-wish__info"><h3 class="s-wish__name">' + nameHTML(p, key) + '</h3>' +
         (p.size ? '<p class="s-wish__size">' + esc(p.size) + '</p>' : '') +
         '<p class="price s-wish__price">' + priceHTML({ price: +p.price || 0, compare: +p.compare || 0 }) + '</p></div>' +
         '<div class="s-wish__acts"><button class="btn btn--ghost btn--sm s-wish__add" type="button" data-add="' + esc(key) + '" aria-label="' + esc(tpl(T.add_aria, { name: p.name })) + '">' + esc(T.add) + '</button></div>' +
@@ -953,6 +973,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     render();
   }
 
+  var eyeSVG = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg>';
   var heartSVG = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg>';
 
   function init() {
@@ -1060,6 +1081,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
 @media (prefers-reduced-motion:reduce){.ship__bar i{transition:none}.line--gift.is-new,.s-cart-bag__line--gift.is-new{animation:none}}
 .drawer__list{flex:1;overflow:auto;padding:4px 24px}
 .line{display:grid;grid-template-columns:72px 1fr auto;gap:14px;padding:14px 0;border-top:1px solid var(--line);align-items:center}
+.line .lv3-plink{width:72px;border-radius:var(--r-img)}
 .line img{width:72px;height:88px;object-fit:cover;border-radius:var(--r-img);background:var(--oat)}
 .line h3{font:600 15px/1.25 var(--f-body)}
 .line .small{margin:2px 0 8px}
@@ -1156,6 +1178,11 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     little:{name:'Little lotion',size:'150 ml',price:14,img:'../img/c-little-lotion.jpg',hover:'../img/h-little.jpg',labels:['new','ff'],line:'Soft, light oat lotion for ages 1 and up. Fragrance-free.',ing:'Water, glycerin, colloidal oat, calendula oil, shea butter, cetearyl alcohol, xanthan gum, sodium benzoate.'},
     bar:{name:'Oat bar',size:'120 g',price:9,img:'../img/c-oat-bar.jpg',hover:'../img/h-bar.jpg',labels:['best','ff'],line:'Oat milk soap bar for face and body. Rich lather that rinses soft.',ing:'Sodium olivate, sodium cocoate, oat milk, colloidal oat, shea butter, glycerin.'}
   };
+  /* product page links: one product page in the demo; calm is product.html, the others product.html?p=<id>.
+     Relative links on purpose: blocko.ai 308-redirects product.html to /product and keeps the query. */
+  const CAT=Object.keys(products);
+  const url=id=>CAT.includes(id)?(id==='calm'?'product.html':'product.html?p='+encodeURIComponent(id)):'';
+  const pid=()=>{let q='';try{q=new URLSearchParams(location.search).get('p')||''}catch(e){}return CAT.includes(q)?q:'calm'};
   const LBL={best:['label--best','Best seller'],ff:['label--ff','Fragrance-free'],new:['label--new','New'],sale:['label--sale','Sale']};
   const fmt=n=>'$'+(Math.round(n*100)/100).toFixed(n%1?2:0);
   const labelsHTML=ids=>ids.map(k=>`<span class="label ${LBL[k][0]}">${LBL[k][1]}</span>`).join('');
@@ -1218,6 +1245,8 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
       el.querySelector('.ship__add').hidden=!P.offer;
     });
   }
+  /* bag line image and name link to the product page (custom lines such as sets stay plain) */
+  const lnk=(l,h,img)=>{const u=url(l.id);return u?`<a class="${img?'lv3-plink':'lv3-pname'}" href="${u}"${img?' tabindex="-1" aria-hidden="true"':''}>${h}</a>`:h};
   function render(){
     syncGift(); save();
     const n=count(), st=subtotal();
@@ -1228,8 +1257,8 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     const list=$('#drawerList'); let h='';
     if(removed) h+=`<div class="undo"><span>Removed ${removed.name}.</span><button type="button" id="undoBtn">Undo</button></div>`;
     if(!cart.length && !removed) h+=`<p class="drawer__empty">Nothing here yet. Most people start with the Oat bar, $9.</p>`;
-    cart.forEach((l,i)=>{if(l.gift){h+=`<div class="line line--gift${fresh?' is-new':''}"><img src="${l.img}" alt=""><div><h3>${l.name}</h3><p class="small">${l.note}</p></div><div style="text-align:right"><p class="price" style="font-size:18px">Free</p><button class="rm" type="button" data-rm="${i}" aria-label="Remove free ${l.name}">Remove</button></div></div>`;return}
-      h+=`<div class="line"><img src="${l.img}" alt=""><div><h3>${l.name}</h3><p class="small">${l.note||l.size}</p><div class="qty"><button type="button" aria-label="Less" data-q="${i}" data-d="-1">−</button><span>${l.qty}</span><button type="button" aria-label="More" data-q="${i}" data-d="1">+</button></div></div><div style="text-align:right"><p class="price" style="font-size:18px">${fmt(l.qty*l.price)}</p><button class="rm" type="button" data-rm="${i}">Remove</button></div></div>`});
+    cart.forEach((l,i)=>{if(l.gift){h+=`<div class="line line--gift${fresh?' is-new':''}">${lnk(l,`<img src="${l.img}" alt="">`,1)}<div><h3>${lnk(l,l.name)}</h3><p class="small">${l.note}</p></div><div style="text-align:right"><p class="price" style="font-size:18px">Free</p><button class="rm" type="button" data-rm="${i}" aria-label="Remove free ${l.name}">Remove</button></div></div>`;return}
+      h+=`<div class="line">${lnk(l,`<img src="${l.img}" alt="">`,1)}<div><h3>${lnk(l,l.name)}</h3><p class="small">${l.note||l.size}</p><div class="qty"><button type="button" aria-label="Less" data-q="${i}" data-d="-1">−</button><span>${l.qty}</span><button type="button" aria-label="More" data-q="${i}" data-d="1">+</button></div></div><div style="text-align:right"><p class="price" style="font-size:18px">${fmt(l.qty*l.price)}</p><button class="rm" type="button" data-rm="${i}">Remove</button></div></div>`});
     if(cart.length && !cart.some(l=>l.id==='bar')) h+=`<div class="drawer__up"><img src="${products.bar.img}" alt=""><span style="flex:1">Add the Oat bar for face and hands, $9.</span><button class="btn btn--light btn--sm" type="button" data-add="bar">Add</button></div>`;
     list.innerHTML=h;
     $('#checkoutBtn').textContent= st?`Check out, ${fmt(st)}`:'Check out';
@@ -1284,7 +1313,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     /* free gift: settings, live state, and bring a declined gift back */
     gift:{...GIFT,state:()=>progress()}, addGift(){setGiftOff(false);render()}
   };
-  window.LATHER={products,add,quick,fmt,labelsHTML,U,openLayer,closeAll,cart:cartApi};
+  window.LATHER={products,add,quick,fmt,labelsHTML,U,openLayer,closeAll,cart:cartApi,url,pid};
   render();
 
   /* header: over the hero until scrolled */

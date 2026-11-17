@@ -9,7 +9,8 @@
   assign s = section.settings
   assign uid = 'help-title-' | append: section.id
 -%}
-<section class="s-help-support" id="{{ s.anchor | default: 'help' | handleize }}" aria-labelledby="{{ uid }}">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-3' -%}
+<section class="s-help-support{%- if lv3_sid != 'scheme-3' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="{{ s.anchor | default: 'help' | handleize }}" aria-labelledby="{{ uid }}">
   <div class="wrap s-help-support__row">
     <div>
       {%- if s.kicker != blank -%}<p class="small">{{ s.kicker | escape }}</p>{%- endif -%}
@@ -29,6 +30,7 @@
   "name": "Lather help support",
   "class": "blko-lv3-section-help-support",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-3" },
     { "type": "text", "id": "kicker", "label": "Small text above the heading", "default": "Customer care" },
     { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "A little <em>help.</em>", "info": "Italic text shows in the accent style." },
     { "type": "textarea", "id": "text", "label": "Text", "default": "Choosing a formula, checking a delivery, or asking about a reaction. Start here." },

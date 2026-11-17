@@ -40,12 +40,14 @@ Do not use a zip.
    - `sections/blko-lv3-header.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/header/sections/blko-lv3-header.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/header/sections/blko-lv3-theme.liquid
    - `snippets/blko-lv3-demo-links.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/header/snippets/blko-lv3-demo-links.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/header/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-2 |
 | `logo` | image_picker | Logo image |  |
 | `logo_tint` | checkbox | Tint the logo with the header colour (needs a transparent PNG or SVG) | True |
 | `brand_logo` | checkbox | No image: use the Lather mark (off = store name as text) | True |

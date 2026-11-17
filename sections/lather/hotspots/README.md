@@ -42,12 +42,14 @@ Do not use a zip.
    - `sections/blko-lv3-hotspots.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/hotspots/sections/blko-lv3-hotspots.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/hotspots/sections/blko-lv3-theme.liquid
    - `snippets/blko-lv3-product-data.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/hotspots/snippets/blko-lv3-product-data.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/hotspots/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-5 |
 | `anchor` | text | Anchor id | after-shower |
 | `label` | text | Section name (screen readers) | Shop the after-shower routine from a photo |
 | `image` | image_picker | Photo |  |

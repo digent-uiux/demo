@@ -23,7 +23,8 @@
   assign keep_url = s.keep_link | default: routes.all_products_collection_url
   assign empty_url = s.empty_link | default: routes.all_products_collection_url
 -%}
-<section class="s-cart-bag" aria-labelledby="cart-title" data-lv3-cart-bag data-real="{{ n }}" data-free="{{ free_ship }}">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-1' -%}
+<section class="s-cart-bag{%- if lv3_sid != 'scheme-1' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" aria-labelledby="cart-title" data-lv3-cart-bag data-real="{{ n }}" data-free="{{ free_ship }}">
   <script type="application/json" data-cart-strings>
     {
       "ship_free_over": {{ s.ship_free_over | json }}, "ship_left": {{ s.ship_left | json }}, "ship_done": {{ s.ship_done | json }},
@@ -158,6 +159,7 @@
   "name": "Lather bag",
   "class": "blko-lv3-section-cart-bag",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
     { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Your <em>bag.</em>", "info": "Italic text shows in the accent style." },
     { "type": "text", "id": "keep_label", "label": "Keep browsing link", "default": "Keep browsing" },
     { "type": "url", "id": "keep_link", "label": "Keep browsing URL", "info": "Blank: all products." },

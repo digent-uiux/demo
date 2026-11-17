@@ -44,6 +44,7 @@
       var dl = drawerList(), b = dl && dl.querySelector('#undoBtn'); if (b) b.click();
     }
     function hrefFor(l) {
+      if (l.url) return l.url;
       if (l.key && urls[l.key]) return urls[l.key];
       var p = l.id && L.products[l.id];
       return (p && p.url) || T.fallback_url || '/collections/all';
@@ -53,11 +54,13 @@
       if (!ready) return;
       var lines = C.lines(), total = C.subtotal(), rem = removed();
       $('cart-lines').innerHTML = lines.map(function (l, i) {
-        if (l.gift) return '<article class="s-cart-bag__line s-cart-bag__line--gift" data-cart-index="' + i + '"><a href="' + esc(hrefFor(l)) + '">' + (l.img ? '<img src="' + esc(l.img) + '" alt="' + esc(l.name) + '" loading="lazy">' : ph) + '</a><div><h2>' + esc(l.name) + '</h2><p class="small">' + esc(l.note || '') + '</p></div><div><span class="price">' + esc(l.price ? L.fmt(l.price * l.qty) : 'Free') + '</span><button type="button" class="s-cart-bag__remove" data-remove aria-label="' + esc(T.remove + ' ' + l.name) + '">' + esc(T.remove) + '</button></div></article>';
-        var p = l.id && L.products[l.id], quick = p && !p.url && !l.real;
-        return '<article class="s-cart-bag__line" data-cart-index="' + i + '"><a href="' + esc(hrefFor(l)) + '"' + (quick ? ' data-quick="' + esc(l.id) + '"' : '') + '>' +
+        if (l.gift) return '<article class="s-cart-bag__line s-cart-bag__line--gift" data-cart-index="' + i + '"><a class="lv3-plink" href="' + esc(hrefFor(l)) + '" tabindex="-1" aria-hidden="true">' + (l.img ? '<img src="' + esc(l.img) + '" alt="' + esc(l.name) + '" loading="lazy">' : ph) + '</a><div><h2><a class="lv3-pname" href="' + esc(hrefFor(l)) + '">' + esc(l.name) + '</a></h2><p class="small">' + esc(l.note || '') + '</p></div><div><span class="price">' + esc(l.price ? L.fmt(l.price * l.qty) : 'Free') + '</span><button type="button" class="s-cart-bag__remove" data-remove aria-label="' + esc(T.remove + ' ' + l.name) + '">' + esc(T.remove) + '</button></div></article>';
+        /* image + name link to the product page (a demo product without a page opens its quick view instead) */
+        var p = l.id && L.products[l.id], quick = p && !p.url && !l.url && !l.real;
+        var href = esc(hrefFor(l)), qa = quick ? ' data-quick="' + esc(l.id) + '"' : '';
+        return '<article class="s-cart-bag__line" data-cart-index="' + i + '"><a class="lv3-plink" href="' + href + '"' + qa + ' tabindex="-1" aria-hidden="true">' +
           (l.img ? '<img src="' + esc(l.img) + '" alt="' + esc(l.name) + '" loading="lazy">' : ph) + '</a>' +
-          '<div><h2>' + esc(l.name) + '</h2><p class="small">' + esc(l.note || l.size || '') + '</p>' +
+          '<div><h2><a class="lv3-pname" href="' + href + '"' + qa + '>' + esc(l.name) + '</a></h2><p class="small">' + esc(l.note || l.size || '') + '</p>' +
           '<div class="qty"><button type="button" data-change="-1" aria-label="' + esc(tpl(T.fewer, { name: l.name })) + '">−</button><span aria-label="' + esc(T.qty) + '">' + l.qty + '</span>' +
           '<button type="button" data-change="1" aria-label="' + esc(tpl(T.more, { name: l.name })) + '"' + (l.qty >= 99 ? ' disabled' : '') + '>+</button></div></div>' +
           '<div><span class="price">' + esc(L.fmt(l.price * l.qty)) + '</span><button type="button" class="s-cart-bag__remove" data-remove aria-label="' + esc(T.remove + ' ' + l.name) + '">' + esc(T.remove) + '</button></div></article>';

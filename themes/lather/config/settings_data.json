@@ -2,7 +2,100 @@
   "current": "Default",
   "presets": {
     "Default": {
-      "free_shipping_threshold": 40
+      "logo_text": "Lather",
+      "logo_width": 120,
+      "page_color_scheme": "scheme-1",
+      "color_sale": "#8A4B2A",
+      "color_input_bg": "#F7F3EA",
+      "color_input_text": "#262B22",
+      "page_width": 1320,
+      "section_spacing": 0,
+      "font_source": "theme",
+      "theme_font_pair": "default",
+      "font_heading": "urbanist_n5",
+      "heading_italic": false,
+      "heading_case": "none",
+      "heading_tracking": -2,
+      "font_body": "urbanist_n4",
+      "type_scale": 100,
+      "button_case": "none",
+      "button_tracking": 0,
+      "button_weight": "600",
+      "radius_button": 8,
+      "radius_card": 6,
+      "radius_image": 6,
+      "radius_input": 8,
+      "card_ratio": "4/5",
+      "card_show_rating": false,
+      "card_show_vendor": false,
+      "free_shipping_threshold": 40,
+      "color_schemes": {
+        "scheme-1": {
+          "settings": {
+            "background": "#EEE8DC",
+            "background_alt": "#F7F3EA",
+            "text": "#262B22",
+            "text_muted": "#5F6354",
+            "border": "#D3CAB6",
+            "accent": "#5E6B4E",
+            "button": "#2F3A2A",
+            "button_label": "#EEE8DC",
+            "button_hover": "#262B22"
+          }
+        },
+        "scheme-2": {
+          "settings": {
+            "background": "#F7F3EA",
+            "background_alt": "#EEE8DC",
+            "text": "#262B22",
+            "text_muted": "#5F6354",
+            "border": "#D3CAB6",
+            "accent": "#5E6B4E",
+            "button": "#2F3A2A",
+            "button_label": "#EEE8DC",
+            "button_hover": "#262B22"
+          }
+        },
+        "scheme-3": {
+          "settings": {
+            "background": "#DFDDCC",
+            "background_alt": "#F7F3EA",
+            "text": "#262B22",
+            "text_muted": "#5F6354",
+            "border": "#D3CAB6",
+            "accent": "#5E6B4E",
+            "button": "#2F3A2A",
+            "button_label": "#EEE8DC",
+            "button_hover": "#262B22"
+          }
+        },
+        "scheme-4": {
+          "settings": {
+            "background": "#D9CFBD",
+            "background_alt": "#F7F3EA",
+            "text": "#262B22",
+            "text_muted": "#5F6354",
+            "border": "#D3CAB6",
+            "accent": "#5E6B4E",
+            "button": "#2F3A2A",
+            "button_label": "#EEE8DC",
+            "button_hover": "#262B22"
+          }
+        },
+        "scheme-5": {
+          "settings": {
+            "background": "#2F3A2A",
+            "background_alt": "#262B22",
+            "text": "#EEE8DC",
+            "text_muted": "#A3AE8E",
+            "border": "#4D5947",
+            "accent": "#A3AE8E",
+            "button": "#F7F3EA",
+            "button_label": "#262B22",
+            "button_hover": "#EEE8DC"
+          }
+        }
+      }
     }
   }
 }

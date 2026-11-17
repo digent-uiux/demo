@@ -381,18 +381,18 @@
     "manifest": "lather/manifest.json",
     "layouts": "lather/templates/layouts.json",
     "templateJsBytes": {
-      "home": 95961,
-      "collection": 60941,
-      "product": 63495,
-      "cart": 60833,
-      "search": 60141,
-      "blog": 58024,
-      "article": 57914,
-      "about": 56633,
-      "help": 58084,
-      "account": 58562,
-      "wishlist": 56633,
-      "404": 56633
+      "home": 98739,
+      "collection": 63432,
+      "product": 74782,
+      "cart": 63427,
+      "search": 62637,
+      "blog": 60520,
+      "article": 60410,
+      "about": 59129,
+      "help": 60580,
+      "account": 61058,
+      "wishlist": 59129,
+      "404": 59129
     }
   },
   {

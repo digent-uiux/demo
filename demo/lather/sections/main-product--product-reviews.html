@@ -87,7 +87,7 @@ html.motion [data-rv="blur"]:not(.in){opacity:0;transform:translateY(12px);filte
 html.motion [data-rv="settle"]:not(.in){opacity:0;transform:scale(.96)}
 html.motion [data-rv="draw"]{transform-origin:left center}
 html.motion [data-rv="draw"]:not(.in){transform:scaleX(0)}
-html.motion [data-rv="line"] .ln{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
+[data-rv="line"] .ln{display:block}html.motion [data-rv="line"] .ln{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
 html.motion [data-rv="line"] .ln>span{display:block;transition:transform .9s cubic-bezier(.22,1,.36,1)}
 html.motion [data-rv="line"]:not(.in) .ln>span{transform:translateY(105%)}
 html.motion [data-rv="line"] .ln:nth-child(2)>span{transition-delay:.09s}
@@ -132,6 +132,13 @@ html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
 .mnav.open{transform:none}
 .mnav a{font:500 26px/1.3 var(--f-body);text-decoration:none;padding:10px 0;border-bottom:1px solid var(--line)}
 .mnav__top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+/* product links on cards and chips: image + name go to the product page; buttons inside stay on top */
+.lv3-plink{display:block;color:inherit;text-decoration:none;border-radius:inherit}
+.lv3-plink--fill{position:absolute;inset:0;z-index:0}
+.lv3-plink:focus-visible{outline:2px solid var(--moss);outline-offset:-3px}
+.lv3-pname{color:inherit;text-decoration:none;text-underline-offset:4px;text-decoration-thickness:1px}
+.lv3-pname:hover{text-decoration-line:underline}
+.lv3-pname:focus-visible{outline:2px solid var(--moss);outline-offset:3px;border-radius:2px}
 </style>
 </head>
 <body class="pg-product">
@@ -159,14 +166,279 @@ html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
 <main id="top">
 
 <style>
-.s-pdp-reviews{padding:88px 0;background:var(--raised)}.s-pdp-reviews__head{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:end;margin-bottom:38px}.s-pdp-reviews__head p{max-width:37ch;color:var(--muted)}.s-pdp-reviews__row{display:grid;grid-template-columns:180px 1fr;gap:40px;border-top:1px solid var(--line);padding:32px 0}.s-pdp-reviews__person{font-size:14px;color:var(--muted)}.s-pdp-reviews__person b{display:block;font-size:16px;color:var(--ink);margin-bottom:5px}.s-pdp-reviews__quote{font-size:clamp(22px,2.4vw,32px);font-weight:400;line-height:1.45;max-width:36ch}.s-pdp-reviews__quote .stars{display:block;font-size:15px;margin-bottom:12px}.s-pdp-reviews__foot{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:20px}.s-pdp-reviews__foot a{margin-left:10px}
-@media(max-width:760px){.s-pdp-reviews{padding:56px 0}.s-pdp-reviews__head{grid-template-columns:1fr;gap:20px}.s-pdp-reviews__row{grid-template-columns:1fr;gap:18px;padding:24px 0}.s-pdp-reviews__quote{font-size:23px}.s-pdp-reviews__foot a{display:block;margin:10px 0 0}}
+/* Lather v3 product page, reviews (pages/product/50-reviews.html).
+   Rating summary under the heading (the space beside the heading stays empty on purpose), skin-type chips with counts, one lead review on deep green with a customer photo,
+   the rest on oat panels in a 7/5 rhythm, "Show more" below. 390 has its own stack with an edge-to-edge lead. */
+.s-pdp-reviews{padding:104px 0 96px;background:var(--raised)}
+.s-pdp-reviews__head{display:flex;flex-direction:column;align-items:flex-start;gap:30px;margin-bottom:40px}
+.s-pdp-reviews__head .h2{max-width:12ch}
+.s-pdp-reviews__score{display:flex;align-items:center;gap:20px}
+.s-pdp-reviews__avg{font:300 72px/.86 var(--f-body);letter-spacing:-.04em;color:var(--ink)}
+.s-pdp-reviews__score-text{display:flex;flex-direction:column;gap:8px}
+.s-pdp-reviews__meter{position:relative;display:inline-block;font-size:20px;line-height:1;letter-spacing:3px;color:var(--stone);white-space:nowrap}
+.s-pdp-reviews__meter i{position:absolute;inset:0 auto 0 0;overflow:hidden;color:var(--moss);font-style:normal}
+.s-pdp-reviews__count{font-size:15px;line-height:1.4;color:var(--muted)}
+.s-pdp-reviews__count b{color:var(--ink);font-weight:600}
+
+.s-pdp-reviews__bar{display:flex;align-items:center;gap:12px 10px;flex-wrap:wrap;margin-bottom:24px}
+.s-pdp-reviews__bar-label{font-size:15px;color:var(--muted);margin-right:8px}
+.s-pdp-reviews__filters{display:flex;gap:8px;flex-wrap:wrap}
+.s-pdp-reviews .chip{background:var(--oat);height:42px;padding:0 18px;font-size:15px}
+.s-pdp-reviews .chip:hover{background:var(--stone)}
+.s-pdp-reviews .chip[aria-pressed="true"]{background:var(--deep);color:var(--oat)}
+.s-pdp-reviews .chip .n{margin-left:8px;font-weight:400;opacity:.62}
+.s-pdp-reviews .chip[hidden]{display:none}
+
+.s-pdp-reviews__list{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;align-items:start}
+.s-pdp-reviews__item{grid-column:8 / span 5;position:relative;background:var(--oat);border-radius:var(--r-img);padding:28px 30px 26px;display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-self:stretch}
+/* after the lead the rows swing: wide left + narrow right, then narrow left + wide right */
+.s-pdp-reviews__item.is-nl{grid-column:1 / span 5}
+.s-pdp-reviews__item.is-wide{grid-column:1 / span 7}
+.s-pdp-reviews__item.is-wide.is-r{grid-column:6 / span 7}
+.s-pdp-reviews__item.is-off{display:none}
+.s-pdp-reviews__item:focus-visible{outline:2px solid var(--moss);outline-offset:3px}
+.s-pdp-reviews__body{display:flex;flex-direction:column;gap:12px;min-width:0}
+.s-pdp-reviews__top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.s-pdp-reviews__top .stars{font-size:15px;letter-spacing:2px}
+.s-pdp-reviews__top .stars s{text-decoration:none;opacity:.28}
+.s-pdp-reviews__skin{font:600 14px/1.2 var(--f-body);color:var(--moss)}
+.s-pdp-reviews__title{font:600 19px/1.3 var(--f-body);letter-spacing:-.01em}
+.s-pdp-reviews__text{font-size:16px;line-height:1.55;color:var(--ink)}
+.s-pdp-reviews__who{margin-top:auto;padding-top:6px;font-size:14px;line-height:1.45;color:var(--muted)}
+.s-pdp-reviews__who b{display:block;font-size:15px;color:var(--ink);font-weight:600}
+.s-pdp-reviews__media{margin:0;border-radius:4px;overflow:hidden;background:var(--stone)}
+.s-pdp-reviews__media img,.s-pdp-reviews__media svg{display:block;width:100%;height:100%;object-fit:cover}
+/* a photo on a small review sits beside the words, like an attachment */
+.s-pdp-reviews__item.has-photo:not(.is-lead){grid-template-columns:minmax(0,1fr) 116px}
+.s-pdp-reviews__item.has-photo:not(.is-lead) .s-pdp-reviews__media{grid-column:2;grid-row:1;aspect-ratio:4/5;align-self:start}
+/* wide rows read like a ledger line: who and stars on the left, the words larger on the right */
+.s-pdp-reviews__item.is-wide{padding:32px 36px 30px}
+.s-pdp-reviews__item.is-wide .s-pdp-reviews__body{display:grid;grid-template-columns:minmax(210px,.38fr) minmax(0,1fr);grid-template-rows:auto auto 1fr;grid-template-areas:'top title' 'top text' 'who text';gap:12px 32px}
+.s-pdp-reviews__item.is-wide .s-pdp-reviews__top{grid-area:top;align-self:start;flex-direction:column;align-items:flex-start;gap:8px}
+.s-pdp-reviews__item.is-wide .s-pdp-reviews__who{grid-area:who;align-self:end}
+.s-pdp-reviews__item.is-wide .s-pdp-reviews__title{grid-area:title;font-size:24px;font-weight:500;letter-spacing:-.015em;line-height:1.22}
+.s-pdp-reviews__item.is-wide .s-pdp-reviews__text{grid-area:text;align-self:start;font-size:17px;max-width:48ch}
+
+/* the lead: deep green, photo bleeding the full height */
+.s-pdp-reviews__item.is-lead{grid-column:1 / span 7;grid-row:span 2;background:var(--deep);color:var(--oat);padding:0;gap:0;overflow:hidden}
+.s-pdp-reviews__item.is-lead.is-pair{grid-row:auto}
+.s-pdp-reviews__item.is-lead.is-pair .s-pdp-reviews__media{min-height:400px}
+.s-pdp-reviews__item.is-lead.is-solo{grid-column:1 / -1;grid-row:auto}
+.s-pdp-reviews__item.is-lead.has-photo{grid-template-columns:minmax(0,.86fr) minmax(0,1fr)}
+.s-pdp-reviews__item.is-lead .s-pdp-reviews__media{border-radius:0;min-height:480px;height:100%;position:relative}
+.s-pdp-reviews__item.is-lead .s-pdp-reviews__media img,.s-pdp-reviews__item.is-lead .s-pdp-reviews__media svg{position:absolute;inset:0}
+.s-pdp-reviews__item.is-lead .s-pdp-reviews__body{padding:40px 40px 36px;gap:18px}
+.s-pdp-reviews__item.is-lead .stars{color:var(--sage);font-size:17px}
+.s-pdp-reviews__item.is-lead .s-pdp-reviews__skin{color:var(--sage)}
+.s-pdp-reviews__item.is-lead .s-pdp-reviews__title{font-weight:500;font-size:clamp(26px,2.3vw,32px);line-height:1.18;letter-spacing:-.02em}
+.s-pdp-reviews__item.is-lead .s-pdp-reviews__text{color:var(--oat);opacity:.84;font-size:17px}
+.s-pdp-reviews__item.is-lead .s-pdp-reviews__who{color:var(--sage)}
+.s-pdp-reviews__item.is-lead .s-pdp-reviews__who b{color:var(--oat)}
+.s-pdp-reviews__item.is-lead.is-solo .s-pdp-reviews__title{max-width:24ch}
+
+.s-pdp-reviews__foot{display:flex;align-items:center;justify-content:space-between;gap:16px 32px;flex-wrap:wrap;margin-top:32px}
+.s-pdp-reviews__more{display:flex;align-items:center;gap:20px}
+.s-pdp-reviews__more .btn[hidden]{display:none}
+.s-pdp-reviews__shown{font-size:14px;color:var(--muted)}
+.s-pdp-reviews__help{font-size:15px;color:var(--muted)}
+.s-pdp-reviews__help a{margin-left:8px;color:var(--ink)}
+.s-pdp-reviews__apps{margin-top:8px}
+
+/* motion: the lead photo settles from a slight zoom as the panel arrives (transform only) */
+html.motion .s-pdp-reviews__item.is-lead[data-rv] .s-pdp-reviews__media img{transition:transform 1.2s cubic-bezier(.22,1,.36,1)}
+html.motion .s-pdp-reviews__item.is-lead[data-rv]:not(.in) .s-pdp-reviews__media img{transform:scale(1.08)}
+@media (prefers-reduced-motion:reduce){.s-pdp-reviews *{transition:none!important}}
+
+@media (max-width:900px){
+  .s-pdp-reviews__item.is-lead.has-photo{grid-template-columns:minmax(0,.8fr) minmax(0,1fr)}
+  .s-pdp-reviews__item.is-lead .s-pdp-reviews__body{padding:32px 28px 28px}
+}
+@media (max-width:760px){
+  .s-pdp-reviews{padding:64px 0 72px}
+  .s-pdp-reviews__head{display:block;margin-bottom:28px}
+  .s-pdp-reviews__score{margin-top:24px;gap:16px}
+  .s-pdp-reviews__avg{font-size:56px}
+  .s-pdp-reviews__meter{font-size:18px}
+  .s-pdp-reviews__bar{display:block;margin-bottom:20px}
+  .s-pdp-reviews__bar-label{display:block;font-size:14px;margin:0 0 10px}
+  .s-pdp-reviews__filters{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 calc(-1 * var(--gut));padding:0 var(--gut)}
+  .s-pdp-reviews__filters::-webkit-scrollbar{display:none}
+  .s-pdp-reviews .chip{flex:none;height:40px;padding:0 16px}
+  .s-pdp-reviews__list{display:flex;flex-direction:column;gap:12px}
+  .s-pdp-reviews__item,.s-pdp-reviews__item.is-wide{padding:24px 20px 22px}
+  .s-pdp-reviews__item.is-wide .s-pdp-reviews__body{display:flex}
+  .s-pdp-reviews__item.is-wide .s-pdp-reviews__top{flex-direction:row;align-items:center;align-self:stretch}
+  .s-pdp-reviews__item.is-wide .s-pdp-reviews__who,.s-pdp-reviews__item.is-wide .s-pdp-reviews__text{align-self:auto}
+  .s-pdp-reviews__item.is-wide .s-pdp-reviews__title{font-size:20px;font-weight:600}
+  .s-pdp-reviews__item.is-wide .s-pdp-reviews__text{font-size:16px}
+  .s-pdp-reviews__item.has-photo:not(.is-lead){grid-template-columns:minmax(0,1fr) 88px;gap:16px}
+  /* lead runs edge to edge: photo on top, words on deep green below */
+  .s-pdp-reviews__item.is-lead,.s-pdp-reviews__item.is-lead.has-photo{display:block;margin:0 calc(-1 * var(--gut)) 4px;border-radius:0;padding:0}
+  .s-pdp-reviews__item.is-lead .s-pdp-reviews__media{min-height:0;height:auto;aspect-ratio:5/4}
+  .s-pdp-reviews__item.is-lead .s-pdp-reviews__body{padding:28px var(--gut) 32px}
+  .s-pdp-reviews__item.is-lead .s-pdp-reviews__title{font-size:26px}
+  .s-pdp-reviews__foot{display:block;margin-top:24px}
+  .s-pdp-reviews__more{flex-direction:column;align-items:stretch;gap:10px;text-align:center}
+  .s-pdp-reviews__more .btn{width:100%}
+  .s-pdp-reviews__help{margin-top:22px;text-align:center}
+}
 </style>
-<section class="s-pdp-reviews" id="pdp-reviews" aria-labelledby="pdp-reviews-title"><div class="wrap">
- <div class="s-pdp-reviews__head"><h2 class="h2" id="pdp-reviews-title" data-rv="line"><span class="ln"><span>The feel, in</span></span><span class="ln"><span>your <em>words.</em></span></span></h2><p>Skin is personal. Read the experience alongside the ingredient list, not instead of it.</p></div>
- <article class="s-pdp-reviews__row" data-rv="blur"><p class="s-pdp-reviews__person"><b>Hannah K.</b>Eczema-prone skin<br>Using it for 6 months</p><blockquote class="s-pdp-reviews__quote"><span class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</span>“First wash that doesn't leave my arms tight. No smell at all, which is the whole point.”</blockquote></article>
- <div class="s-pdp-reviews__foot">Every skin responds differently. Need help choosing?<a href="../templates/help.html" class="link">Talk to us</a></div>
+<noscript><style>.s-pdp-reviews__item.is-off{display:grid}.s-pdp-reviews__more,.s-pdp-reviews__bar{display:none}</style></noscript>
+<section class="s-pdp-reviews" id="pdp-reviews" aria-labelledby="pdp-reviews-title" data-lv3-pdp-reviews data-page="5"><div class="wrap">
+ <div class="s-pdp-reviews__head">
+  <h2 class="h2" id="pdp-reviews-title" data-rv="line"><span class="ln"><span>The feel, in</span></span><span class="ln"><span>your <em>words.</em></span></span></h2>
+  <div class="s-pdp-reviews__score" data-rv="blur" data-rv-delay="1"><span class="s-pdp-reviews__avg">4.6</span><span class="s-pdp-reviews__score-text"><span class="s-pdp-reviews__meter" role="img" aria-label="4.6 out of 5 stars">★★★★★<i style="width:92%">★★★★★</i></span><span class="s-pdp-reviews__count"><b>318</b> reviews of Calm wash</span></span></div>
+ </div>
+ <div class="s-pdp-reviews__bar" role="group" aria-label="Filter reviews by skin type" data-rv="blur" data-rv-delay="2"><span class="s-pdp-reviews__bar-label">Skin type</span><div class="s-pdp-reviews__filters"><button type="button" class="chip" data-rev-filter="all" aria-pressed="true">All<span class="n" data-n>9</span></button><button type="button" class="chip" data-rev-filter="eczema" aria-pressed="false">Eczema-prone<span class="n" data-n>3</span></button><button type="button" class="chip" data-rev-filter="dry" aria-pressed="false">Very dry<span class="n" data-n>2</span></button><button type="button" class="chip" data-rev-filter="sensitive" aria-pressed="false">Sensitive<span class="n" data-n>2</span></button><button type="button" class="chip" data-rev-filter="little" aria-pressed="false">Little ones<span class="n" data-n>2</span></button></div></div>
+ <div class="s-pdp-reviews__list" data-rev-list aria-live="polite">
+  <article class="s-pdp-reviews__item has-photo is-lead" data-skin="eczema" tabindex="-1" data-rv="settle"><figure class="s-pdp-reviews__media"><img src="https://images.unsplash.com/photo-1692776092941-b45565a5075f?w=900&q=72&auto=format&fit=crop" alt="Wet shoulder wrapped in a towel after a shower" loading="lazy"></figure><div class="s-pdp-reviews__body">
+   <div class="s-pdp-reviews__top"><span class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</span><span class="s-pdp-reviews__skin">Eczema-prone</span></div>
+   <h3 class="s-pdp-reviews__title">My shoulders stay calm after a hot shower now</h3>
+   <p class="s-pdp-reviews__text">Winter used to mean red, tight patches across my shoulders. I wash with this, pat dry and put the lotion on straight away. It barely foams, which threw me at first. Now it&#x27;s the only thing in my shower.</p>
+   <p class="s-pdp-reviews__who"><b>Maya R.</b>8 months in, bought the Calm routine set</p>
+  </div></article>
+  <article class="s-pdp-reviews__item" data-skin="eczema" tabindex="-1" data-rv="blur" data-rv-delay="1"><div class="s-pdp-reviews__body">
+   <div class="s-pdp-reviews__top"><span class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</span><span class="s-pdp-reviews__skin">Eczema-prone</span></div>
+   <h3 class="s-pdp-reviews__title">No tight arms, no smell</h3>
+   <p class="s-pdp-reviews__text">First wash that doesn&#x27;t leave my arms tight. No smell at all, which is the whole point.</p>
+   <p class="s-pdp-reviews__who"><b>Hannah K.</b>6 months in, bought Calm wash</p>
+  </div></article>
+  <article class="s-pdp-reviews__item" data-skin="dry" tabindex="-1" data-rv="blur" data-rv-delay="2"><div class="s-pdp-reviews__body">
+   <div class="s-pdp-reviews__top"><span class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</span><span class="s-pdp-reviews__skin">Very dry</span></div>
+   <h3 class="s-pdp-reviews__title">My shins stopped cracking</h3>
+   <p class="s-pdp-reviews__text">Long shifts, hot showers and very dry legs. This is the first wash I don&#x27;t have to follow with a heavy cream every night.</p>
+   <p class="s-pdp-reviews__who"><b>Tom B.</b>3 months in, bought 2 bottles of Calm wash</p>
+  </div></article>
+  <article class="s-pdp-reviews__item is-wide" data-skin="sensitive" tabindex="-1" data-rv="blur" data-rv-delay="3"><div class="s-pdp-reviews__body">
+   <div class="s-pdp-reviews__top"><span class="stars" role="img" aria-label="4 out of 5 stars">★★★★<s>★</s></span><span class="s-pdp-reviews__skin">Sensitive</span></div>
+   <h3 class="s-pdp-reviews__title">Gentle, rinses clean</h3>
+   <p class="s-pdp-reviews__text">No sting and no film left on my skin. One star off because the pump gets stiff near the end of the bottle.</p>
+   <p class="s-pdp-reviews__who"><b>Priya S.</b>5 weeks in, bought Calm wash</p>
+  </div></article>
+  <article class="s-pdp-reviews__item has-photo" data-skin="little" tabindex="-1" data-rv="blur" data-rv-delay="3"><figure class="s-pdp-reviews__media"><img src="https://images.unsplash.com/photo-1630305130592-210da48f151e?w=240&q=72&auto=format&fit=crop" alt="Baby peeking out from under a white towel after a bath" loading="lazy"></figure><div class="s-pdp-reviews__body">
+   <div class="s-pdp-reviews__top"><span class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</span><span class="s-pdp-reviews__skin">Little ones</span></div>
+   <h3 class="s-pdp-reviews__title">Bath time without the rough patches</h3>
+   <p class="s-pdp-reviews__text">A small pump for our son&#x27;s bath, then the lotion. The backs of his knees used to look rough by morning. They haven&#x27;t for weeks.</p>
+   <p class="s-pdp-reviews__who"><b>Jules M.</b>4 months in, bought Calm wash and Little lotion</p>
+  </div></article>
+  <article class="s-pdp-reviews__item is-off" data-skin="dry" tabindex="-1" data-rv="blur" data-rv-delay="3"><div class="s-pdp-reviews__body">
+   <div class="s-pdp-reviews__top"><span class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</span><span class="s-pdp-reviews__skin">Very dry</span></div>
+   <h3 class="s-pdp-reviews__title">On my fourth bottle</h3>
+   <p class="s-pdp-reviews__text">Legs feel soft rather than squeaky after the shower. One bottle lasts me about ten weeks.</p>
+   <p class="s-pdp-reviews__who"><b>Ana L.</b>1 year in, bought Calm wash</p>
+  </div></article>
+  <article class="s-pdp-reviews__item is-off" data-skin="sensitive" tabindex="-1" data-rv="blur" data-rv-delay="3"><div class="s-pdp-reviews__body">
+   <div class="s-pdp-reviews__top"><span class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</span><span class="s-pdp-reviews__skin">Sensitive</span></div>
+   <h3 class="s-pdp-reviews__title">Fragrance-free really means it</h3>
+   <p class="s-pdp-reviews__text">My partner likes the chamomile one and I can&#x27;t use anything scented, so we keep both in the shower. This one smells of nothing at all.</p>
+   <p class="s-pdp-reviews__who"><b>Sam O.</b>2 months in, bought the Calm routine set</p>
+  </div></article>
+  <article class="s-pdp-reviews__item is-off" data-skin="eczema" tabindex="-1" data-rv="blur" data-rv-delay="3"><div class="s-pdp-reviews__body">
+   <div class="s-pdp-reviews__top"><span class="stars" role="img" aria-label="4 out of 5 stars">★★★★<s>★</s></span><span class="s-pdp-reviews__skin">Eczema-prone</span></div>
+   <h3 class="s-pdp-reviews__title">Early days, but no sting</h3>
+   <p class="s-pdp-reviews__text">Too soon to say much. It doesn&#x27;t sting the patches on my hands, which is more than most washes manage.</p>
+   <p class="s-pdp-reviews__who"><b>Rachel D.</b>3 weeks in, bought Calm wash</p>
+  </div></article>
+  <article class="s-pdp-reviews__item is-off" data-skin="little" tabindex="-1" data-rv="blur" data-rv-delay="3"><div class="s-pdp-reviews__body">
+   <div class="s-pdp-reviews__top"><span class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</span><span class="s-pdp-reviews__skin">Little ones</span></div>
+   <h3 class="s-pdp-reviews__title">One bottle for two little ones</h3>
+   <p class="s-pdp-reviews__text">Our two share it at bath time. No scent to put them off, and their skin isn&#x27;t rough the next day.</p>
+   <p class="s-pdp-reviews__who"><b>Dev P.</b>6 weeks in, bought Calm wash</p>
+  </div></article>
+ </div>
+ <div class="s-pdp-reviews__foot">
+  <div class="s-pdp-reviews__more"><button type="button" class="btn btn--ghost" data-rev-more>Show more reviews</button><span class="s-pdp-reviews__shown" data-rev-shown data-tpl="Showing [shown] of [total]">Showing 5 of 9</span></div>
+  <p class="s-pdp-reviews__help">Not sure it suits your skin?<a href="../templates/help.html" class="link">Ask us first</a></p>
+ </div>
 </div></section>
+<script>
+/* Lather v3 product page, reviews: skin-type filter, "Show more", one lead review.
+   Markup carries the first state (lead, wide, hidden extras), so nothing shifts on load.
+   Filtering: leaving reviews fade out, the rest glide to their new place (transform only), new ones rise in.
+   Buttons and chips only change colour. Without html.motion every change is instant. */
+(() => {
+  const EASE = 'cubic-bezier(.22,.61,.36,1)';
+  function init(root) {
+    if (root.dataset.lv3Ready) return; root.dataset.lv3Ready = '1';
+    const list = root.querySelector('[data-rev-list]'); if (!list) return;
+    const items = [...list.querySelectorAll('[data-skin]')];
+    const chips = [...root.querySelectorAll('[data-rev-filter]')];
+    const more = root.querySelector('[data-rev-more]');
+    const shown = root.querySelector('[data-rev-shown]');
+    const page = Math.max(1, +root.dataset.page || 5);
+    let filter = 'all', limit = page, busy = false;
+    const moving = () => document.documentElement.classList.contains('motion') && !!list.animate;
+    const isOn = el => !el.classList.contains('is-off');
+
+    // counts per chip, from the reviews really on the page
+    chips.forEach(c => {
+      const f = c.dataset.revFilter, n = f === 'all' ? items.length : items.filter(el => el.dataset.skin === f).length;
+      const out = c.querySelector('[data-n]'); if (out) out.textContent = n;
+      if (f !== 'all' && !n) c.hidden = true;
+    });
+
+    function layout() {
+      const match = items.filter(el => filter === 'all' || el.dataset.skin === filter);
+      const vis = match.slice(0, limit);
+      items.forEach(el => { el.classList.remove('is-lead', 'is-solo', 'is-pair', 'is-wide', 'is-r', 'is-nl'); el.classList.add('is-off'); });
+      vis.forEach((el, i) => {
+        el.classList.remove('is-off');
+        if (i === 0) { el.classList.add('is-lead'); if (vis.length === 1) el.classList.add('is-solo'); else if (vis.length === 2) el.classList.add('is-pair'); }
+        else if (i >= 3) el.classList.add(...[['is-wide'], [], ['is-nl'], ['is-wide', 'is-r']][(i - 3) % 4]);
+      });
+      if (more) more.hidden = match.length <= limit;
+      if (shown) shown.textContent = (shown.dataset.tpl || '').replace('[shown]', vis.length).replace('[total]', match.length);
+      chips.forEach(c => c.setAttribute('aria-pressed', c.dataset.revFilter === filter ? 'true' : 'false'));
+      return vis;
+    }
+
+    function run(focusNew) {
+      if (busy) return;
+      const before = items.filter(isOn);
+      if (!moving()) {
+        const vis = layout();
+        if (focusNew) { const f = vis.find(el => !before.includes(el)); if (f) f.focus({ preventScroll: true }); }
+        return;
+      }
+      busy = true;
+      const first = new Map(before.map(el => [el, { r: el.getBoundingClientRect(), lead: el.classList.contains('is-lead') }]));
+      const match = items.filter(el => filter === 'all' || el.dataset.skin === filter).slice(0, limit);
+      const leaving = before.filter(el => !match.includes(el));
+      const out = leaving.map(el => el.animate([{ opacity: 1 }, { opacity: 0, transform: 'scale(.98)' }], { duration: 180, easing: 'ease-out', fill: 'forwards' }));
+      Promise.all(out.map(a => a.finished.catch(() => {}))).then(() => {
+        out.forEach(a => a.cancel());
+        const vis = layout();
+        let k = 0;
+        vis.forEach(el => {
+          el.classList.add('in');
+          const f = first.get(el);
+          if (f && f.lead === el.classList.contains('is-lead')) {
+            const r = el.getBoundingClientRect(), dx = f.r.left - r.left, dy = f.r.top - r.top;
+            if (Math.abs(dx) + Math.abs(dy) > 1) el.animate([{ transform: `translate(${dx}px,${dy}px)` }, { transform: 'none' }], { duration: 560, easing: EASE });
+          } else {
+            el.animate([{ opacity: 0, transform: 'translateY(16px)' }, { opacity: 1, transform: 'none' }], { duration: 520, delay: 60 * k++, easing: EASE, fill: 'backwards' });
+          }
+        });
+        if (focusNew) { const f = vis.find(el => !before.includes(el)); if (f) f.focus({ preventScroll: true }); }
+        setTimeout(() => { busy = false; }, 200);
+      });
+    }
+
+    chips.forEach(c => c.addEventListener('click', () => {
+      if (c.dataset.revFilter === filter) return;
+      filter = c.dataset.revFilter; limit = page; run(false);
+    }));
+    if (more) more.addEventListener('click', () => { limit += page; run(true); });
+    items.forEach(el => el.addEventListener('shopify:block:select', () => {
+      filter = 'all'; limit = Math.max(limit, items.indexOf(el) + 1); run(false);
+    }));
+    layout();
+  }
+  const all = r => (r || document).querySelectorAll('[data-lv3-pdp-reviews]').forEach(init);
+  if (document.readyState !== 'loading') all(); else document.addEventListener('DOMContentLoaded', () => all());
+  document.addEventListener('shopify:section:load', e => all(e.target));
+})();
+</script>
 
 <!-- Search overlay with predictive results (feature 1, agent S1). Same CSS/JS as the Liquid assets blko-lv3-search-overlay.css/.js: edit both. -->
 <style>
@@ -366,7 +638,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
 
     /* ---------- local index (window.LATHER.products) ---------- */
     function hitOf(k, p) {
-      var url = p.url || (C.pages || {})[k] || '';
+      var url = p.url || (C.pages || {})[k] || (L().url ? L().url(k) : '') || '';
       return { key: k, name: p.name, size: p.size || '', price: +p.price || 0, compare: +p.compare || 0, img: p.img || '', url: url || C.fallbackUrl || '#', quick: !url };
     }
     function index() {
@@ -558,6 +830,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
   'use strict';
   if (window.LatherRecent) return;
   var K = 'lather-recent', MAX = 12;
+  var EYE = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg>';
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
   var handleOf = function (url) { var m = /\/products\/([^\/?#]+)/.exec(url || ''); return m ? decodeURIComponent(m[1]) : ''; };
 
@@ -634,11 +907,16 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
       var L = window.LATHER;
       /* an entry viewed on another page: hand it to the runtime so its quick view works here */
       if (!e.url && L && L.products && !L.products[e.k]) L.products[e.k] = { name: e.name, size: e.size, price: e.price, compare: null, img: e.img, hover: '', labels: [], line: '', ing: '', variant: null, available: true, url: '' };
-      var name = e.url
-        ? '<a class="s-pdp-recent__name" href="' + esc(e.url) + '">' + esc(e.name) + '</a>'
+      /* the name is the product link (stretched over the card, so the image opens it too); quick view is its own button */
+      var u = e.url || (L && L.url ? L.url(e.k) : '');
+      var canQuick = !!(L && L.products && L.products[e.k]);
+      var name = u
+        ? '<a class="s-pdp-recent__name" href="' + esc(u) + '">' + esc(e.name) + '</a>'
         : '<button class="s-pdp-recent__name" type="button" data-quick="' + esc(e.k) + '" aria-label="' + esc(S.quick + ': ' + e.name) + '">' + esc(e.name) + '</button>';
+      var qv = u && canQuick ? '<button class="s-pdp-recent__qv" type="button" data-quick="' + esc(e.k) + '" aria-label="' + esc(S.quick + ': ' + e.name) + '">' + EYE + '</button>' : '';
       var img = e.img ? '<img src="' + esc(thumb(e.img)) + '" alt="" width="120" height="150" loading="lazy">' : '<span class="blko-lv3-ph" aria-hidden="true"></span>';
-      return '<li class="s-pdp-recent__card">' + img + '<div class="s-pdp-recent__text">' + name + (e.size ? '<span class="small">' + esc(e.size) + '</span>' : '') + '</div><span class="price">' + esc(fmt(e.price)) + '</span></li>';
+      if (u) img = '<a class="lv3-plink s-pdp-recent__img" href="' + esc(u) + '" tabindex="-1" aria-hidden="true">' + img + '</a>';
+      return '<li class="s-pdp-recent__card">' + img + '<div class="s-pdp-recent__text">' + name + (e.size ? '<span class="small">' + esc(e.size) + '</span>' : '') + '</div><span class="price">' + esc(fmt(e.price)) + '</span>' + qv + '</li>';
     }
     function render() {
       if (!list) return;
@@ -817,7 +1095,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
       one: d.countOne || '1 saved product.', many: d.countMany || '[count] saved products.', zero: d.countZero || '',
       add: d.addLabel || 'Add to bag', add_aria: d.addAria || 'Add [name] to bag', rm: d.removeLabel || 'Remove',
       rm_aria: d.removeAria || 'Remove [name] from wishlist', sold: d.soldLabel || 'Sold out', removed: d.removedLabel || 'Removed [name].',
-      undo: d.undoLabel || 'Undo', save_aria: d.saveAria || 'Save [name]'
+      undo: d.undoLabel || 'Undo', save_aria: d.saveAria || 'Save [name]', qv_aria: d.quickAria || 'Quick view [name]'
     };
     var ul = root.querySelector('[data-wish-list]'), empty = root.querySelector('[data-wish-empty]'), status = root.querySelector('[data-wish-status]');
     var undoBox = root.querySelector('[data-wish-undo]'), sugg = root.querySelector('[data-wish-suggest]');
@@ -835,10 +1113,17 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     }
     function media(src, alt) { return src ? '<img src="' + esc(src) + '" alt="' + esc(alt) + '" loading="lazy">' : ph; }
     function labels(ids) { var l = L(); return l.labelsHTML ? l.labelsHTML(ids || []) : ''; }
+    /* product page link: a real product's own url, else the demo page for that key (LATHER.url) */
+    function urlOf(e, key) { return (e && e.url) || (L().url ? L().url(key) : '') || ''; }
     function nameHTML(e, key) {
-      if (e.url) return '<a href="' + esc(e.url) + '">' + esc(e.name) + '</a>';
+      var u = urlOf(e, key);
+      if (u) return '<a class="lv3-pname" href="' + esc(u) + '">' + esc(e.name) + '</a>';
       if (L().products[key]) return '<button type="button" data-quick="' + esc(key) + '">' + esc(e.name) + '</button>';
       return esc(e.name);
+    }
+    function linked(u, html) { return u ? '<a class="lv3-plink lv3-plink--fill" href="' + esc(u) + '" tabindex="-1" aria-hidden="true">' + html + '</a>' : html; }
+    function qvHTML(key, name) {
+      return L().products[key] ? '<button class="s-wish__qv" type="button" data-quick="' + esc(key) + '" aria-label="' + esc(T.qv_aria.replace('[name]', name)) + '">' + eyeSVG + '</button>' : '';
     }
     function priceHTML(e) { return esc(fmt(e.price)) + (e.compare > e.price ? ' <s>' + esc(fmt(e.compare)) + '</s>' : ''); }
     function card(e) {
@@ -847,7 +1132,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
         ? '<button class="btn btn--light btn--sm s-wish__add" type="button" disabled>' + esc(T.sold) + '</button>'
         : '<button class="btn btn--primary btn--sm s-wish__add" type="button" data-wish-add="' + esc(e.id) + '" aria-label="' + esc(tpl(T.add_aria, { name: e.name })) + '">' + esc(T.add) + '</button>';
       return '<li class="s-wish__card">' +
-        '<div class="s-wish__media">' + media(e.img, alt) + '<div class="labels">' + labels(e.labels) + '</div></div>' +
+        '<div class="s-wish__media">' + linked(urlOf(e, e.key), media(e.img, alt)) + '<div class="labels">' + labels(e.labels) + '</div>' + qvHTML(e.key, e.name) + '</div>' +
         '<div class="s-wish__info"><h2 class="s-wish__name">' + nameHTML(e, e.key) + '</h2>' +
         (e.size ? '<p class="s-wish__size">' + esc(e.size) + '</p>' : '') +
         '<p class="price s-wish__price">' + priceHTML(e) + '</p></div>' +
@@ -859,9 +1144,9 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
       var p = L().products[key]; if (!p) return '';
       var alt = p.size ? p.name + ', ' + p.size : p.name;
       return '<li class="s-wish__card s-wish__card--sugg">' +
-        '<div class="s-wish__media">' + media(p.img, alt) + '<div class="labels">' + labels(p.labels) + '</div>' +
+        '<div class="s-wish__media">' + linked(urlOf(p, key), media(p.img, alt)) + '<div class="labels">' + labels(p.labels) + '</div>' + qvHTML(key, p.name) +
         '<button class="lv3-heart" type="button" data-wish="' + esc(key) + '" aria-pressed="false" aria-label="' + esc(tpl(T.save_aria, { name: p.name })) + '">' + heartSVG + '</button></div>' +
-        '<div class="s-wish__info"><h3 class="s-wish__name"><button type="button" data-quick="' + esc(key) + '">' + esc(p.name) + '</button></h3>' +
+        '<div class="s-wish__info"><h3 class="s-wish__name">' + nameHTML(p, key) + '</h3>' +
         (p.size ? '<p class="s-wish__size">' + esc(p.size) + '</p>' : '') +
         '<p class="price s-wish__price">' + priceHTML({ price: +p.price || 0, compare: +p.compare || 0 }) + '</p></div>' +
         '<div class="s-wish__acts"><button class="btn btn--ghost btn--sm s-wish__add" type="button" data-add="' + esc(key) + '" aria-label="' + esc(tpl(T.add_aria, { name: p.name })) + '">' + esc(T.add) + '</button></div>' +
@@ -923,6 +1208,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     render();
   }
 
+  var eyeSVG = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg>';
   var heartSVG = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg>';
 
   function init() {
@@ -1030,6 +1316,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
 @media (prefers-reduced-motion:reduce){.ship__bar i{transition:none}.line--gift.is-new,.s-cart-bag__line--gift.is-new{animation:none}}
 .drawer__list{flex:1;overflow:auto;padding:4px 24px}
 .line{display:grid;grid-template-columns:72px 1fr auto;gap:14px;padding:14px 0;border-top:1px solid var(--line);align-items:center}
+.line .lv3-plink{width:72px;border-radius:var(--r-img)}
 .line img{width:72px;height:88px;object-fit:cover;border-radius:var(--r-img);background:var(--oat)}
 .line h3{font:600 15px/1.25 var(--f-body)}
 .line .small{margin:2px 0 8px}
@@ -1126,6 +1413,11 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     little:{name:'Little lotion',size:'150 ml',price:14,img:'../img/c-little-lotion.jpg',hover:'../img/h-little.jpg',labels:['new','ff'],line:'Soft, light oat lotion for ages 1 and up. Fragrance-free.',ing:'Water, glycerin, colloidal oat, calendula oil, shea butter, cetearyl alcohol, xanthan gum, sodium benzoate.'},
     bar:{name:'Oat bar',size:'120 g',price:9,img:'../img/c-oat-bar.jpg',hover:'../img/h-bar.jpg',labels:['best','ff'],line:'Oat milk soap bar for face and body. Rich lather that rinses soft.',ing:'Sodium olivate, sodium cocoate, oat milk, colloidal oat, shea butter, glycerin.'}
   };
+  /* product page links: one product page in the demo; calm is product.html, the others product.html?p=<id>.
+     Relative links on purpose: blocko.ai 308-redirects product.html to /product and keeps the query. */
+  const CAT=Object.keys(products);
+  const url=id=>CAT.includes(id)?(id==='calm'?'product.html':'product.html?p='+encodeURIComponent(id)):'';
+  const pid=()=>{let q='';try{q=new URLSearchParams(location.search).get('p')||''}catch(e){}return CAT.includes(q)?q:'calm'};
   const LBL={best:['label--best','Best seller'],ff:['label--ff','Fragrance-free'],new:['label--new','New'],sale:['label--sale','Sale']};
   const fmt=n=>'$'+(Math.round(n*100)/100).toFixed(n%1?2:0);
   const labelsHTML=ids=>ids.map(k=>`<span class="label ${LBL[k][0]}">${LBL[k][1]}</span>`).join('');
@@ -1188,6 +1480,8 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
       el.querySelector('.ship__add').hidden=!P.offer;
     });
   }
+  /* bag line image and name link to the product page (custom lines such as sets stay plain) */
+  const lnk=(l,h,img)=>{const u=url(l.id);return u?`<a class="${img?'lv3-plink':'lv3-pname'}" href="${u}"${img?' tabindex="-1" aria-hidden="true"':''}>${h}</a>`:h};
   function render(){
     syncGift(); save();
     const n=count(), st=subtotal();
@@ -1198,8 +1492,8 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     const list=$('#drawerList'); let h='';
     if(removed) h+=`<div class="undo"><span>Removed ${removed.name}.</span><button type="button" id="undoBtn">Undo</button></div>`;
     if(!cart.length && !removed) h+=`<p class="drawer__empty">Nothing here yet. Most people start with the Oat bar, $9.</p>`;
-    cart.forEach((l,i)=>{if(l.gift){h+=`<div class="line line--gift${fresh?' is-new':''}"><img src="${l.img}" alt=""><div><h3>${l.name}</h3><p class="small">${l.note}</p></div><div style="text-align:right"><p class="price" style="font-size:18px">Free</p><button class="rm" type="button" data-rm="${i}" aria-label="Remove free ${l.name}">Remove</button></div></div>`;return}
-      h+=`<div class="line"><img src="${l.img}" alt=""><div><h3>${l.name}</h3><p class="small">${l.note||l.size}</p><div class="qty"><button type="button" aria-label="Less" data-q="${i}" data-d="-1">−</button><span>${l.qty}</span><button type="button" aria-label="More" data-q="${i}" data-d="1">+</button></div></div><div style="text-align:right"><p class="price" style="font-size:18px">${fmt(l.qty*l.price)}</p><button class="rm" type="button" data-rm="${i}">Remove</button></div></div>`});
+    cart.forEach((l,i)=>{if(l.gift){h+=`<div class="line line--gift${fresh?' is-new':''}">${lnk(l,`<img src="${l.img}" alt="">`,1)}<div><h3>${lnk(l,l.name)}</h3><p class="small">${l.note}</p></div><div style="text-align:right"><p class="price" style="font-size:18px">Free</p><button class="rm" type="button" data-rm="${i}" aria-label="Remove free ${l.name}">Remove</button></div></div>`;return}
+      h+=`<div class="line">${lnk(l,`<img src="${l.img}" alt="">`,1)}<div><h3>${lnk(l,l.name)}</h3><p class="small">${l.note||l.size}</p><div class="qty"><button type="button" aria-label="Less" data-q="${i}" data-d="-1">−</button><span>${l.qty}</span><button type="button" aria-label="More" data-q="${i}" data-d="1">+</button></div></div><div style="text-align:right"><p class="price" style="font-size:18px">${fmt(l.qty*l.price)}</p><button class="rm" type="button" data-rm="${i}">Remove</button></div></div>`});
     if(cart.length && !cart.some(l=>l.id==='bar')) h+=`<div class="drawer__up"><img src="${products.bar.img}" alt=""><span style="flex:1">Add the Oat bar for face and hands, $9.</span><button class="btn btn--light btn--sm" type="button" data-add="bar">Add</button></div>`;
     list.innerHTML=h;
     $('#checkoutBtn').textContent= st?`Check out, ${fmt(st)}`:'Check out';
@@ -1254,7 +1548,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     /* free gift: settings, live state, and bring a declined gift back */
     gift:{...GIFT,state:()=>progress()}, addGift(){setGiftOff(false);render()}
   };
-  window.LATHER={products,add,quick,fmt,labelsHTML,U,openLayer,closeAll,cart:cartApi};
+  window.LATHER={products,add,quick,fmt,labelsHTML,U,openLayer,closeAll,cart:cartApi,url,pid};
   render();
 
   /* header: over the hero until scrolled */

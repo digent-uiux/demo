@@ -1,18 +1,23 @@
 {%- comment -%}
-  Lather look + store runtime for the blko-lv3 sections. Renders no markup: the Lather fonts, the brand logo mask,
+  Lather look + store runtime for the blko-lv3 sections. Renders no markup: the Lather fonts (or the Shopify library fonts from Theme settings > Typography), the theme settings as tokens (snippets/blko-lv3-settings), the brand logo mask,
   the shared CSS (blko-lv3-base.css), html.motion (skipped for reduced motion) and the runtime (blko-lv3-store.js:
   window.LATHER, cart drawer, quick view, popup, cookie bar, header, announcement, [data-rv] reveals).
   Keep it first in the header group.
 {%- endcomment -%}
 <script>try { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('motion'); } catch (e) {}</script>
 {%- style -%}
+  {%- unless settings.font_source == 'shopify' %}
   @font-face { font-family: 'Urbanist'; font-style: normal; font-weight: 300 700; font-display: swap; src: url({{ 'blko-lv3-urbanist.woff2' | asset_url }}) format('woff2'); }
   @font-face { font-family: 'Yeseva One'; font-style: normal; font-weight: 400; font-display: swap; src: url({{ 'blko-lv3-yeseva-one.woff2' | asset_url }}) format('woff2'); }
+  {%- endunless %}
   @font-face { font-family: 'Antonio'; font-style: normal; font-weight: 600; font-display: swap; src: url({{ 'blko-lv3-antonio-600.woff2' | asset_url }}) format('woff2'); }
   :root { --lv3-logo: url({{ 'blko-lv3-logo.png' | asset_url }}); --lv3-mark: url({{ 'blko-lv3-mark.png' | asset_url }}); }
 {%- endstyle -%}
+{%- unless settings.font_source == 'shopify' -%}
 {{ 'blko-lv3-urbanist.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
+{%- endunless %}
 {{ 'blko-lv3-base.css' | asset_url | stylesheet_tag }}
+{%- render 'blko-lv3-settings' -%}
 <script>
   window.LATHER_CFG = {
     root: {{ routes.root_url | json }},
@@ -20,7 +25,8 @@
     cartAdd: {{ routes.cart_add_url | default: '/cart/add' | json }},
     cartChange: {{ routes.cart_change_url | default: '/cart/change' | json }},
     money: {{ shop.money_format | strip_html | json }},
-    cartCount: {{ cart.item_count | json }}
+    cartCount: {{ cart.item_count | json }},
+    allProducts: {{ routes.all_products_collection_url | json }}
   };
 </script>
 <script src="{{ 'blko-lv3-store.js' | asset_url }}" defer="defer"></script>
@@ -34,7 +40,7 @@
   "tag": "div",
   "class": "lv3-theme-sec",
   "settings": [
-    { "type": "paragraph", "content": "Loads the Lather fonts, colours and the store runtime (bag, quick view, popup, cookie bar). Keep this section first in the header group." }
+    { "type": "paragraph", "content": "Loads the Lather fonts, the colours and shapes from Theme settings, and the store runtime (bag, quick view, popup, cookie bar). Keep this section first in the header group." }
   ],
   "presets": [{ "name": "Lather look" }]
 }

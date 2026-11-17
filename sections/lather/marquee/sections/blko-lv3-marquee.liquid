@@ -12,7 +12,8 @@
     assign anchor = 'commitments-' | append: section.id
   endif
 -%}
-<section class="s-cmt" id="{{ anchor }}" aria-label="{{ s.label | escape }}" style="--s-cmt-dur: {{ s.duration }}s;">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-2' -%}
+<section class="s-cmt{%- if lv3_sid != 'scheme-2' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="{{ anchor }}" aria-label="{{ s.label | escape }}" style="--s-cmt-dur: {{ s.duration }}s;">
   <div class="s-cmt__view">
     <div class="s-cmt__track">
       <ul class="s-cmt__list" data-cmt-list role="list">
@@ -33,6 +34,7 @@
   "tag": "div",
   "class": "blko-lv3-marquee",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-2" },
     { "type": "text", "id": "label", "label": "Section label (screen readers)", "default": "What we promise" },
     { "type": "text", "id": "anchor", "label": "Anchor id", "info": "Used for in-page links, e.g. #commitments.", "default": "commitments" },
     { "type": "range", "id": "duration", "label": "Loop time", "min": 20, "max": 90, "step": 2, "unit": "s", "default": 48 }

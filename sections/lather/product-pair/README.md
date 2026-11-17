@@ -42,12 +42,14 @@ Do not use a zip.
    - `sections/blko-lv3-product-pair.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/product-pair/sections/blko-lv3-product-pair.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/product-pair/sections/blko-lv3-theme.liquid
    - `snippets/blko-lv3-product-data.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/product-pair/snippets/blko-lv3-product-data.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/product-pair/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-5 |
 | `heading_1` | inline_richtext | Heading, line 1 | Wash, then |
 | `heading_2` | inline_richtext | Heading, line 2 | <em>lotion.</em> |
 | `text` | textarea | Text | The Calm routine. Two fragrance-free products, one place bes |

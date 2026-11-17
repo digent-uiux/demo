@@ -43,12 +43,14 @@ Do not use a zip.
    - `sections/blko-lv3-cart-bag.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/cart-bag/sections/blko-lv3-cart-bag.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/cart-bag/sections/blko-lv3-theme.liquid
    - `snippets/blko-lv3-free-gift-progress.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/cart-bag/snippets/blko-lv3-free-gift-progress.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/cart-bag/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-1 |
 | `heading` | inline_richtext | Heading | Your <em>bag.</em> |
 | `keep_label` | text | Keep browsing link | Keep browsing |
 | `keep_link` | url | Keep browsing URL |  |

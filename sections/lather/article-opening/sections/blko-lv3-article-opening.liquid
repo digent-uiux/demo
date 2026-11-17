@@ -17,7 +17,8 @@
     endif
   endif
 -%}
-<section class="s-art-opening" aria-labelledby="art-title"><div class="wrap">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-1' -%}
+<section class="s-art-opening{%- if lv3_sid != 'scheme-1' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" aria-labelledby="art-title"><div class="wrap">
   {%- if s.back_label != blank -%}<a class="s-art-opening__back" href="{{ back }}">{{ s.back_label | escape }}</a>{%- endif -%}
   {%- if article != blank -%}
     {%- liquid
@@ -74,6 +75,7 @@
   "name": "Lather article opening",
   "class": "blko-lv3-section-article-opening",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
     { "type": "text", "id": "back_label", "label": "Back link label", "default": "← Back to skin notes" },
     { "type": "url", "id": "back_link", "label": "Back link", "info": "Empty: the article's blog." },
     { "type": "text", "id": "author_prefix", "label": "Before the author", "default": "By" },

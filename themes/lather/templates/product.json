@@ -179,12 +179,15 @@
         "summary": "Read the complete ingredient list",
         "full_list": "Water, glycerin, coco-glucoside, decyl glucoside, colloidal oat, shea butter, sunflower seed oil, xanthan gum, citric acid, sodium benzoate. pH 5.5.",
         "note": "Contains oat. Check the full list against your known allergies before using.",
-        "anchor": "pdp-ingredients"
+        "image_alt": "A bowl of rolled oats seen from above on a pale stone surface",
+        "anchor": "pdp-ingredients",
+        "image": "shopify://shop_images/u-1598048851887-0263d4f43e73.jpg"
       },
       "blocks": {
         "ing_1": {
           "type": "ingredient",
           "settings": {
+            "icon": "oat",
             "title": "Colloidal oat",
             "text": "Finely milled oat, in a wash made for everyday dry skin."
           }
@@ -192,6 +195,7 @@
         "ing_2": {
           "type": "ingredient",
           "settings": {
+            "icon": "drop",
             "title": "Glycerin",
             "text": "A familiar humectant in the formula, for a comfortable wash."
           }
@@ -199,6 +203,7 @@
         "ing_3": {
           "type": "ingredient",
           "settings": {
+            "icon": "foam",
             "title": "Gentle cleansers",
             "text": "Coco-glucoside and decyl glucoside make the soft foam."
           }
@@ -206,6 +211,7 @@
         "ing_4": {
           "type": "ingredient",
           "settings": {
+            "icon": "no_scent",
             "title": "No added scent",
             "text": "Fragrance-free means no perfume or essential oil added to Calm wash."
           }
@@ -234,22 +240,28 @@
         "step_1": {
           "type": "step",
           "settings": {
+            "image_alt": "Hands working a soft white foam between the palms",
             "title": "Wet, then lather",
-            "text": "Work a small amount between wet palms. Wash gently with lukewarm water."
+            "text": "Work a small amount between wet palms. Wash gently with lukewarm water.",
+            "image": "shopify://shop_images/u-1634043319737-e4df206ab5b9.jpg"
           }
         },
         "step_2": {
           "type": "step",
           "settings": {
+            "image_alt": "Cupped hands rinsing under a running tap",
             "title": "Rinse it away",
-            "text": "Rinse the foam off fully. Skip the hard scrubbing and pat dry with a soft towel."
+            "text": "Rinse the foam off fully. Skip the hard scrubbing and pat dry with a soft towel.",
+            "image": "shopify://shop_images/u-1584961503022-d19acee0af7b.jpg"
           }
         },
         "step_3": {
           "type": "step",
           "settings": {
+            "image_alt": "Fingers taking a little cream from a tin in a bathroom",
             "title": "Follow with lotion",
-            "text": "Keep Calm lotion nearby. Smooth it over damp skin after your shower."
+            "text": "Keep Calm lotion nearby. Smooth it over damp skin after your shower.",
+            "image": "shopify://shop_images/u-1672763057474-cce3af40cf4f.jpg"
           }
         }
       },
@@ -307,27 +319,149 @@
       "settings": {
         "heading_1": "The feel, in",
         "heading_2": "your <em>words.</em>",
-        "text": "Skin is personal. Read the experience alongside the ingredient list, not instead of it.",
+        "show_summary": true,
+        "rating_fallback": "4.6",
+        "count_fallback": 318,
+        "count_text": "[count] reviews of [product]",
+        "product_fallback": "Calm wash",
         "stars_aria": "[n] out of 5 stars",
-        "foot": "Every skin responds differently. Need help choosing?",
-        "foot_link_label": "Talk to us",
-        "foot_link": "/pages/help",
+        "show_filter": true,
+        "filter_label": "Skin type",
+        "label_all": "All",
+        "label_eczema": "Eczema-prone",
+        "label_dry": "Very dry",
+        "label_sensitive": "Sensitive",
+        "label_little": "Little ones",
+        "page_size": 5,
+        "more_label": "Show more reviews",
+        "shown_text": "Showing [shown] of [total]",
+        "help_text": "Not sure it suits your skin?",
+        "help_link_label": "Ask us first",
+        "help_link": "/pages/help",
         "anchor": "pdp-reviews"
       },
       "blocks": {
         "review_1": {
           "type": "review",
           "settings": {
-            "name": "Hannah K.",
-            "detail_1": "Eczema-prone skin",
-            "detail_2": "Using it for 6 months",
+            "name": "Maya R.",
+            "skin": "eczema",
+            "duration": "8 months in",
+            "bought": "bought the Calm routine set",
             "rating": 5,
-            "quote": "\u201cFirst wash that doesn't leave my arms tight. No smell at all, which is the whole point.\u201d"
+            "title": "My shoulders stay calm after a hot shower now",
+            "text": "Winter used to mean red, tight patches across my shoulders. I wash with this, pat dry and put the lotion on straight away. It barely foams, which threw me at first. Now it's the only thing in my shower.",
+            "image": "shopify://shop_images/u-1692776092941-b45565a5075f.jpg"
+          }
+        },
+        "review_2": {
+          "type": "review",
+          "settings": {
+            "name": "Hannah K.",
+            "skin": "eczema",
+            "duration": "6 months in",
+            "bought": "bought Calm wash",
+            "rating": 5,
+            "title": "No tight arms, no smell",
+            "text": "First wash that doesn't leave my arms tight. No smell at all, which is the whole point."
+          }
+        },
+        "review_3": {
+          "type": "review",
+          "settings": {
+            "name": "Tom B.",
+            "skin": "dry",
+            "duration": "3 months in",
+            "bought": "bought 2 bottles of Calm wash",
+            "rating": 5,
+            "title": "My shins stopped cracking",
+            "text": "Long shifts, hot showers and very dry legs. This is the first wash I don't have to follow with a heavy cream every night."
+          }
+        },
+        "review_4": {
+          "type": "review",
+          "settings": {
+            "name": "Priya S.",
+            "skin": "sensitive",
+            "duration": "5 weeks in",
+            "bought": "bought Calm wash",
+            "rating": 4,
+            "title": "Gentle, rinses clean",
+            "text": "No sting and no film left on my skin. One star off because the pump gets stiff near the end of the bottle."
+          }
+        },
+        "review_5": {
+          "type": "review",
+          "settings": {
+            "name": "Jules M.",
+            "skin": "little",
+            "duration": "4 months in",
+            "bought": "bought Calm wash and Little lotion",
+            "rating": 5,
+            "title": "Bath time without the rough patches",
+            "text": "A small pump for our son's bath, then the lotion. The backs of his knees used to look rough by morning. They haven't for weeks.",
+            "image": "shopify://shop_images/u-1630305130592-210da48f151e.jpg"
+          }
+        },
+        "review_6": {
+          "type": "review",
+          "settings": {
+            "name": "Ana L.",
+            "skin": "dry",
+            "duration": "1 year in",
+            "bought": "bought Calm wash",
+            "rating": 5,
+            "title": "On my fourth bottle",
+            "text": "Legs feel soft rather than squeaky after the shower. One bottle lasts me about ten weeks."
+          }
+        },
+        "review_7": {
+          "type": "review",
+          "settings": {
+            "name": "Sam O.",
+            "skin": "sensitive",
+            "duration": "2 months in",
+            "bought": "bought the Calm routine set",
+            "rating": 5,
+            "title": "Fragrance-free really means it",
+            "text": "My partner likes the chamomile one and I can't use anything scented, so we keep both in the shower. This one smells of nothing at all."
+          }
+        },
+        "review_8": {
+          "type": "review",
+          "settings": {
+            "name": "Rachel D.",
+            "skin": "eczema",
+            "duration": "3 weeks in",
+            "bought": "bought Calm wash",
+            "rating": 4,
+            "title": "Early days, but no sting",
+            "text": "Too soon to say much. It doesn't sting the patches on my hands, which is more than most washes manage."
+          }
+        },
+        "review_9": {
+          "type": "review",
+          "settings": {
+            "name": "Dev P.",
+            "skin": "little",
+            "duration": "6 weeks in",
+            "bought": "bought Calm wash",
+            "rating": 5,
+            "title": "One bottle for two little ones",
+            "text": "Our two share it at bath time. No scent to put them off, and their skin isn't rough the next day."
           }
         }
       },
       "block_order": [
-        "review_1"
+        "review_1",
+        "review_2",
+        "review_3",
+        "review_4",
+        "review_5",
+        "review_6",
+        "review_7",
+        "review_8",
+        "review_9"
       ]
     },
     "questions": {

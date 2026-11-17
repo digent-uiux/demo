@@ -1,5 +1,6 @@
 {%- comment -%} Generic page (templates/page.json): title and the page content in the Lather type. {%- endcomment -%}
-<div class="lv3-page" style="padding-top:{{ section.settings.padding_top }}px;padding-bottom:{{ section.settings.padding_bottom }}px">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-1' -%}
+<div class="lv3-page{%- if lv3_sid != 'scheme-1' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" style="padding-top:{{ section.settings.padding_top }}px;padding-bottom:{{ section.settings.padding_bottom }}px">
   <div class="wrap">
     <div class="lv3-page__in">
       {%- if section.settings.show_title -%}<h1 class="h1 lv3-page__title" data-rv="blur">{{ page.title | escape }}</h1>{%- endif -%}
@@ -14,6 +15,7 @@
   "tag": "section",
   "class": "lv3-main-page-sec",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
     { "type": "checkbox", "id": "show_title", "label": "Show the title", "default": true },
     { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 96 },
     { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 96 }

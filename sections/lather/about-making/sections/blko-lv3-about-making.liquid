@@ -8,7 +8,8 @@
   assign s = section.settings
   assign uid = 'aboutMakingTitle-' | append: section.id
 -%}
-<section class="s-about-making" id="{{ s.anchor | default: 'making' | handleize }}" aria-labelledby="{{ uid }}">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-2' -%}
+<section class="s-about-making{%- if lv3_sid != 'scheme-2' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="{{ s.anchor | default: 'making' | handleize }}" aria-labelledby="{{ uid }}">
   <div class="wrap">
     <div class="s-about-making__head">
       <h2 class="h2" id="{{ uid }}" data-rv="line">
@@ -51,6 +52,7 @@
   "class": "blko-lv3-section-about-making",
   "max_blocks": 6,
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-2" },
     { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "A job for" },
     { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "every <em>ingredient.</em>", "info": "Italic text shows in the accent style." },
     { "type": "textarea", "id": "text", "label": "Intro", "default": "We build around the wash, the rinse and the feeling after. The ingredient list should help you understand all three." },

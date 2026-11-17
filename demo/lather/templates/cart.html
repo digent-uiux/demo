@@ -87,7 +87,7 @@ html.motion [data-rv="blur"]:not(.in){opacity:0;transform:translateY(12px);filte
 html.motion [data-rv="settle"]:not(.in){opacity:0;transform:scale(.96)}
 html.motion [data-rv="draw"]{transform-origin:left center}
 html.motion [data-rv="draw"]:not(.in){transform:scaleX(0)}
-html.motion [data-rv="line"] .ln{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
+[data-rv="line"] .ln{display:block}html.motion [data-rv="line"] .ln{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
 html.motion [data-rv="line"] .ln>span{display:block;transition:transform .9s cubic-bezier(.22,1,.36,1)}
 html.motion [data-rv="line"]:not(.in) .ln>span{transform:translateY(105%)}
 html.motion [data-rv="line"] .ln:nth-child(2)>span{transition-delay:.09s}
@@ -132,6 +132,13 @@ html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
 .mnav.open{transform:none}
 .mnav a{font:500 26px/1.3 var(--f-body);text-decoration:none;padding:10px 0;border-bottom:1px solid var(--line)}
 .mnav__top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+/* product links on cards and chips: image + name go to the product page; buttons inside stay on top */
+.lv3-plink{display:block;color:inherit;text-decoration:none;border-radius:inherit}
+.lv3-plink--fill{position:absolute;inset:0;z-index:0}
+.lv3-plink:focus-visible{outline:2px solid var(--moss);outline-offset:-3px}
+.lv3-pname{color:inherit;text-decoration:none;text-underline-offset:4px;text-decoration-thickness:1px}
+.lv3-pname:hover{text-decoration-line:underline}
+.lv3-pname:focus-visible{outline:2px solid var(--moss);outline-offset:3px;border-radius:2px}
 </style>
 </head>
 <body class="pg-cart">
@@ -160,15 +167,17 @@ html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
 
 <!-- part: 10-bag.html -->
 <style>
-.s-cart-bag{padding:56px 0 88px;background:var(--oat)}.s-cart-bag__head{display:flex;justify-content:space-between;gap:20px;align-items:baseline;margin-bottom:40px}.s-cart-bag__layout{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(280px,1fr);gap:7%}.s-cart-bag__line{display:grid;grid-template-columns:100px minmax(0,1fr) auto;gap:22px;align-items:center;padding:24px 0;border-top:1px solid var(--line)}.s-cart-bag__line img{width:100px;aspect-ratio:4/5;object-fit:cover;border-radius:var(--r-img)}.s-cart-bag__line h2{font-size:21px;line-height:1.2;font-weight:500}.s-cart-bag__line .qty{margin-top:12px}.s-cart-bag__line .price{font-size:24px}.s-cart-bag__remove{display:block;font-size:14px;text-decoration:underline;margin-top:14px}.s-cart-bag__summary{padding:30px;background:var(--raised);border-radius:var(--r-img);align-self:start;position:sticky;top:100px}.s-cart-bag__summary dl{display:grid;grid-template-columns:1fr auto;gap:14px;margin:24px 0}.s-cart-bag__summary dd{text-align:right}.s-cart-bag__total{border-top:1px solid var(--line);padding-top:18px;font-weight:600}.s-cart-bag .ship--page{padding:0;margin:12px 0 4px}.s-cart-bag .ship--page .ship__msg{font-size:15px}.s-cart-bag__line--gift .price{color:var(--moss)}.s-cart-bag__gift{margin-top:12px;font-size:14px;color:var(--muted)}.s-cart-bag__note{margin-top:24px}.s-cart-bag__note label{display:block;font-weight:600;margin-bottom:8px}.s-cart-bag__note textarea{width:100%;min-height:96px;resize:vertical;font:inherit;padding:12px;border:1px solid var(--line);border-radius:var(--r-btn);background:var(--raised);color:var(--ink)}.s-cart-bag__undo{padding:14px 18px;background:var(--sage-wash);display:flex;gap:20px;justify-content:space-between;align-items:center;border-radius:var(--r-btn)}.s-cart-bag__empty{padding:48px 0}.s-cart-bag__empty p{max-width:38ch;color:var(--muted);margin:16px 0 26px}.s-cart-bag__status{margin-top:14px;font-size:14px}.s-cart-bag [hidden]{display:none}.s-cart-bag__extras{margin-top:30px;font-size:14px;color:var(--muted)}.s-cart-bag button:focus-visible,.s-cart-bag textarea:focus-visible{outline:2px solid var(--moss);outline-offset:3px}@media(max-width:760px){.s-cart-bag{padding:36px 0 56px}.s-cart-bag__head{align-items:flex-start;flex-direction:column;margin-bottom:28px}.s-cart-bag__layout{grid-template-columns:1fr;gap:32px}.s-cart-bag__line{grid-template-columns:76px minmax(0,1fr) auto;gap:12px}.s-cart-bag__line img{width:76px}.s-cart-bag__line h2{font-size:18px}.s-cart-bag__line .price{font-size:20px}.s-cart-bag__summary{position:static;padding:24px}.s-cart-bag__head .h1{font-size:40px}}
+.s-cart-bag{padding:56px 0 88px;background:var(--oat)}.s-cart-bag__head{display:flex;justify-content:space-between;gap:20px;align-items:baseline;margin-bottom:40px}.s-cart-bag__layout{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(280px,1fr);gap:7%}.s-cart-bag__line{display:grid;grid-template-columns:100px minmax(0,1fr) auto;gap:22px;align-items:center;padding:24px 0;border-top:1px solid var(--line)}.s-cart-bag__line>.lv3-plink,.s-cart-bag__line>img{border-radius:var(--r-img)}.s-cart-bag__line img{width:100px;aspect-ratio:4/5;object-fit:cover;border-radius:var(--r-img)}.s-cart-bag__line h2{font-size:21px;line-height:1.2;font-weight:500}.s-cart-bag__line .qty{margin-top:12px}.s-cart-bag__line .price{font-size:24px}.s-cart-bag__remove{display:block;font-size:14px;text-decoration:underline;margin-top:14px}.s-cart-bag__summary{padding:30px;background:var(--raised);border-radius:var(--r-img);align-self:start;position:sticky;top:100px}.s-cart-bag__summary dl{display:grid;grid-template-columns:1fr auto;gap:14px;margin:24px 0}.s-cart-bag__summary dd{text-align:right}.s-cart-bag__total{border-top:1px solid var(--line);padding-top:18px;font-weight:600}.s-cart-bag .ship--page{padding:0;margin:12px 0 4px}.s-cart-bag .ship--page .ship__msg{font-size:15px}.s-cart-bag__line--gift .price{color:var(--moss)}.s-cart-bag__gift{margin-top:12px;font-size:14px;color:var(--muted)}.s-cart-bag__note{margin-top:24px}.s-cart-bag__note label{display:block;font-weight:600;margin-bottom:8px}.s-cart-bag__note textarea{width:100%;min-height:96px;resize:vertical;font:inherit;padding:12px;border:1px solid var(--line);border-radius:var(--r-btn);background:var(--raised);color:var(--ink)}.s-cart-bag__undo{padding:14px 18px;background:var(--sage-wash);display:flex;gap:20px;justify-content:space-between;align-items:center;border-radius:var(--r-btn)}.s-cart-bag__empty{padding:48px 0}.s-cart-bag__empty p{max-width:38ch;color:var(--muted);margin:16px 0 26px}.s-cart-bag__status{margin-top:14px;font-size:14px}.s-cart-bag [hidden]{display:none}.s-cart-bag__extras{margin-top:30px;font-size:14px;color:var(--muted)}.s-cart-bag button:focus-visible,.s-cart-bag textarea:focus-visible{outline:2px solid var(--moss);outline-offset:3px}@media(max-width:760px){.s-cart-bag{padding:36px 0 56px}.s-cart-bag__head{align-items:flex-start;flex-direction:column;margin-bottom:28px}.s-cart-bag__layout{grid-template-columns:1fr;gap:32px}.s-cart-bag__line{grid-template-columns:76px minmax(0,1fr) auto;gap:12px}.s-cart-bag__line img{width:76px}.s-cart-bag__line h2{font-size:18px}.s-cart-bag__line .price{font-size:20px}.s-cart-bag__summary{position:static;padding:24px}.s-cart-bag__head .h1{font-size:40px}}
 </style>
 <section class="s-cart-bag" aria-labelledby="cart-title"><div class="wrap"><div class="s-cart-bag__head"><h1 class="h1" id="cart-title" tabindex="-1" data-rv="line"><span class="ln"><span>Your <em>bag.</em></span></span></h1><a href="../templates/collection.html" class="link">Keep browsing</a></div><div class="s-cart-bag__layout"><div><div class="s-cart-bag__undo" id="cart-undo" role="status" hidden><span id="cart-removed"></span><button type="button" class="link" id="cart-undo-button">Undo</button></div><div id="cart-lines"></div><div id="cart-empty" class="s-cart-bag__empty"><h2 class="h3">Room for a softer routine.</h2><p>Start with a wash, or keep it small with the Oat bar for face and body.</p><a class="btn btn--primary" href="../templates/collection.html">Find your formula</a></div><div class="s-cart-bag__note" id="cart-note-wrap" hidden><label for="cart-note">Anything we should know?</label><textarea id="cart-note" maxlength="500" placeholder="An order note, if you need one."></textarea><p class="small">Saved on this device with your bag.</p></div></div><aside class="s-cart-bag__summary" aria-label="Order summary"><h2 class="h3">Your order</h2><div class="ship ship--page" id="cart-progress" data-progress></div><dl><dt>Subtotal</dt><dd class="price" id="cart-subtotal">$0</dd><dt>Shipping</dt><dd id="cart-shipping-cost">Calculated at checkout</dd><dt class="s-cart-bag__total">Total before shipping &amp; tax</dt><dd class="price s-cart-bag__total" id="cart-total">$0</dd></dl><button class="btn btn--primary btn--block" type="button" id="cart-checkout" disabled>Check out, $0</button><p class="s-cart-bag__status" id="cart-status" role="status" aria-live="polite"></p><p class="s-cart-bag__extras">Skin reacted? Your first bottle of any formula is refundable within 30 days, used or not. <a href="../templates/help.html#refund">How it works</a></p></aside></div></div></section>
 <script>
 (()=>{document.addEventListener('DOMContentLoaded',()=>{
  const L=window.LATHER,root=document.querySelector('.s-cart-bag');if(!L?.cart||!root)return;
  const C=L.cart,$=id=>root.querySelector('#'+id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ /* line image and name go to that product's page; custom lines (sets) stay plain */
+ const pl=(l,h,img)=>{const u=L.url?L.url(l.id):'';return u?`<a class="${img?'lv3-plink':'lv3-pname'}" href="${u}"${img?' tabindex="-1" aria-hidden="true"':''}>${h}</a>`:h};
  function render(e){const lines=C.lines(),total=C.subtotal(),threshold=C.freeShip,removed=C.removed(),fresh=!!(e&&e.detail&&e.detail.giftNew);
-  $('cart-lines').innerHTML=lines.map((l,i)=>l.gift?`<article class="s-cart-bag__line s-cart-bag__line--gift${fresh?' is-new':''}" data-cart-index="${i}"><a href="../templates/collection.html" data-quick="${esc(l.id)}"><img src="${esc(l.img)}" alt="${esc(l.name)}"></a><div><h2>${esc(l.name)}</h2><p class="small">${esc(l.note)}</p><p class="s-cart-bag__gift">Added because your bag is over ${L.fmt(C.gift.at)}.</p></div><div><span class="price">Free</span><button type="button" class="s-cart-bag__remove" data-remove aria-label="Remove free ${esc(l.name)}">Remove</button></div></article>`:`<article class="s-cart-bag__line" data-cart-index="${i}"><a href="${l.id==='calm'?'product.html':'collection.html'}" ${L.products[l.id]&&l.id!=='calm'?`data-quick="${esc(l.id)}"`:''}><img src="${esc(l.img)}" alt="${esc(l.name)}"></a><div><h2>${esc(l.name)}</h2><p class="small">${esc(l.note||l.size)}</p><div class="qty"><button type="button" data-change="-1" aria-label="One fewer ${esc(l.name)}">−</button><span aria-label="Quantity">${l.qty}</span><button type="button" data-change="1" aria-label="One more ${esc(l.name)}" ${l.qty>=99?'disabled':''}>+</button></div></div><div><span class="price">${L.fmt(l.price*l.qty)}</span><button type="button" class="s-cart-bag__remove" data-remove aria-label="Remove ${esc(l.name)}">Remove</button></div></article>`).join('');
+  $('cart-lines').innerHTML=lines.map((l,i)=>l.gift?`<article class="s-cart-bag__line s-cart-bag__line--gift${fresh?' is-new':''}" data-cart-index="${i}">${pl(l,`<img src="${esc(l.img)}" alt="${esc(l.name)}">`,1)}<div><h2>${pl(l,esc(l.name))}</h2><p class="small">${esc(l.note)}</p><p class="s-cart-bag__gift">Added because your bag is over ${L.fmt(C.gift.at)}.</p></div><div><span class="price">Free</span><button type="button" class="s-cart-bag__remove" data-remove aria-label="Remove free ${esc(l.name)}">Remove</button></div></article>`:`<article class="s-cart-bag__line" data-cart-index="${i}">${pl(l,`<img src="${esc(l.img)}" alt="${esc(l.name)}">`,1)}<div><h2>${pl(l,esc(l.name))}</h2><p class="small">${esc(l.note||l.size)}</p><div class="qty"><button type="button" data-change="-1" aria-label="One fewer ${esc(l.name)}">−</button><span aria-label="Quantity">${l.qty}</span><button type="button" data-change="1" aria-label="One more ${esc(l.name)}" ${l.qty>=99?'disabled':''}>+</button></div></div><div><span class="price">${L.fmt(l.price*l.qty)}</span><button type="button" class="s-cart-bag__remove" data-remove aria-label="Remove ${esc(l.name)}">Remove</button></div></article>`).join('');
   $('cart-empty').hidden=!!lines.length;$('cart-note-wrap').hidden=!lines.length;
   $('cart-subtotal').textContent=$('cart-total').textContent=L.fmt(total);
   $('cart-checkout').textContent='Check out, '+L.fmt(total);$('cart-checkout').disabled=!lines.length;
@@ -186,7 +195,7 @@ html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
 </script>
 
 <!-- part: 20-finish.html -->
-<style>.s-cart-finish{background:var(--sage-wash);padding:48px 0}.s-cart-finish__in{display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center}.s-cart-finish__product{display:flex;gap:24px;align-items:center}.s-cart-finish img{width:96px;aspect-ratio:4/5;object-fit:cover;border-radius:var(--r-img)}.s-cart-finish p{max-width:42ch;color:var(--muted);margin-top:8px}@media(max-width:600px){.s-cart-finish__in{grid-template-columns:1fr}.s-cart-finish__product{gap:16px}.s-cart-finish .btn{width:100%}}</style>
+<style>.s-cart-finish{background:var(--sage-wash);padding:48px 0}.s-cart-finish__in{display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center}.s-cart-finish__product{display:flex;gap:24px;align-items:center}.s-cart-finish img{width:96px;height:auto;aspect-ratio:4/5;object-fit:cover;border-radius:var(--r-img)}.s-cart-finish p{max-width:42ch;color:var(--muted);margin-top:8px}@media(max-width:600px){.s-cart-finish__in{grid-template-columns:1fr}.s-cart-finish__product{gap:16px}.s-cart-finish .btn{width:100%}}</style>
 <section class="s-cart-finish" aria-labelledby="cart-finish-title"><div class="wrap s-cart-finish__in"><div class="s-cart-finish__product"><img src="../img/c-oat-bar.jpg" alt="Oat bar and moss carton" loading="lazy"><div><h2 class="h3" id="cart-finish-title">For the sink, too.</h2><p>Oat bar for face and body. A simple addition, 120 g.</p><span class="price" id="cart-bar-price">$9</span></div></div><button class="btn btn--light" type="button" data-add="bar">Add Oat bar</button></div></section>
 <script>document.addEventListener('DOMContentLoaded',()=>{if(window.LATHER)document.getElementById('cart-bar-price').textContent=window.LATHER.fmt(window.LATHER.products.bar.price)});</script>
 
@@ -199,7 +208,7 @@ html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
 .s-pdp-recent__clear{font-size:14px;color:var(--muted);text-decoration:underline;text-underline-offset:4px;padding:6px 0;transition:color .25s var(--ease)}
 .s-pdp-recent__clear:hover{color:var(--ink)}
 .s-pdp-recent__list{list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.s-pdp-recent__card{position:relative;display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;padding:10px 16px 10px 10px;border-radius:var(--r-img);background:var(--raised);transition:background-color .25s var(--ease)}
+.s-pdp-recent__card{position:relative;display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:14px;align-items:center;padding:10px 16px 10px 10px;border-radius:var(--r-img);background:var(--raised);transition:background-color .25s var(--ease)}
 .s-pdp-recent__card:hover{background:#fbf8f1}
 .s-pdp-recent__card img,.s-pdp-recent__card .blko-lv3-ph{width:64px;height:80px;object-fit:cover;border-radius:4px;background:var(--oat)}
 .s-pdp-recent__text{display:flex;flex-direction:column;gap:2px;min-width:0}
@@ -208,6 +217,12 @@ html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
 .s-pdp-recent__name:focus-visible{outline:none}
 .s-pdp-recent__card:has(.s-pdp-recent__name:focus-visible){outline:2px solid var(--moss);outline-offset:2px}
 .s-pdp-recent__card .price{font-size:18px}
+.s-pdp-recent__img{position:relative;z-index:1;border-radius:4px}
+.s-pdp-recent__qv{position:relative;z-index:1;width:36px;height:36px;border-radius:999px;display:grid;place-items:center;background:var(--oat);color:var(--ink);transition:background-color .25s var(--ease),color .25s var(--ease)}
+.s-pdp-recent__qv:hover{background:var(--stone);color:var(--moss)}
+.s-pdp-recent__qv:focus-visible{outline:2px solid var(--moss);outline-offset:2px}
+.s-pdp-recent__qv svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.s-pdp-recent__card:has(.s-pdp-recent__qv){grid-template-columns:64px minmax(0,1fr) auto 36px;gap:12px;padding-right:12px}
 .s-pdp-recent__clear:focus-visible{outline:2px solid var(--moss);outline-offset:3px}
 @media (max-width:1080px){.s-pdp-recent__list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:760px){
@@ -215,7 +230,7 @@ html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
   .s-pdp-recent__title{font-size:21px}
   .s-pdp-recent__list{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 calc(-1*var(--gut));padding:2px var(--gut) 4px;scroll-padding:0 var(--gut)}
   .s-pdp-recent__list::-webkit-scrollbar{display:none}
-  .s-pdp-recent__card{flex:0 0 76%;scroll-snap-align:start}
+  .s-pdp-recent__card{flex:0 0 84%;scroll-snap-align:start}
 }
 </style>
 <!-- Recently viewed (FEATURES-BRIEF #4). The tracker and renderer live in shared/40-recent.html.
@@ -227,10 +242,10 @@ html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
  <div class="wrap">
   <div class="s-pdp-recent__head"><h2 class="s-pdp-recent__title" id="pdp-recent-title">Recently viewed</h2><button class="s-pdp-recent__clear" type="button" data-recent-clear>Clear</button></div>
   <ul class="s-pdp-recent__list" data-recent-list>
-  <li class="s-pdp-recent__card"><img src="../img/c-rich.jpg" alt="" width="120" height="150" loading="lazy"><div class="s-pdp-recent__text"><button class="s-pdp-recent__name" type="button" data-quick="rich" aria-label="Quick view: Rich wash">Rich wash</button><span class="small">400 ml</span></div><span class="price">$20</span></li>
-  <li class="s-pdp-recent__card"><img src="../img/c-lotion.jpg" alt="" width="120" height="150" loading="lazy"><div class="s-pdp-recent__text"><button class="s-pdp-recent__name" type="button" data-quick="lotion" aria-label="Quick view: Calm lotion">Calm lotion</button><span class="small">250 ml</span></div><span class="price">$22</span></li>
-  <li class="s-pdp-recent__card"><img src="../img/c-oat-bar.jpg" alt="" width="120" height="150" loading="lazy"><div class="s-pdp-recent__text"><button class="s-pdp-recent__name" type="button" data-quick="bar" aria-label="Quick view: Oat bar">Oat bar</button><span class="small">120 g</span></div><span class="price">$9</span></li>
-  <li class="s-pdp-recent__card"><img src="../img/c-soft.jpg" alt="" width="120" height="150" loading="lazy"><div class="s-pdp-recent__text"><button class="s-pdp-recent__name" type="button" data-quick="soft" aria-label="Quick view: Soft wash">Soft wash</button><span class="small">400 ml</span></div><span class="price">$18</span></li>
+  <li class="s-pdp-recent__card"><a class="lv3-plink s-pdp-recent__img" href="../templates/product.html?p=rich" tabindex="-1" aria-hidden="true"><img src="../img/c-rich.jpg" alt="" width="120" height="150" loading="lazy"></a><div class="s-pdp-recent__text"><a class="s-pdp-recent__name" href="../templates/product.html?p=rich">Rich wash</a><span class="small">400 ml</span></div><span class="price">$20</span><button class="s-pdp-recent__qv" type="button" data-quick="rich" aria-label="Quick view: Rich wash"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg></button></li>
+  <li class="s-pdp-recent__card"><a class="lv3-plink s-pdp-recent__img" href="../templates/product.html?p=lotion" tabindex="-1" aria-hidden="true"><img src="../img/c-lotion.jpg" alt="" width="120" height="150" loading="lazy"></a><div class="s-pdp-recent__text"><a class="s-pdp-recent__name" href="../templates/product.html?p=lotion">Calm lotion</a><span class="small">250 ml</span></div><span class="price">$22</span><button class="s-pdp-recent__qv" type="button" data-quick="lotion" aria-label="Quick view: Calm lotion"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg></button></li>
+  <li class="s-pdp-recent__card"><a class="lv3-plink s-pdp-recent__img" href="../templates/product.html?p=bar" tabindex="-1" aria-hidden="true"><img src="../img/c-oat-bar.jpg" alt="" width="120" height="150" loading="lazy"></a><div class="s-pdp-recent__text"><a class="s-pdp-recent__name" href="../templates/product.html?p=bar">Oat bar</a><span class="small">120 g</span></div><span class="price">$9</span><button class="s-pdp-recent__qv" type="button" data-quick="bar" aria-label="Quick view: Oat bar"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg></button></li>
+  <li class="s-pdp-recent__card"><a class="lv3-plink s-pdp-recent__img" href="../templates/product.html?p=soft" tabindex="-1" aria-hidden="true"><img src="../img/c-soft.jpg" alt="" width="120" height="150" loading="lazy"></a><div class="s-pdp-recent__text"><a class="s-pdp-recent__name" href="../templates/product.html?p=soft">Soft wash</a><span class="small">400 ml</span></div><span class="price">$18</span><button class="s-pdp-recent__qv" type="button" data-quick="soft" aria-label="Quick view: Soft wash"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg></button></li>
   </ul>
   <p class="sr" aria-live="polite" data-recent-status></p>
  </div>
@@ -435,7 +450,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
 
     /* ---------- local index (window.LATHER.products) ---------- */
     function hitOf(k, p) {
-      var url = p.url || (C.pages || {})[k] || '';
+      var url = p.url || (C.pages || {})[k] || (L().url ? L().url(k) : '') || '';
       return { key: k, name: p.name, size: p.size || '', price: +p.price || 0, compare: +p.compare || 0, img: p.img || '', url: url || C.fallbackUrl || '#', quick: !url };
     }
     function index() {
@@ -628,6 +643,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
   'use strict';
   if (window.LatherRecent) return;
   var K = 'lather-recent', MAX = 12;
+  var EYE = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg>';
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
   var handleOf = function (url) { var m = /\/products\/([^\/?#]+)/.exec(url || ''); return m ? decodeURIComponent(m[1]) : ''; };
 
@@ -704,11 +720,16 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
       var L = window.LATHER;
       /* an entry viewed on another page: hand it to the runtime so its quick view works here */
       if (!e.url && L && L.products && !L.products[e.k]) L.products[e.k] = { name: e.name, size: e.size, price: e.price, compare: null, img: e.img, hover: '', labels: [], line: '', ing: '', variant: null, available: true, url: '' };
-      var name = e.url
-        ? '<a class="s-pdp-recent__name" href="' + esc(e.url) + '">' + esc(e.name) + '</a>'
+      /* the name is the product link (stretched over the card, so the image opens it too); quick view is its own button */
+      var u = e.url || (L && L.url ? L.url(e.k) : '');
+      var canQuick = !!(L && L.products && L.products[e.k]);
+      var name = u
+        ? '<a class="s-pdp-recent__name" href="' + esc(u) + '">' + esc(e.name) + '</a>'
         : '<button class="s-pdp-recent__name" type="button" data-quick="' + esc(e.k) + '" aria-label="' + esc(S.quick + ': ' + e.name) + '">' + esc(e.name) + '</button>';
+      var qv = u && canQuick ? '<button class="s-pdp-recent__qv" type="button" data-quick="' + esc(e.k) + '" aria-label="' + esc(S.quick + ': ' + e.name) + '">' + EYE + '</button>' : '';
       var img = e.img ? '<img src="' + esc(thumb(e.img)) + '" alt="" width="120" height="150" loading="lazy">' : '<span class="blko-lv3-ph" aria-hidden="true"></span>';
-      return '<li class="s-pdp-recent__card">' + img + '<div class="s-pdp-recent__text">' + name + (e.size ? '<span class="small">' + esc(e.size) + '</span>' : '') + '</div><span class="price">' + esc(fmt(e.price)) + '</span></li>';
+      if (u) img = '<a class="lv3-plink s-pdp-recent__img" href="' + esc(u) + '" tabindex="-1" aria-hidden="true">' + img + '</a>';
+      return '<li class="s-pdp-recent__card">' + img + '<div class="s-pdp-recent__text">' + name + (e.size ? '<span class="small">' + esc(e.size) + '</span>' : '') + '</div><span class="price">' + esc(fmt(e.price)) + '</span>' + qv + '</li>';
     }
     function render() {
       if (!list) return;
@@ -888,7 +909,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
       one: d.countOne || '1 saved product.', many: d.countMany || '[count] saved products.', zero: d.countZero || '',
       add: d.addLabel || 'Add to bag', add_aria: d.addAria || 'Add [name] to bag', rm: d.removeLabel || 'Remove',
       rm_aria: d.removeAria || 'Remove [name] from wishlist', sold: d.soldLabel || 'Sold out', removed: d.removedLabel || 'Removed [name].',
-      undo: d.undoLabel || 'Undo', save_aria: d.saveAria || 'Save [name]'
+      undo: d.undoLabel || 'Undo', save_aria: d.saveAria || 'Save [name]', qv_aria: d.quickAria || 'Quick view [name]'
     };
     var ul = root.querySelector('[data-wish-list]'), empty = root.querySelector('[data-wish-empty]'), status = root.querySelector('[data-wish-status]');
     var undoBox = root.querySelector('[data-wish-undo]'), sugg = root.querySelector('[data-wish-suggest]');
@@ -906,10 +927,17 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     }
     function media(src, alt) { return src ? '<img src="' + esc(src) + '" alt="' + esc(alt) + '" loading="lazy">' : ph; }
     function labels(ids) { var l = L(); return l.labelsHTML ? l.labelsHTML(ids || []) : ''; }
+    /* product page link: a real product's own url, else the demo page for that key (LATHER.url) */
+    function urlOf(e, key) { return (e && e.url) || (L().url ? L().url(key) : '') || ''; }
     function nameHTML(e, key) {
-      if (e.url) return '<a href="' + esc(e.url) + '">' + esc(e.name) + '</a>';
+      var u = urlOf(e, key);
+      if (u) return '<a class="lv3-pname" href="' + esc(u) + '">' + esc(e.name) + '</a>';
       if (L().products[key]) return '<button type="button" data-quick="' + esc(key) + '">' + esc(e.name) + '</button>';
       return esc(e.name);
+    }
+    function linked(u, html) { return u ? '<a class="lv3-plink lv3-plink--fill" href="' + esc(u) + '" tabindex="-1" aria-hidden="true">' + html + '</a>' : html; }
+    function qvHTML(key, name) {
+      return L().products[key] ? '<button class="s-wish__qv" type="button" data-quick="' + esc(key) + '" aria-label="' + esc(T.qv_aria.replace('[name]', name)) + '">' + eyeSVG + '</button>' : '';
     }
     function priceHTML(e) { return esc(fmt(e.price)) + (e.compare > e.price ? ' <s>' + esc(fmt(e.compare)) + '</s>' : ''); }
     function card(e) {
@@ -918,7 +946,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
         ? '<button class="btn btn--light btn--sm s-wish__add" type="button" disabled>' + esc(T.sold) + '</button>'
         : '<button class="btn btn--primary btn--sm s-wish__add" type="button" data-wish-add="' + esc(e.id) + '" aria-label="' + esc(tpl(T.add_aria, { name: e.name })) + '">' + esc(T.add) + '</button>';
       return '<li class="s-wish__card">' +
-        '<div class="s-wish__media">' + media(e.img, alt) + '<div class="labels">' + labels(e.labels) + '</div></div>' +
+        '<div class="s-wish__media">' + linked(urlOf(e, e.key), media(e.img, alt)) + '<div class="labels">' + labels(e.labels) + '</div>' + qvHTML(e.key, e.name) + '</div>' +
         '<div class="s-wish__info"><h2 class="s-wish__name">' + nameHTML(e, e.key) + '</h2>' +
         (e.size ? '<p class="s-wish__size">' + esc(e.size) + '</p>' : '') +
         '<p class="price s-wish__price">' + priceHTML(e) + '</p></div>' +
@@ -930,9 +958,9 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
       var p = L().products[key]; if (!p) return '';
       var alt = p.size ? p.name + ', ' + p.size : p.name;
       return '<li class="s-wish__card s-wish__card--sugg">' +
-        '<div class="s-wish__media">' + media(p.img, alt) + '<div class="labels">' + labels(p.labels) + '</div>' +
+        '<div class="s-wish__media">' + linked(urlOf(p, key), media(p.img, alt)) + '<div class="labels">' + labels(p.labels) + '</div>' + qvHTML(key, p.name) +
         '<button class="lv3-heart" type="button" data-wish="' + esc(key) + '" aria-pressed="false" aria-label="' + esc(tpl(T.save_aria, { name: p.name })) + '">' + heartSVG + '</button></div>' +
-        '<div class="s-wish__info"><h3 class="s-wish__name"><button type="button" data-quick="' + esc(key) + '">' + esc(p.name) + '</button></h3>' +
+        '<div class="s-wish__info"><h3 class="s-wish__name">' + nameHTML(p, key) + '</h3>' +
         (p.size ? '<p class="s-wish__size">' + esc(p.size) + '</p>' : '') +
         '<p class="price s-wish__price">' + priceHTML({ price: +p.price || 0, compare: +p.compare || 0 }) + '</p></div>' +
         '<div class="s-wish__acts"><button class="btn btn--ghost btn--sm s-wish__add" type="button" data-add="' + esc(key) + '" aria-label="' + esc(tpl(T.add_aria, { name: p.name })) + '">' + esc(T.add) + '</button></div>' +
@@ -994,6 +1022,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     render();
   }
 
+  var eyeSVG = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg>';
   var heartSVG = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg>';
 
   function init() {
@@ -1101,6 +1130,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
 @media (prefers-reduced-motion:reduce){.ship__bar i{transition:none}.line--gift.is-new,.s-cart-bag__line--gift.is-new{animation:none}}
 .drawer__list{flex:1;overflow:auto;padding:4px 24px}
 .line{display:grid;grid-template-columns:72px 1fr auto;gap:14px;padding:14px 0;border-top:1px solid var(--line);align-items:center}
+.line .lv3-plink{width:72px;border-radius:var(--r-img)}
 .line img{width:72px;height:88px;object-fit:cover;border-radius:var(--r-img);background:var(--oat)}
 .line h3{font:600 15px/1.25 var(--f-body)}
 .line .small{margin:2px 0 8px}
@@ -1197,6 +1227,11 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     little:{name:'Little lotion',size:'150 ml',price:14,img:'../img/c-little-lotion.jpg',hover:'../img/h-little.jpg',labels:['new','ff'],line:'Soft, light oat lotion for ages 1 and up. Fragrance-free.',ing:'Water, glycerin, colloidal oat, calendula oil, shea butter, cetearyl alcohol, xanthan gum, sodium benzoate.'},
     bar:{name:'Oat bar',size:'120 g',price:9,img:'../img/c-oat-bar.jpg',hover:'../img/h-bar.jpg',labels:['best','ff'],line:'Oat milk soap bar for face and body. Rich lather that rinses soft.',ing:'Sodium olivate, sodium cocoate, oat milk, colloidal oat, shea butter, glycerin.'}
   };
+  /* product page links: one product page in the demo; calm is product.html, the others product.html?p=<id>.
+     Relative links on purpose: blocko.ai 308-redirects product.html to /product and keeps the query. */
+  const CAT=Object.keys(products);
+  const url=id=>CAT.includes(id)?(id==='calm'?'product.html':'product.html?p='+encodeURIComponent(id)):'';
+  const pid=()=>{let q='';try{q=new URLSearchParams(location.search).get('p')||''}catch(e){}return CAT.includes(q)?q:'calm'};
   const LBL={best:['label--best','Best seller'],ff:['label--ff','Fragrance-free'],new:['label--new','New'],sale:['label--sale','Sale']};
   const fmt=n=>'$'+(Math.round(n*100)/100).toFixed(n%1?2:0);
   const labelsHTML=ids=>ids.map(k=>`<span class="label ${LBL[k][0]}">${LBL[k][1]}</span>`).join('');
@@ -1259,6 +1294,8 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
       el.querySelector('.ship__add').hidden=!P.offer;
     });
   }
+  /* bag line image and name link to the product page (custom lines such as sets stay plain) */
+  const lnk=(l,h,img)=>{const u=url(l.id);return u?`<a class="${img?'lv3-plink':'lv3-pname'}" href="${u}"${img?' tabindex="-1" aria-hidden="true"':''}>${h}</a>`:h};
   function render(){
     syncGift(); save();
     const n=count(), st=subtotal();
@@ -1269,8 +1306,8 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     const list=$('#drawerList'); let h='';
     if(removed) h+=`<div class="undo"><span>Removed ${removed.name}.</span><button type="button" id="undoBtn">Undo</button></div>`;
     if(!cart.length && !removed) h+=`<p class="drawer__empty">Nothing here yet. Most people start with the Oat bar, $9.</p>`;
-    cart.forEach((l,i)=>{if(l.gift){h+=`<div class="line line--gift${fresh?' is-new':''}"><img src="${l.img}" alt=""><div><h3>${l.name}</h3><p class="small">${l.note}</p></div><div style="text-align:right"><p class="price" style="font-size:18px">Free</p><button class="rm" type="button" data-rm="${i}" aria-label="Remove free ${l.name}">Remove</button></div></div>`;return}
-      h+=`<div class="line"><img src="${l.img}" alt=""><div><h3>${l.name}</h3><p class="small">${l.note||l.size}</p><div class="qty"><button type="button" aria-label="Less" data-q="${i}" data-d="-1">−</button><span>${l.qty}</span><button type="button" aria-label="More" data-q="${i}" data-d="1">+</button></div></div><div style="text-align:right"><p class="price" style="font-size:18px">${fmt(l.qty*l.price)}</p><button class="rm" type="button" data-rm="${i}">Remove</button></div></div>`});
+    cart.forEach((l,i)=>{if(l.gift){h+=`<div class="line line--gift${fresh?' is-new':''}">${lnk(l,`<img src="${l.img}" alt="">`,1)}<div><h3>${lnk(l,l.name)}</h3><p class="small">${l.note}</p></div><div style="text-align:right"><p class="price" style="font-size:18px">Free</p><button class="rm" type="button" data-rm="${i}" aria-label="Remove free ${l.name}">Remove</button></div></div>`;return}
+      h+=`<div class="line">${lnk(l,`<img src="${l.img}" alt="">`,1)}<div><h3>${lnk(l,l.name)}</h3><p class="small">${l.note||l.size}</p><div class="qty"><button type="button" aria-label="Less" data-q="${i}" data-d="-1">−</button><span>${l.qty}</span><button type="button" aria-label="More" data-q="${i}" data-d="1">+</button></div></div><div style="text-align:right"><p class="price" style="font-size:18px">${fmt(l.qty*l.price)}</p><button class="rm" type="button" data-rm="${i}">Remove</button></div></div>`});
     if(cart.length && !cart.some(l=>l.id==='bar')) h+=`<div class="drawer__up"><img src="${products.bar.img}" alt=""><span style="flex:1">Add the Oat bar for face and hands, $9.</span><button class="btn btn--light btn--sm" type="button" data-add="bar">Add</button></div>`;
     list.innerHTML=h;
     $('#checkoutBtn').textContent= st?`Check out, ${fmt(st)}`:'Check out';
@@ -1325,7 +1362,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     /* free gift: settings, live state, and bring a declined gift back */
     gift:{...GIFT,state:()=>progress()}, addGift(){setGiftOff(false);render()}
   };
-  window.LATHER={products,add,quick,fmt,labelsHTML,U,openLayer,closeAll,cart:cartApi};
+  window.LATHER={products,add,quick,fmt,labelsHTML,U,openLayer,closeAll,cart:cartApi,url,pid};
   render();
 
   /* header: over the hero until scrolled */

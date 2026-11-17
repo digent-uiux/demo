@@ -1,18 +1,19 @@
 {%- comment -%}
   Lather v3, product page: how to use (home-v3/pages/product/30-use.html).
-  Heading and intro; numbered step blocks; a note with a link. When the product has the custom.how_to_use metafield
+  Heading and intro; numbered step blocks, each with its own photo (image picker, Shopify placeholder until set); a note with a link. When the product has the custom.how_to_use metafield
   and "Use the product's how-to-use metafield" is on, its rich text replaces the steps.
 {%- endcomment -%}
 {{ 'blko-lv3-product-use.css' | asset_url | stylesheet_tag }}
 {%- liquid
   assign s = section.settings
   assign anchor = s.anchor | handleize | default: 'pdp-use'
-  assign mf = blank
+  assign mf = ''
   if s.use_metafield and product != blank and product.metafields.custom.how_to_use != blank
     assign mf = product.metafields.custom.how_to_use
   endif
 -%}
-<section class="s-pdp-use" id="{{ anchor }}" aria-labelledby="{{ anchor }}-title"><div class="wrap">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-3' -%}
+<section class="s-pdp-use{%- if lv3_sid != 'scheme-3' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="{{ anchor }}" aria-labelledby="{{ anchor }}-title"><div class="wrap">
   <div class="s-pdp-use__head">
     <h2 class="h2" id="{{ anchor }}-title" data-rv="line">
       {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
@@ -26,7 +27,19 @@
     <ol class="s-pdp-use__steps">
       {%- for block in section.blocks -%}
         {%- assign d = forloop.index0 | modulo: 3 -%}
-        <li data-rv="blur"{% if d > 0 %} data-rv-delay="{{ d }}"{% endif %} {{ block.shopify_attributes }}><h3>{{ block.settings.title | escape }}</h3>{%- if block.settings.text != blank -%}<p>{{ block.settings.text | escape }}</p>{%- endif -%}</li>
+        {%- assign ph = 'lifestyle-1' -%}{%- if d == 1 -%}{%- assign ph = 'lifestyle-2' -%}{%- elsif d == 2 -%}{%- assign ph = 'image' -%}{%- endif -%}
+        <li {{ block.shopify_attributes }}>
+          <figure class="s-pdp-use__media" data-rv="settle"{% if d > 0 %} data-rv-delay="{{ d }}"{% endif %}>
+            {%- assign im = block.settings.image -%}
+            {%- if im != blank -%}
+              {%- assign pos = '' -%}{%- if im.presentation.focal_point != blank -%}{%- assign pos = 'object-position: ' | append: im.presentation.focal_point -%}{%- endif -%}
+              {{ im | image_url: width: 900 | image_tag: widths: '240, 360, 480, 700, 900', sizes: '(max-width: 760px) 38vw, 30vw', loading: 'lazy', alt: block.settings.image_alt | default: im.alt, style: pos }}
+            {%- else -%}
+              {{ ph | placeholder_svg_tag: 'blko-lv3-ph' }}
+            {%- endif -%}
+          </figure>
+          <div data-rv="blur"{% if d > 0 %} data-rv-delay="{{ d }}"{% endif %}><h3>{{ block.settings.title | escape }}</h3>{%- if block.settings.text != blank -%}<p>{{ block.settings.text | escape }}</p>{%- endif -%}</div>
+        </li>
       {%- endfor -%}
     </ol>
   {%- endif -%}
@@ -41,6 +54,7 @@
   "class": "blko-lv3-section-product-use",
   "max_blocks": 6,
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-3" },
     { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "Keep the shower" },
     { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "<em>simple.</em>", "info": "Italic text shows in the accent style." },
     { "type": "textarea", "id": "text", "label": "Intro", "default": "Soft foam. A thorough rinse. Then a little lotion while skin is still damp." },
@@ -57,6 +71,8 @@
       "type": "step",
       "name": "Step",
       "settings": [
+        { "type": "image_picker", "id": "image", "label": "Photo", "info": "Square on desktop, 4:5 on mobile. Show the step being done." },
+        { "type": "text", "id": "image_alt", "label": "Photo alt text" },
         { "type": "text", "id": "title", "label": "Step", "default": "Wet, then lather" },
         { "type": "textarea", "id": "text", "label": "Text", "default": "Work a small amount between wet palms. Wash gently with lukewarm water." }
       ]
@@ -66,9 +82,9 @@
     {
       "name": "Lather product how to use",
       "blocks": [
-        { "type": "step", "settings": { "title": "Wet, then lather", "text": "Work a small amount between wet palms. Wash gently with lukewarm water." } },
-        { "type": "step", "settings": { "title": "Rinse it away", "text": "Rinse the foam off fully. Skip the hard scrubbing and pat dry with a soft towel." } },
-        { "type": "step", "settings": { "title": "Follow with lotion", "text": "Keep Calm lotion nearby. Smooth it over damp skin after your shower." } }
+        { "type": "step", "settings": { "image_alt": "Hands working a soft white foam between the palms", "title": "Wet, then lather", "text": "Work a small amount between wet palms. Wash gently with lukewarm water." } },
+        { "type": "step", "settings": { "image_alt": "Cupped hands rinsing under a running tap", "title": "Rinse it away", "text": "Rinse the foam off fully. Skip the hard scrubbing and pat dry with a soft towel." } },
+        { "type": "step", "settings": { "image_alt": "Fingers taking a little cream from a tin in a bathroom", "title": "Follow with lotion", "text": "Keep Calm lotion nearby. Smooth it over damp skin after your shower." } }
       ]
     }
   ]

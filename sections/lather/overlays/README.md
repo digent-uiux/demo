@@ -42,6 +42,7 @@ Do not use a zip.
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/overlays/sections/blko-lv3-theme.liquid
    - `snippets/blko-lv3-free-gift-progress.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/overlays/snippets/blko-lv3-free-gift-progress.liquid
    - `snippets/blko-lv3-product-data.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/overlays/snippets/blko-lv3-product-data.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/overlays/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings

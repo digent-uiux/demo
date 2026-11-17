@@ -40,12 +40,14 @@ Do not use a zip.
    - `assets/blko-lv3-yeseva-one.woff2`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/collection-intro/assets/blko-lv3-yeseva-one.woff2
    - `sections/blko-lv3-collection-intro.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/collection-intro/sections/blko-lv3-collection-intro.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/collection-intro/sections/blko-lv3-theme.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/collection-intro/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-3 |
 | `crumb_home` | text | Home link | Home |
 | `crumb_current` | text | Current page (all products) | Shop all |
 | `crumb_label` | text | Breadcrumb label (screen readers) | Breadcrumb |

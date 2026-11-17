@@ -1,6 +1,6 @@
 {%- comment -%}
   Lather home v3, 65 Collage: shop by skin. Three photo tiles of clearly different sizes (1st wide, 2nd tall, 3rd square)
-  set as one mosaic with the heading and a note card. Each tile links to a product (quick view) or a URL.
+  set as one mosaic with the heading and a note card. Each tile links to its product page (or quick view, if turned on) or a URL.
   Port of parts/65-collage.html; shared classes (.h2 .link, data-rv) come from blko-lv3-base.css.
 {%- endcomment -%}
 {{ 'blko-lv3-collage.css' | asset_url | stylesheet_tag }}
@@ -14,7 +14,8 @@
     assign fallback = routes.all_products_collection_url
   endif
 -%}
-<section class="s-col"{% if s.anchor != blank %} id="{{ s.anchor | handleize }}"{% endif %} aria-label="{{ s.label | escape }}">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-1' -%}
+<section class="s-col{%- if lv3_sid != 'scheme-1' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}"{% if s.anchor != blank %} id="{{ s.anchor | handleize }}"{% endif %} aria-label="{{ s.label | escape }}">
   <div class="wrap s-col__box">
     <div class="s-col__grid">
       <div class="s-col__head">
@@ -94,6 +95,7 @@
   "class": "blko-lv3-section-collage",
   "max_blocks": 3,
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
     { "type": "header", "content": "Content" },
     { "type": "text", "id": "anchor", "label": "Anchor id", "default": "by-skin" },
     { "type": "text", "id": "label", "label": "Section name (screen readers)", "default": "Shop by skin" },
@@ -115,7 +117,7 @@
         { "type": "text", "id": "title", "label": "Title", "default": "Little lotion, ages 1 and up" },
         { "type": "text", "id": "link_label", "label": "Link label", "default": "Shop Little lotion" },
         { "type": "url", "id": "link", "label": "Link", "info": "Blank uses the product page, or the fallback anchor." },
-        { "type": "checkbox", "id": "quick_view", "label": "Open quick view on click", "default": true },
+        { "type": "checkbox", "id": "quick_view", "label": "Open quick view on click", "info": "Off: the link goes to the product page.", "default": false },
         { "type": "product", "id": "product", "label": "Product" },
         { "type": "text", "id": "key", "label": "Product key", "info": "Shared with the other sections' buttons. Blank uses the product handle.", "default": "little" },
         { "type": "header", "content": "Demo product (no product picked)" },

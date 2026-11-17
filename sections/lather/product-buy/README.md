@@ -42,6 +42,7 @@ Do not use a zip.
    - `sections/blko-lv3-product-buy.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/product-buy/sections/blko-lv3-product-buy.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/product-buy/sections/blko-lv3-theme.liquid
    - `snippets/blko-lv3-product-data.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/product-buy/snippets/blko-lv3-product-data.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/product-buy/snippets/blko-lv3-settings.liquid
    - `snippets/blko-lv3-wishlist-heart.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/product-buy/snippets/blko-lv3-wishlist-heart.liquid
 3. Add the section in the Theme Editor and pick your products.
 
@@ -49,6 +50,7 @@ Do not use a zip.
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-1 |
 | `key` | text | Product key | calm |
 | `crumb_home` | text | Home link label | Home |
 | `crumb_label` | text | Collection label | Body wash |

@@ -40,12 +40,15 @@ Do not use a zip.
    - `sections/blko-lv3-footer.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/footer/sections/blko-lv3-footer.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/footer/sections/blko-lv3-theme.liquid
    - `snippets/blko-lv3-demo-links.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/footer/snippets/blko-lv3-demo-links.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/footer/snippets/blko-lv3-settings.liquid
+   - `snippets/blko-lv3-social-links.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/footer/snippets/blko-lv3-social-links.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-4 |
 | `promise` | inline_richtext | Promise (wrap one word in italics for the display type) | If your skin reacts, we <em>refund</em> it. |
 | `how` | textarea | How it works | First bottle of any formula, within 30 days, used or not. Em |
 | `show_newsletter` | checkbox | Show newsletter | True |

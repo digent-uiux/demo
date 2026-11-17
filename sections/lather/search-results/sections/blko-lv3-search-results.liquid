@@ -48,7 +48,8 @@
     endif
   endif
 -%}
-<section class="s-search-results" id="latherSearchResults-{{ uid }}" aria-labelledby="searchResultsHeading-{{ uid }}" data-lv3-search-results data-mode="{{ mode }}" data-heading-all="{{ s.heading_all | escape }}" data-heading-results="{{ s.heading_results | escape }}" data-count-one="{{ s.count_one | escape }}" data-count-other="{{ s.count_other | escape }}">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-1' -%}
+<section class="s-search-results{%- if lv3_sid != 'scheme-1' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="latherSearchResults-{{ uid }}" aria-labelledby="searchResultsHeading-{{ uid }}" data-lv3-search-results data-mode="{{ mode }}" data-heading-all="{{ s.heading_all | escape }}" data-heading-results="{{ s.heading_results | escape }}" data-count-one="{{ s.count_one | escape }}" data-count-other="{{ s.count_other | escape }}">
   <div class="wrap">
     <div class="s-search-results__top"><h2 id="searchResultsHeading-{{ uid }}" data-heading>{{ heading | escape }}</h2><p role="status" aria-live="polite" aria-atomic="true" data-count>{{ count_text | escape }}</p></div>
     <ul class="s-search-results__list" data-list{% if n == 0 %} hidden{% endif %}>
@@ -109,6 +110,7 @@
   "class": "blko-lv3-section-search-results",
   "enabled_on": { "templates": ["search"] },
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
     { "type": "range", "id": "per_page", "label": "Results per page", "min": 6, "max": 48, "step": 2, "default": 24 },
     { "type": "header", "content": "Before a search" },
     { "type": "collection", "id": "collection", "label": "Products to list", "info": "Empty: all products." },

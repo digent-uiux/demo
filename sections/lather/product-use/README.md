@@ -1,6 +1,6 @@
 # Lather product how to use
 
-how to use Heading and intro; numbered step blocks; a note with a link.
+how to use Heading and intro; numbered step blocks, each with its own photo (image picker, Shopify placeholder until set); a note with a link.
 
 - Category: main-product
 - Kind: section
@@ -40,12 +40,14 @@ Do not use a zip.
    - `assets/blko-lv3-yeseva-one.woff2`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/product-use/assets/blko-lv3-yeseva-one.woff2
    - `sections/blko-lv3-product-use.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/product-use/sections/blko-lv3-product-use.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/product-use/sections/blko-lv3-theme.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/product-use/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-3 |
 | `heading_1` | inline_richtext | Heading, line 1 | Keep the shower |
 | `heading_2` | inline_richtext | Heading, line 2 | <em>simple.</em> |
 | `text` | textarea | Intro | Soft foam. A thorough rinse. Then a little lotion while skin |

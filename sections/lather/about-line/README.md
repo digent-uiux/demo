@@ -42,12 +42,14 @@ Do not use a zip.
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/about-line/sections/blko-lv3-theme.liquid
    - `snippets/blko-lv3-about-line-start.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/about-line/snippets/blko-lv3-about-line-start.liquid
    - `snippets/blko-lv3-product-data.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/about-line/snippets/blko-lv3-product-data.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/about-line/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-3 |
 | `heading_1` | inline_richtext | Heading, line 1 | Less on the shelf. |
 | `heading_2` | inline_richtext | Heading, line 2 | More <em>clarity.</em> |
 | `text` | textarea | Intro | Nine products. Choose a wash, then the texture that feels ri |

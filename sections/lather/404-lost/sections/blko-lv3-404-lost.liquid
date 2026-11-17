@@ -12,7 +12,8 @@
   assign caption_url = s.caption_link | default: routes.all_products_collection_url
   assign img_alt = s.image.alt | default: s.image_alt
 -%}
-<section class="s-404-lost" aria-labelledby="lost-title-{{ section.id }}">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-3' -%}
+<section class="s-404-lost{%- if lv3_sid != 'scheme-3' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" aria-labelledby="lost-title-{{ section.id }}">
   <div class="s-404-lost__copy">
     {%- if s.code != blank -%}<p class="s-404-lost__code">{{ s.code | escape }}</p>{%- endif -%}
     <h1 class="h1" id="lost-title-{{ section.id }}" data-rv="line">
@@ -47,6 +48,7 @@
   "name": "Lather page not found",
   "class": "blko-lv3-section-404",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-3" },
     { "type": "text", "id": "code", "label": "Code", "default": "404" },
     { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "A page gone" },
     { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "<em>astray.</em>", "info": "Italic text shows in the accent style." },

@@ -27,7 +27,6 @@
         "toc_title": "In this article",
         "add_label": "Add [name]",
         "link_aria": "Read about [name]",
-        "quick_aria": "Read [name] details",
         "show_tags": true,
         "label": "Article",
         "demo_label": "Washing eczema-prone skin"
@@ -80,7 +79,6 @@
             "key": "calm",
             "after": 2,
             "text": "Fragrance-free body wash with colloidal oat and glycerin. Read every ingredient before choosing.",
-            "image_action": "link",
             "image": "shopify://shop_images/t-calm.jpg",
             "image_alt": "Calm wash, 400 ml",
             "name": "Calm wash",
@@ -110,8 +108,7 @@
           "settings": {
             "key": "cream",
             "after": 3,
-            "text": "A thick, fragrance-free body cream with shea butter and oat. Full ingredients are in quick view.",
-            "image_action": "quick",
+            "text": "A thick, fragrance-free body cream with shea butter and oat. Full ingredients are on its page.",
             "image": "shopify://shop_images/c-cream.jpg",
             "image_alt": "Rich cream, 200 ml",
             "name": "Rich cream",

@@ -87,7 +87,7 @@ html.motion [data-rv="blur"]:not(.in){opacity:0;transform:translateY(12px);filte
 html.motion [data-rv="settle"]:not(.in){opacity:0;transform:scale(.96)}
 html.motion [data-rv="draw"]{transform-origin:left center}
 html.motion [data-rv="draw"]:not(.in){transform:scaleX(0)}
-html.motion [data-rv="line"] .ln{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
+[data-rv="line"] .ln{display:block}html.motion [data-rv="line"] .ln{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
 html.motion [data-rv="line"] .ln>span{display:block;transition:transform .9s cubic-bezier(.22,1,.36,1)}
 html.motion [data-rv="line"]:not(.in) .ln>span{transform:translateY(105%)}
 html.motion [data-rv="line"] .ln:nth-child(2)>span{transition-delay:.09s}
@@ -132,6 +132,13 @@ html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
 .mnav.open{transform:none}
 .mnav a{font:500 26px/1.3 var(--f-body);text-decoration:none;padding:10px 0;border-bottom:1px solid var(--line)}
 .mnav__top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+/* product links on cards and chips: image + name go to the product page; buttons inside stay on top */
+.lv3-plink{display:block;color:inherit;text-decoration:none;border-radius:inherit}
+.lv3-plink--fill{position:absolute;inset:0;z-index:0}
+.lv3-plink:focus-visible{outline:2px solid var(--moss);outline-offset:-3px}
+.lv3-pname{color:inherit;text-decoration:none;text-underline-offset:4px;text-decoration-thickness:1px}
+.lv3-pname:hover{text-decoration-line:underline}
+.lv3-pname:focus-visible{outline:2px solid var(--moss);outline-offset:3px;border-radius:2px}
 </style>
 </head>
 <body>
@@ -180,7 +187,7 @@ html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
 .s-social__tile:nth-child(4n+2){align-self:flex-end}
 .s-social__tile img{width:100%;height:100%;object-fit:cover;transition:transform .5s var(--ease)}
 .s-social__tile:hover img{transform:scale(1.04)}
-.s-social__chip{position:absolute;left:10px;bottom:10px;max-width:calc(100% - 20px);display:flex;align-items:center;gap:10px;height:44px;padding:0 12px 0 6px;border-radius:var(--r-btn);
+.s-social__chip{text-decoration:none;position:absolute;left:10px;bottom:10px;max-width:calc(100% - 20px);display:flex;align-items:center;gap:10px;height:44px;padding:0 12px 0 6px;border-radius:var(--r-btn);
   background:var(--raised);color:var(--ink);font:600 14px/1 var(--f-body);white-space:nowrap;opacity:0;transition:opacity .3s var(--ease),background-color .25s var(--ease)}
 .s-social__chip img{width:32px;height:32px;border-radius:4px;object-fit:cover;background:var(--oat);transform:none!important}
 .s-social__chip .price{font-size:16px;color:var(--muted)}
@@ -223,35 +230,35 @@ html.motion .s-social__strip.is-drift:hover .s-social__track,html.motion .s-soci
     <div class="s-social__track">
       <figure class="s-social__tile" style="--w:340px;--h:250px">
         <img src="https://images.unsplash.com/photo-1760722974657-f64bce2f9cc5?w=700&q=72&auto=format&fit=crop" alt="Folded white towels on a chair" loading="lazy" style="object-position:40% 50%">
-        <button class="s-social__chip" type="button" data-quick="milk"><img src="../img/c-body-milk.jpg" alt=""><span data-n>Body milk</span><span class="price" data-p>$20</span></button>
+        <a class="s-social__chip" href="../templates/product.html?p=milk" data-pid="milk"><img src="../img/c-body-milk.jpg" alt=""><span data-n>Body milk</span><span class="price" data-p>$20</span></a>
       </figure>
       <figure class="s-social__tile" style="--w:250px;--h:360px">
         <img src="https://images.unsplash.com/photo-1566446896748-6075a87760c1?w=520&q=72&auto=format&fit=crop" alt="White tiled shower with two bottles in the niche" loading="lazy" style="object-position:50% 40%">
-        <button class="s-social__chip" type="button" data-quick="chamomile"><img src="../img/t-chamomile.jpg" alt=""><span data-n>Chamomile wash</span><span class="price" data-p>$20</span></button>
+        <a class="s-social__chip" href="../templates/product.html?p=chamomile" data-pid="chamomile"><img src="../img/t-chamomile.jpg" alt=""><span data-n>Chamomile wash</span><span class="price" data-p>$20</span></a>
       </figure>
       <figure class="s-social__tile" style="--w:230px;--h:290px">
         <img src="https://images.unsplash.com/photo-1614373532018-92a75430a0da?w=480&q=72&auto=format&fit=crop" alt="Close-up of rolled oat flakes" loading="lazy">
-        <button class="s-social__chip" type="button" data-quick="bar"><img src="../img/c-oat-bar.jpg" alt=""><span data-n>Oat bar</span><span class="price" data-p>$9</span></button>
+        <a class="s-social__chip" href="../templates/product.html?p=bar" data-pid="bar"><img src="../img/c-oat-bar.jpg" alt=""><span data-n>Oat bar</span><span class="price" data-p>$9</span></a>
       </figure>
       <figure class="s-social__tile" style="--w:290px;--h:400px">
         <img src="https://images.unsplash.com/photo-1654781350550-0dc72ecb6fae?w=600&q=72&auto=format&fit=crop" alt="Water drops on a bare back and shoulder" loading="lazy" style="object-position:50% 35%">
-        <button class="s-social__chip" type="button" data-quick="rich"><img src="../img/c-rich.jpg" alt=""><span data-n>Rich wash</span><span class="price" data-p>$20</span></button>
+        <a class="s-social__chip" href="../templates/product.html?p=rich" data-pid="rich"><img src="../img/c-rich.jpg" alt=""><span data-n>Rich wash</span><span class="price" data-p>$20</span></a>
       </figure>
       <figure class="s-social__tile" style="--w:330px;--h:230px">
         <img src="https://images.unsplash.com/photo-1574421233376-06f2ccf017f7?w=700&q=72&auto=format&fit=crop" alt="Folded green and white towels on a bathroom ledge" loading="lazy" style="object-position:55% 60%">
-        <button class="s-social__chip" type="button" data-quick="little"><img src="../img/c-little-lotion.jpg" alt=""><span data-n>Little lotion</span><span class="price" data-p>$14</span></button>
+        <a class="s-social__chip" href="../templates/product.html?p=little" data-pid="little"><img src="../img/c-little-lotion.jpg" alt=""><span data-n>Little lotion</span><span class="price" data-p>$14</span></a>
       </figure>
       <figure class="s-social__tile" style="--w:360px;--h:270px">
         <img src="https://images.unsplash.com/photo-1601065732058-029db52c86b4?w=740&q=72&auto=format&fit=crop" alt="A dab of cream on the back of a hand" loading="lazy" style="object-position:55% 50%">
-        <button class="s-social__chip" type="button" data-quick="cream"><img src="../img/c-cream.jpg" alt=""><span data-n>Rich cream</span><span class="price" data-p>$24</span></button>
+        <a class="s-social__chip" href="../templates/product.html?p=cream" data-pid="cream"><img src="../img/c-cream.jpg" alt=""><span data-n>Rich cream</span><span class="price" data-p>$24</span></a>
       </figure>
       <figure class="s-social__tile" style="--w:250px;--h:340px">
         <img src="https://images.unsplash.com/photo-1561228987-8e7379dde477?w=520&q=72&auto=format&fit=crop" alt="Fingers resting on the side of a neck, soft skin close up" loading="lazy" style="object-position:50% 45%">
-        <button class="s-social__chip" type="button" data-quick="lotion"><img src="../img/c-lotion.jpg" alt=""><span data-n>Calm lotion</span><span class="price" data-p>$22</span></button>
+        <a class="s-social__chip" href="../templates/product.html?p=lotion" data-pid="lotion"><img src="../img/c-lotion.jpg" alt=""><span data-n>Calm lotion</span><span class="price" data-p>$22</span></a>
       </figure>
       <figure class="s-social__tile" style="--w:310px;--h:300px">
         <img src="https://images.unsplash.com/photo-1581182800629-7d90925ad072?w=640&q=72&auto=format&fit=crop" alt="Woman with wet hair and eyes closed in warm window light" loading="lazy" style="object-position:50% 30%">
-        <button class="s-social__chip" type="button" data-quick="calm"><img src="../img/t-calm.jpg" alt=""><span data-n>Calm wash</span><span class="price" data-p>$18</span></button>
+        <a class="s-social__chip" href="../templates/product.html" data-pid="calm"><img src="../img/t-calm.jpg" alt=""><span data-n>Calm wash</span><span class="price" data-p>$18</span></a>
       </figure>
     </div>
   </div>
@@ -260,12 +267,13 @@ html.motion .s-social__strip.is-drift:hover .s-social__track,html.motion .s-soci
   const root = document.getElementById('social'); if (!root) return;
   const strip = root.querySelector('.s-social__strip'), track = root.querySelector('.s-social__track');
   const L = window.LATHER;
-  if (L) root.querySelectorAll('.s-social__chip[data-quick]').forEach(b => {
-    const p = L.products[b.dataset.quick]; if (!p) return;
+  if (L) root.querySelectorAll('.s-social__chip[data-pid]').forEach(b => {
+    const p = L.products[b.dataset.pid]; if (!p) return;
     b.querySelector('img').src = p.img;
     b.querySelector('[data-n]').textContent = p.name;
     b.querySelector('[data-p]').textContent = L.fmt(p.price);
-    b.setAttribute('aria-label', `Quick view: ${p.name}, ${L.fmt(p.price)}`);
+    if (L.url) b.href = L.url(b.dataset.pid);
+    b.setAttribute('aria-label', `${p.name}, ${L.fmt(p.price)}`);
   });
   // drift only on wide screens with motion: double the set so the loop is seamless; the copy is hidden from AT and focus
   const wide = matchMedia('(min-width: 761px)');
@@ -273,7 +281,7 @@ html.motion .s-social__strip.is-drift:hover .s-social__track,html.motion .s-soci
   function arm() {
     const on = document.documentElement.classList.contains('motion') && wide.matches;
     if (on && !doubled) {
-      [...track.children].forEach(t => { const c = t.cloneNode(true); c.setAttribute('aria-hidden', 'true'); c.setAttribute('inert', ''); c.querySelectorAll('button').forEach(b => b.tabIndex = -1); track.appendChild(c); });
+      [...track.children].forEach(t => { const c = t.cloneNode(true); c.setAttribute('aria-hidden', 'true'); c.setAttribute('inert', ''); c.querySelectorAll('a, button').forEach(b => b.tabIndex = -1); track.appendChild(c); });
       doubled = true;
     }
     if (!on && doubled) { [...track.children].slice(track.children.length / 2).forEach(c => c.remove()); doubled = false; }
@@ -481,7 +489,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
 
     /* ---------- local index (window.LATHER.products) ---------- */
     function hitOf(k, p) {
-      var url = p.url || (C.pages || {})[k] || '';
+      var url = p.url || (C.pages || {})[k] || (L().url ? L().url(k) : '') || '';
       return { key: k, name: p.name, size: p.size || '', price: +p.price || 0, compare: +p.compare || 0, img: p.img || '', url: url || C.fallbackUrl || '#', quick: !url };
     }
     function index() {
@@ -673,6 +681,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
   'use strict';
   if (window.LatherRecent) return;
   var K = 'lather-recent', MAX = 12;
+  var EYE = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg>';
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
   var handleOf = function (url) { var m = /\/products\/([^\/?#]+)/.exec(url || ''); return m ? decodeURIComponent(m[1]) : ''; };
 
@@ -749,11 +758,16 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
       var L = window.LATHER;
       /* an entry viewed on another page: hand it to the runtime so its quick view works here */
       if (!e.url && L && L.products && !L.products[e.k]) L.products[e.k] = { name: e.name, size: e.size, price: e.price, compare: null, img: e.img, hover: '', labels: [], line: '', ing: '', variant: null, available: true, url: '' };
-      var name = e.url
-        ? '<a class="s-pdp-recent__name" href="' + esc(e.url) + '">' + esc(e.name) + '</a>'
+      /* the name is the product link (stretched over the card, so the image opens it too); quick view is its own button */
+      var u = e.url || (L && L.url ? L.url(e.k) : '');
+      var canQuick = !!(L && L.products && L.products[e.k]);
+      var name = u
+        ? '<a class="s-pdp-recent__name" href="' + esc(u) + '">' + esc(e.name) + '</a>'
         : '<button class="s-pdp-recent__name" type="button" data-quick="' + esc(e.k) + '" aria-label="' + esc(S.quick + ': ' + e.name) + '">' + esc(e.name) + '</button>';
+      var qv = u && canQuick ? '<button class="s-pdp-recent__qv" type="button" data-quick="' + esc(e.k) + '" aria-label="' + esc(S.quick + ': ' + e.name) + '">' + EYE + '</button>' : '';
       var img = e.img ? '<img src="' + esc(thumb(e.img)) + '" alt="" width="120" height="150" loading="lazy">' : '<span class="blko-lv3-ph" aria-hidden="true"></span>';
-      return '<li class="s-pdp-recent__card">' + img + '<div class="s-pdp-recent__text">' + name + (e.size ? '<span class="small">' + esc(e.size) + '</span>' : '') + '</div><span class="price">' + esc(fmt(e.price)) + '</span></li>';
+      if (u) img = '<a class="lv3-plink s-pdp-recent__img" href="' + esc(u) + '" tabindex="-1" aria-hidden="true">' + img + '</a>';
+      return '<li class="s-pdp-recent__card">' + img + '<div class="s-pdp-recent__text">' + name + (e.size ? '<span class="small">' + esc(e.size) + '</span>' : '') + '</div><span class="price">' + esc(fmt(e.price)) + '</span>' + qv + '</li>';
     }
     function render() {
       if (!list) return;
@@ -932,7 +946,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
       one: d.countOne || '1 saved product.', many: d.countMany || '[count] saved products.', zero: d.countZero || '',
       add: d.addLabel || 'Add to bag', add_aria: d.addAria || 'Add [name] to bag', rm: d.removeLabel || 'Remove',
       rm_aria: d.removeAria || 'Remove [name] from wishlist', sold: d.soldLabel || 'Sold out', removed: d.removedLabel || 'Removed [name].',
-      undo: d.undoLabel || 'Undo', save_aria: d.saveAria || 'Save [name]'
+      undo: d.undoLabel || 'Undo', save_aria: d.saveAria || 'Save [name]', qv_aria: d.quickAria || 'Quick view [name]'
     };
     var ul = root.querySelector('[data-wish-list]'), empty = root.querySelector('[data-wish-empty]'), status = root.querySelector('[data-wish-status]');
     var undoBox = root.querySelector('[data-wish-undo]'), sugg = root.querySelector('[data-wish-suggest]');
@@ -950,10 +964,17 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     }
     function media(src, alt) { return src ? '<img src="' + esc(src) + '" alt="' + esc(alt) + '" loading="lazy">' : ph; }
     function labels(ids) { var l = L(); return l.labelsHTML ? l.labelsHTML(ids || []) : ''; }
+    /* product page link: a real product's own url, else the demo page for that key (LATHER.url) */
+    function urlOf(e, key) { return (e && e.url) || (L().url ? L().url(key) : '') || ''; }
     function nameHTML(e, key) {
-      if (e.url) return '<a href="' + esc(e.url) + '">' + esc(e.name) + '</a>';
+      var u = urlOf(e, key);
+      if (u) return '<a class="lv3-pname" href="' + esc(u) + '">' + esc(e.name) + '</a>';
       if (L().products[key]) return '<button type="button" data-quick="' + esc(key) + '">' + esc(e.name) + '</button>';
       return esc(e.name);
+    }
+    function linked(u, html) { return u ? '<a class="lv3-plink lv3-plink--fill" href="' + esc(u) + '" tabindex="-1" aria-hidden="true">' + html + '</a>' : html; }
+    function qvHTML(key, name) {
+      return L().products[key] ? '<button class="s-wish__qv" type="button" data-quick="' + esc(key) + '" aria-label="' + esc(T.qv_aria.replace('[name]', name)) + '">' + eyeSVG + '</button>' : '';
     }
     function priceHTML(e) { return esc(fmt(e.price)) + (e.compare > e.price ? ' <s>' + esc(fmt(e.compare)) + '</s>' : ''); }
     function card(e) {
@@ -962,7 +983,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
         ? '<button class="btn btn--light btn--sm s-wish__add" type="button" disabled>' + esc(T.sold) + '</button>'
         : '<button class="btn btn--primary btn--sm s-wish__add" type="button" data-wish-add="' + esc(e.id) + '" aria-label="' + esc(tpl(T.add_aria, { name: e.name })) + '">' + esc(T.add) + '</button>';
       return '<li class="s-wish__card">' +
-        '<div class="s-wish__media">' + media(e.img, alt) + '<div class="labels">' + labels(e.labels) + '</div></div>' +
+        '<div class="s-wish__media">' + linked(urlOf(e, e.key), media(e.img, alt)) + '<div class="labels">' + labels(e.labels) + '</div>' + qvHTML(e.key, e.name) + '</div>' +
         '<div class="s-wish__info"><h2 class="s-wish__name">' + nameHTML(e, e.key) + '</h2>' +
         (e.size ? '<p class="s-wish__size">' + esc(e.size) + '</p>' : '') +
         '<p class="price s-wish__price">' + priceHTML(e) + '</p></div>' +
@@ -974,9 +995,9 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
       var p = L().products[key]; if (!p) return '';
       var alt = p.size ? p.name + ', ' + p.size : p.name;
       return '<li class="s-wish__card s-wish__card--sugg">' +
-        '<div class="s-wish__media">' + media(p.img, alt) + '<div class="labels">' + labels(p.labels) + '</div>' +
+        '<div class="s-wish__media">' + linked(urlOf(p, key), media(p.img, alt)) + '<div class="labels">' + labels(p.labels) + '</div>' + qvHTML(key, p.name) +
         '<button class="lv3-heart" type="button" data-wish="' + esc(key) + '" aria-pressed="false" aria-label="' + esc(tpl(T.save_aria, { name: p.name })) + '">' + heartSVG + '</button></div>' +
-        '<div class="s-wish__info"><h3 class="s-wish__name"><button type="button" data-quick="' + esc(key) + '">' + esc(p.name) + '</button></h3>' +
+        '<div class="s-wish__info"><h3 class="s-wish__name">' + nameHTML(p, key) + '</h3>' +
         (p.size ? '<p class="s-wish__size">' + esc(p.size) + '</p>' : '') +
         '<p class="price s-wish__price">' + priceHTML({ price: +p.price || 0, compare: +p.compare || 0 }) + '</p></div>' +
         '<div class="s-wish__acts"><button class="btn btn--ghost btn--sm s-wish__add" type="button" data-add="' + esc(key) + '" aria-label="' + esc(tpl(T.add_aria, { name: p.name })) + '">' + esc(T.add) + '</button></div>' +
@@ -1038,6 +1059,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     render();
   }
 
+  var eyeSVG = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg>';
   var heartSVG = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg>';
 
   function init() {
@@ -1145,6 +1167,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
 @media (prefers-reduced-motion:reduce){.ship__bar i{transition:none}.line--gift.is-new,.s-cart-bag__line--gift.is-new{animation:none}}
 .drawer__list{flex:1;overflow:auto;padding:4px 24px}
 .line{display:grid;grid-template-columns:72px 1fr auto;gap:14px;padding:14px 0;border-top:1px solid var(--line);align-items:center}
+.line .lv3-plink{width:72px;border-radius:var(--r-img)}
 .line img{width:72px;height:88px;object-fit:cover;border-radius:var(--r-img);background:var(--oat)}
 .line h3{font:600 15px/1.25 var(--f-body)}
 .line .small{margin:2px 0 8px}
@@ -1241,6 +1264,11 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     little:{name:'Little lotion',size:'150 ml',price:14,img:'../img/c-little-lotion.jpg',hover:'../img/h-little.jpg',labels:['new','ff'],line:'Soft, light oat lotion for ages 1 and up. Fragrance-free.',ing:'Water, glycerin, colloidal oat, calendula oil, shea butter, cetearyl alcohol, xanthan gum, sodium benzoate.'},
     bar:{name:'Oat bar',size:'120 g',price:9,img:'../img/c-oat-bar.jpg',hover:'../img/h-bar.jpg',labels:['best','ff'],line:'Oat milk soap bar for face and body. Rich lather that rinses soft.',ing:'Sodium olivate, sodium cocoate, oat milk, colloidal oat, shea butter, glycerin.'}
   };
+  /* product page links: one product page in the demo; calm is product.html, the others product.html?p=<id>.
+     Relative links on purpose: blocko.ai 308-redirects product.html to /product and keeps the query. */
+  const CAT=Object.keys(products);
+  const url=id=>CAT.includes(id)?(id==='calm'?'product.html':'product.html?p='+encodeURIComponent(id)):'';
+  const pid=()=>{let q='';try{q=new URLSearchParams(location.search).get('p')||''}catch(e){}return CAT.includes(q)?q:'calm'};
   const LBL={best:['label--best','Best seller'],ff:['label--ff','Fragrance-free'],new:['label--new','New'],sale:['label--sale','Sale']};
   const fmt=n=>'$'+(Math.round(n*100)/100).toFixed(n%1?2:0);
   const labelsHTML=ids=>ids.map(k=>`<span class="label ${LBL[k][0]}">${LBL[k][1]}</span>`).join('');
@@ -1303,6 +1331,8 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
       el.querySelector('.ship__add').hidden=!P.offer;
     });
   }
+  /* bag line image and name link to the product page (custom lines such as sets stay plain) */
+  const lnk=(l,h,img)=>{const u=url(l.id);return u?`<a class="${img?'lv3-plink':'lv3-pname'}" href="${u}"${img?' tabindex="-1" aria-hidden="true"':''}>${h}</a>`:h};
   function render(){
     syncGift(); save();
     const n=count(), st=subtotal();
@@ -1313,8 +1343,8 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     const list=$('#drawerList'); let h='';
     if(removed) h+=`<div class="undo"><span>Removed ${removed.name}.</span><button type="button" id="undoBtn">Undo</button></div>`;
     if(!cart.length && !removed) h+=`<p class="drawer__empty">Nothing here yet. Most people start with the Oat bar, $9.</p>`;
-    cart.forEach((l,i)=>{if(l.gift){h+=`<div class="line line--gift${fresh?' is-new':''}"><img src="${l.img}" alt=""><div><h3>${l.name}</h3><p class="small">${l.note}</p></div><div style="text-align:right"><p class="price" style="font-size:18px">Free</p><button class="rm" type="button" data-rm="${i}" aria-label="Remove free ${l.name}">Remove</button></div></div>`;return}
-      h+=`<div class="line"><img src="${l.img}" alt=""><div><h3>${l.name}</h3><p class="small">${l.note||l.size}</p><div class="qty"><button type="button" aria-label="Less" data-q="${i}" data-d="-1">−</button><span>${l.qty}</span><button type="button" aria-label="More" data-q="${i}" data-d="1">+</button></div></div><div style="text-align:right"><p class="price" style="font-size:18px">${fmt(l.qty*l.price)}</p><button class="rm" type="button" data-rm="${i}">Remove</button></div></div>`});
+    cart.forEach((l,i)=>{if(l.gift){h+=`<div class="line line--gift${fresh?' is-new':''}">${lnk(l,`<img src="${l.img}" alt="">`,1)}<div><h3>${lnk(l,l.name)}</h3><p class="small">${l.note}</p></div><div style="text-align:right"><p class="price" style="font-size:18px">Free</p><button class="rm" type="button" data-rm="${i}" aria-label="Remove free ${l.name}">Remove</button></div></div>`;return}
+      h+=`<div class="line">${lnk(l,`<img src="${l.img}" alt="">`,1)}<div><h3>${lnk(l,l.name)}</h3><p class="small">${l.note||l.size}</p><div class="qty"><button type="button" aria-label="Less" data-q="${i}" data-d="-1">−</button><span>${l.qty}</span><button type="button" aria-label="More" data-q="${i}" data-d="1">+</button></div></div><div style="text-align:right"><p class="price" style="font-size:18px">${fmt(l.qty*l.price)}</p><button class="rm" type="button" data-rm="${i}">Remove</button></div></div>`});
     if(cart.length && !cart.some(l=>l.id==='bar')) h+=`<div class="drawer__up"><img src="${products.bar.img}" alt=""><span style="flex:1">Add the Oat bar for face and hands, $9.</span><button class="btn btn--light btn--sm" type="button" data-add="bar">Add</button></div>`;
     list.innerHTML=h;
     $('#checkoutBtn').textContent= st?`Check out, ${fmt(st)}`:'Check out';
@@ -1369,7 +1399,7 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
     /* free gift: settings, live state, and bring a declined gift back */
     gift:{...GIFT,state:()=>progress()}, addGift(){setGiftOff(false);render()}
   };
-  window.LATHER={products,add,quick,fmt,labelsHTML,U,openLayer,closeAll,cart:cartApi};
+  window.LATHER={products,add,quick,fmt,labelsHTML,U,openLayer,closeAll,cart:cartApi,url,pid};
   render();
 
   /* header: over the hero until scrolled */

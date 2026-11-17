@@ -10,7 +10,8 @@
   assign s = section.settings
   assign uid = 'rv-' | append: section.id
 -%}
-<section class="s-reviews" id="{{ s.anchor | default: 'reviews' | handleize }}" aria-label="{{ s.label | escape }}" data-lv3-reviews>
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-3' -%}
+<section class="s-reviews{%- if lv3_sid != 'scheme-3' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="{{ s.anchor | default: 'reviews' | handleize }}" aria-label="{{ s.label | escape }}" data-lv3-reviews>
   <div class="wrap s-reviews__grid">
     <div class="s-reviews__intro">
       <div class="s-reviews__head">
@@ -115,6 +116,7 @@
   "class": "blko-lv3-section-reviews",
   "max_blocks": 6,
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-3" },
     { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "From skin" },
     { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "like <em>yours.</em>", "info": "Italic text shows in the accent style." },
     { "type": "header", "content": "Rating summary" },

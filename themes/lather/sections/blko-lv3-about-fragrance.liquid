@@ -1,7 +1,7 @@
 {%- comment -%}
   Lather v3, About: fragrance (home-v3/pages/about/20-fragrance.html). Dark band: intro on the left, a list of
-  choices on the right. Each choice is a block with an optional link; a choice can also open a product's quick view
-  (pick a product, or give a product key already on the page, e.g. 'chamomile' from the line section).
+  choices on the right. Each choice is a block with an optional link: a picked product links to its page; with no
+  product and no link, a demo product key already on the page (e.g. 'chamomile') opens that product's quick view.
 {%- endcomment -%}
 {{ 'blko-lv3-about-fragrance.css' | asset_url | stylesheet_tag }}
 
@@ -15,7 +15,8 @@
   {%- endif -%}
 {%- endfor -%}
 
-<section class="s-about-fragrance" id="{{ s.anchor | default: 'fragrance' | handleize }}" aria-labelledby="{{ uid }}">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-5' -%}
+<section class="s-about-fragrance{%- if lv3_sid != 'scheme-5' %} color-{{ lv3_sid }} lv3-scheme-pick lv3-scheme-pick--dark{% endif %}" id="{{ s.anchor | default: 'fragrance' | handleize }}" aria-labelledby="{{ uid }}">
   <div class="wrap s-about-fragrance__layout">
     <div class="s-about-fragrance__intro">
       <h2 class="h2" id="{{ uid }}" data-rv="line">
@@ -31,8 +32,8 @@
             assign b = block.settings
             assign d = forloop.index0 | at_most: 3
             assign qk = b.quick_key
-            if b.quick_product != blank
-              assign qk = b.quick_product.handle
+            if b.quick_product != blank or b.link != blank
+              assign qk = ''
             endif
             assign href = b.link
             if href == blank
@@ -62,6 +63,7 @@
   "class": "blko-lv3-section-about-fragrance",
   "max_blocks": 6,
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-5" },
     { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "Fragrance-free." },
     { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "On <em>purpose.</em>", "info": "Italic text shows in the accent style." },
     { "type": "textarea", "id": "text", "label": "Text", "default": "A body wash doesn't need a perfume to do its job. We keep fragrance out of most of our line, so there's one less thing to think about." },
@@ -78,8 +80,8 @@
         { "type": "text", "id": "link_label", "label": "Link label", "default": "Find a fragrance-free fit" },
         { "type": "url", "id": "link", "label": "Link", "info": "Blank: all products (or the picked product)." },
         { "type": "header", "content": "Quick view (optional)" },
-        { "type": "product", "id": "quick_product", "label": "Product", "info": "The link opens this product's quick view." },
-        { "type": "text", "id": "quick_key", "label": "Demo product key", "info": "Without a product: a key shown elsewhere on the page, e.g. chamomile." },
+        { "type": "product", "id": "quick_product", "label": "Product", "info": "The link goes to this product's page." },
+        { "type": "text", "id": "quick_key", "label": "Demo product key", "info": "Without a product or link: the link opens the quick view of a key shown elsewhere on the page, e.g. chamomile." },
         { "type": "text", "id": "quick_aria", "label": "Quick view label (screen readers)" }
       ]
     }

@@ -64,7 +64,8 @@
   {%- endif -%}
 {%- endfor -%}
 
-<section class="s-feat" id="{{ anchor }}" aria-labelledby="featH-{{ uid }}" data-lv3-feat>
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-1' -%}
+<section class="s-feat{%- if lv3_sid != 'scheme-1' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="{{ anchor }}" aria-labelledby="featH-{{ uid }}" data-lv3-feat>
   <div class="wrap s-feat__grid">
     <div class="s-feat__head">
       <h2 class="h2" id="featH-{{ uid }}" data-rv="blur">{{ s.heading }}</h2>
@@ -134,6 +135,7 @@
   "tag": "div",
   "class": "blko-lv3-section-featured",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
     { "type": "header", "content": "Heading" },
     { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Our <em>favourites.</em>", "info": "Italic text shows in the display font." },
     { "type": "text", "id": "sub", "label": "Text", "default": "Fragrance-free unless the label says otherwise." },

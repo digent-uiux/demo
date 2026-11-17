@@ -42,17 +42,19 @@ Do not use a zip.
    - `sections/blko-lv3-reels.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/reels/sections/blko-lv3-reels.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/reels/sections/blko-lv3-theme.liquid
    - `snippets/blko-lv3-product-data.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/reels/snippets/blko-lv3-product-data.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/reels/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-5 |
 | `heading_1` | inline_richtext | Heading, line 1 | Real showers, |
 | `heading_2` | inline_richtext | Heading, line 2 | <em>real</em> skin. |
 | `text` | textarea | Text | How people use it, in under a minute. Tap a product to see w |
 | `start` | range | Clip centred on load | 2 |
-| `quick_label` | text | Product chip label (screen readers) | Quick view |
+| `quick_label` | text | Quick view button label (screen readers) | Quick view |
 | `prev_label` | text | Previous button (screen readers) | Previous clip |
 | `next_label` | text | Next button (screen readers) | Next clip |
 | `label` | text | Section label (screen readers) | Customer clips |

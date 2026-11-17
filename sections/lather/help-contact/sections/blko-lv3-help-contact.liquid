@@ -11,7 +11,8 @@
   assign fid = 'contact-' | append: section.id
   assign topics = s.topics | newline_to_br | split: '<br />'
 -%}
-<section class="s-help-contact" id="{{ s.anchor | default: 'contact' | handleize }}" aria-labelledby="{{ uid }}">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-4' -%}
+<section class="s-help-contact{%- if lv3_sid != 'scheme-4' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="{{ s.anchor | default: 'contact' | handleize }}" aria-labelledby="{{ uid }}">
   <div class="wrap s-help-contact__in">
     <div class="s-help-contact__intro">
       <h2 class="h2" id="{{ uid }}" data-rv="line"><span class="ln"><span>{{ s.heading }}</span></span></h2>
@@ -62,6 +63,7 @@
   "name": "Lather help contact",
   "class": "blko-lv3-section-help-contact",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-4" },
     { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Ask a <em>person.</em>", "info": "Italic text shows in the accent style." },
     { "type": "textarea", "id": "text", "label": "Text", "default": "Tell us the product, your question, and your order number if you have one." },
     { "type": "textarea", "id": "hours", "label": "Hours", "default": "Customer care\nWeekdays, 9–5 ET" },

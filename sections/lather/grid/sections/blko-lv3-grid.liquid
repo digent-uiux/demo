@@ -31,7 +31,8 @@
     assign count_text = s.count_many | replace: '[n]', n_products
   endif
 -%}
-<section class="s-grid" id="{{ anchor }}" aria-labelledby="{{ uid }}-h" data-count-one="{{ s.count_one | escape }}" data-count-many="{{ s.count_many | escape }}">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-1' -%}
+<section class="s-grid{%- if lv3_sid != 'scheme-1' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="{{ anchor }}" aria-labelledby="{{ uid }}-h" data-count-one="{{ s.count_one | escape }}" data-count-many="{{ s.count_many | escape }}">
   <div class="wrap">
     <div class="s-grid__hd">
       <h2 class="h2" id="{{ uid }}-h" data-rv="line">
@@ -98,11 +99,16 @@
             endif
           endif
           assign alt = b.image_alt | default: name
+          assign url = routes.all_products_collection_url
+          if p != blank
+            assign url = p.url
+          endif
           assign label_keys = b.labels | remove: ' ' | split: ','
         -%}
         {%- render 'blko-lv3-product-data', key: key, product: p, name: b.name, size: b.size, price: b.price, line: b.quick_line, ing: b.ingredients, labels: b.labels, img: b.image, hover: b.hover_image -%}
         <li class="s-grid__card{% if card == 'feat' %} s-grid__card--feat{% elsif card == 'wide' %} s-grid__card--wide{% endif %}" data-tags="{{ b.tags | strip | downcase | escape }}" data-rv="settle"{% if delay > 0 %} data-rv-delay="{{ delay }}"{% endif %} {{ block.shopify_attributes }}>
           <div class="s-grid__media">
+            <a class="lv3-plink lv3-plink--fill" href="{{ url }}" tabindex="-1" aria-hidden="true">
             {%- if img_a != blank -%}
               {{ img_a | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '360, 540, 720, 1000, 1400', sizes: sizes, alt: alt, class: 'a' }}
             {%- else -%}
@@ -117,6 +123,7 @@
                 {{ img_b | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '360, 540, 720, 1000, 1400', sizes: sizes, alt: '', class: b_class }}
               {%- endif -%}
             {%- endif -%}
+            </a>
             {%- if label_keys.size > 0 -%}
               <div class="labels">
                 {%- for lk in label_keys -%}
@@ -133,7 +140,7 @@
             {%- render 'blko-lv3-wishlist-heart', key: key, name: name, label: s.wish_aria -%}
           </div>
           <div class="s-grid__info">
-            <h3 class="s-grid__nm">{{ name | escape }}</h3>
+            <h3 class="s-grid__nm"><a class="lv3-pname" href="{{ url }}">{{ name | escape }}</a></h3>{%- render 'blko-lv3-card-meta', product: p -%}
             {%- if b.line != blank -%}<p class="s-grid__line">{{ b.line | escape }}</p>{%- endif -%}
             <p class="s-grid__price"><span class="price">{{ price_html }}{% if cut_html != '' %} <s>{{ cut_html }}</s>{% endif %}</span>{% if size != blank %}<span class="small">{{ size | escape }}</span>{% endif %}</p>
             {%- if card == 'feat' -%}
@@ -155,6 +162,7 @@
   "class": "blko-lv3-grid",
   "max_blocks": 30,
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
     { "type": "header", "content": "Heading" },
     { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "Eight products, one" },
     { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "info": "Italic text shows in the display font.", "default": "<em>short</em> list." },

@@ -13,7 +13,8 @@
     assign terms = search.terms
   endif
 -%}
-<section class="s-search-find" aria-labelledby="searchHeading-{{ uid }}">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-3' -%}
+<section class="s-search-find{%- if lv3_sid != 'scheme-3' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" aria-labelledby="searchHeading-{{ uid }}">
   <div class="wrap s-search-find__layout">
     <div class="s-search-find__intro">
       <h1 class="h1" id="searchHeading-{{ uid }}" data-rv="line">
@@ -45,6 +46,7 @@
   "tag": "div",
   "class": "blko-lv3-section-search-find",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-3" },
     { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "A little help" },
     { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "finding <em>soft.</em>", "info": "Italic text shows in the display font." },
     { "type": "textarea", "id": "text", "label": "Text", "default": "Search by product, ingredient or what your skin needs." },

@@ -46,7 +46,8 @@
     endfor
   endif
 -%}
-<section class="s-art-continue" aria-labelledby="art-continue-title-{{ uid }}"><div class="wrap s-art-continue__layout">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-3' -%}
+<section class="s-art-continue{%- if lv3_sid != 'scheme-3' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" aria-labelledby="art-continue-title-{{ uid }}"><div class="wrap s-art-continue__layout">
   <div class="s-art-continue__intro">
     <h2 class="h2" id="art-continue-title-{{ uid }}" data-rv="line">
       {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
@@ -83,6 +84,7 @@
   "class": "blko-lv3-section-article-continue",
   "max_blocks": 8,
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-3" },
     { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "A few more" },
     { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "useful <em>notes.</em>", "info": "Italic text shows in the accent style." },
     { "type": "textarea", "id": "text", "label": "Text", "default": "Keep reading, or take a closer look at the things on your bathroom shelf." },

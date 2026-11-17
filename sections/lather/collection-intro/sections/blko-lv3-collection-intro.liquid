@@ -25,7 +25,8 @@
     assign text = collection.description | strip_html | truncatewords: 30
   endif
 -%}
-<section class="s-shop-intro" aria-labelledby="shopTitle-{{ uid }}">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-3' -%}
+<section class="s-shop-intro{%- if lv3_sid != 'scheme-3' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" aria-labelledby="shopTitle-{{ uid }}">
   <div class="wrap">
     <nav class="s-shop-intro__crumb" aria-label="{{ s.crumb_label | escape }}"><a href="{{ routes.root_url }}">{{ s.crumb_home | escape }}</a> / {{ crumb_current | escape }}</nav>
     <div class="s-shop-intro__row">
@@ -55,6 +56,7 @@
   "tag": "div",
   "class": "blko-lv3-section-collection-intro",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-3" },
     { "type": "header", "content": "Breadcrumb" },
     { "type": "text", "id": "crumb_home", "label": "Home link", "default": "Home" },
     { "type": "text", "id": "crumb_current", "label": "Current page (all products)", "default": "Shop all", "info": "Other collections show their own title." },

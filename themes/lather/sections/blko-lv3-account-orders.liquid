@@ -35,7 +35,8 @@
   </div>
 {%- endcapture -%}
 
-<section class="s-acct-access" aria-labelledby="account-title-{{ section.id }}" data-view="{{ view }}">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-3' -%}
+<section class="s-acct-access{%- if lv3_sid != 'scheme-3' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" aria-labelledby="account-title-{{ section.id }}" data-view="{{ view }}">
   <div class="wrap s-acct-access__grid">
     {%- render 'blko-lv3-account-intro', s: s, sid: section.id -%}
     <div class="s-acct-access__panel" id="account-panel">
@@ -123,6 +124,7 @@
   "name": "Lather account and orders",
   "class": "blko-lv3-section-account-orders",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-3" },
     {"type": "select", "id": "view", "label": "View", "default": "auto", "info": "Auto picks the panel from the template (customers/account, customers/order).", "options": [{"value": "auto", "label": "Auto"}, {"value": "account", "label": "Account and orders"}, {"value": "order", "label": "One order"}]},
     {"type": "header", "content": "Intro"},
     {"type": "text", "id": "eyebrow", "label": "Small label", "default": "Your account"},

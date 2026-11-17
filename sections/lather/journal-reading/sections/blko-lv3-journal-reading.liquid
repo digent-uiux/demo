@@ -19,7 +19,8 @@
   assign demo_filters = section.blocks | where: 'type', 'filter'
   assign sizes = '(max-width: 760px) 100vw, (max-width: 1000px) 50vw, 33vw'
 -%}
-<section class="s-jr-reading" id="{{ s.anchor | default: 'journalReading' | handleize }}" aria-labelledby="journalReadingTitle-{{ uid }}" data-lv3-journal data-one="{{ s.count_one | escape }}" data-many="{{ s.count_many | escape }}"><div class="wrap">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-1' -%}
+<section class="s-jr-reading{%- if lv3_sid != 'scheme-1' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="{{ s.anchor | default: 'journalReading' | handleize }}" aria-labelledby="journalReadingTitle-{{ uid }}" data-lv3-journal data-one="{{ s.count_one | escape }}" data-many="{{ s.count_many | escape }}"><div class="wrap">
 {%- if real -%}
   {%- paginate blog.articles by s.per_page -%}
     {%- liquid
@@ -124,6 +125,7 @@
   "class": "blko-lv3-section-journal-reading",
   "max_blocks": 24,
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
     { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Worth a <em>read.</em>", "info": "Italic text shows in the accent style." },
     { "type": "text", "id": "count_one", "label": "Count, one article", "default": "[count] short read" },
     { "type": "text", "id": "count_many", "label": "Count, several articles", "default": "[count] short reads" },

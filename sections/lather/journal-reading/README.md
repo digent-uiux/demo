@@ -41,12 +41,14 @@ Do not use a zip.
    - `assets/blko-lv3-yeseva-one.woff2`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/journal-reading/assets/blko-lv3-yeseva-one.woff2
    - `sections/blko-lv3-journal-reading.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/journal-reading/sections/blko-lv3-journal-reading.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/journal-reading/sections/blko-lv3-theme.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/journal-reading/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-1 |
 | `heading` | inline_richtext | Heading | Worth a <em>read.</em> |
 | `count_one` | text | Count, one article | [count] short read |
 | `count_many` | text | Count, several articles | [count] short reads |

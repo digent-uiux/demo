@@ -38,12 +38,14 @@ Do not use a zip.
    - `assets/blko-lv3-yeseva-one.woff2`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/list-collections/assets/blko-lv3-yeseva-one.woff2
    - `sections/blko-lv3-list-collections.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/list-collections/sections/blko-lv3-list-collections.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/list-collections/sections/blko-lv3-theme.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/list-collections/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-1 |
 | `title` | inline_richtext | Title | Shop by <em>need</em> |
 | `columns` | range | Columns | 3 |
 | `show_count` | checkbox | Show product count | True |

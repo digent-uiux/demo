@@ -41,12 +41,14 @@ Do not use a zip.
    - `assets/blko-lv3-yeseva-one.woff2`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/highlight/assets/blko-lv3-yeseva-one.woff2
    - `sections/blko-lv3-highlight.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/highlight/sections/blko-lv3-highlight.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/highlight/sections/blko-lv3-theme.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/highlight/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-3 |
 | `label` | text | Section label (screen readers) | What's in the wash |
 | `text` | textarea | Sentence | Oat [1], shea and glycerin wash you clean [2] and leave skin |
 | `side_text` | textarea | Side note | The other seven: two sugar cleansers, sunflower oil, xanthan |

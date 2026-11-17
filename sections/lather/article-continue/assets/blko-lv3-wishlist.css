@@ -25,9 +25,13 @@
 .s-wish__note{margin-top:4px}
 .s-wish__list{list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:40px 20px}
 .s-wish__card{display:flex;flex-direction:column;min-width:0}
-.s-wish__media{position:relative;aspect-ratio:4/5;border-radius:var(--r-img);overflow:hidden;background:var(--sage-wash)}
+.s-wish__media{position:relative;aspect-ratio:var(--card-ratio,4/5);border-radius:var(--r-img);overflow:hidden;background:var(--sage-wash)}
 .s-wish__media img,.s-wish__media .blko-lv3-ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.s-wish__media .labels{position:absolute;top:12px;left:12px;right:60px;z-index:1}
+.s-wish__media .labels{position:absolute;top:12px;left:12px;right:60px;z-index:1;pointer-events:none}
+.s-wish__qv{position:absolute;right:10px;bottom:10px;z-index:3;width:40px;height:40px;border-radius:999px;display:grid;place-items:center;background:rgba(247,243,234,.92);color:var(--ink);transition:background-color .25s var(--ease),color .25s var(--ease)}
+.s-wish__qv:hover{background:var(--raised);color:var(--moss)}
+.s-wish__qv:focus-visible{outline:2px solid var(--moss);outline-offset:2px}
+.s-wish__qv svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .s-wish__info{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding-top:14px}
 .s-wish__name{font:600 17px/1.25 var(--f-body);grid-column:1}
 .s-wish__name a,.s-wish__name button{text-decoration:none;text-align:left;transition:color .2s var(--ease)}
@@ -75,3 +79,6 @@
   .s-wish__card--sugg .s-wish__add{width:100%}
 }
 @media (prefers-reduced-motion:reduce){.lv3-heart,.lv3-heart svg,.s-wish__rm{transition:none}}
+/* cards in a row line up: same image ratio, the add/remove row sits at the card foot */
+.s-wish__acts{margin-top:auto;padding-top:16px}
+@media (max-width:760px){.s-wish__acts{margin-top:auto;padding-top:12px}}

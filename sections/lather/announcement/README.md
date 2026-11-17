@@ -39,12 +39,14 @@ Do not use a zip.
    - `assets/blko-lv3-yeseva-one.woff2`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/announcement/assets/blko-lv3-yeseva-one.woff2
    - `sections/blko-lv3-announcement.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/announcement/sections/blko-lv3-announcement.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/announcement/sections/blko-lv3-theme.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/announcement/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-5 |
 | `home_only` | checkbox | Show on the home page only | True |
 | `region_label` | text | Region label (screen readers) | Offers |
 | `prev_label` | text | Previous button label | Previous offer |

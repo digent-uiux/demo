@@ -2,7 +2,8 @@
   One row of the Lather v3 search results (blko-lv3-search-results), markup of pages/search/20-results.html.
   item     a search result or product (object_type 'product' | 'article' | 'page'); blank = demo product
   demo     the demo block's settings (key, name, size, price in cents, line, ing, labels, keywords, image, url)
-  Strings: qv_aria, view_aria, add_label, add_aria ([name]), sold_label, read_label.
+  Photo + name link to the item (a demo product with no URL links to the all-products collection).
+  Strings: qv_aria (unused, kept for callers), view_aria, add_label, add_aria ([name]), sold_label, read_label.
   A product (real or demo) also goes to window.LATHER through blko-lv3-product-data.
 {%- endcomment -%}
 {%- liquid
@@ -10,7 +11,6 @@
   if item != blank
     assign kind = item.object_type
   endif
-  assign quick = false
   assign available = true
   assign price = 0
   assign img = blank
@@ -66,7 +66,6 @@
       assign price = d.price | plus: 0
       assign img = d.image
       if url == blank
-        assign quick = true
         assign url = routes.all_products_collection_url
       endif
     endif
@@ -90,7 +89,7 @@
   {%- endif -%}
 {%- endif -%}
 <li class="s-search-results__item" data-search-product="{{ key | escape }}" data-words="{{ words | strip_html | escape }}">
-  <a class="s-search-results__photo" href="{{ url }}"{% if quick %} data-quick="{{ key | escape }}" aria-label="{{ qv_aria | escape }} {{ name | escape }}"{% else %} aria-label="{{ view_aria | escape }} {{ name | escape }}"{% endif %}>
+  <a class="s-search-results__photo" href="{{ url }}" aria-label="{{ view_aria | escape }} {{ name | escape }}">
     {%- if img != blank -%}
       {{ img | image_url: width: 400 | image_tag: widths: '150, 230, 300, 400', sizes: '(max-width: 1000px) 120px, 150px', loading: 'lazy', alt: name }}
     {%- else -%}
@@ -98,7 +97,7 @@
     {%- endif -%}
   </a>
   <div class="s-search-results__info">
-    <h3><a href="{{ url }}"{% if quick %} data-quick="{{ key | escape }}" aria-label="{{ qv_aria | escape }} {{ name | escape }}"{% endif %}>{{ name | escape }}</a></h3>
+    <h3><a class="lv3-pname" href="{{ url }}">{{ name | escape }}</a></h3>{%- if kind == 'product' -%}{%- render 'blko-lv3-card-meta', product: item -%}{%- endif -%}
     {%- if size != blank -%}<p class="small">{{ size | escape }}</p>{%- endif -%}
     {%- if line != blank -%}<p class="s-search-results__line">{{ line | escape }}</p>{%- endif -%}
     <div class="s-search-results__buy">

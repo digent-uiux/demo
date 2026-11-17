@@ -5,7 +5,7 @@
 .s-pdp-recent__clear{font-size:14px;color:var(--muted);text-decoration:underline;text-underline-offset:4px;padding:6px 0;transition:color .25s var(--ease)}
 .s-pdp-recent__clear:hover{color:var(--ink)}
 .s-pdp-recent__list{list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.s-pdp-recent__card{position:relative;display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;padding:10px 16px 10px 10px;border-radius:var(--r-img);background:var(--raised);transition:background-color .25s var(--ease)}
+.s-pdp-recent__card{position:relative;display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:14px;align-items:center;padding:10px 16px 10px 10px;border-radius:var(--r-card,var(--r-img));background:var(--raised);transition:background-color .25s var(--ease)}
 .s-pdp-recent__card:hover{background:#fbf8f1}
 .s-pdp-recent__card img,.s-pdp-recent__card .blko-lv3-ph{width:64px;height:80px;object-fit:cover;border-radius:4px;background:var(--oat)}
 .s-pdp-recent__text{display:flex;flex-direction:column;gap:2px;min-width:0}
@@ -14,6 +14,12 @@
 .s-pdp-recent__name:focus-visible{outline:none}
 .s-pdp-recent__card:has(.s-pdp-recent__name:focus-visible){outline:2px solid var(--moss);outline-offset:2px}
 .s-pdp-recent__card .price{font-size:18px}
+.s-pdp-recent__img{position:relative;z-index:1;border-radius:4px}
+.s-pdp-recent__qv{position:relative;z-index:1;width:36px;height:36px;border-radius:999px;display:grid;place-items:center;background:var(--oat);color:var(--ink);transition:background-color .25s var(--ease),color .25s var(--ease)}
+.s-pdp-recent__qv:hover{background:var(--stone);color:var(--moss)}
+.s-pdp-recent__qv:focus-visible{outline:2px solid var(--moss);outline-offset:2px}
+.s-pdp-recent__qv svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.s-pdp-recent__card:has(.s-pdp-recent__qv){grid-template-columns:64px minmax(0,1fr) auto 36px;gap:12px;padding-right:12px}
 .s-pdp-recent__clear:focus-visible{outline:2px solid var(--moss);outline-offset:3px}
 @media (max-width:1080px){.s-pdp-recent__list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:760px){
@@ -21,5 +27,5 @@
   .s-pdp-recent__title{font-size:21px}
   .s-pdp-recent__list{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 calc(-1*var(--gut));padding:2px var(--gut) 4px;scroll-padding:0 var(--gut)}
   .s-pdp-recent__list::-webkit-scrollbar{display:none}
-  .s-pdp-recent__card{flex:0 0 76%;scroll-snap-align:start}
+  .s-pdp-recent__card{flex:0 0 84%;scroll-snap-align:start}
 }

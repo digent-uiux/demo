@@ -42,12 +42,14 @@ Do not use a zip.
    - `sections/blko-lv3-compare.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/compare/sections/blko-lv3-compare.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/compare/sections/blko-lv3-theme.liquid
    - `snippets/blko-lv3-product-data.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/compare/snippets/blko-lv3-product-data.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/compare/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-2 |
 | `anchor` | text | Anchor id | compare |
 | `heading_1` | inline_richtext | Heading, line 1 | Which wash for |
 | `heading_2` | inline_richtext | Heading, line 2 | <em>your</em> skin? |

@@ -1,7 +1,7 @@
 /* Lather store runtime (port of home-v3 parts/99-tail.html). Loaded with defer from blko-lv3-theme, so it runs after
    the document is parsed and before DOMContentLoaded: section scripts that read window.LATHER inside DOMContentLoaded
    handlers find it ready.
-   window.LATHER = { products, add, quick, fmt, labelsHTML, U, openLayer, closeAll, reveal, refresh, cart }
+   window.LATHER = { products, add, quick, url, fmt, labelsHTML, U, openLayer, closeAll, reveal, refresh, cart }
    - products: collected from <script type="application/json" data-lv3-product="key"> (first per key wins; later ones fill its blank fields)
    - add(id, qty = 1, o = {}): real product (has variant) -> /cart/add.js, then the drawer renders /cart.js.
        o.items = [{id, qty}] adds several real products at once (bundles); o.properties = line item properties.
@@ -111,6 +111,13 @@
   function labelsHTML(ids) { return (ids || []).filter(function (k) { return LBL[k]; }).map(function (k) { return '<span class="label ' + LBL[k][0] + '">' + esc(S[LBL[k][1]]) + '</span>'; }).join(''); }
   /* the HTML hot-linked photos through U(); the Liquid port never does: callers get '' and show a placeholder */
   function U() { return ''; }
+  /* product page URL for a key ('' when the product has none, e.g. a demo product) */
+  function url(id) { var p = products[id]; return (p && p.url) || ''; }
+  /* line image + name link to the product page; lines without a URL stay plain */
+  function lnk(l, h, img) {
+    var u = l.url || url(l.id);
+    return u ? '<a class="' + (img ? 'lv3-plink' : 'lv3-pname') + '" href="' + esc(u) + '"' + (img ? ' tabindex="-1" aria-hidden="true"' : '') + '>' + h + '</a>' : h;
+  }
 
   /* ---------- placeholders ---------- */
   function phHTML() { var t = $('#lv3-ph'); return t ? t.innerHTML : '<span class="blko-lv3-ph"></span>'; }
@@ -161,7 +168,7 @@
       var img = it.image || (it.featured_image && it.featured_image.url) || '';
       if (img) img += (img.indexOf('?') > -1 ? '&' : '?') + 'width=200';
       return {
-        real: true, key: it.key, id: keyOfVariant(it.variant_id), variant: it.variant_id, qty: it.quantity,
+        real: true, key: it.key, id: keyOfVariant(it.variant_id), variant: it.variant_id, qty: it.quantity, url: it.url || '',
         name: it.product_title, size: it.variant_title && !/default title/i.test(it.variant_title) ? it.variant_title : '',
         price: (it.final_price != null ? it.final_price : it.price) / 100, img: img, note: note, properties: it.properties || {},
         selling_plan: sp ? sp.id : null, gift: gift
@@ -270,11 +277,11 @@
       if (!all.length && !removed) h += '<p class="drawer__empty">' + esc(tpl(S.empty, { price: upPrice })) + '</p>';
       all.forEach(function (l, i) {
         if (l.gift) {
-          h += '<div class="line line--gift' + (fresh ? ' is-new' : '') + '">' + imgHTML(l.img, '') + '<div><h3>' + esc(l.name) + '</h3><p class="small">' + esc(l.note || '') + '</p></div>' +
+          h += '<div class="line line--gift' + (fresh ? ' is-new' : '') + '">' + lnk(l, imgHTML(l.img, ''), 1) + '<div><h3>' + lnk(l, esc(l.name)) + '</h3><p class="small">' + esc(l.note || '') + '</p></div>' +
             '<div style="text-align:right"><p class="price" style="font-size:18px">' + esc(l.price ? fmt(l.qty * l.price) : S.gift_free) + '</p><button class="rm" type="button" data-rm="' + i + '" aria-label="' + esc(tpl(S.gift_remove, { name: l.name })) + '">' + esc(S.remove) + '</button></div></div>';
           return;
         }
-        h += '<div class="line">' + imgHTML(l.img, '') + '<div><h3>' + esc(l.name) + '</h3><p class="small">' + esc(l.note || l.size || '') + '</p>' +
+        h += '<div class="line">' + lnk(l, imgHTML(l.img, ''), 1) + '<div><h3>' + lnk(l, esc(l.name)) + '</h3><p class="small">' + esc(l.note || l.size || '') + '</p>' +
           '<div class="qty"><button type="button" aria-label="' + esc(S.less) + '" data-q="' + i + '" data-d="-1">−</button><span>' + l.qty + '</span><button type="button" aria-label="' + esc(S.more) + '" data-q="' + i + '" data-d="1">+</button></div></div>' +
           '<div style="text-align:right"><p class="price" style="font-size:18px">' + esc(fmt(l.qty * l.price)) + '</p><button class="rm" type="button" data-rm="' + i + '">' + esc(S.remove) + '</button></div></div>';
       });
@@ -394,7 +401,7 @@
   function reveal(root) { (root || document).querySelectorAll('[data-rv]').forEach(function (el) { if (io) io.observe(el); else el.classList.add('in'); }); }
 
   function refresh(root) { collect(root, !!root); render(); }
-  window.LATHER = { products: products, add: add, quick: quick, fmt: fmt, labelsHTML: labelsHTML, U: U, openLayer: openLayer, closeAll: closeAll, reveal: reveal, refresh: refresh, sellingPlans: true, cart: { sync: sync, lines: lines, count: count, subtotal: subtotal, freeShip: +S.free_ship || 0, setQty: function (i, q) { var l = lines()[i]; return l ? setQty(l, q) : Promise.resolve(); }, remove: function (i) { var l = lines()[i]; return l ? setQty(l, 0) : Promise.resolve(); }, removed: function () { return removed; }, undo: undo, clear: clearCart, gift: { at: GIFT.at, variant: GIFT.variant, value: GIFT.value, name: giftName, state: progress }, addGift: function () { setGiftOff(false); giftFail = false; render(); } }, __lv3: true };
+  window.LATHER = { products: products, add: add, quick: quick, url: url, fmt: fmt, labelsHTML: labelsHTML, U: U, openLayer: openLayer, closeAll: closeAll, reveal: reveal, refresh: refresh, sellingPlans: true, cart: { sync: sync, lines: lines, count: count, subtotal: subtotal, freeShip: +S.free_ship || 0, setQty: function (i, q) { var l = lines()[i]; return l ? setQty(l, q) : Promise.resolve(); }, remove: function (i) { var l = lines()[i]; return l ? setQty(l, 0) : Promise.resolve(); }, removed: function () { return removed; }, undo: undo, clear: clearCart, gift: { at: GIFT.at, variant: GIFT.variant, value: GIFT.value, name: giftName, state: progress }, addGift: function () { setGiftOff(false); giftFail = false; render(); } }, __lv3: true };
   render();
   if (CFG.cartCount > 0 || Object.keys(products).some(function (k) { return products[k].variant; })) sync().catch(function () {});
 

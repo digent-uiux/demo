@@ -1,0 +1,119 @@
+{%- comment -%}
+  Theme settings -> the Lather tokens in blko-lv3-base.css (same groups and ids as the Balm core settings).
+  Rendered by the "Lather look" section right after blko-lv3-base.css, so this :root wins over the file's own :root.
+  Every value falls back to the Lather default: with the default settings the store looks exactly as before.
+  Colours: the page scheme feeds --oat/--ink/--muted/--line/--moss and the button; schemes 2-5 feed --raised,
+  --sage-wash, --stone and --deep. A section whose picker is off its default gets `color-<scheme> lv3-scheme-pick`
+  (plus --dark when the section is dark by default): its tokens are re-pointed to that scheme below.
+{%- endcomment -%}
+{%- liquid
+  assign cs = settings.color_schemes
+  assign page_sid = settings.page_color_scheme.id | default: settings.page_color_scheme | default: 'scheme-1'
+  assign pg = cs[page_sid].settings
+  assign s2 = cs['scheme-2'].settings
+  assign s3 = cs['scheme-3'].settings
+  assign s4 = cs['scheme-4'].settings
+  assign s5 = cs['scheme-5'].settings
+  assign r_btn = settings.radius_button | default: 8
+  assign r_img = settings.radius_image | default: 6
+  assign r_card = settings.radius_card | default: 6
+  assign scale = settings.type_scale | default: 100 | divided_by: 100.0
+-%}
+<style>
+  {%- if settings.font_source == 'shopify' -%}
+    {%- liquid
+      assign hf = settings.font_heading
+      assign bf = settings.font_body
+      assign hf_i = hf | font_modify: 'style', 'italic'
+      assign bf_5 = bf | font_modify: 'weight', '500'
+      assign bf_6 = bf | font_modify: 'weight', '600'
+      assign bf_7 = bf | font_modify: 'weight', 'bold'
+    -%}
+    {{ hf | font_face: font_display: 'swap' }}
+    {%- if hf_i %}{{ hf_i | font_face: font_display: 'swap' }}{% endif %}
+    {{ bf | font_face: font_display: 'swap' }}
+    {%- if bf_5 %}{{ bf_5 | font_face: font_display: 'swap' }}{% endif %}
+    {%- if bf_6 %}{{ bf_6 | font_face: font_display: 'swap' }}{% endif %}
+    {%- if bf_7 %}{{ bf_7 | font_face: font_display: 'swap' }}{% endif %}
+  :root {
+    --f-body: {{ bf.family }}, {{ bf.fallback_families }};
+    --f-head: {{ hf.family }}, {{ hf.fallback_families }};
+    --fw-head: {{ hf.weight }};
+    --f-display: {{ hf.family }}, {{ hf.fallback_families }};
+    --f-price: 'Antonio', {{ bf.family }}, {{ bf.fallback_families }};
+  }
+  {%- endif %}
+  :root {
+    --oat: {{ pg.background | default: '#EEE8DC' }};
+    --ink: {{ pg.text | default: '#262B22' }};
+    --muted: {{ pg.text_muted | default: '#5F6354' }};
+    --line: {{ pg.border | default: '#D3CAB6' }};
+    --moss: {{ pg.accent | default: '#5E6B4E' }};
+    --lv3-btn: {{ pg.button | default: '#2F3A2A' }};
+    --lv3-btn-label: {{ pg.button_label | default: '#EEE8DC' }};
+    --lv3-btn-hover: {{ pg.button_hover | default: '#262B22' }};
+    --raised: {{ s2.background | default: '#F7F3EA' }};
+    --sage-wash: {{ s3.background | default: '#DFDDCC' }};
+    --stone: {{ s4.background | default: '#D9CFBD' }};
+    --deep: {{ s5.background | default: '#2F3A2A' }};
+    --sage: {{ s5.accent | default: '#A3AE8E' }};
+    --sale: {{ settings.color_sale | default: '#8A4B2A' }};
+    --max: {{ settings.page_width | default: 1320 }}px;
+    --r-btn: {% if r_btn >= 40 %}999{% else %}{{ r_btn }}{% endif %}px;
+    --r-img: {{ r_img }}px;
+    --r-card: {{ r_card }}px;
+    --r-input: {{ settings.radius_input | default: 8 }}px;
+    --card-ratio: {{ settings.card_ratio | default: '4/5' }};
+    --type-scale: {{ scale }};
+    --h-track: {{ settings.heading_tracking | default: -2 | divided_by: 100.0 }}em;
+    --h-case: {{ settings.heading_case | default: 'none' }};
+    --h-italic: {% if settings.heading_italic %}italic{% else %}normal{% endif %};
+    --btn-w: {{ settings.button_weight | default: '600' }};
+    --btn-case: {{ settings.button_case | default: 'none' }};
+  }
+  {%- if settings.button_tracking != blank and settings.button_tracking != 0 %}
+  .btn { letter-spacing: {{ settings.button_tracking | divided_by: 100.0 }}em; }
+  {%- endif %}
+  {%- if settings.section_spacing != blank and settings.section_spacing > 0 %}
+  main > .shopify-section + .shopify-section { margin-top: {{ settings.section_spacing }}px; }
+  {%- endif %}
+  {%- if settings.logo_width != blank and settings.logo_width != 120 %}
+  .hdr__in .logo, .hdr__in .logo.logo--img, .mnav__top .logo { width: {{ settings.logo_width }}px; max-width: 50vw; }
+  .ftr__mark .logo, .ftr__mark .logo.logo--img { width: {{ settings.logo_width | times: 1.1 | round }}px; max-width: 60vw; }
+  @media (max-width: 760px) { .hdr__in .logo, .hdr__in .logo.logo--img { width: {{ settings.logo_width | times: 0.85 | round }}px; } }
+  {%- endif %}
+  {%- assign in_bg = settings.color_input_bg | default: '#F7F3EA' | downcase -%}
+  {%- assign in_text = settings.color_input_text | default: '#262B22' | downcase -%}
+  {%- if in_bg != '#f7f3ea' or in_text != '#262b22' %}
+  :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea) { background-color: {{ in_bg }} !important; color: {{ in_text }} !important; }
+  {%- endif %}
+  {%- for scheme in cs -%}
+    {%- assign c = scheme.settings %}
+  .color-{{ scheme.id }} {
+    --color-bg: {{ c.background }};
+    {%- if c.background_gradient != blank %} --color-bg-gradient: {{ c.background_gradient }};{% else %} --color-bg-gradient: initial;{% endif %}
+    --color-bg-alt: {{ c.background_alt }}; --color-text: {{ c.text }}; --color-text-muted: {{ c.text_muted }};
+    --color-border: {{ c.border }}; --color-accent: {{ c.accent }};
+    --color-button: {{ c.button }}; --color-button-text: {{ c.button_label }}; --color-button-hover: {{ c.button_hover }};
+  }
+  {%- endfor %}
+  .lv3-scheme-pick.lv3-scheme-pick {
+    --oat: var(--color-bg); --sage-wash: var(--color-bg); --raised: var(--color-bg-alt); --stone: var(--color-bg-alt);
+    --ink: var(--color-text); --muted: var(--color-text-muted); --line: var(--color-border); --moss: var(--color-accent);
+    --deep: var(--color-button); --lv3-btn: var(--color-button); --lv3-btn-label: var(--color-button-text); --lv3-btn-hover: var(--color-button-hover);
+    background: var(--color-bg-gradient, var(--color-bg)); color: var(--color-text);
+  }
+  .lv3-scheme-pick--dark.lv3-scheme-pick--dark {
+    --deep: var(--color-bg); --ink: var(--color-bg); --oat: var(--color-text); --raised: var(--color-text); --sage: var(--color-text-muted);
+    --sage-wash: var(--color-bg-alt); --stone: var(--color-bg-alt);
+  }
+  {%- comment -%} Labels, hearts and copy laid over photos keep the theme colours whatever the section scheme. {%- endcomment %}
+  .lv3-scheme-pick :is([class*="__tile"], [class*="__media"], [class*="__photo"], [class*="__img"], [class*="__thumb"]) {
+    --oat: {{ pg.background | default: '#EEE8DC' }}; --raised: {{ s2.background | default: '#F7F3EA' }}; --ink: {{ pg.text | default: '#262B22' }};
+    --deep: {{ s5.background | default: '#2F3A2A' }}; --muted: {{ pg.text_muted | default: '#5F6354' }}; --line: {{ pg.border | default: '#D3CAB6' }};
+    --moss: {{ pg.accent | default: '#5E6B4E' }}; --sage: {{ s5.accent | default: '#A3AE8E' }};
+    --lv3-btn: {{ pg.button | default: '#2F3A2A' }}; --lv3-btn-label: {{ pg.button_label | default: '#EEE8DC' }}; --lv3-btn-hover: {{ pg.button_hover | default: '#262B22' }};
+  }
+  {%- comment -%} Header over the home hero stays see-through with light text until it turns solid on scroll. {%- endcomment %}
+  .hdr.is-over.lv3-scheme-pick.lv3-scheme-pick:not(.is-solid) { background: transparent; color: {{ s2.background | default: '#F7F3EA' }}; }
+</style>

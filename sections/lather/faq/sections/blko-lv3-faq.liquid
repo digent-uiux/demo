@@ -9,7 +9,8 @@
   assign s = section.settings
   assign uid = 'faq-' | append: section.id
 -%}
-<section class="s-faq" id="{{ s.anchor | default: 'faq' | handleize }}" aria-label="{{ s.label | escape }}" data-lv3-faq>
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-1' -%}
+<section class="s-faq{%- if lv3_sid != 'scheme-1' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="{{ s.anchor | default: 'faq' | handleize }}" aria-label="{{ s.label | escape }}" data-lv3-faq>
   <div class="wrap s-faq__grid">
     <div class="s-faq__head">
       <h2 class="h2" data-rv="line">
@@ -58,6 +59,7 @@
   "class": "blko-lv3-section-faq",
   "max_blocks": 12,
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
     { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "Questions, <em>answered.</em>", "info": "Italic text shows in the accent style." },
     { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2 (optional)" },
     { "type": "checkbox", "id": "open_first", "label": "Open the first question", "default": true },

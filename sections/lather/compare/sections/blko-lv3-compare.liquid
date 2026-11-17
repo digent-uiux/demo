@@ -10,7 +10,8 @@
   assign s = section.settings
   assign uid = section.id | replace: '_', '-'
 -%}
-<section class="s-cmp" id="{{ s.anchor | default: 'compare' | handleize }}" aria-labelledby="cmpH-{{ uid }}">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-2' -%}
+<section class="s-cmp{%- if lv3_sid != 'scheme-2' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="{{ s.anchor | default: 'compare' | handleize }}" aria-labelledby="cmpH-{{ uid }}">
   <div class="wrap">
     <div class="s-cmp__top">
       <h2 class="h2" id="cmpH-{{ uid }}" data-rv="line">
@@ -82,6 +83,7 @@
   "name": "Compare products",
   "class": "blko-lv3-section-compare",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-2" },
     { "type": "header", "content": "Content" },
     { "type": "text", "id": "anchor", "label": "Anchor id", "info": "Links like #compare jump here.", "default": "compare" },
     { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "Which wash for" },

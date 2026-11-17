@@ -1,7 +1,7 @@
 {%- comment -%}
   Lather v3, Reels (home-v3/parts/70-reels.html). Deep-moss rail of 9:16 customer clips; the centred clip is the large one.
   Each reel: poster image, an optional clip (Shopify video, or an .mp4 URL) that plays muted only while centred and in view,
-  a caption and a product chip that opens quick view. Product chips use a real product when picked, demo settings otherwise.
+  a caption and a product chip: image + name link to the product page, the + opens quick view. Product chips use a real product when picked, demo settings otherwise.
 {%- endcomment -%}
 {{ 'blko-lv3-reels.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'blko-lv3-reels.js' | asset_url }}" defer></script>
@@ -10,7 +10,8 @@
   assign s = section.settings
   assign start = s.start | minus: 1
 -%}
-<section class="s-reels" id="{{ s.anchor | default: 'reels' | handleize }}" aria-label="{{ s.label | escape }}" data-lv3-reels data-start="{{ start }}">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-5' -%}
+<section class="s-reels{%- if lv3_sid != 'scheme-5' %} color-{{ lv3_sid }} lv3-scheme-pick lv3-scheme-pick--dark{% endif %}" id="{{ s.anchor | default: 'reels' | handleize }}" aria-label="{{ s.label | escape }}" data-lv3-reels data-start="{{ start }}">
   <div class="wrap s-reels__top">
     <h2 class="h2" data-rv="line">
       {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
@@ -40,6 +41,10 @@
           assign p_name = b.name
           assign p_price = b.price | plus: 0 | money_without_trailing_zeros
           assign p_img = b.thumb
+        endif
+        assign p_url = routes.all_products_collection_url
+        if p != blank
+          assign p_url = p.url
         endif
         assign has_chip = false
         if p != blank or b.name != blank
@@ -78,15 +83,17 @@
           {%- else -%}
             {%- render 'blko-lv3-product-data', key: key, name: b.name, size: b.size, price: b.price, line: b.line, labels: b.labels, img: b.thumb -%}
           {%- endif -%}
-          <button class="s-reels__chip" type="button" data-quick="{{ key }}" aria-label="{{ s.quick_label | escape }}: {{ p_name | escape }}, {{ p_price | strip_html }}">
-            {%- if p_img -%}
-              {{ p_img | image_url: width: 96 | image_tag: class: 's-reels__thumb', alt: '', loading: 'lazy', width: 44, height: 44 }}
-            {%- else -%}
-              {{ 'product-1' | placeholder_svg_tag: 'blko-lv3-ph s-reels__thumb' }}
-            {%- endif -%}
-            <span><b data-n>{{ p_name | escape }}</b><span class="price" data-p>{{ p_price }}</span></span>
-            <span class="s-reels__plus" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span>
-          </button>
+          <div class="s-reels__chip">
+            <a class="s-reels__plink" href="{{ p_url }}">
+              {%- if p_img -%}
+                {{ p_img | image_url: width: 96 | image_tag: class: 's-reels__thumb', alt: '', loading: 'lazy', width: 44, height: 44 }}
+              {%- else -%}
+                {{ 'product-1' | placeholder_svg_tag: 'blko-lv3-ph s-reels__thumb' }}
+              {%- endif -%}
+              <span><b data-n>{{ p_name | escape }}</b><span class="price" data-p>{{ p_price }}</span></span>
+            </a>
+            <button class="s-reels__plus" type="button" data-quick="{{ key }}" aria-label="{{ s.quick_label | escape }} {{ p_name | escape }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+          </div>
         {%- endif -%}
       </article>
     {%- endfor -%}
@@ -99,13 +106,14 @@
   "class": "blko-lv3-section-reels",
   "max_blocks": 8,
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-5" },
     { "type": "header", "content": "Content" },
     { "type": "inline_richtext", "id": "heading_1", "label": "Heading, line 1", "default": "Real showers," },
     { "type": "inline_richtext", "id": "heading_2", "label": "Heading, line 2", "default": "<em>real</em> skin.", "info": "Italic text shows in the accent style." },
     { "type": "textarea", "id": "text", "label": "Text", "default": "How people use it, in under a minute. Tap a product to see what's in it." },
     { "type": "range", "id": "start", "label": "Clip centred on load", "min": 1, "max": 8, "step": 1, "default": 2 },
     { "type": "header", "content": "Labels" },
-    { "type": "text", "id": "quick_label", "label": "Product chip label (screen readers)", "default": "Quick view" },
+    { "type": "text", "id": "quick_label", "label": "Quick view button label (screen readers)", "default": "Quick view" },
     { "type": "text", "id": "prev_label", "label": "Previous button (screen readers)", "default": "Previous clip" },
     { "type": "text", "id": "next_label", "label": "Next button (screen readers)", "default": "Next clip" },
     { "type": "text", "id": "label", "label": "Section label (screen readers)", "default": "Customer clips" },

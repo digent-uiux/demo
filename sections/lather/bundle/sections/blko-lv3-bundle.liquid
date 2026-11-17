@@ -23,7 +23,8 @@
   assign slot_html = ''
   assign slot_count = 0
 -%}
-<section class="s-bundle" id="{{ anchor }}" aria-labelledby="{{ uid }}-h">
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-3' -%}
+<section class="s-bundle{%- if lv3_sid != 'scheme-3' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="{{ anchor }}" aria-labelledby="{{ uid }}-h">
   <div class="wrap s-bundle__in">
     <div class="s-bundle__pick">
       <header class="s-bundle__hd">
@@ -232,6 +233,7 @@
   "tag": "div",
   "class": "blko-lv3-bundle",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-3" },
     {
       "type": "header",
       "content": "Heading"

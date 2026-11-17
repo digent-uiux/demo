@@ -30,7 +30,8 @@
     endif
   endif
 -%}
-<section class="s-pdp-recent" id="{{ anchor }}" aria-labelledby="{{ anchor }}-title" data-recent data-max="{{ s.max }}" data-recent-current="{% if c_key %}entry{% else %}{{ dk }}{% endif %}"{% if request.design_mode and s.editor_sample %} data-recent-sample{% endif %} hidden>
+{%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-1' -%}
+<section class="s-pdp-recent{%- if lv3_sid != 'scheme-1' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="{{ anchor }}" aria-labelledby="{{ anchor }}-title" data-recent data-max="{{ s.max }}" data-recent-current="{% if c_key %}entry{% else %}{{ dk }}{% endif %}"{% if request.design_mode and s.editor_sample %} data-recent-sample{% endif %} hidden>
   {%- if c_key %}
   <script type="application/json" data-recent-entry>
     { "k": {{ c_key | json }}, "name": {{ c_name | json }}, "size": {{ c_size | json }}, "price": {{ c_price | json }}, "img": {{ c_img | json }}, "url": {{ c_url | json }} }
@@ -54,6 +55,7 @@
   "name": "Lather recently viewed",
   "class": "blko-lv3-section-product-recent",
   "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "Recently viewed" },
     { "type": "text", "id": "clear", "label": "Clear button", "default": "Clear", "info": "Empty hides the button." },
     { "type": "text", "id": "cleared", "label": "Message after clearing (screen readers)", "default": "Viewing history cleared." },

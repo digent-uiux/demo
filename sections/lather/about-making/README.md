@@ -40,12 +40,14 @@ Do not use a zip.
    - `assets/blko-lv3-yeseva-one.woff2`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/about-making/assets/blko-lv3-yeseva-one.woff2
    - `sections/blko-lv3-about-making.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/about-making/sections/blko-lv3-about-making.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/about-making/sections/blko-lv3-theme.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/about-making/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-2 |
 | `heading_1` | inline_richtext | Heading, line 1 | A job for |
 | `heading_2` | inline_richtext | Heading, line 2 | every <em>ingredient.</em> |
 | `text` | textarea | Intro | We build around the wash, the rinse and the feeling after. T |

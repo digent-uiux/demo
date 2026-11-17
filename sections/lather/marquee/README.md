@@ -42,12 +42,14 @@ Do not use a zip.
    - `sections/blko-lv3-marquee.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/marquee/sections/blko-lv3-marquee.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/marquee/sections/blko-lv3-theme.liquid
    - `snippets/blko-lv3-marquee-icon.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/marquee/snippets/blko-lv3-marquee-icon.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/marquee/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-2 |
 | `label` | text | Section label (screen readers) | What we promise |
 | `anchor` | text | Anchor id | commitments |
 | `duration` | range | Loop time | 48 |

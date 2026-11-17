@@ -41,14 +41,17 @@ Do not use a zip.
    - `assets/blko-lv3-yeseva-one.woff2`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/search-results/assets/blko-lv3-yeseva-one.woff2
    - `sections/blko-lv3-search-results.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/search-results/sections/blko-lv3-search-results.liquid
    - `sections/blko-lv3-theme.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/search-results/sections/blko-lv3-theme.liquid
+   - `snippets/blko-lv3-card-meta.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/search-results/snippets/blko-lv3-card-meta.liquid
    - `snippets/blko-lv3-product-data.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/search-results/snippets/blko-lv3-product-data.liquid
    - `snippets/blko-lv3-search-item.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/search-results/snippets/blko-lv3-search-item.liquid
+   - `snippets/blko-lv3-settings.liquid`: https://raw.githubusercontent.com/digent-uiux/demo/main/sections/lather/search-results/snippets/blko-lv3-settings.liquid
 3. Add the section in the Theme Editor and pick your products.
 
 ## Settings
 
 | Id | Type | Label | Default |
 |---|---|---|---|
+| `color_scheme` | color_scheme | Color scheme | scheme-1 |
 | `per_page` | range | Results per page | 24 |
 | `collection` | collection | Products to list |  |
 | `browse_limit` | range | Products to show | 12 |

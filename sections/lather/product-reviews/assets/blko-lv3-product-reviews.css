@@ -1,3 +1,116 @@
-/* Lather v3 product page, reviews (pages/product/50-reviews.html). */
-.s-pdp-reviews{padding:88px 0;background:var(--raised)}.s-pdp-reviews__head{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:end;margin-bottom:38px}.s-pdp-reviews__head p{max-width:37ch;color:var(--muted)}.s-pdp-reviews__row{display:grid;grid-template-columns:180px 1fr;gap:40px;border-top:1px solid var(--line);padding:32px 0}.s-pdp-reviews__person{font-size:14px;color:var(--muted)}.s-pdp-reviews__person b{display:block;font-size:16px;color:var(--ink);margin-bottom:5px}.s-pdp-reviews__quote{font-size:clamp(22px,2.4vw,32px);font-weight:400;line-height:1.45;max-width:36ch}.s-pdp-reviews__quote .stars{display:block;font-size:15px;margin-bottom:12px}.s-pdp-reviews__foot{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:20px}.s-pdp-reviews__foot a{margin-left:10px}
-@media(max-width:760px){.s-pdp-reviews{padding:56px 0}.s-pdp-reviews__head{grid-template-columns:1fr;gap:20px}.s-pdp-reviews__row{grid-template-columns:1fr;gap:18px;padding:24px 0}.s-pdp-reviews__quote{font-size:23px}.s-pdp-reviews__foot a{display:block;margin:10px 0 0}}
+/* Lather v3 product page, reviews (pages/product/50-reviews.html).
+   Rating summary under the heading (the space beside the heading stays empty on purpose), skin-type chips with counts, one lead review on deep green with a customer photo,
+   the rest on oat panels in a 7/5 rhythm, "Show more" below. 390 has its own stack with an edge-to-edge lead. */
+.s-pdp-reviews{padding:104px 0 96px;background:var(--raised)}
+.s-pdp-reviews__head{display:flex;flex-direction:column;align-items:flex-start;gap:30px;margin-bottom:40px}
+.s-pdp-reviews__head .h2{max-width:12ch}
+.s-pdp-reviews__score{display:flex;align-items:center;gap:20px}
+.s-pdp-reviews__avg{font:300 72px/.86 var(--f-body);letter-spacing:-.04em;color:var(--ink)}
+.s-pdp-reviews__score-text{display:flex;flex-direction:column;gap:8px}
+.s-pdp-reviews__meter{position:relative;display:inline-block;font-size:20px;line-height:1;letter-spacing:3px;color:var(--stone);white-space:nowrap}
+.s-pdp-reviews__meter i{position:absolute;inset:0 auto 0 0;overflow:hidden;color:var(--moss);font-style:normal}
+.s-pdp-reviews__count{font-size:15px;line-height:1.4;color:var(--muted)}
+.s-pdp-reviews__count b{color:var(--ink);font-weight:600}
+
+.s-pdp-reviews__bar{display:flex;align-items:center;gap:12px 10px;flex-wrap:wrap;margin-bottom:24px}
+.s-pdp-reviews__bar-label{font-size:15px;color:var(--muted);margin-right:8px}
+.s-pdp-reviews__filters{display:flex;gap:8px;flex-wrap:wrap}
+.s-pdp-reviews .chip{background:var(--oat);height:42px;padding:0 18px;font-size:15px}
+.s-pdp-reviews .chip:hover{background:var(--stone)}
+.s-pdp-reviews .chip[aria-pressed="true"]{background:var(--deep);color:var(--oat)}
+.s-pdp-reviews .chip .n{margin-left:8px;font-weight:400;opacity:.62}
+.s-pdp-reviews .chip[hidden]{display:none}
+
+.s-pdp-reviews__list{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;align-items:start}
+.s-pdp-reviews__item{grid-column:8 / span 5;position:relative;background:var(--oat);border-radius:var(--r-card,var(--r-img));padding:28px 30px 26px;display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-self:stretch}
+/* after the lead the rows swing: wide left + narrow right, then narrow left + wide right */
+.s-pdp-reviews__item.is-nl{grid-column:1 / span 5}
+.s-pdp-reviews__item.is-wide{grid-column:1 / span 7}
+.s-pdp-reviews__item.is-wide.is-r{grid-column:6 / span 7}
+.s-pdp-reviews__item.is-off{display:none}
+.s-pdp-reviews__item:focus-visible{outline:2px solid var(--moss);outline-offset:3px}
+.s-pdp-reviews__body{display:flex;flex-direction:column;gap:12px;min-width:0}
+.s-pdp-reviews__top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.s-pdp-reviews__top .stars{font-size:15px;letter-spacing:2px}
+.s-pdp-reviews__top .stars s{text-decoration:none;opacity:.28}
+.s-pdp-reviews__skin{font:600 14px/1.2 var(--f-body);color:var(--moss)}
+.s-pdp-reviews__title{font:600 19px/1.3 var(--f-body);letter-spacing:-.01em}
+.s-pdp-reviews__text{font-size:16px;line-height:1.55;color:var(--ink)}
+.s-pdp-reviews__who{margin-top:auto;padding-top:6px;font-size:14px;line-height:1.45;color:var(--muted)}
+.s-pdp-reviews__who b{display:block;font-size:15px;color:var(--ink);font-weight:600}
+.s-pdp-reviews__media{margin:0;border-radius:4px;overflow:hidden;background:var(--stone)}
+.s-pdp-reviews__media img,.s-pdp-reviews__media svg{display:block;width:100%;height:100%;object-fit:cover}
+/* a photo on a small review sits beside the words, like an attachment */
+.s-pdp-reviews__item.has-photo:not(.is-lead){grid-template-columns:minmax(0,1fr) 116px}
+.s-pdp-reviews__item.has-photo:not(.is-lead) .s-pdp-reviews__media{grid-column:2;grid-row:1;aspect-ratio:4/5;align-self:start}
+/* wide rows read like a ledger line: who and stars on the left, the words larger on the right */
+.s-pdp-reviews__item.is-wide{padding:32px 36px 30px}
+.s-pdp-reviews__item.is-wide .s-pdp-reviews__body{display:grid;grid-template-columns:minmax(210px,.38fr) minmax(0,1fr);grid-template-rows:auto auto 1fr;grid-template-areas:'top title' 'top text' 'who text';gap:12px 32px}
+.s-pdp-reviews__item.is-wide .s-pdp-reviews__top{grid-area:top;align-self:start;flex-direction:column;align-items:flex-start;gap:8px}
+.s-pdp-reviews__item.is-wide .s-pdp-reviews__who{grid-area:who;align-self:end}
+.s-pdp-reviews__item.is-wide .s-pdp-reviews__title{grid-area:title;font-size:24px;font-weight:500;letter-spacing:-.015em;line-height:1.22}
+.s-pdp-reviews__item.is-wide .s-pdp-reviews__text{grid-area:text;align-self:start;font-size:17px;max-width:48ch}
+
+/* the lead: deep green, photo bleeding the full height */
+.s-pdp-reviews__item.is-lead{grid-column:1 / span 7;grid-row:span 2;background:var(--deep);color:var(--oat);padding:0;gap:0;overflow:hidden}
+.s-pdp-reviews__item.is-lead.is-pair{grid-row:auto}
+.s-pdp-reviews__item.is-lead.is-pair .s-pdp-reviews__media{min-height:400px}
+.s-pdp-reviews__item.is-lead.is-solo{grid-column:1 / -1;grid-row:auto}
+.s-pdp-reviews__item.is-lead.has-photo{grid-template-columns:minmax(0,.86fr) minmax(0,1fr)}
+.s-pdp-reviews__item.is-lead .s-pdp-reviews__media{border-radius:0;min-height:480px;height:100%;position:relative}
+.s-pdp-reviews__item.is-lead .s-pdp-reviews__media img,.s-pdp-reviews__item.is-lead .s-pdp-reviews__media svg{position:absolute;inset:0}
+.s-pdp-reviews__item.is-lead .s-pdp-reviews__body{padding:40px 40px 36px;gap:18px}
+.s-pdp-reviews__item.is-lead .stars{color:var(--sage);font-size:17px}
+.s-pdp-reviews__item.is-lead .s-pdp-reviews__skin{color:var(--sage)}
+.s-pdp-reviews__item.is-lead .s-pdp-reviews__title{font-weight:500;font-size:clamp(26px,2.3vw,32px);line-height:1.18;letter-spacing:-.02em}
+.s-pdp-reviews__item.is-lead .s-pdp-reviews__text{color:var(--oat);opacity:.84;font-size:17px}
+.s-pdp-reviews__item.is-lead .s-pdp-reviews__who{color:var(--sage)}
+.s-pdp-reviews__item.is-lead .s-pdp-reviews__who b{color:var(--oat)}
+.s-pdp-reviews__item.is-lead.is-solo .s-pdp-reviews__title{max-width:24ch}
+
+.s-pdp-reviews__foot{display:flex;align-items:center;justify-content:space-between;gap:16px 32px;flex-wrap:wrap;margin-top:32px}
+.s-pdp-reviews__more{display:flex;align-items:center;gap:20px}
+.s-pdp-reviews__more .btn[hidden]{display:none}
+.s-pdp-reviews__shown{font-size:14px;color:var(--muted)}
+.s-pdp-reviews__help{font-size:15px;color:var(--muted)}
+.s-pdp-reviews__help a{margin-left:8px;color:var(--ink)}
+.s-pdp-reviews__apps{margin-top:8px}
+
+/* motion: the lead photo settles from a slight zoom as the panel arrives (transform only) */
+html.motion .s-pdp-reviews__item.is-lead[data-rv] .s-pdp-reviews__media img{transition:transform 1.2s cubic-bezier(.22,1,.36,1)}
+html.motion .s-pdp-reviews__item.is-lead[data-rv]:not(.in) .s-pdp-reviews__media img{transform:scale(1.08)}
+@media (prefers-reduced-motion:reduce){.s-pdp-reviews *{transition:none!important}}
+
+@media (max-width:900px){
+  .s-pdp-reviews__item.is-lead.has-photo{grid-template-columns:minmax(0,.8fr) minmax(0,1fr)}
+  .s-pdp-reviews__item.is-lead .s-pdp-reviews__body{padding:32px 28px 28px}
+}
+@media (max-width:760px){
+  .s-pdp-reviews{padding:64px 0 72px}
+  .s-pdp-reviews__head{display:block;margin-bottom:28px}
+  .s-pdp-reviews__score{margin-top:24px;gap:16px}
+  .s-pdp-reviews__avg{font-size:56px}
+  .s-pdp-reviews__meter{font-size:18px}
+  .s-pdp-reviews__bar{display:block;margin-bottom:20px}
+  .s-pdp-reviews__bar-label{display:block;font-size:14px;margin:0 0 10px}
+  .s-pdp-reviews__filters{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 calc(-1 * var(--gut));padding:0 var(--gut)}
+  .s-pdp-reviews__filters::-webkit-scrollbar{display:none}
+  .s-pdp-reviews .chip{flex:none;height:40px;padding:0 16px}
+  .s-pdp-reviews__list{display:flex;flex-direction:column;gap:12px}
+  .s-pdp-reviews__item,.s-pdp-reviews__item.is-wide{padding:24px 20px 22px}
+  .s-pdp-reviews__item.is-wide .s-pdp-reviews__body{display:flex}
+  .s-pdp-reviews__item.is-wide .s-pdp-reviews__top{flex-direction:row;align-items:center;align-self:stretch}
+  .s-pdp-reviews__item.is-wide .s-pdp-reviews__who,.s-pdp-reviews__item.is-wide .s-pdp-reviews__text{align-self:auto}
+  .s-pdp-reviews__item.is-wide .s-pdp-reviews__title{font-size:20px;font-weight:600}
+  .s-pdp-reviews__item.is-wide .s-pdp-reviews__text{font-size:16px}
+  .s-pdp-reviews__item.has-photo:not(.is-lead){grid-template-columns:minmax(0,1fr) 88px;gap:16px}
+  /* lead runs edge to edge: photo on top, words on deep green below */
+  .s-pdp-reviews__item.is-lead,.s-pdp-reviews__item.is-lead.has-photo{display:block;margin:0 calc(-1 * var(--gut)) 4px;border-radius:0;padding:0}
+  .s-pdp-reviews__item.is-lead .s-pdp-reviews__media{min-height:0;height:auto;aspect-ratio:5/4}
+  .s-pdp-reviews__item.is-lead .s-pdp-reviews__body{padding:28px var(--gut) 32px}
+  .s-pdp-reviews__item.is-lead .s-pdp-reviews__title{font-size:26px}
+  .s-pdp-reviews__foot{display:block;margin-top:24px}
+  .s-pdp-reviews__more{flex-direction:column;align-items:stretch;gap:10px;text-align:center}
+  .s-pdp-reviews__more .btn{width:100%}
+  .s-pdp-reviews__help{margin-top:22px;text-align:center}
+}
