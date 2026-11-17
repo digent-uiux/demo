@@ -1,0 +1,50 @@
+/* Kiln motion kit, Liquid half: generated with components/ui/kiln-motion.tsx from one rule set (owner A). Picks: buttons clay press; links trailing arrow; headings clay settle; images arch clip reveal; cards press; icons rock; entry rotate-in. Runs only under html.blko-m (set by blko-kiln-motion.js). */
+:root { --motion-duration: 900ms; --motion-ease: cubic-bezier(.65,0,.35,1); --motion-distance: 30px; --motion-stagger: 100ms; --motion-hover-scale: 1.03; }
+html.blko-m [data-reveal-group][data-pending] > *, html.blko-m [data-reveal][data-pending] { visibility: hidden; }
+html.blko-m [data-reveal-group][data-shown] > *, html.blko-m [data-reveal][data-shown] { animation: kiln-enter var(--motion-duration) var(--motion-ease) backwards; }
+html.blko-m [data-reveal-group] > :nth-child(2) { animation-delay: var(--motion-stagger); }
+html.blko-m [data-reveal-group] > :nth-child(3) { animation-delay: calc(var(--motion-stagger) * 2); }
+html.blko-m [data-reveal-group] > :nth-child(4) { animation-delay: calc(var(--motion-stagger) * 3); }
+html.blko-m [data-reveal-group] > :nth-child(5) { animation-delay: calc(var(--motion-stagger) * 4); }
+html.blko-m [data-reveal-group] > :nth-child(n+6) { animation-delay: calc(var(--motion-stagger) * 5); }
+/* Buttons: clay press (sinks in with an inset shadow). */
+html.blko-m.blko-m :is(.blko-btn, .blko-ui-button) { transition: translate .35s var(--motion-ease), box-shadow .35s var(--motion-ease); }
+html.blko-m.blko-m :is(.blko-btn, .blko-ui-button):is(:hover, :focus-visible) { translate: 0 2px; box-shadow: inset 0 3px 8px -2px rgb(0 0 0 / .32); }
+html.blko-m.blko-m :is(.blko-btn, .blko-ui-button):active { translate: 0 3px; }
+/* Links: a trailing arrow slides in. */
+html.blko-m.blko-m :is(.blko-text-link, .blko-header__link, .blko-footer__link, .blko-ui-link) { position: relative; }
+html.blko-m.blko-m :is(.blko-text-link, .blko-header__link, .blko-footer__link, .blko-ui-link)::after { content: "\2192"; position: absolute; left: 100%; top: 50%; margin-left: .3em; line-height: 1; opacity: 0; translate: -6px -50%; transition: opacity .45s var(--motion-ease), translate .45s var(--motion-ease); pointer-events: none; }
+html.blko-m.blko-m :is(.blko-text-link, .blko-header__link, .blko-footer__link, .blko-ui-link):is(:hover, :focus-visible)::after { opacity: 1; translate: 0 -50%; }
+/* Headings: clay settle (squashed at the baseline, then up). */
+@keyframes kiln-h { 0% { opacity: 0; transform: translateY(.25em) scaleY(.55); transform-origin: 50% 100%; } 60% { opacity: 1; transform: scaleY(1.05); transform-origin: 50% 100%; } 100% { transform: none; transform-origin: 50% 100%; } }
+html.blko-m.blko-m [data-shown] :is(h1, h2, .blko-display, .blko-h1, .blko-h2), html.blko-m.blko-m [data-reveal-group]:not([data-pending], [data-shown]) :is(h1, .blko-display) { animation: kiln-h 1s var(--motion-ease) .1s backwards; }
+/* Images: arch clip reveal. */
+@keyframes kiln-i { from { clip-path: inset(16% 14% 0 14% round 999px 999px 0 0); } to { clip-path: inset(0 0 0 0 round 0 0 0 0); } }
+html.blko-m.blko-m [data-shown] :is(img, svg.blko-placeholder) { animation: kiln-i 1.3s var(--motion-ease) .1s backwards; }
+/* Cards: press. */
+html.blko-m.blko-m :is(.blko-card__media, .blko-ui-product-card__media) { transition: scale .6s var(--motion-ease); }
+html.blko-m.blko-m :is(.blko-card, .blko-ui-product-card):is(:hover, :focus-within) :is(.blko-card__media, .blko-ui-product-card__media) { scale: .985; }
+/* Icons: rock. */
+@keyframes kiln-x { 0%, 100% { rotate: 0deg; } 30% { rotate: -12deg; } 65% { rotate: 7deg; } }
+html.blko-m.blko-m :is(a, button):is(:hover, :focus-visible) :is(.blko-icon, .blko-ui-icon) { animation: kiln-x .7s var(--motion-ease); }
+/* Section entry: rotate-in (set down slightly turned). */
+@keyframes kiln-enter { from { opacity: 0; translate: 0 var(--motion-distance); rotate: -2deg; transform-origin: 0 100%; } }
+@keyframes kiln-Li { from { clip-path: inset(30% 22% 0 22% round 999px 999px 0 0); } to { clip-path: inset(0 0 0 0 round 0 0 0 0); } }
+@keyframes kiln-Lp { from { opacity: 0; translate: 0 30px; } }
+@keyframes kiln-Lb { 0% { opacity: 0; translate: 0 -18px; } 65% { opacity: 1; translate: 0 3px; box-shadow: inset 0 3px 8px -2px rgb(0 0 0 / .32); } 100% { translate: 0 0; } }
+html.blko-m.blko-m #MainContent > .shopify-section:first-child .blko-section:not(#km) :is(img, svg.blko-placeholder) { animation: kiln-Li 1.3s var(--motion-ease) backwards; }
+html.blko-m.blko-m #MainContent > .shopify-section:first-child .blko-section:not(#km) :is(h1, .blko-display) { animation: kiln-h 1s var(--motion-ease) .3s backwards; }
+html.blko-m.blko-m #MainContent > .shopify-section:first-child .blko-section:not(#km) p { animation: kiln-Lp .8s var(--motion-ease) .6s backwards; }
+html.blko-m.blko-m #MainContent > .shopify-section:first-child .blko-section:not(#km) :is(.blko-btn, .blko-ui-button) { animation: kiln-Lb .8s var(--motion-ease) .8s backwards; }
+@keyframes kiln-Sh2 { from { opacity: .2; transform: translateY(.35em) scaleY(.5); transform-origin: 50% 100%; } to { opacity: 1; transform: none; transform-origin: 50% 100%; } }
+@keyframes kiln-Sbig { from { clip-path: inset(18% 16% 0 16% round 999px 999px 0 0); } to { clip-path: inset(0 0 0 0 round 0 0 0 0); } }
+@supports (animation-timeline: view()) {
+html.blko-m.blko-m :is(h2, .blko-h2):not(#km) { animation: kiln-Sh2 linear both; animation-timeline: view(); animation-range: entry 5% cover 35%; }
+html.blko-m.blko-m [data-km-big]:not(#km) { animation: kiln-Sbig linear both; animation-timeline: view(); animation-range: entry 0% cover 50%; }
+}
+@supports not (animation-timeline: view()) {
+html.blko-m.blko-m :is(h2, .blko-h2):not(#km)[data-km-in] { animation: kiln-Sh2 1s var(--motion-ease) both; }
+html.blko-m.blko-m [data-km-big]:not(#km)[data-km-in] { animation: kiln-Sbig 1s var(--motion-ease) both; }
+}
+html.blko-m.blko-m [data-reveal-group][data-shown] > *, html.blko-m.blko-m [data-reveal][data-shown] { animation-name: kiln-enter; }
+@media (prefers-reduced-motion: reduce) { html.blko-m.blko-m *, html.blko-m.blko-m *::before, html.blko-m.blko-m *::after { animation: none !important; transition: none !important; } }

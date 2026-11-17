@@ -1,0 +1,46 @@
+/* Blush motion kit. GENERATED from components/ui/kits/blush.ts by kits/liquid.mjs; do not edit.
+   Runs only under html.blko-kit-blush (added by blko-blush-motion.js when motion is allowed). */
+/* Entry: clear from a soft blur as it rises. */
+html.blko-kit-blush:root [data-reveal-group][data-shown] > :not(h1, h2) { animation-name: blush-clear; }
+@keyframes blush-clear { from { opacity: 0; filter: blur(12px); transform: translateY(var(--blko-motion-distance, 24px)); } }
+
+/* Headings: flip up from the baseline. */
+html.blko-kit-blush:root [data-reveal-group][data-shown] :is(h1, h2) { transform-origin: 50% 100%; animation: blush-flip calc(var(--blko-motion-duration, 650ms) * 1.2) var(--blko-motion-ease, cubic-bezier(.22,1,.36,1)) calc(var(--blko-motion-stagger, 80ms) + 80ms) backwards; }
+@keyframes blush-flip { from { opacity: 0; transform: perspective(700px) rotateX(75deg); } }
+
+/* Buttons: a fill rises from the bottom; a little squeeze on press. */
+html.blko-kit-blush:root .blko-ui-button:not(.blko-ui-button--link) { background-image: linear-gradient(color-mix(in oklab, currentColor 18%, transparent), color-mix(in oklab, currentColor 18%, transparent)); background-repeat: no-repeat; background-position: 0 100%; background-size: 100% 0%; transition: background-size .45s var(--blko-motion-ease, cubic-bezier(.22,1,.36,1)), transform .2s var(--blko-motion-ease, cubic-bezier(.22,1,.36,1)); }
+html.blko-kit-blush:root .blko-ui-button:not(.blko-ui-button--link):is(:hover, :focus-visible) { background-size: 100% 100%; }
+html.blko-kit-blush:root .blko-ui-button:not(.blko-ui-button--link):active { transform: scale(.96); }
+
+/* Pictures: pull in to an inset rounded frame while their card or link is hovered. */
+html.blko-kit-blush:root :is(img, svg[data-placeholder]) { clip-path: inset(0 round 0px); transition: clip-path .6s var(--blko-motion-ease, cubic-bezier(.22,1,.36,1)); }
+html.blko-kit-blush:root :is(a, article, figure, li):is(:hover, :focus-within) :is(img, svg[data-placeholder]) { clip-path: inset(3.5% round 22px); }
+
+/* Links: a dotted underline appears and turns solid. */
+html.blko-kit-blush:root :is(nav, footer, p) a:not(.blko-ui-button):not(.blko-ui-arrow-link):not(:has(img, svg)):is(:hover, :focus-visible) { text-decoration-line: underline; text-decoration-thickness: 2px; text-underline-offset: .25em; text-decoration-color: var(--blko-color-pop-4); animation: blush-dots .5s steps(1) ; }
+@keyframes blush-dots { 0% { text-decoration-style: dotted; text-decoration-color: transparent; } 20% { text-decoration-style: dotted; text-decoration-color: var(--blko-color-pop-4); } 60% { text-decoration-style: dashed; } 100% { text-decoration-style: solid; } }
+
+/* Product cards: lift on a soft pink shadow. Icons: pop. */
+html.blko-kit-blush:root .blko-ui-product-card { transition: transform .45s var(--blko-motion-ease, cubic-bezier(.22,1,.36,1)), box-shadow .45s var(--blko-motion-ease, cubic-bezier(.22,1,.36,1)); }
+html.blko-kit-blush:root .blko-ui-product-card:is(:hover, :focus-within) { transform: translateY(-4px); box-shadow: 0 18px 40px -18px color-mix(in oklab, var(--blko-color-pop-1) 90%, black); }
+html.blko-kit-blush:root :is(.blko-ui-button:not(.blko-ui-button--link), .blko-ui-arrow-link):is(:hover, :focus-visible) svg { animation: blush-pop .45s var(--blko-motion-ease, cubic-bezier(.22,1,.36,1)); }
+@keyframes blush-pop { 40% { transform: scale(1.3); } }
+
+/* r3 load: heading flips up, the text clears, buttons pop, the picture opens out of a rounded inset. */
+html.blko-kit-blush:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(h1, h2) { transform-origin: 50% 100%; animation: blush-l-head .85s var(--blko-motion-ease, cubic-bezier(.22,1,.36,1)) 60ms backwards; }
+@keyframes blush-l-head { from { opacity: 0; transform: perspective(700px) rotateX(85deg) translateY(.3em); } }
+html.blko-kit-blush:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(h1, h2) ~ p { animation: blush-l-up .75s var(--blko-motion-ease, cubic-bezier(.22,1,.36,1)) 340ms backwards; }
+@keyframes blush-l-up { from { opacity: 0; filter: blur(12px); transform: translateY(24px); } }
+html.blko-kit-blush:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(.blko-ui-button:not(.blko-ui-button--link), .blko-ui-arrow-link) { animation: blush-l-btn .6s cubic-bezier(.34,1.56,.64,1) 520ms backwards; }
+@keyframes blush-l-btn { from { opacity: 0; transform: translateY(24px) scale(.8); } }
+html.blko-kit-blush:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(img, svg[data-placeholder]) { animation: blush-l-img 1s var(--blko-motion-ease, cubic-bezier(.22,1,.36,1)) 140ms backwards; }
+@keyframes blush-l-img { from { clip-path: inset(14% round 40px); filter: blur(8px); } to { clip-path: inset(0 round 0px); filter: none; } }
+
+/* r3 scroll: tiles fan in from alternating angles around their foot, one after another. */
+html.blko-kit-blush:root [data-reveal-group][data-shown] :is(:is(ul, ol, [class*="grid"]) > :has(img, svg[data-placeholder]), .blko-ui-product-card:not(:is(ul, ol, [class*="grid"]) > * .blko-ui-product-card)) { transform-origin: 50% 100%; animation: blush-fan .75s var(--blko-motion-ease, cubic-bezier(.22,1,.36,1)) calc(var(--blush-i, 0) * 80ms + 150ms) backwards; }
+html.blko-kit-blush:root [data-reveal-group][data-shown] :is(:is(ul, ol, [class*="grid"]) > :has(img, svg[data-placeholder]), .blko-ui-product-card:not(:is(ul, ol, [class*="grid"]) > * .blko-ui-product-card)):nth-child(even) { animation-name: blush-fan-r; }
+@keyframes blush-fan { from { opacity: 0; transform: translateY(40px) rotate(-8deg); } }
+@keyframes blush-fan-r { from { opacity: 0; transform: translateY(40px) rotate(8deg); } }
+/* r3 scroll: a pink highlighter grows under section headings, line by line, with the scroll (--blush-m 0..1). */
+html.blko-kit-blush:root [data-reveal-group][data-shown] h2[data-blush-m] { text-decoration-line: underline; text-decoration-skip-ink: none; text-underline-offset: -.28em; text-decoration-thickness: calc(var(--blush-m, 1) * .34em); text-decoration-color: color-mix(in oklab, var(--blko-color-pop-4) calc(var(--blush-m, 1) * 55%), transparent); }

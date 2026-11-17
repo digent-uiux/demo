@@ -1,0 +1,580 @@
+<script data-blko-kit="blush">try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-kit-blush')}catch(e){}</script>
+{{ 'blko-blush-motion.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-blush-motion.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign s = section.settings
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-swatches-04.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-swatches-04.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-blush', tokens: s.tokens -%}
+{%- liquid
+  assign item = s.product | default: product
+  assign shades = section.blocks | where: 'type', 'shade'
+  assign count = shades.size
+  assign pick = s.selected | minus: 1
+  if pick >= count
+    assign pick = 0
+  endif
+  assign sel = shades[pick]
+  assign tone_cool = s.filter_cool | downcase
+  assign tone_warm = s.filter_warm | downcase
+  assign tone_neutral = s.filter_neutral | downcase
+-%}
+{%- capture inner -%}<header class="bswatches04__head"><div class="bswatches04__intro"><h2 class="bswatches04__title">{{ s.heading }}</h2>{%- if s.text != blank -%}<p class="bswatches04__lead blko-ui-text--body">{{ s.text | replace: '[count]', count | escape }}</p>{%- endif -%}</div><div role="group" aria-label="{{ s.filter_label | escape }}" class="bswatches04__filters"><button type="button" class="bswatches04__filter" data-filter="all" aria-pressed="true">{{ s.filter_all | escape }}</button><button type="button" class="bswatches04__filter" data-filter="cool" aria-pressed="false">{{ s.filter_cool | escape }}</button><button type="button" class="bswatches04__filter" data-filter="warm" aria-pressed="false">{{ s.filter_warm | escape }}</button><button type="button" class="bswatches04__filter" data-filter="neutral" aria-pressed="false">{{ s.filter_neutral | escape }}</button></div></header
+><div class="bswatches04__grid"><ul class="bswatches04__wall" data-stage aria-live="polite"
+>{%- for b in shades -%}
+{%- liquid
+  assign bs = b.settings
+  assign vid = ''
+  assign avail = true
+  if item != blank
+    assign want = bs.variant_name | default: bs.name | strip | downcase
+    assign found = false
+    for v in item.variants
+      if found
+        break
+      endif
+      for o in v.options
+        assign od = o | strip | downcase
+        if od == want
+          assign found = true
+          assign vid = v.id
+          assign avail = v.available
+          break
+        endif
+      endfor
+    endfor
+  endif
+  assign fin_lc = bs.finish | downcase
+  case bs.tone
+    when 'cool'
+      assign tone_word = tone_cool
+    when 'warm'
+      assign tone_word = tone_warm
+    else
+      assign tone_word = tone_neutral
+  endcase
+-%}
+<li class="bswatches04__cell" data-tone="{{ bs.tone }}" {{ b.shopify_attributes }}><button type="button" class="bswatches04__card" aria-pressed="{% if forloop.index0 == pick %}true{% else %}false{% endif %}" data-shade data-hex="{{ bs.color }}" data-name="{{ bs.name | escape }}" data-meta="{{ s.meta_text | replace: '[code]', bs.code | replace: '[tone]', tone_word | replace: '[finish]', fin_lc | escape }}" data-variant="{{ vid }}" data-available="{{ avail }}"><span aria-hidden="true" class="bswatches04__chip" style="background-color:{{ bs.color }};--i:{{ forloop.index0 }}"></span><span class="bswatches04__text"><span class="bswatches04__name blko-ui-text--small">{{ bs.name | escape }}</span><span class="bswatches04__finish blko-ui-text--label">{{ bs.finish | escape }}</span></span></button></li
+>{%- endfor -%}
+</ul
+>{%- liquid
+  case sel.settings.tone
+    when 'cool'
+      assign sel_tone = tone_cool
+    when 'warm'
+      assign sel_tone = tone_warm
+    else
+      assign sel_tone = tone_neutral
+  endcase
+  assign sel_name = sel.settings.name | escape
+-%}
+{%- liquid
+  assign sel_fin = sel.settings.finish | downcase
+  assign sel_hex = sel.settings.color | default: '#b4553a'
+  assign demo = false
+  if request.design_mode or template == blank
+    assign demo = true
+  endif
+  assign mask_a = "url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22 preserveAspectRatio=%22none%22%3E%3Cfilter id=%22b%22%3E%3CfeGaussianBlur stdDeviation=%22.35%22/%3E%3C/filter%3E%3Cpath d=%22"
+  assign mask_b = "%22 filter=%22url(%23b)%22/%3E%3C/svg%3E')"
+  assign shown_skins = 0
+  for i in (1..3)
+    assign ik = 'skin_' | append: i | append: '_image'
+    if s[ik] != blank or demo
+      assign shown_skins = shown_skins | plus: 1
+    endif
+  endfor
+-%}
+<aside class="bswatches04__aside" aria-live="polite">{%- if s.image != blank -%}<figure class="bswatches04__try">{{ s.image | image_url: width: 1400 | image_tag: loading: 'lazy', alt: s.image.alt, sizes: '(min-width: 1024px) 40vw, 100vw', widths: '500, 800, 1000, 1400', class: 'bswatches04__img' }}</figure>{%- elsif demo -%}{%- assign m = 'M28.5 57 L29.5 53 L31 51.5 L33 51.8 L35 52.5 L37 53.5 L40 55 L42 57 L43.5 59.5 L44.5 62 L45 63.5 L43 64.5 L40 66 L37 66.5 L34 66.5 L31 66 L29 64 L28 61Z' | prepend: mask_a | append: mask_b -%}<figure class="bswatches04__try"><div class="bswatches04__zoom" style="transform-origin:37% 59%;transform:scale(1.4)"><img src="https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=1000&q=80&auto=format&fit=crop" alt="{{ s.demo_alt | escape }}" width="1000" height="667" loading="lazy" class="bswatches04__img"><span aria-hidden="true" class="bswatches04__lipwash" data-lip style="background-color:{{ sel_hex }};-webkit-mask-image:{{ m }};mask-image:{{ m }}"></span></div></figure>{%- endif -%}<div class="bswatches04__picked"><h3 class="bswatches04__shade blko-ui-text--h3" data-out-name>{{ sel_name }}</h3><p class="bswatches04__meta blko-ui-text--small" data-out-meta>{{ s.meta_text | replace: '[code]', sel.settings.code | replace: '[tone]', sel_tone | replace: '[finish]', sel_fin | escape }}</p></div
+>{%- if shown_skins > 0 -%}<div class="bswatches04__skins"><p class="bswatches04__on blko-ui-text--small">{{ s.skins_label | escape }}</p><ul class="bswatches04__tones"
+>{%- for i in (1..3) -%}{%- liquid
+  assign ik = 'skin_' | append: i | append: '_image'
+  assign nk = 'skin_' | append: i | append: '_name'
+  case i
+    when 1
+      assign d_src = 'photo-1654374504608-67c4cfe65fca?w=500'
+      assign d_box = 'left:-11.9%;top:-6.7%;width:129%;height:121%'
+      assign d_path = 'M15 50 L22 45 L30 41 L38 39.5 L45 40.5 L50 41 L55 40 L62 39.5 L70 41 L77 45 L81 50 L77 54 L70 58 L60 61 L50 62 L40 61.5 L30 59 L22 55Z'
+    when 2
+      assign d_src = 'photo-1586811032606-f8fd4a8f80dd?w=700'
+      assign d_box = 'left:-58.9%;top:0%;width:220%;height:110%'
+      assign d_path = 'M29 40 L32 33 L36 27 L42 24 L48 25 L52 27 L57 28 L62 32 L67 36 L70 41 L67 46 L60 51 L52 54 L44 55 L37 53 L31 49Z'
+    else
+      assign d_src = 'photo-1727186776078-3ea1727aea4f?w=800'
+      assign d_box = 'left:-55%;top:-17.4%;width:250%;height:125%'
+      assign d_path = 'M25 53 L28 47 L33 43.5 L40 43 L47 44 L53 46 L57 50 L59 54 L56 59 L50 64 L42 67.5 L34 68 L28 64 L25.5 58Z'
+  endcase
+  assign tone_lc = s[nk] | downcase
+  assign skin_alt = s.skin_alt | replace: '[tone]', tone_lc | escape
+-%}
+{%- if s[ik] != blank -%}<li class="bswatches04__tone"><span class="bswatches04__tile">{{ s[ik] | image_url: width: 400 | image_tag: loading: 'lazy', alt: s[ik].alt, sizes: '160px', widths: '200, 400', class: 'bswatches04__img' }}</span><span class="bswatches04__tonename blko-ui-text--label">{{ s[nk] | escape }}</span></li
+>{%- elsif demo -%}{%- assign m = d_path | prepend: mask_a | append: mask_b -%}<li class="bswatches04__tone"><span class="bswatches04__tile"><span class="bswatches04__box" style="{{ d_box }}"><img src="https://images.unsplash.com/{{ d_src }}&q=80&auto=format&fit=crop" alt="{{ skin_alt }}" width="400" height="533" loading="lazy" class="bswatches04__fill"><span aria-hidden="true" class="bswatches04__lipwash" data-lip style="background-color:{{ sel_hex }};-webkit-mask-image:{{ m }};mask-image:{{ m }}"></span></span></span><span class="bswatches04__tonename blko-ui-text--label">{{ s[nk] | escape }}</span></li
+>{%- endif -%}
+{%- endfor -%}
+</ul></div>{%- endif -%}
+{%- capture add_text -%}<span data-out-add>{{ s.add_label | escape | replace: '[name]', sel_name }}</span>{%- endcapture -%}
+{%- capture add_attrs -%}data-add data-add-text="{{ s.add_label | escape }}" data-sold-text="{{ s.sold_label | escape }}" data-added-text="{{ s.added_label | escape }}" data-error-text="{{ s.error_label | escape }}" data-link="{{ s.link | default: routes.all_products_collection_url }}"{%- endcapture -%}
+{%- render 'blko-ui-button', full: true, size: 'lg', children: add_text, attrs: add_attrs -%}<p class="bswatches04__status" role="status" data-status></p
+>{%- for b in section.blocks -%}{%- if b.type == '@app' -%}<div class="bswatches04__app">{% render b %}</div>{%- endif -%}{%- endfor -%}
+</aside></div>{%- endcapture -%}
+<blko-swatches-04 class="bswatches04" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-preview="{% if item == blank %}true{% else %}false{% endif %}">{%- render 'blko-ui-section', surface: s.surface, label: s.label, inner: 'bswatches04__inner', children: inner -%}</blko-swatches-04
+
+>
+
+{% schema %}
+{
+  "name": "Swatches 04 - Shade wall",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Section name for screen readers",
+      "default": "Lip shades"
+    },
+    {
+      "type": "header",
+      "content": "Product"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product with the shades",
+      "info": "On a product page this is the page's product when left empty. Each shade card adds the variant whose option value matches the shade name (or its Variant name)."
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Button link without a product",
+      "info": "Where the button goes when no product is set. Empty: all products."
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Find your shade by undertone"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "[count] lip colours. Pick one to see it on.",
+      "info": "[count] shows the number of shade cards."
+    },
+    {
+      "type": "range",
+      "id": "selected",
+      "label": "Shade shown first",
+      "min": 1,
+      "max": 24,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "text",
+      "id": "meta_text",
+      "label": "Shade details",
+      "default": "[code], [tone] undertone, [finish] finish",
+      "info": "[code], [tone] and [finish] come from the chosen card."
+    },
+    {
+      "type": "header",
+      "content": "Undertone filter"
+    },
+    {
+      "type": "text",
+      "id": "filter_label",
+      "label": "Filter name for screen readers",
+      "default": "Filter by undertone"
+    },
+    {
+      "type": "text",
+      "id": "filter_all",
+      "label": "All",
+      "default": "All"
+    },
+    {
+      "type": "text",
+      "id": "filter_cool",
+      "label": "Cool",
+      "default": "Cool"
+    },
+    {
+      "type": "text",
+      "id": "filter_warm",
+      "label": "Warm",
+      "default": "Warm"
+    },
+    {
+      "type": "text",
+      "id": "filter_neutral",
+      "label": "Neutral",
+      "default": "Neutral"
+    },
+    {
+      "type": "header",
+      "content": "Try-on photos"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Main photo",
+      "info": "Your own photo of the shade on lips. In the Theme Editor a demo photo shows the chosen shade until you add one."
+    },
+    {
+      "type": "text",
+      "id": "demo_alt",
+      "label": "Demo photo description",
+      "default": "Close-up of a model having lip colour applied with a brush"
+    },
+    {
+      "type": "text",
+      "id": "skins_label",
+      "label": "Skin tones line",
+      "default": "On three skin tones"
+    },
+    {
+      "type": "text",
+      "id": "skin_alt",
+      "label": "Demo skin-tone photo description",
+      "default": "Close-up of lips on [tone] skin",
+      "info": "[tone] is the skin tone name."
+    },
+    {
+      "type": "text",
+      "id": "skin_1_name",
+      "label": "Skin tone 1",
+      "default": "Fair"
+    },
+    {
+      "type": "image_picker",
+      "id": "skin_1_image",
+      "label": "Skin tone 1 photo"
+    },
+    {
+      "type": "text",
+      "id": "skin_2_name",
+      "label": "Skin tone 2",
+      "default": "Medium"
+    },
+    {
+      "type": "image_picker",
+      "id": "skin_2_image",
+      "label": "Skin tone 2 photo"
+    },
+    {
+      "type": "text",
+      "id": "skin_3_name",
+      "label": "Skin tone 3",
+      "default": "Deep"
+    },
+    {
+      "type": "image_picker",
+      "id": "skin_3_image",
+      "label": "Skin tone 3 photo",
+      "info": "Photos of the shade on lips or skin. A tone without a photo is hidden on the store; the Theme Editor shows demo photos in the chosen shade."
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "add_label",
+      "label": "Add to bag",
+      "default": "Add [name] to bag",
+      "info": "[name] is the chosen shade."
+    },
+    {
+      "type": "text",
+      "id": "sold_label",
+      "label": "Sold out",
+      "default": "[name] is sold out"
+    },
+    {
+      "type": "text",
+      "id": "added_label",
+      "label": "Added message",
+      "default": "[name] is in your bag"
+    },
+    {
+      "type": "text",
+      "id": "error_label",
+      "label": "Error message",
+      "default": "Couldn't add it. Please try again."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "select",
+      "id": "surface",
+      "label": "Background",
+      "default": "soft-2",
+      "options": [
+        {
+          "value": "soft-2",
+          "label": "Soft tint"
+        },
+        {
+          "value": "bg",
+          "label": "Page"
+        },
+        {
+          "value": "alt",
+          "label": "Alternate"
+        },
+        {
+          "value": "soft-1",
+          "label": "Soft tint 2"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Blush)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "shade",
+      "name": "Shade",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Shade name",
+          "default": "New shade"
+        },
+        {
+          "type": "text",
+          "id": "variant_name",
+          "label": "Variant name",
+          "info": "The product's option value for this shade, when it differs from the shade name."
+        },
+        {
+          "type": "text",
+          "id": "code",
+          "label": "Code",
+          "default": "L-13"
+        },
+        {
+          "type": "color",
+          "id": "color",
+          "label": "Colour",
+          "default": "#b4553a"
+        },
+        {
+          "type": "select",
+          "id": "tone",
+          "label": "Undertone",
+          "default": "neutral",
+          "options": [
+            {
+              "value": "cool",
+              "label": "Cool"
+            },
+            {
+              "value": "warm",
+              "label": "Warm"
+            },
+            {
+              "value": "neutral",
+              "label": "Neutral"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "finish",
+          "label": "Finish",
+          "default": "Satin"
+        }
+      ]
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "max_blocks": 30,
+  "presets": [
+    {
+      "name": "Swatches 04 - Shade wall",
+      "blocks": [
+        {
+          "type": "shade",
+          "settings": {
+            "code": "L-01",
+            "name": "Bare petal",
+            "color": "#d49a92",
+            "tone": "neutral",
+            "finish": "Satin"
+          }
+        },
+        {
+          "type": "shade",
+          "settings": {
+            "code": "L-02",
+            "name": "Rosewood",
+            "color": "#a5545a",
+            "tone": "cool",
+            "finish": "Matte"
+          }
+        },
+        {
+          "type": "shade",
+          "settings": {
+            "code": "L-03",
+            "name": "Terracotta",
+            "color": "#b4553a",
+            "tone": "warm",
+            "finish": "Matte"
+          }
+        },
+        {
+          "type": "shade",
+          "settings": {
+            "code": "L-04",
+            "name": "Fig",
+            "color": "#6e2f3d",
+            "tone": "cool",
+            "finish": "Satin"
+          }
+        },
+        {
+          "type": "shade",
+          "settings": {
+            "code": "L-05",
+            "name": "Brick",
+            "color": "#933624",
+            "tone": "warm",
+            "finish": "Matte"
+          }
+        },
+        {
+          "type": "shade",
+          "settings": {
+            "code": "L-06",
+            "name": "Mauve",
+            "color": "#a0717e",
+            "tone": "cool",
+            "finish": "Sheer"
+          }
+        },
+        {
+          "type": "shade",
+          "settings": {
+            "code": "L-07",
+            "name": "Cinnamon",
+            "color": "#9b5a3f",
+            "tone": "warm",
+            "finish": "Satin"
+          }
+        },
+        {
+          "type": "shade",
+          "settings": {
+            "code": "L-08",
+            "name": "True red",
+            "color": "#b0222e",
+            "tone": "neutral",
+            "finish": "Matte"
+          }
+        },
+        {
+          "type": "shade",
+          "settings": {
+            "code": "L-09",
+            "name": "Coral",
+            "color": "#de6a55",
+            "tone": "warm",
+            "finish": "Sheer"
+          }
+        },
+        {
+          "type": "shade",
+          "settings": {
+            "code": "L-10",
+            "name": "Berry",
+            "color": "#7f2547",
+            "tone": "cool",
+            "finish": "Matte"
+          }
+        },
+        {
+          "type": "shade",
+          "settings": {
+            "code": "L-11",
+            "name": "Nude rose",
+            "color": "#bf8577",
+            "tone": "neutral",
+            "finish": "Satin"
+          }
+        },
+        {
+          "type": "shade",
+          "settings": {
+            "code": "L-12",
+            "name": "Plum",
+            "color": "#4f2233",
+            "tone": "neutral",
+            "finish": "Satin"
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

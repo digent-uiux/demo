@@ -1,0 +1,408 @@
+<script data-blko-kit="linen">try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-kit-linen')}catch(e){}</script>
+{{ 'blko-linen-motion.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-linen-motion.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign s = section.settings
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-care-guide-02.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-care-guide-02.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-linen', tokens: s.tokens -%}
+{%- comment -%}
+  Care guide 02 (linen): tone split. Left, the warm alt panel holds two photos of the cloth (new and washed); a wash slider
+  crossfades between them and fills the softness meter. Right, a display heading, the ticking habits with a count and the
+  buy row (product title, live price, button to the product URL).
+  Motion (html.blko-ui-motion only; static = final frame): photo unclips from the left, the meter fills, habits rise.
+{%- endcomment -%}
+{%- liquid
+  assign alt = s.image_alt | default: s.image.alt
+  assign alt_2 = s.image_washed_alt | default: s.image_washed.alt
+  assign total = 0
+  for block in section.blocks
+    assign total = total | plus: 1
+  endfor
+  assign count_text = s.count_text | replace: '[done]', '0' | replace: '[total]', total
+  assign badge = s.after_many | replace: '[count]', '0'
+  assign soft_text = s.softness | replace: '[percent]', '22'
+  assign p = s.product
+  if p != blank
+    assign title = p.title
+    assign cents = p.price
+    assign href = p.url
+  else
+    assign title = s.product_title
+    assign cents = s.price | times: 100 | round
+    assign href = s.button_link | default: routes.all_products_collection_url
+  endif
+  assign row_n = 0
+-%}
+{%- capture content -%}
+<div class="bcareguide02__grid" data-cg2
+  ><div class="bcareguide02__panel"
+    ><div class="bcareguide02__photo" data-cg2-photo
+      >{%- if s.image != blank -%}
+        {{ s.image | image_url: width: 1200 | image_tag: alt: alt, loading: 'lazy', class: 'bcareguide02__img', widths: '480, 720, 1000, 1200', sizes: '(min-width: 1024px) 50vw, 100vw' -}}
+      {%- else -%}
+        {{ 'product-apparel-2' | placeholder_svg_tag: 'bcareguide02__img' -}}
+      {%- endif -%}
+      {%- if s.image_washed != blank -%}
+        {{ s.image_washed | image_url: width: 1200 | image_tag: alt: alt_2, loading: 'lazy', class: 'bcareguide02__img bcareguide02__washed', widths: '480, 720, 1000, 1200', sizes: '(min-width: 1024px) 50vw, 100vw' -}}
+      {%- else -%}
+        {{ 'product-apparel-3' | placeholder_svg_tag: 'bcareguide02__img bcareguide02__washed' -}}
+      {%- endif -%}
+      <span class="bcareguide02__badge blko-ui-text--label" data-badge>{{ badge | escape }}</span
+    ></div
+    ><div class="bcareguide02__meter-wrap"
+      ><div class="bcareguide02__meter-row"
+        ><p class="bcareguide02__stage blko-ui-text--h4" data-stage>{{ s.stage_1 | escape }}</p
+        ><p class="bcareguide02__muted bcareguide02__num blko-ui-text--small" data-soft>{{ soft_text | escape }}</p
+      ></div
+      ><div class="bcareguide02__meter" aria-hidden="true"><div class="bcareguide02__fill" data-fill data-cg2-meter style="width:22%"></div></div
+    ></div
+    ><label class="bcareguide02__range" for="bcareguide02-{{ section.id }}-w"
+      ><span class="bcareguide02__range-label blko-ui-text--small">{{ s.slider_label | escape }}</span
+      ><input id="bcareguide02-{{ section.id }}-w" type="range" min="0" max="{{ s.max_washes }}" value="0" step="1" aria-valuetext="{{ badge | escape }}, {{ soft_text | escape }}" data-washes
+      ><span class="bcareguide02__scale bcareguide02__muted blko-ui-text--label"><span>{{ s.scale_start | escape }}</span><span>{{ s.max_washes | divided_by: 2 }}</span><span>{{ s.scale_end | replace: '[max]', s.max_washes | escape }}</span></span
+    ></label
+  ></div
+  ><div class="bcareguide02__body"
+    ><header class="bcareguide02__head"
+      ><h2 class="bcareguide02__title">{{ s.heading | escape }}</h2
+      >{%- if s.lead != blank -%}<p class="bcareguide02__muted blko-ui-text--body">{{ s.lead | escape }}</p>{%- endif -%}
+    </header
+    ><div class="bcareguide02__list"
+      ><p class="bcareguide02__muted bcareguide02__num blko-ui-text--small" aria-live="polite" data-count>{{ count_text | escape }}</p
+      ><ul class="bcareguide02__habits"
+        >{%- for block in section.blocks -%}
+          <li data-cg2-row style="--i:{{ row_n }}" {{ block.shopify_attributes }}
+            ><label class="bcareguide02__habit"
+              ><input type="checkbox" class="bcareguide02__cb" data-habit
+              ><span class="bcareguide02__tick" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.5 8.5 L6.5 11.5 L12.5 4.5" pathLength="1"/></svg></span
+              ><span class="bcareguide02__habit-text"
+                ><span class="bcareguide02__habit-title blko-ui-text--body">{{ block.settings.title | escape }}</span
+                >{%- if block.settings.detail != blank -%}<span class="bcareguide02__muted blko-ui-text--small">{{ block.settings.detail | escape }}</span>{%- endif -%}
+              </span
+            ></label
+          ></li
+          >{%- assign row_n = row_n | plus: 1 -%}
+        {%- endfor -%}
+      </ul
+    ></div
+    ><div class="bcareguide02__buy"
+      ><div class="bcareguide02__buy-text"
+        >{%- if title != blank -%}<span class="bcareguide02__muted blko-ui-text--small">{{ title | escape }}</span>{%- endif -%}
+        {% render 'blko-ui-price', amount: cents, cents: true, size: 'lg' -%}
+      </div
+      >{% render 'blko-ui-button', href: href, size: 'lg', children: s.button_label -%}
+    </div
+  ></div
+></div
+>{%- endcapture -%}
+<div class="bcareguide02" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-bcareguide02 data-one="{{ s.after_one | escape }}" data-many="{{ s.after_many | escape }}" data-softness="{{ s.softness | escape }}" data-count-text="{{ s.count_text | escape }}" data-s1="{{ s.stage_1 | escape }}" data-s2="{{ s.stage_2 | escape }}" data-s3="{{ s.stage_3 | escape }}" data-s4="{{ s.stage_4 | escape }}">{% render 'blko-ui-section', surface: 'bg', label: s.label, inner: 'bcareguide02__inner', children: content %}</div
+>
+
+{% schema %}
+{
+  "name": "Care 02 - Wash slider",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Make it last, and it only gets softer"
+    },
+    {
+      "type": "textarea",
+      "id": "lead",
+      "label": "Intro",
+      "default": "Linen is the one cloth that improves with use. A few gentle habits, and every wash makes it kinder to wear."
+    },
+    {
+      "type": "header",
+      "content": "Photos"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Photo, new",
+      "info": "The garment as it arrives, crisp."
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Alt text, new",
+      "info": "Leave blank to use the image's own alt text."
+    },
+    {
+      "type": "image_picker",
+      "id": "image_washed",
+      "label": "Photo, washed",
+      "info": "The same cloth after many washes. The slider fades from the first photo to this one."
+    },
+    {
+      "type": "text",
+      "id": "image_washed_alt",
+      "label": "Alt text, washed",
+      "info": "Leave blank to use the image's own alt text."
+    },
+    {
+      "type": "text",
+      "id": "slider_label",
+      "label": "Slider label",
+      "default": "Slide the washes"
+    },
+    {
+      "type": "range",
+      "id": "max_washes",
+      "label": "Most washes on the slider",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "default": 40
+    },
+    {
+      "type": "text",
+      "id": "scale_start",
+      "label": "Scale start",
+      "default": "New"
+    },
+    {
+      "type": "text",
+      "id": "scale_end",
+      "label": "Scale end",
+      "default": "[max] washes",
+      "info": "[max] is the number of washes."
+    },
+    {
+      "type": "text",
+      "id": "after_one",
+      "label": "Photo tag, one wash",
+      "default": "After 1 wash"
+    },
+    {
+      "type": "text",
+      "id": "after_many",
+      "label": "Photo tag, other counts",
+      "default": "After [count] washes",
+      "info": "[count] is the number of washes."
+    },
+    {
+      "type": "text",
+      "id": "softness",
+      "label": "Softness value",
+      "default": "Softness [percent]%",
+      "info": "[percent] is worked out from the washes."
+    },
+    {
+      "type": "text",
+      "id": "stage_1",
+      "label": "Stage, under 5 washes",
+      "default": "Crisp, straight from the loom"
+    },
+    {
+      "type": "text",
+      "id": "stage_2",
+      "label": "Stage, 5 to 14 washes",
+      "default": "Relaxed, the stiffness gone"
+    },
+    {
+      "type": "text",
+      "id": "stage_3",
+      "label": "Stage, 15 to 29 washes",
+      "default": "Soft, drapes like cotton"
+    },
+    {
+      "type": "text",
+      "id": "stage_4",
+      "label": "Stage, 30 washes and more",
+      "default": "Heirloom soft, almost suede"
+    },
+    {
+      "type": "header",
+      "content": "Habits"
+    },
+    {
+      "type": "text",
+      "id": "count_text",
+      "label": "Count",
+      "default": "[done] of [total] habits done",
+      "info": "[done] and [total] are filled in as shoppers tick the habits."
+    },
+    {
+      "type": "header",
+      "content": "Buy row"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Shows its live title and price and links to it."
+    },
+    {
+      "type": "text",
+      "id": "product_title",
+      "label": "Preview title",
+      "default": "Stand-collar linen shirt, undyed",
+      "info": "Used when no product is chosen."
+    },
+    {
+      "type": "number",
+      "id": "price",
+      "label": "Preview price",
+      "default": 118
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "Used when no product is chosen."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop the linen shirt"
+    },
+    {
+      "type": "paragraph",
+      "content": "Add a Habit block for each line of the checklist."
+    },
+    {
+      "type": "header",
+      "content": "Accessibility"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Section name for screen readers",
+      "default": "Make it last"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "habit",
+      "name": "Habit",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Habit",
+          "default": "Wash at 30–40 °C with a mild liquid"
+        },
+        {
+          "type": "text",
+          "id": "detail",
+          "label": "Why",
+          "default": "Powder and bleach scratch the flax fibre."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 10,
+  "presets": [
+    {
+      "name": "Care 02 - Wash slider",
+      "blocks": [
+        {
+          "type": "habit",
+          "settings": {
+            "title": "Wash at 30–40 °C with a mild liquid",
+            "detail": "Powder and bleach scratch the flax fibre."
+          }
+        },
+        {
+          "type": "habit",
+          "settings": {
+            "title": "Fill the drum only halfway",
+            "detail": "Linen needs room to move or it sets in creases."
+          }
+        },
+        {
+          "type": "habit",
+          "settings": {
+            "title": "Line dry in shade, shake it out first",
+            "detail": "Sun yellows natural undyed cloth over time."
+          }
+        },
+        {
+          "type": "habit",
+          "settings": {
+            "title": "Skip the iron, or press while damp",
+            "detail": "The soft crumple is part of the look."
+          }
+        },
+        {
+          "type": "habit",
+          "settings": {
+            "title": "Fold loosely, store where air moves",
+            "detail": "Linen breathes; a closed box keeps damp in."
+          }
+        },
+        {
+          "type": "habit",
+          "settings": {
+            "title": "Mend small holes early",
+            "detail": "Send it to us and we darn it for free, for life."
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

@@ -1,0 +1,444 @@
+{%- liquid
+  assign s = section.settings
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-care-guide-03.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-care-guide-03.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-oak', tokens: s.tokens -%}
+{%- comment -%}
+  Care guide 03 (oak): left column (sticky from 896) with a display heading, a close oak grain photo and the care kit buy
+  row (title, contents, live price, add to cart when a product is chosen, else a link). Right, a single-open accordion of
+  Material blocks: photo, do / don't and a four-step frequency strip. No row numbers.
+  Motion (html.blko-ui-motion only; static = final frame): the oak photo unclips from the top and the open panel's bars
+  fill; opening a row unclips its panel and refills its bars.
+{%- endcomment -%}
+{%- liquid
+  assign kit_alt = s.image_alt | default: s.image.alt
+  assign p = s.product
+  if p != blank
+    assign kit_title = p.title
+    assign cents = p.selected_or_first_available_variant.price
+  else
+    assign kit_title = s.kit_title
+    assign cents = s.price | times: 100 | round
+  endif
+-%}
+{%- capture content -%}
+<div class="bcareguide03__grid" data-cg3
+><div class="bcareguide03__intro"
+  ><header class="bcareguide03__head"
+    ><h2 class="bcareguide03__title">{{ s.heading | escape }}</h2
+    >{%- if s.lead != blank -%}<p class="bcareguide03__muted blko-ui-text--body">{{ s.lead | escape }}</p>{%- endif -%}
+  </header
+  ><div class="bcareguide03__hero" data-cg3-photo
+    >{%- if s.image != blank -%}
+      {{ s.image | image_url: width: 1200 | image_tag: alt: kit_alt, loading: 'lazy', class: 'bcareguide03__img', widths: '480, 720, 1000, 1200', sizes: '(min-width: 1024px) 40vw, 100vw' -}}
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'bcareguide03__img' -}}
+    {%- endif -%}
+  </div
+  ><div class="bcareguide03__kit"
+    ><div class="bcareguide03__kit-text"
+      ><span class="bcareguide03__kit-name blko-ui-text--h4">{{ kit_title | escape }}</span
+      >{%- if s.kit_detail != blank -%}<span class="bcareguide03__muted blko-ui-text--small">{{ s.kit_detail | escape }}</span>{%- endif -%}
+      {% render 'blko-ui-price', amount: cents, cents: true, size: 'lg', className: 'bcareguide03__kit-price' -%}
+    </div
+    >{%- if p != blank -%}
+      {%- form 'product', p, class: 'bcareguide03__form' -%}
+        <input type="hidden" name="id" value="{{ p.selected_or_first_available_variant.id }}"
+        >{%- if p.available -%}
+          {% render 'blko-ui-button', type: 'submit', size: 'lg', children: s.button_label -%}
+        {%- else -%}
+          {% render 'blko-ui-button', type: 'submit', size: 'lg', children: s.button_label, attrs: 'disabled' -%}
+        {%- endif -%}
+      {%- endform -%}
+    {%- else -%}
+      {%- assign kit_href = s.link | default: routes.all_products_collection_url -%}
+      {% render 'blko-ui-button', href: kit_href, size: 'lg', children: s.button_label -%}
+    {%- endif -%}
+  </div
+></div
+><div class="bcareguide03__list"
+  >{%- for block in section.blocks -%}
+    {%- liquid
+      assign b = block.settings
+      assign open = forloop.first
+      assign alt = b.image_alt | default: b.image.alt
+      assign bid = section.id | append: '-' | append: block.id
+      assign mat = b.name | downcase
+      assign freq_label = s.freq_label | replace: '[material]', mat
+    -%}
+    <div class="bcareguide03__item" data-item {{ block.shopify_attributes }}
+      ><h3
+        ><button type="button" class="bcareguide03__btn" id="bcareguide03-{{ bid }}-b" aria-expanded="{{ open }}" aria-controls="bcareguide03-{{ bid }}-p" data-toggle
+          ><span class="bcareguide03__name-wrap"><span class="bcareguide03__name blko-ui-text--h3">{{ b.name | escape }}</span>{%- if b.line != blank -%}<span class="bcareguide03__muted blko-ui-text--small">{{ b.line | escape }}</span>{%- endif -%}</span
+          ><span class="bcareguide03__plus">{% render 'blko-ui-icon', name: 'plus', size: 20 %}</span
+        ></button
+      ></h3
+      ><div id="bcareguide03-{{ bid }}-p" role="region" aria-labelledby="bcareguide03-{{ bid }}-b" class="bcareguide03__panel" data-cg3-panel{% unless open %} hidden{% endunless %}
+        ><div class="bcareguide03__panel-grid"
+          ><div class="bcareguide03__photo"
+            >{%- if b.image != blank -%}
+              {{ b.image | image_url: width: 900 | image_tag: alt: alt, loading: 'lazy', class: 'bcareguide03__img', widths: '360, 600, 900', sizes: '(min-width: 1024px) 25vw, 100vw' -}}
+            {%- else -%}
+              {{ 'lifestyle-2' | placeholder_svg_tag: 'bcareguide03__img' -}}
+            {%- endif -%}
+          </div
+          ><div class="bcareguide03__info"
+            ><div class="bcareguide03__pair"
+              ><p class="bcareguide03__do blko-ui-text--small">{% render 'blko-ui-icon', name: 'check', size: 16, className: 'bcareguide03__mark' %}<span><strong>{{ s.do_label | escape }}</strong>{{ b.do | escape }}</span></p
+              ><p class="bcareguide03__dont blko-ui-text--small">{% render 'blko-ui-icon', name: 'x', size: 16, className: 'bcareguide03__mark' %}<span><strong>{{ s.dont_label | escape }}</strong>{{ b.dont | escape }}</span></p
+            ></div
+            ><ol class="bcareguide03__freq" aria-label="{{ freq_label | escape }}"
+              >{%- for j in (1..4) -%}
+                {%- liquid
+                  assign lk = 'freq_' | append: j
+                  assign tk = 'task_' | append: j
+                  assign filled = 5 | minus: j
+                -%}
+                <li class="bcareguide03__cell"
+                  ><span class="bcareguide03__bars" aria-hidden="true">{% for k in (1..4) %}<span data-cg3-bar style="--b:{{ k | minus: 1 }}"{% if k <= filled %} class="bcareguide03__on"{% endif %}></span>{% endfor %}</span
+                  ><span class="bcareguide03__muted blko-ui-text--label">{{ s[lk] | escape }}</span
+                  >{%- if b[tk] != blank -%}
+                    <span class="blko-ui-text--small">{{ b[tk] | escape }}</span
+                  >{%- else -%}
+                    <span class="bcareguide03__muted blko-ui-text--small">{{ s.none_label | escape }}</span
+                  >{%- endif -%}
+                </li
+              >{%- endfor -%}
+            </ol
+          ></div
+        ></div
+      ></div
+    ></div
+  >{%- endfor -%}
+</div
+></div
+>{%- endcapture -%}
+<div class="bcareguide03" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-bcareguide03>{% render 'blko-ui-section', surface: 'bg', label: s.label, inner: 'bcareguide03__inner', children: content %}</div
+>
+
+{% schema %}
+{
+  "name": "Care 03 - Materials",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Looking after what you sit on"
+    },
+    {
+      "type": "textarea",
+      "id": "lead",
+      "label": "Intro",
+      "default": "Every piece is a mix of materials, and each one ages on its own clock. Open a material for what to do, what to avoid and how often."
+    },
+    {
+      "type": "header",
+      "content": "Care kit"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Photo",
+      "info": "A close photo of the main material, for example oiled oak grain."
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Photo alt text",
+      "info": "Leave blank to use the image's own alt text."
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Care kit product",
+      "info": "Shows its live title and price and adds it to the cart."
+    },
+    {
+      "type": "text",
+      "id": "kit_title",
+      "label": "Preview title",
+      "default": "Oak and fabric care kit",
+      "info": "Used when no product is chosen."
+    },
+    {
+      "type": "text",
+      "id": "kit_detail",
+      "label": "What is in it",
+      "default": "Hardwax oil, wool balm, two cloths"
+    },
+    {
+      "type": "number",
+      "id": "price",
+      "label": "Preview price",
+      "default": 38
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Add the care kit"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Button link",
+      "info": "Used when no product is chosen. Empty links go to all products."
+    },
+    {
+      "type": "header",
+      "content": "Labels"
+    },
+    {
+      "type": "text",
+      "id": "do_label",
+      "label": "Do",
+      "default": "Do"
+    },
+    {
+      "type": "text",
+      "id": "dont_label",
+      "label": "Don't",
+      "default": "Don't"
+    },
+    {
+      "type": "text",
+      "id": "freq_1",
+      "label": "First column",
+      "default": "Weekly"
+    },
+    {
+      "type": "text",
+      "id": "freq_2",
+      "label": "Second column",
+      "default": "Monthly"
+    },
+    {
+      "type": "text",
+      "id": "freq_3",
+      "label": "Third column",
+      "default": "Seasonal"
+    },
+    {
+      "type": "text",
+      "id": "freq_4",
+      "label": "Fourth column",
+      "default": "Yearly"
+    },
+    {
+      "type": "text",
+      "id": "none_label",
+      "label": "Empty task",
+      "default": "Nothing needed",
+      "info": "Shown when a material has no task in a column."
+    },
+    {
+      "type": "text",
+      "id": "freq_label",
+      "label": "Frequency list name for screen readers",
+      "default": "How often to care for [material]",
+      "info": "[material] is the material name."
+    },
+    {
+      "type": "paragraph",
+      "content": "Add a Material block for each row. The first one opens on load."
+    },
+    {
+      "type": "header",
+      "content": "Accessibility"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Section name for screen readers",
+      "default": "Care by material"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Oak)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "material",
+      "name": "Material",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Material",
+          "default": "Solid oak"
+        },
+        {
+          "type": "text",
+          "id": "line",
+          "label": "Used for",
+          "default": "Tables, chairs and frames"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo"
+        },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Photo alt text",
+          "info": "Leave blank to use the image's own alt text."
+        },
+        {
+          "type": "textarea",
+          "id": "do",
+          "label": "Do",
+          "default": "Wipe spills at once with a damp, well-wrung cloth and dry along the grain."
+        },
+        {
+          "type": "textarea",
+          "id": "dont",
+          "label": "Don't",
+          "default": "Spray polish with silicone: it builds a film that dulls the oil finish."
+        },
+        {
+          "type": "text",
+          "id": "task_1",
+          "label": "First column task",
+          "default": "Dust with a soft cloth",
+          "info": "Leave a column blank for \"Nothing needed\"."
+        },
+        {
+          "type": "text",
+          "id": "task_2",
+          "label": "Second column task",
+          "default": "Damp wipe"
+        },
+        {
+          "type": "text",
+          "id": "task_3",
+          "label": "Third column task",
+          "default": "Re-oil worn edges"
+        },
+        {
+          "type": "text",
+          "id": "task_4",
+          "label": "Fourth column task",
+          "default": "Full re-oil and buff"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "Care 03 - Materials",
+      "blocks": [
+        {
+          "type": "material",
+          "settings": {
+            "name": "Solid oak",
+            "line": "Tables, chairs and frames",
+            "do": "Wipe spills at once with a damp, well-wrung cloth and dry along the grain.",
+            "dont": "Spray polish with silicone: it builds a film that dulls the oil finish.",
+            "task_1": "Dust with a soft cloth",
+            "task_2": "Damp wipe",
+            "task_3": "Re-oil worn edges",
+            "task_4": "Full re-oil and buff"
+          }
+        },
+        {
+          "type": "material",
+          "settings": {
+            "name": "Linen",
+            "line": "Loose covers and cushions",
+            "do": "Zip off covers and wash at 30 °C inside out, then refit while slightly damp.",
+            "dont": "Tumble dry hot. Linen shrinks up to 4% and the covers stop fitting.",
+            "task_1": "Plump and turn cushions",
+            "task_2": "Vacuum with a brush head",
+            "task_3": "Wash the covers",
+            "task_4": ""
+          }
+        },
+        {
+          "type": "material",
+          "settings": {
+            "name": "Wool",
+            "line": "Rugs and upholstery",
+            "do": "Blot spills from the outside in with cold water and a white towel.",
+            "dont": "Rub a stain or use hot water: wool felts and the mark spreads.",
+            "task_1": "Vacuum, no beater bar",
+            "task_2": "Turn the rug 180°",
+            "task_3": "Air it outside, out of sun",
+            "task_4": "Professional deep clean"
+          }
+        },
+        {
+          "type": "material",
+          "settings": {
+            "name": "Leather",
+            "line": "Sofas and seat pads",
+            "do": "Keep it a metre from radiators and out of all-day sun.",
+            "dont": "Use baby wipes or soap: they strip the oils and crack the grain.",
+            "task_1": "Dust with a dry cloth",
+            "task_2": "",
+            "task_3": "Feed with leather balm",
+            "task_4": "Check seams and fixings"
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

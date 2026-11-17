@@ -1,0 +1,432 @@
+<script data-blko-kit="seam">try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-kit-seam')}catch(e){}</script>
+{{ 'blko-seam-motion.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-seam-motion.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign s = section.settings
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-care-guide-01.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-care-guide-01.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-seam', tokens: s.tokens -%}
+{%- comment -%}
+  Care guide 01 (seam): the coat is the care label. A tall photo of the coat carries pinned "Fabric fact" callouts (label,
+  value, x/y in %); beside it a display heading, "Care step" blocks on a ruled 2 x 2 grid with drawn care symbols, the
+  storage note and the buy row (product title, live price, "Shop the coat" to the product URL).
+  Motion (html.blko-ui-motion only; static = final frame): photo unclips from the bottom, pins pop in, symbols draw.
+{%- endcomment -%}
+{%- liquid
+  assign alt = s.image_alt | default: s.image.alt
+  assign p = s.product
+  if p != blank
+    assign title = p.title
+    assign cents = p.price
+    assign href = p.url
+  else
+    assign title = s.product_title
+    assign cents = s.price | times: 100 | round
+    assign href = s.button_link | default: routes.all_products_collection_url
+  endif
+  assign pin_n = 0
+  assign step_n = 0
+-%}
+{%- capture content -%}
+<div class="bcareguide01__grid" data-cg1
+  ><figure class="bcareguide01__fig"
+    ><div class="bcareguide01__photo" data-cg1-photo
+      >{%- if s.image != blank -%}
+        {{ s.image | image_url: width: 1400 | image_tag: alt: alt, loading: 'lazy', class: 'bcareguide01__img', widths: '480, 720, 1000, 1400', sizes: '(min-width: 1024px) 50vw, 100vw' -}}
+      {%- else -%}
+        {{ 'product-apparel-1' | placeholder_svg_tag: 'bcareguide01__img' -}}
+      {%- endif -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'spec' -%}
+          <span class="bcareguide01__pin blko-ui-text--label" data-cg1-pin style="left:{{ block.settings.x }}%;top:{{ block.settings.y }}%;--i:{{ pin_n }}" {{ block.shopify_attributes }}
+            ><span class="bcareguide01__dot" aria-hidden="true"></span
+            ><span class="bcareguide01__pin-key">{{ block.settings.key | escape }}</span
+            ><span class="bcareguide01__pin-val">{{ block.settings.value | escape }}</span
+          ></span
+          >{%- assign pin_n = pin_n | plus: 1 -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </div
+    ><dl class="bcareguide01__facts"
+      >{%- for block in section.blocks -%}
+        {%- if block.type == 'spec' -%}
+          <div class="bcareguide01__fact blko-ui-text--small"
+            ><dt>{{ block.settings.key | escape }}</dt
+            ><dd>{{ block.settings.value | escape }}</dd
+          ></div
+        >{%- endif -%}
+      {%- endfor -%}
+    </dl
+  ></figure
+  ><div class="bcareguide01__body"
+    ><header class="bcareguide01__head"
+      ><h2 class="blko-ui-text--h1">{{ s.heading | escape }}</h2
+      >{%- if s.lead != blank -%}<p class="bcareguide01__muted blko-ui-text--body">{{ s.lead | escape }}</p>{%- endif -%}
+    </header
+    ><ol class="bcareguide01__steps"
+      >{%- for block in section.blocks -%}
+        {%- if block.type == 'step' -%}
+          <li class="bcareguide01__step" style="--s:{{ step_n }}" {{ block.shopify_attributes }}
+            ><svg viewBox="0 0 48 48" aria-hidden="true" focusable="false" class="bcareguide01__sym"
+              >{%- case block.settings.symbol -%}
+                {%- when 'dry' -%}
+                  <rect pathLength="1" data-cg1-stroke x="8" y="8" width="32" height="32"/><circle pathLength="1" data-cg1-stroke cx="24" cy="24" r="11"/><path pathLength="1" data-cg1-stroke d="M6 6 L42 42 M42 6 L6 42"
+                />{%- when 'iron' -%}
+                  <path pathLength="1" data-cg1-stroke d="M7 34 H41 L38 23 C37 19 34 17 30 17 H15 L13 23"/><path pathLength="1" data-cg1-stroke d="M13 23 C10 26 8 30 7 34"/><path pathLength="1" data-cg1-stroke d="M16 17 V13 H31"/><circle cx="24" cy="28" r="1.4" class="bcareguide01__ink"
+                />{%- when 'clean' -%}
+                  <circle pathLength="1" data-cg1-stroke cx="24" cy="24" r="16"/><text x="24" y="29.5" text-anchor="middle" class="bcareguide01__ink bcareguide01__p">{{ block.settings.mark | escape }}</text><path pathLength="1" data-cg1-stroke d="M12 44 H36"
+                />{%- when 'flat' -%}
+                  <rect pathLength="1" data-cg1-stroke x="8" y="8" width="32" height="32"/><path pathLength="1" data-cg1-stroke d="M14 24 H34"
+                />{%- when 'bleach' -%}
+                  <path pathLength="1" data-cg1-stroke d="M24 8 L42 40 H6 Z"/><path pathLength="1" data-cg1-stroke d="M8 8 L40 40 M40 8 L8 40"
+                />{%- else -%}
+                  <path pathLength="1" data-cg1-stroke d="M6 16 L10 40 H38 L42 16"/><path pathLength="1" data-cg1-stroke d="M6 16 q4.5 -4 9 0 t9 0 t9 0 t9 0"/><text x="24" y="34" text-anchor="middle" class="bcareguide01__ink bcareguide01__t">{{ block.settings.mark | escape }}</text
+              >{%- endcase -%}
+            </svg
+            ><h3 class="blko-ui-text--h4">{{ block.settings.title | escape }}</h3
+            ><p class="bcareguide01__muted blko-ui-text--small">{{ block.settings.body | escape }}</p
+          ></li
+          >{%- assign step_n = step_n | plus: 1 -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </ol
+    >{%- if s.note != blank -%}<p class="bcareguide01__note blko-ui-text--small">{{ s.note | escape }}</p>{%- endif -%}
+    <div class="bcareguide01__buy"
+      ><div class="bcareguide01__buy-text"
+        >{%- if title != blank -%}<span class="bcareguide01__muted blko-ui-text--small">{{ title | escape }}</span>{%- endif -%}
+        {% render 'blko-ui-price', amount: cents, cents: true, size: 'lg' -%}
+      </div
+      >{% render 'blko-ui-button', href: href, size: 'lg', children: s.button_label -%}
+    </div
+  ></div
+></div
+>{%- endcapture -%}
+<div class="bcareguide01" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-bcareguide01>{% render 'blko-ui-section', surface: 'bg', label: s.label, inner: 'bcareguide01__inner', children: content %}</div
+>
+
+{% schema %}
+{
+  "name": "Care 01 - Coat callouts",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Four habits keep it for a decade"
+    },
+    {
+      "type": "textarea",
+      "id": "lead",
+      "label": "Intro",
+      "default": "Wool cleans itself in the air more than in water. Most weeks a brush and a night on a wide hanger is all it asks for."
+    },
+    {
+      "type": "textarea",
+      "id": "note",
+      "label": "Storage note",
+      "default": "Moths love worn wool. Store it clean, in a cotton bag, with a cedar block. Never in plastic.",
+      "info": "Leave blank to hide."
+    },
+    {
+      "type": "header",
+      "content": "Photo"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Garment photo",
+      "info": "A tall photo of the whole garment. Place each Fabric fact pin on it with its x and y."
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Photo alt text",
+      "info": "Leave blank to use the image's own alt text."
+    },
+    {
+      "type": "header",
+      "content": "Buy row"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Shows its live title and price and links to it."
+    },
+    {
+      "type": "text",
+      "id": "product_title",
+      "label": "Preview title",
+      "default": "Belted wrap coat, camel",
+      "info": "Used when no product is chosen."
+    },
+    {
+      "type": "number",
+      "id": "price",
+      "label": "Preview price",
+      "default": 640
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "Used when no product is chosen."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop the coat"
+    },
+    {
+      "type": "paragraph",
+      "content": "Add Fabric fact blocks for the pins and Care step blocks for the steps."
+    },
+    {
+      "type": "header",
+      "content": "Accessibility"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Section name for screen readers",
+      "default": "Care and materials"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Seam)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "spec",
+      "name": "Fabric fact",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "text",
+          "id": "key",
+          "label": "Label",
+          "default": "Shell"
+        },
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Value",
+          "default": "90% virgin wool, 10% cashmere"
+        },
+        {
+          "type": "range",
+          "id": "x",
+          "label": "Pin across (%)",
+          "min": 5,
+          "max": 95,
+          "step": 1,
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "y",
+          "label": "Pin down (%)",
+          "min": 5,
+          "max": 95,
+          "step": 1,
+          "default": 50
+        }
+      ]
+    },
+    {
+      "type": "step",
+      "name": "Care step",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "select",
+          "id": "symbol",
+          "label": "Care symbol",
+          "default": "wash",
+          "options": [
+            {
+              "value": "wash",
+              "label": "Wash tub"
+            },
+            {
+              "value": "dry",
+              "label": "Do not tumble dry"
+            },
+            {
+              "value": "flat",
+              "label": "Dry flat"
+            },
+            {
+              "value": "iron",
+              "label": "Iron"
+            },
+            {
+              "value": "clean",
+              "label": "Professional clean"
+            },
+            {
+              "value": "bleach",
+              "label": "Do not bleach"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "mark",
+          "label": "Symbol mark",
+          "default": "30",
+          "info": "Wash tub: the temperature. Professional clean: the letter (P, F or W)."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Hand wash, cool"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Text",
+          "default": "Only when it truly needs it. Thirty degrees, a wool wash, no wringing: press the water out in a towel."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "Care 01 - Coat callouts",
+      "blocks": [
+        {
+          "type": "spec",
+          "settings": {
+            "key": "Shell",
+            "value": "90% virgin wool, 10% cashmere",
+            "x": 34,
+            "y": 16
+          }
+        },
+        {
+          "type": "spec",
+          "settings": {
+            "key": "Belt",
+            "value": "Self fabric, tie or loop",
+            "x": 58,
+            "y": 31
+          }
+        },
+        {
+          "type": "spec",
+          "settings": {
+            "key": "Lining",
+            "value": "100% cupro",
+            "x": 66,
+            "y": 50
+          }
+        },
+        {
+          "type": "spec",
+          "settings": {
+            "key": "Weave",
+            "value": "2/2 twill, 340 g/m²",
+            "x": 40,
+            "y": 76
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "symbol": "wash",
+            "mark": "30",
+            "title": "Hand wash, cool",
+            "body": "Only when it truly needs it. Thirty degrees, a wool wash, no wringing: press the water out in a towel."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "symbol": "flat",
+            "mark": "30",
+            "title": "Dry flat, never tumble",
+            "body": "Lay it on a dry towel, reshape the shoulders and keep it out of direct sun until the collar is dry."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "symbol": "iron",
+            "mark": "30",
+            "title": "Press low, through cloth",
+            "body": "One dot on the iron and a damp cotton cloth between. Steam lifts creases without shining the twill."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "symbol": "clean",
+            "mark": "P",
+            "title": "Professional clean, once a season",
+            "body": "Ask for a gentle solvent clean before you store it for summer. Brush the nap downward between wears."
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

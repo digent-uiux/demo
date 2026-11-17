@@ -1,0 +1,40 @@
+{
+  "blko_ui": {
+    "price": {
+      "from": "From",
+      "was": "Was",
+      "save": "Save"
+    },
+    "rating": {
+      "stars": "{{ value }} out of 5 stars"
+    },
+    "quantity": {
+      "label": "Quantity",
+      "decrease": "Decrease {{ label }}",
+      "increase": "Increase {{ label }}"
+    },
+    "field": {
+      "optional": "(optional)"
+    },
+    "option": {
+      "sold_out": "sold out"
+    },
+    "product": {
+      "save": "Save {{ title }}",
+      "add": "Add {{ title }} to bag",
+      "colors": "{{ count }} colours"
+    }
+  },
+  "blko": {
+    "referral_05": {
+      "placeholder": "you@email.com",
+      "bad": "That email doesn't look right. Check for a typo.",
+      "copy": "Copy",
+      "copied": "Copied",
+      "copy_code": "Copy code",
+      "code_copied": "Code copied",
+      "paste": "Copied. Paste it at checkout.",
+      "not_you": "Not you? Use another email"
+    }
+  }
+}

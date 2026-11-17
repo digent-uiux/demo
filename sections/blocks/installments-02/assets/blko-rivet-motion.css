@@ -1,0 +1,52 @@
+/* Rivet motion kit, Liquid half: generated with components/ui/rivet-motion.tsx from one rule set (owner A). Picks: buttons stripe slide; links block invert; headings stepped wipe-up; images split shutter; cards offset hard shadow; icons snap nudge; entry skew-in from the side. Runs only under html.blko-m (set by blko-rivet-motion.js). */
+:root { --motion-duration: 380ms; --motion-ease: cubic-bezier(.7,0,.2,1); --motion-distance: 48px; --motion-stagger: 35ms; --motion-hover-scale: 1.04; }
+html.blko-m [data-reveal-group][data-pending] > *, html.blko-m [data-reveal][data-pending] { visibility: hidden; }
+html.blko-m [data-reveal-group][data-shown] > *, html.blko-m [data-reveal][data-shown] { animation: rivet-enter var(--motion-duration) var(--motion-ease) backwards; }
+html.blko-m [data-reveal-group] > :nth-child(2) { animation-delay: var(--motion-stagger); }
+html.blko-m [data-reveal-group] > :nth-child(3) { animation-delay: calc(var(--motion-stagger) * 2); }
+html.blko-m [data-reveal-group] > :nth-child(4) { animation-delay: calc(var(--motion-stagger) * 3); }
+html.blko-m [data-reveal-group] > :nth-child(5) { animation-delay: calc(var(--motion-stagger) * 4); }
+html.blko-m [data-reveal-group] > :nth-child(n+6) { animation-delay: calc(var(--motion-stagger) * 5); }
+/* Buttons: stripe slide (diagonal stripes run across, stepped). */
+html.blko-m.blko-m :is(.blko-btn, .blko-ui-button) { position: relative; isolation: isolate; overflow: hidden; }
+html.blko-m.blko-m :is(.blko-btn, .blko-ui-button)::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(-45deg, color-mix(in oklab, currentColor 20%, transparent) 25%, transparent 25% 50%, color-mix(in oklab, currentColor 20%, transparent) 50% 75%, transparent 75%) 0 0 / 12px 12px; opacity: 0; transition: opacity .15s steps(2); }
+@keyframes rivet-st { to { background-position: 48px 0; } }
+html.blko-m.blko-m :is(.blko-btn, .blko-ui-button):is(:hover, :focus-visible)::after { opacity: 1; animation: rivet-st .6s steps(8); }
+html.blko-m.blko-m :is(.blko-btn, .blko-ui-button):active { translate: 0 1px; }
+/* Links: block invert (stepped fill, the text flips colour). */
+html.blko-m.blko-m :is(.blko-text-link, .blko-header__link, .blko-footer__link, .blko-ui-link) { background: linear-gradient(var(--color-text, var(--blko-color-text)), var(--color-text, var(--blko-color-text))) no-repeat 0 0 / 0 100%; -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: background-size .24s steps(4), color 0s .12s; }
+html.blko-m.blko-m :is(.blko-text-link, .blko-header__link, .blko-footer__link, .blko-ui-link):is(:hover, :focus-visible) { background-size: 100% 100%; color: var(--color-bg, var(--blko-color-bg)); }
+/* Headings: stepped wipe-up. */
+@keyframes rivet-h { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
+html.blko-m.blko-m [data-shown] :is(h1, h2, .blko-display, .blko-h1, .blko-h2), html.blko-m.blko-m [data-reveal-group]:not([data-pending], [data-shown]) :is(h1, .blko-display) { animation: rivet-h .5s steps(5) .05s backwards; }
+/* Images: split shutter (opens from the centre line). */
+@keyframes rivet-i { from { clip-path: inset(50% 0 50% 0); } to { clip-path: inset(0 0 0 0); } }
+html.blko-m.blko-m [data-shown] :is(img, svg.blko-placeholder) { animation: rivet-i .55s var(--motion-ease) .05s backwards; }
+/* Cards: offset hard shadow. */
+html.blko-m.blko-m :is(.blko-card__media, .blko-ui-product-card__media) { transition: translate .18s var(--motion-ease), box-shadow .18s var(--motion-ease); }
+html.blko-m.blko-m :is(.blko-card, .blko-ui-product-card):is(:hover, :focus-within) :is(.blko-card__media, .blko-ui-product-card__media) { translate: -4px -4px; box-shadow: 4px 4px 0 var(--color-text, var(--blko-color-text)); }
+/* Icons: snap nudge. */
+html.blko-m.blko-m :is(.blko-icon, .blko-ui-icon) { transition: translate .16s steps(2); }
+html.blko-m.blko-m :is(a, button):is(:hover, :focus-visible) :is(.blko-icon, .blko-ui-icon) { translate: 3px 0; }
+/* Section entry: skew-in from the side. */
+@keyframes rivet-enter { from { opacity: 0; transform: translateX(calc(var(--motion-distance) * -1)) skewX(-10deg); } }
+@keyframes rivet-Li { from { clip-path: inset(50% 0 50% 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes rivet-Lh { from { clip-path: inset(100% 0 0 0); transform: translateX(-48px) skewX(-10deg); } to { clip-path: inset(0 0 0 0); transform: none; } }
+@keyframes rivet-Lx { from { opacity: 0; transform: translateX(-40px); } }
+html.blko-m.blko-m #MainContent > .shopify-section:first-child .blko-section:not(#km) :is(img, svg.blko-placeholder) { animation: rivet-Li .6s steps(6) backwards; }
+html.blko-m.blko-m #MainContent > .shopify-section:first-child .blko-section:not(#km) :nth-child(2) > :is(img, svg.blko-placeholder), html.blko-m.blko-m #MainContent > .shopify-section:first-child .blko-section:not(#km) :nth-child(2) > * > :is(img, svg.blko-placeholder) { animation-delay: .12s; }
+html.blko-m.blko-m #MainContent > .shopify-section:first-child .blko-section:not(#km) :is(h1, .blko-display) { animation: rivet-Lh .55s steps(6) .25s backwards; }
+html.blko-m.blko-m #MainContent > .shopify-section:first-child .blko-section:not(#km) p { animation: rivet-Lx .3s steps(3) .5s backwards; }
+html.blko-m.blko-m #MainContent > .shopify-section:first-child .blko-section:not(#km) :is(.blko-btn, .blko-ui-button) { animation: rivet-Lx .32s steps(4) .62s backwards; }
+html.blko-m.blko-m #MainContent > .shopify-section:first-child .blko-section:not(#km) :is(.blko-btn, .blko-ui-button) + :is(.blko-btn, .blko-ui-button) { animation-delay: .72s; }
+@keyframes rivet-Sbig { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes rivet-Sgi { from { opacity: 0; transform: translateX(-48px) skewX(-10deg); } }
+html.blko-m.blko-m [data-shown] [data-km-i] { animation: rivet-Sgi .32s steps(4) backwards; animation-delay: calc(var(--ki, 0) * 55ms + 60ms); }
+@supports (animation-timeline: view()) {
+html.blko-m.blko-m [data-km-big]:not(#km) { animation: rivet-Sbig steps(8) both; animation-timeline: view(); animation-range: entry 0% cover 40%; }
+}
+@supports not (animation-timeline: view()) {
+html.blko-m.blko-m [data-km-big]:not(#km)[data-km-in] { animation: rivet-Sbig 1s steps(8) both; }
+}
+html.blko-m.blko-m [data-reveal-group][data-shown] > *, html.blko-m.blko-m [data-reveal][data-shown] { animation-name: rivet-enter; }
+@media (prefers-reduced-motion: reduce) { html.blko-m.blko-m *, html.blko-m.blko-m *::before, html.blko-m.blko-m *::after { animation: none !important; transition: none !important; } }

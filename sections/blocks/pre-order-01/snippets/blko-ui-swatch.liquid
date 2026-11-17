@@ -1,0 +1,4 @@
+{%- comment -%}Swatch(color, label, selected, soldOut, size='md', className), plus native name/value/disabled. Option groups use data-blko-ui-options on their parent.{%- endcomment -%}
+<button type="button" class="blko-ui-swatch blko-ui-swatch--{{ size | default: 'md' }} {{ className }}" aria-label="{{ label | escape }}{% if soldOut %}, {{ 'blko_ui.option.sold_out' | t }}{% endif %}" title="{{ label | escape }}" aria-pressed="{% if selected %}true{% else %}false{% endif %}"{% if name != blank %} name="{{ name | escape }}"{% endif %}{% if value != nil %} value="{{ value | escape }}"{% endif %}{% if disabled %} disabled{% endif %} data-blko-ui-option>
+  <span class="blko-ui-swatch__color" style="background: {{ color | escape }}"></span>{% if soldOut %}<span class="blko-ui-swatch__strike" aria-hidden="true"></span>{% endif %}
+</button>

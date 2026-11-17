@@ -1,0 +1,4 @@
+{%- comment -%}
+  Bundled fonts of the Blocko Prism preset (OFL, latin subset). Printed only when the section uses the preset.
+{%- endcomment -%}
+{%- if tokens != 'theme' -%}<style>@font-face{font-family:'blko Unbounded';src:url('{{ 'blko-f-unbounded.woff2' | asset_url }}') format('woff2');font-weight:200 900;font-style:normal;font-display:swap}@font-face{font-family:'blko Work Sans';src:url('{{ 'blko-f-work-sans.woff2' | asset_url }}') format('woff2');font-weight:100 900;font-style:normal;font-display:swap}</style>{%- endif -%}

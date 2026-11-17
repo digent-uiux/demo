@@ -1,0 +1,513 @@
+<script data-blko-kit="linen">try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-kit-linen')}catch(e){}</script>
+{{ 'blko-linen-motion.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-linen-motion.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign s = section.settings
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-model-info-01.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-model-info-01.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-linen', tokens: s.tokens -%}
+{%- comment -%}
+  Model info 01, two (or more) models with a height ruler and a measurement sheet (linen preset; DS
+  registry/model-info/model-info-01.tsx). From 768px: photo 6/12 (4:5), a slim height ruler in column 7 whose accent
+  marker sits at the picked model's height, and in 8 to 12: product line, heading, lead, the model rows (radio
+  buttons: thumb, name, "5'2", wears XS"), the measurement sheet (height with cm, bust, waist, hips, usual size,
+  wearing), the fit line, "Shop size XS" and a size guide link. Phones: intro, the model rows two up, photo, sheet;
+  the ruler hides.
+  Live models, first found wins: (1) the metaobject list product.metafields.custom.models, fields name, height_in
+  (inches), bust, waist, hips, usual_size, size, fit, image; (2) the metafields custom.model_height (inches, or cm when
+  100 or more) + custom.model_size: one model on the product image; (3) the section's Model blocks. "Shop size X" links
+  to the product with ?variant= the first variant whose options include that size (else the product). The product
+  setting, else the page's product. Preview (Theme Editor or no template, no product): the Model blocks and the preview
+  settings. Live with no product: nothing renders.
+  Motion (html.blko-ui-motion): the photo settles in (.96 → 1, 800ms) while the ruler's ticks draw up (900ms) and the
+  marker climbs to the height (1000ms). Picking another model crossfades the photo (600ms), slides the marker (700ms)
+  and lifts the new figures in (8px, 400ms). Buttons never move. Static = the frame with the first model picked.
+{%- endcomment -%}
+{%- liquid
+  assign p = s.product | default: product
+  assign live = false
+  assign preview = false
+  if p != blank
+    assign live = true
+  elsif request.design_mode or template == blank
+    assign preview = true
+  endif
+  assign low = s.ruler_low
+  assign high = s.ruler_high
+  if high <= low
+    assign high = low | plus: 12
+  endif
+  assign span = high | minus: low
+  assign blocks = section.blocks | where: 'type', 'model'
+  assign meta_models = nil
+  assign source = 'blocks'
+  if live
+    assign meta_models = p.metafields.custom.models.value
+    if meta_models != blank
+      assign source = 'meta'
+    elsif p.metafields.custom.model_height != blank and p.metafields.custom.model_size != blank
+      assign source = 'simple'
+    endif
+  endif
+  assign sep = '~|~'
+  capture rows
+    if source == 'meta'
+      for m in meta_models
+        echo m.name | append: sep | append: m.height_in | append: sep | append: m.bust | append: sep | append: m.waist | append: sep | append: m.hips | append: sep | append: m.usual_size | append: sep | append: m.size | append: sep | append: m.fit | append: sep
+        if m.image.value != blank
+          echo m.image.value | image_url: width: 1400 | append: sep | append: m.image.value.alt
+        else
+          echo p.featured_media.preview_image | image_url: width: 1400 | append: sep | append: p.featured_media.alt
+        endif
+        echo '~#~'
+      endfor
+    elsif source == 'simple'
+      assign hraw = p.metafields.custom.model_height.value | plus: 0
+      if hraw >= 100
+        assign hraw = hraw | divided_by: 2.54 | round
+      endif
+      echo s.simple_name | append: sep | append: hraw | append: sep | append: sep | append: sep | append: sep | append: sep | append: p.metafields.custom.model_size.value | append: sep | append: sep
+      echo p.featured_media.preview_image | image_url: width: 1400 | append: sep | append: p.featured_media.alt
+      echo '~#~'
+    else
+      for b in blocks
+        assign bs = b.settings
+        echo bs.name | append: sep | append: bs.height_in | append: sep | append: bs.bust | append: sep | append: bs.waist | append: sep | append: bs.hips | append: sep | append: bs.usual | append: sep | append: bs.size | append: sep | append: bs.fit | append: sep
+        if bs.image != blank
+          echo bs.image | image_url: width: 1400 | append: sep | append: bs.image.alt
+        else
+          echo '' | append: sep | append: bs.alt
+        endif
+        echo '~#~'
+      endfor
+    endif
+  endcapture
+  assign models = rows | strip | remove_last: '~#~' | split: '~#~'
+-%}
+{%- capture ft_tpl -%}[f]'[i]"{%- endcapture -%}
+<div class="bmodelinfo01" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-bmodelinfo01
+  >{%- if live or preview -%}{%- if models.size > 0 -%}
+  <section class="bmodelinfo01__grid" aria-label="{{ s.label | escape }}"
+    ><div class="bmodelinfo01__intro"
+      >{%- if s.product_line != blank -%}<p class="bmodelinfo01__line">{{ s.product_line | escape }}</p>{%- endif -%}
+      <h2 class="bmodelinfo01__title">{{ s.heading | escape }}</h2
+      >{%- if s.lead != blank -%}<p class="bmodelinfo01__lead">{{ s.lead | escape }}</p>{%- endif -%}
+    </div
+
+    ><div class="bmodelinfo01__picks" role="radiogroup" aria-label="{{ s.pick_label | escape }}"
+      >{%- for row in models -%}
+        {%- assign f = row | strip | split: sep -%}
+        {%- assign h = f[1] | plus: 0 -%}
+        {%- assign hf = h | divided_by: 12 | floor -%}{%- assign hi = h | modulo: 12 -%}
+        {%- assign hft = ft_tpl | replace: '[f]', hf | replace: '[i]', hi -%}
+        {%- assign at = high | minus: h | times: 100.0 | divided_by: span -%}
+        {%- if at < 0 -%}{%- assign at = 0 -%}{%- elsif at > 100 -%}{%- assign at = 100 -%}{%- endif -%}
+        <button type="button" class="bmodelinfo01__pick" role="radio" aria-checked="{% if forloop.first %}true{% else %}false{% endif %}" data-pick="{{ forloop.index0 }}" data-at="{{ at }}" data-ft="{{ hft | escape }}"
+          >{%- if f[8] != blank -%}<img class="bmodelinfo01__thumb" src="{{ f[8] | replace: 'width=1400', 'width=160' }}" alt="" width="56" height="70" loading="lazy">{%- else -%}<span class="bmodelinfo01__thumb">{{ 'image' | placeholder_svg_tag }}</span>{%- endif -%}
+          <span class="bmodelinfo01__pick-text"
+            ><span class="bmodelinfo01__pick-name">{{ f[0] | escape }}</span
+            ><span class="bmodelinfo01__pick-meta">{{ s.row_text | replace: '[height]', hft | replace: '[size]', f[6] | escape }}</span
+          ></span
+        ></button
+      >{%- endfor -%}
+    </div
+
+    ><div class="bmodelinfo01__photo" data-photo
+      >{%- for row in models -%}
+        {%- assign f = row | strip | split: sep -%}
+        {%- if f[8] != blank -%}
+          <img class="bmodelinfo01__shot{% if forloop.first %} is-on{% endif %}" data-shot src="{{ f[8] }}" srcset="{{ f[8] | replace: 'width=1400', 'width=800' }} 800w, {{ f[8] }} 1400w" sizes="(min-width: 768px) 50vw, 100vw" alt="{{ f[9] | escape }}"{% unless forloop.first %} aria-hidden="true"{% endunless %} width="1400" height="1750"{% unless forloop.first %} loading="lazy"{% endunless %}
+        >{%- else -%}
+          <span class="bmodelinfo01__shot{% if forloop.first %} is-on{% endif %}" data-shot>{{ 'lifestyle-2' | placeholder_svg_tag }}</span
+        >{%- endif -%}
+      {%- endfor -%}
+    </div
+
+    ><div class="bmodelinfo01__ruler" aria-hidden="true"
+      ><p class="bmodelinfo01__ruler-label">{{ s.ruler_label | escape }}</p
+      ><div class="bmodelinfo01__scale"
+        ><div class="bmodelinfo01__ticks" data-ticks
+          ><span class="bmodelinfo01__axis"></span
+          >{%- for i in (0..span) -%}
+            {%- assign n = high | minus: i -%}
+            {%- assign top = i | times: 100.0 | divided_by: span -%}
+            {%- assign mark = n | modulo: 4 -%}
+            <span class="bmodelinfo01__tick" style="top:{{ top }}%"
+              ><span class="bmodelinfo01__tick-line{% if mark == 2 %} is-long{% endif %}"></span
+              >{%- if mark == 2 -%}{%- assign tf = n | divided_by: 12 | floor -%}{%- assign ti = n | modulo: 12 -%}<span class="bmodelinfo01__tick-label">{{ ft_tpl | replace: '[f]', tf | replace: '[i]', ti }}</span>{%- endif -%}
+            </span
+          >{%- endfor -%}
+        </div
+        >{%- assign f0 = models.first | strip | split: sep -%}
+        {%- assign h0 = f0[1] | plus: 0 -%}
+        {%- assign at0 = high | minus: h0 | times: 100.0 | divided_by: span -%}
+        {%- if at0 < 0 -%}{%- assign at0 = 0 -%}{%- elsif at0 > 100 -%}{%- assign at0 = 100 -%}{%- endif -%}
+        {%- assign f0f = h0 | divided_by: 12 | floor -%}{%- assign f0i = h0 | modulo: 12 -%}
+        <div class="bmodelinfo01__mark" data-mark style="translate:0 {{ at0 }}%"
+          ><span class="bmodelinfo01__mark-in"><span class="bmodelinfo01__mark-line"></span><span class="bmodelinfo01__mark-tag" data-mark-tag>{{ ft_tpl | replace: '[f]', f0f | replace: '[i]', f0i }}</span></span
+        ></div
+      ></div
+    ></div
+
+    ><div class="bmodelinfo01__sheets"
+      >{%- for row in models -%}
+        {%- assign f = row | strip | split: sep -%}
+        {%- assign h = f[1] | plus: 0 -%}
+        {%- assign hf = h | divided_by: 12 | floor -%}{%- assign hi = h | modulo: 12 -%}
+        {%- assign hft = ft_tpl | replace: '[f]', hf | replace: '[i]', hi -%}
+        {%- assign hcm = h | times: 2.54 | round | append: '' -%}
+        {%- assign size = f[6] -%}
+        {%- assign href = '#' -%}
+        {%- if live -%}
+          {%- assign href = p.url -%}
+          {%- for x in p.variants -%}{%- if x.options contains size -%}{%- assign href = p.url | append: '?variant=' | append: x.id -%}{%- break -%}{%- endif -%}{%- endfor -%}
+        {%- endif -%}
+        {%- assign btn = s.button_label | replace: '[size]', size -%}
+        <div class="bmodelinfo01__sheet" data-sheet="{{ forloop.index0 }}" aria-live="polite"{% unless forloop.first %} hidden{% endunless %}
+          ><dl class="bmodelinfo01__dl"
+            ><div class="bmodelinfo01__fig bmodelinfo01__fig--h" data-fig style="--i:0"><dt>{{ s.label_height | escape }}</dt><dd>{{ s.height_format | replace: '[height]', hft | replace: '[cm]', hcm | escape }}</dd></div
+            >{%- if f[2] != blank -%}<div class="bmodelinfo01__fig" data-fig style="--i:1"><dt>{{ s.label_bust | escape }}</dt><dd>{{ s.unit_format | replace: '[n]', f[2] | escape }}</dd></div>{%- endif -%}
+            {%- if f[3] != blank -%}<div class="bmodelinfo01__fig" data-fig style="--i:2"><dt>{{ s.label_waist | escape }}</dt><dd>{{ s.unit_format | replace: '[n]', f[3] | escape }}</dd></div>{%- endif -%}
+            {%- if f[4] != blank -%}<div class="bmodelinfo01__fig" data-fig style="--i:3"><dt>{{ s.label_hips | escape }}</dt><dd>{{ s.unit_format | replace: '[n]', f[4] | escape }}</dd></div>{%- endif -%}
+            {%- if f[5] != blank -%}<div class="bmodelinfo01__fig" data-fig style="--i:4"><dt>{{ s.label_usual | escape }}</dt><dd>{{ f[5] | escape }}</dd></div>{%- endif -%}
+            <div class="bmodelinfo01__fig" data-fig style="--i:5"><dt>{{ s.label_wearing | escape }}</dt><dd>{{ size | escape }}</dd></div
+          ></dl
+          >{%- if f[7] != blank -%}<p class="bmodelinfo01__fit" data-fig><span class="bmodelinfo01__fit-who">{{ s.fit_prefix | replace: '[name]', f[0] | escape }} </span><span class="bmodelinfo01__muted">{{ f[7] | escape }}</span></p>{%- endif -%}
+          <div class="bmodelinfo01__actions"
+            >{%- render 'blko-ui-button', href: href, size: 'lg', shape: 'pill', children: btn -%}
+            {%- if s.guide_label != blank -%}<a href="{{ s.guide_url | default: '#' }}" class="bmodelinfo01__guide">{{ s.guide_label | escape }}</a>{%- endif -%}
+          </div
+        ></div
+      >{%- endfor -%}
+    </div
+  ></section
+  >{%- endif -%}{%- endif -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Model info 01 - Ruler",
+  "tag": "div",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Product"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Empty on a product page: the page's product. Empty elsewhere: the preview, in the theme editor only."
+    },
+    {
+      "type": "paragraph",
+      "content": "Models come from the product's metaobject list custom.models (name, height_in, bust, waist, hips, usual_size, size, fit, image), else from custom.model_height + custom.model_size, else from the Model blocks."
+    },
+    {
+      "type": "text",
+      "id": "simple_name",
+      "label": "Model name with custom.model_height",
+      "default": "Our model"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Section name for screen readers",
+      "default": "Model sizes"
+    },
+    {
+      "type": "text",
+      "id": "product_line",
+      "label": "Product line",
+      "default": "Long tiered dress in washed linen, $168"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "See it on someone your height"
+    },
+    {
+      "type": "textarea",
+      "id": "lead",
+      "label": "Lead",
+      "default": "Worn by two of us, each in the size she'd buy. Pick the build closer to yours."
+    },
+    {
+      "type": "header",
+      "content": "Models"
+    },
+    {
+      "type": "text",
+      "id": "pick_label",
+      "label": "Model picker name for screen readers",
+      "default": "Choose a model"
+    },
+    {
+      "type": "text",
+      "id": "row_text",
+      "label": "Model row",
+      "default": "[height], wears [size]",
+      "info": "[height] and [size] are filled in."
+    },
+    {
+      "type": "text",
+      "id": "ruler_label",
+      "label": "Ruler title",
+      "default": "Height"
+    },
+    {
+      "type": "range",
+      "id": "ruler_low",
+      "label": "Ruler from (inches)",
+      "min": 48,
+      "max": 72,
+      "step": 1,
+      "default": 58
+    },
+    {
+      "type": "range",
+      "id": "ruler_high",
+      "label": "Ruler to (inches)",
+      "min": 60,
+      "max": 84,
+      "step": 1,
+      "default": 74
+    },
+    {
+      "type": "header",
+      "content": "Measurement sheet"
+    },
+    {
+      "type": "text",
+      "id": "label_height",
+      "label": "Height",
+      "default": "Height"
+    },
+    {
+      "type": "text",
+      "id": "height_format",
+      "label": "Height value",
+      "default": "[height] ([cm] cm)"
+    },
+    {
+      "type": "text",
+      "id": "label_bust",
+      "label": "Bust",
+      "default": "Bust"
+    },
+    {
+      "type": "text",
+      "id": "label_waist",
+      "label": "Waist",
+      "default": "Waist"
+    },
+    {
+      "type": "text",
+      "id": "label_hips",
+      "label": "Hips",
+      "default": "Hips"
+    },
+    {
+      "type": "text",
+      "id": "unit_format",
+      "label": "Measurement value",
+      "default": "[n] in"
+    },
+    {
+      "type": "text",
+      "id": "label_usual",
+      "label": "Usual size",
+      "default": "Usual size"
+    },
+    {
+      "type": "text",
+      "id": "label_wearing",
+      "label": "Wearing",
+      "default": "Wearing"
+    },
+    {
+      "type": "text",
+      "id": "fit_prefix",
+      "label": "Before the fit note",
+      "default": "On [name]:"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button",
+      "default": "Shop size [size]"
+    },
+    {
+      "type": "text",
+      "id": "guide_label",
+      "label": "Size guide link label",
+      "default": "Size guide"
+    },
+    {
+      "type": "url",
+      "id": "guide_url",
+      "label": "Size guide link"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Linen)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 96,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 96
+    }
+  ],
+  "blocks": [
+    {
+      "type": "model",
+      "name": "Model",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo"
+        },
+        {
+          "type": "text",
+          "id": "alt",
+          "label": "Photo description",
+          "default": "A model in the dress"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Mai"
+        },
+        {
+          "type": "range",
+          "id": "height_in",
+          "label": "Height (inches)",
+          "min": 48,
+          "max": 84,
+          "step": 1,
+          "default": 62
+        },
+        {
+          "type": "text",
+          "id": "bust",
+          "label": "Bust (inches)",
+          "default": "31"
+        },
+        {
+          "type": "text",
+          "id": "waist",
+          "label": "Waist (inches)",
+          "default": "24"
+        },
+        {
+          "type": "text",
+          "id": "hips",
+          "label": "Hips (inches)",
+          "default": "34"
+        },
+        {
+          "type": "text",
+          "id": "usual",
+          "label": "Usual size",
+          "default": "XS"
+        },
+        {
+          "type": "text",
+          "id": "size",
+          "label": "Size worn",
+          "default": "XS"
+        },
+        {
+          "type": "textarea",
+          "id": "fit",
+          "label": "Fit note",
+          "default": "The hem brushes her ankles. She ties the waist loosely."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Model info 01 - Ruler",
+      "blocks": [
+        {
+          "type": "model",
+          "settings": {
+            "name": "Mai",
+            "height_in": 62,
+            "bust": "31",
+            "waist": "24",
+            "hips": "34",
+            "usual": "XS",
+            "size": "XS",
+            "alt": "Mai, a petite woman with long dark hair, laughing in the shallow surf at sunset in a long white sleeveless linen dress",
+            "fit": "The hem brushes her ankles. She ties the waist loosely."
+          }
+        },
+        {
+          "type": "model",
+          "settings": {
+            "name": "Clara",
+            "height_in": 70,
+            "bust": "35",
+            "waist": "28",
+            "hips": "38",
+            "usual": "S or M",
+            "size": "M",
+            "alt": "Clara, a tall woman with dark hair, walking barefoot through the surf in a long white linen dress with full sleeves",
+            "fit": "It falls to mid-calf on her and sits roomy through the body. She'd take S for a closer fit."
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

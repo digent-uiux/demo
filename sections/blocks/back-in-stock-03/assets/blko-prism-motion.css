@@ -1,0 +1,50 @@
+/* Prism motion kit. GENERATED from components/ui/kits/prism.ts by kits/liquid.mjs; do not edit.
+   Runs only under html.blko-kit-prism (added by blko-prism-motion.js when motion is allowed). */
+/* Entry: odd children slide in from the left, even ones from the right. */
+html.blko-kit-prism:root [data-reveal-group][data-shown] > :not(h1, h2) { animation-name: prism-from-l; }
+html.blko-kit-prism:root [data-reveal-group][data-shown] > :nth-child(even):not(h1, h2) { animation-name: prism-from-r; }
+@keyframes prism-from-l { from { opacity: 0; transform: translateX(calc(var(--blko-motion-distance, 40px) * -1.5)); } }
+@keyframes prism-from-r { from { opacity: 0; transform: translateX(calc(var(--blko-motion-distance, 40px) * 1.5)); } }
+
+/* Headings: wiped in from the left edge. */
+html.blko-kit-prism:root [data-reveal-group][data-shown] :is(h1, h2) { animation: prism-wipe calc(var(--blko-motion-duration, 480ms) * 1.5) var(--blko-motion-ease, cubic-bezier(.16,.84,.2,1)) calc(var(--blko-motion-stagger, 45ms) + 60ms) backwards; }
+@keyframes prism-wipe { from { clip-path: inset(-.2em 100% -.2em -.2em); } to { clip-path: inset(-.2em -.2em -.2em -.2em); } }
+
+/* Buttons: a gloss shine sweeps across once per hover. */
+html.blko-kit-prism:root .blko-ui-button:not(.blko-ui-button--link) { background-image: linear-gradient(110deg, transparent 40%, rgb(255 255 255 / .42) 50%, transparent 60%); background-repeat: no-repeat; background-size: 250% 100%; background-position: 100% 0; }
+html.blko-kit-prism:root .blko-ui-button:not(.blko-ui-button--link):is(:hover, :focus-visible) { background-position: 0% 0; transition: background-position .7s var(--blko-motion-ease, cubic-bezier(.16,.84,.2,1)); }
+
+/* Pictures: flood from grey to full colour when their section reveals. */
+html.blko-kit-prism:root [data-reveal-group][data-shown] :is(img, svg[data-placeholder]) { animation: prism-flood calc(var(--blko-motion-duration, 480ms) * 2.4) ease-out calc(var(--blko-motion-stagger, 45ms) * 3) backwards; }
+@keyframes prism-flood { from { filter: grayscale(1) contrast(1.15); } }
+
+/* Links: a strike-through drops into an underline. */
+html.blko-kit-prism:root :is(nav, footer, p) a:not(.blko-ui-button):not(.blko-ui-arrow-link):not(:has(img, svg)) { background-image: linear-gradient(currentColor, currentColor); background-repeat: no-repeat; background-position: 0 58%; background-size: 0% 2px; }
+html.blko-kit-prism:root :is(nav, footer, p) a:not(.blko-ui-button):not(.blko-ui-arrow-link):not(:has(img, svg)):is(:hover, :focus-visible) { animation: prism-strike .45s var(--blko-motion-ease, cubic-bezier(.16,.84,.2,1)) forwards; }
+@keyframes prism-strike { 0% { background-size: 0% 2px; background-position: 0 58%; } 45% { background-size: 100% 2px; background-position: 0 58%; } 100% { background-size: 100% 2px; background-position: 0 100%; } }
+
+/* Product cards: a glow in the theme's pop colour. Icons: one spin. */
+html.blko-kit-prism:root .blko-ui-product-card { transition: box-shadow .35s var(--blko-motion-ease, cubic-bezier(.16,.84,.2,1)); }
+html.blko-kit-prism:root .blko-ui-product-card:is(:hover, :focus-within) { box-shadow: 0 0 0 2px var(--blko-color-pop-1), 0 14px 40px -12px var(--blko-color-pop-1); }
+html.blko-kit-prism:root :is(.blko-ui-button:not(.blko-ui-button--link), .blko-ui-arrow-link):is(:hover, :focus-visible) svg { animation: prism-spin .5s var(--blko-motion-ease, cubic-bezier(.16,.84,.2,1)); }
+@keyframes prism-spin { from { transform: rotate(-90deg); } }
+
+/* r3 load: heading wiped in with a hue flash, text from the right, buttons from the left with one shine, the picture. */
+html.blko-kit-prism:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(h1, h2) { animation: prism-l-head .75s var(--blko-motion-ease, cubic-bezier(.16,.84,.2,1)) 60ms backwards; }
+@keyframes prism-l-head { from { clip-path: inset(-.2em 100% -.2em -.2em); transform: translateX(-.4em); filter: hue-rotate(-140deg) saturate(2); } to { clip-path: inset(-.2em -.2em -.2em -.2em); transform: none; filter: none; } }
+html.blko-kit-prism:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(h1, h2) ~ p { animation: prism-l-r .6s var(--blko-motion-ease, cubic-bezier(.16,.84,.2,1)) 300ms backwards; }
+@keyframes prism-l-r { from { opacity: 0; transform: translateX(48px); } }
+html.blko-kit-prism:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) .blko-ui-button:not(.blko-ui-button--link) { animation: prism-l-btn 1s var(--blko-motion-ease, cubic-bezier(.16,.84,.2,1)) 420ms backwards; }
+@keyframes prism-l-btn { 0% { opacity: 0; transform: translateX(-48px); background-position: 100% 0; } 45% { opacity: 1; transform: none; background-position: 100% 0; } 100% { background-position: 0% 0; } }
+html.blko-kit-prism:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) .blko-ui-arrow-link { animation: prism-l-l .6s var(--blko-motion-ease, cubic-bezier(.16,.84,.2,1)) 420ms backwards; }
+@keyframes prism-l-l { from { opacity: 0; transform: translateX(-48px); } }
+html.blko-kit-prism:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(img, svg[data-placeholder]) { animation: prism-l-img 1s var(--blko-motion-ease, cubic-bezier(.16,.84,.2,1)) 150ms backwards; }
+@keyframes prism-l-img { from { clip-path: inset(0 0 0 100%); transform: scale(1.08); filter: grayscale(1) contrast(1.15); } to { clip-path: inset(0 0 0 0); transform: none; filter: none; } }
+
+/* r3 scroll: framed pictures slide sideways with the scroll, neighbours in opposite directions (--prism-x -1..1). */
+html.blko-kit-prism:root [data-shown] :is(img, svg[data-placeholder])[data-prism-x] { scale: 1.12; translate: calc(var(--prism-x, 0) * 5%) 0; }
+/* r3 scroll: tiles come in from alternating sides, one after another. */
+html.blko-kit-prism:root [data-reveal-group][data-shown] :is(:is(ul, ol, [class*="grid"]) > :has(img, svg[data-placeholder]), .blko-ui-product-card:not(:is(ul, ol, [class*="grid"]) > * .blko-ui-product-card)) { animation: prism-t-l .6s var(--blko-motion-ease, cubic-bezier(.16,.84,.2,1)) calc(var(--prism-i, 0) * 55ms + 120ms) backwards; }
+html.blko-kit-prism:root [data-reveal-group][data-shown] :is(:is(ul, ol, [class*="grid"]) > :has(img, svg[data-placeholder]), .blko-ui-product-card:not(:is(ul, ol, [class*="grid"]) > * .blko-ui-product-card)):nth-child(even) { animation-name: prism-t-r; }
+@keyframes prism-t-l { from { opacity: 0; transform: translateX(-56px); filter: grayscale(1); } }
+@keyframes prism-t-r { from { opacity: 0; transform: translateX(56px); filter: grayscale(1); } }

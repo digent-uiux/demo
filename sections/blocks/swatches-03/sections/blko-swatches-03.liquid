@@ -1,0 +1,502 @@
+<script data-blko-kit="seam">try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-kit-seam')}catch(e){}</script>
+{{ 'blko-seam-motion.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-seam-motion.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign s = section.settings
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-swatches-03.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-swatches-03.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-seam', tokens: s.tokens -%}
+{%- liquid
+  assign cloths = section.blocks | where: 'type', 'cloth'
+  assign n = cloths.size
+  assign pick = s.selected | minus: 1
+  if pick >= n
+    assign pick = 0
+  endif
+  assign sel = cloths[pick]
+  assign last = n | minus: 1
+  if last < 1
+    assign last = 1
+  endif
+  assign step = s.spread | times: 1.0 | divided_by: last
+  assign half = s.spread | divided_by: 2.0
+  assign wspan = s.weight_max | minus: s.weight_min
+  if wspan < 1
+    assign wspan = 1
+  endif
+  assign fit = s.link | default: '/pages/contact'
+  assign sep = '?'
+  if fit contains '?'
+    assign sep = '&'
+  endif
+-%}
+{%- capture inner -%}<div class="bswatches03__left"><header class="bswatches03__intro"><h2 class="bswatches03__title">{{ s.heading }}</h2>{%- if s.text != blank -%}<p class="bswatches03__lead blko-ui-text--body">{{ s.text | escape | replace: '[count]', n }}</p>{%- endif -%}</header
+><div class="bswatches03__fan" data-stage role="group" aria-label="{{ s.fan_label | escape }}"><span aria-hidden="true" class="bswatches03__bar"></span><span aria-hidden="true" class="bswatches03__hook"></span
+>{%- for b in cloths -%}
+{%- liquid
+  assign bs = b.settings
+  assign i = forloop.index0
+  assign angle = step | times: i | minus: half
+  if i == pick
+    assign z = n | plus: 1
+  elsif i < pick
+    assign z = i
+  else
+    assign z = n | minus: i
+  endif
+  assign url = bs.name | url_encode | prepend: '=' | prepend: s.cloth_param | prepend: sep | prepend: fit
+  if bs.product != blank
+    assign url = bs.product.url
+  endif
+  assign gsm = bs.gsm | default: 0
+  assign w = gsm | minus: s.weight_min | times: 100.0 | divided_by: wspan
+  if w < 0
+    assign w = 0
+  elsif w > 100
+    assign w = 100
+  endif
+-%}
+<button type="button" class="bswatches03__strip bswatches03__weave" data-weave="{{ bs.weave }}" aria-pressed="{% if i == pick %}true{% else %}false{% endif %}" aria-label="{{ bs.name | escape }}" tabindex="{% if i == pick %}0{% else %}-1{% endif %}" data-cloth data-angle="{{ angle }}" data-name="{{ bs.name | escape }}" data-hex="{{ bs.color }}" data-comp="{{ bs.comp | escape }}" data-gsm="{{ gsm }}" data-w="{{ w }}" data-seasons="{{ bs.seasons | escape }}" data-feel="{{ bs.feel | escape }}" data-url="{{ url }}" style="--hex:{{ bs.color }};--a:{% if i == pick %}0{% else %}{{ angle }}{% endif %}deg;--y:{% if i == pick %}12px{% else %}0px{% endif %};z-index:{{ z }};--i:{{ i }}" {{ b.shopify_attributes }}><span aria-hidden="true" class="bswatches03__hem"></span></button
+>{%- endfor -%}
+</div></div
+>{%- liquid
+  assign ss = sel.settings
+  assign sel_url = ss.name | url_encode | prepend: '=' | prepend: s.cloth_param | prepend: sep | prepend: fit
+  if ss.product != blank
+    assign sel_url = ss.product.url
+  endif
+  assign sel_gsm = ss.gsm | default: 0
+  assign sel_w = sel_gsm | minus: s.weight_min | times: 100.0 | divided_by: wspan
+  if sel_w < 0
+    assign sel_w = 0
+  elsif sel_w > 100
+    assign sel_w = 100
+  endif
+  assign seasons = ss.seasons | split: ','
+  assign sel_lc = ss.name | downcase | escape
+-%}
+<article class="bswatches03__card" aria-live="polite"><div class="bswatches03__media">{%- if s.image != blank -%}{{ s.image | image_url: width: 1200 | image_tag: loading: 'lazy', alt: s.image.alt, sizes: '(min-width: 1024px) 40vw, 100vw', widths: '450, 700, 900, 1200', class: 'bswatches03__photo' }}{%- else -%}{{ 'lifestyle-2' | placeholder_svg_tag: 'bswatches03__photo' }}{%- endif -%}</div
+><div class="bswatches03__body"><div class="bswatches03__top"><span aria-hidden="true" class="bswatches03__tag bswatches03__weave" data-out-swatch data-weave="{{ ss.weave }}" style="--hex:{{ ss.color }}"></span><div class="bswatches03__named"><h3 class="bswatches03__name blko-ui-text--h3" data-out-name>{{ ss.name | escape }}</h3><p class="bswatches03__feel blko-ui-text--small" data-out-feel>{{ ss.feel | escape }}</p></div></div
+><dl class="bswatches03__facts blko-ui-text--small"><div class="bswatches03__fact"><dt>{{ s.comp_label | escape }}</dt><dd data-out-comp>{{ ss.comp | escape }}</dd></div><div class="bswatches03__fact"><dt>{{ s.weight_label | escape }}</dt><dd class="bswatches03__weight"><span class="bswatches03__gsm" data-out-gsm data-unit="{{ s.weight_unit | escape }}">{{ sel_gsm }} {{ s.weight_unit | escape }}</span><span aria-hidden="true" class="bswatches03__track"><span class="bswatches03__fill" data-out-fill style="width:{{ sel_w }}%"></span></span><span aria-hidden="true" class="bswatches03__ends blko-ui-text--label"><span>{{ s.light_label | escape }}</span><span>{{ s.heavy_label | escape }}</span></span></dd></div><div class="bswatches03__fact"><dt>{{ s.season_label | escape }}</dt><dd class="bswatches03__seasons" data-out-seasons>{%- for x in seasons -%}{%- assign xs = x | strip -%}{%- if xs != blank -%}<span class="bswatches03__season">{{ xs | escape }}</span>{%- endif -%}{%- endfor -%}</dd></div></dl
+><div class="bswatches03__cta">{%- capture cta_text -%}{{ s.link_label | escape }}{%- endcapture -%}{%- render 'blko-ui-button', children: cta_text, href: sel_url, attrs: 'data-out-link', size: 'lg', full: true -%}{%- if s.note != blank -%}<p class="bswatches03__note blko-ui-text--small" data-out-note data-template="{{ s.note | escape }}">{{ s.note | escape | replace: '[name]', sel_lc }}</p>{%- endif -%}</div
+>{%- for b in section.blocks -%}{%- if b.type == '@app' -%}<div class="bswatches03__app">{% render b %}</div>{%- endif -%}{%- endfor -%}
+</div></article
+>{%- endcapture -%}
+<blko-swatches-03 class="bswatches03" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-count="{{ n }}">{%- render 'blko-ui-section', surface: s.surface, label: s.label, inner: 'bswatches03__inner', children: inner -%}</blko-swatches-03
+
+>
+
+{% schema %}
+{
+  "name": "Swatches 03 - Cloth bunch",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Section name for screen readers",
+      "default": "Cloth bunch"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Choose the cloth, then the cut"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "[count] cloths in this season's bunch. Tap a strip to read it, then book a fitting in it.",
+      "info": "[count] is the number of cloths."
+    },
+    {
+      "type": "text",
+      "id": "fan_label",
+      "label": "Cloth group name for screen readers",
+      "default": "Cloths"
+    },
+    {
+      "type": "range",
+      "id": "selected",
+      "label": "Cloth shown first",
+      "min": 1,
+      "max": 16,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "spread",
+      "label": "Fan spread",
+      "min": 20,
+      "max": 120,
+      "step": 2,
+      "unit": "°",
+      "default": 72
+    },
+    {
+      "type": "header",
+      "content": "Fact card"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Photo"
+    },
+    {
+      "type": "text",
+      "id": "comp_label",
+      "label": "Composition label",
+      "default": "Composition"
+    },
+    {
+      "type": "text",
+      "id": "weight_label",
+      "label": "Weight label",
+      "default": "Weight"
+    },
+    {
+      "type": "text",
+      "id": "weight_unit",
+      "label": "Weight unit",
+      "default": "g/m²"
+    },
+    {
+      "type": "number",
+      "id": "weight_min",
+      "label": "Lightest weight on the scale",
+      "default": 180
+    },
+    {
+      "type": "number",
+      "id": "weight_max",
+      "label": "Heaviest weight on the scale",
+      "default": 420
+    },
+    {
+      "type": "text",
+      "id": "light_label",
+      "label": "Light end",
+      "default": "Light"
+    },
+    {
+      "type": "text",
+      "id": "heavy_label",
+      "label": "Heavy end",
+      "default": "Heavy"
+    },
+    {
+      "type": "text",
+      "id": "season_label",
+      "label": "Season label",
+      "default": "Season"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Button",
+      "default": "Book a fitting"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Fitting page",
+      "info": "Used for cloths without a product; the chosen cloth is added to the link. Empty: /pages/contact."
+    },
+    {
+      "type": "text",
+      "id": "cloth_param",
+      "label": "Cloth parameter on the fitting link",
+      "default": "cloth"
+    },
+    {
+      "type": "text",
+      "id": "note",
+      "label": "Line under the button",
+      "default": "Free, about 45 minutes. We bring [name] to the fitting.",
+      "info": "[name] is the chosen cloth."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "select",
+      "id": "surface",
+      "label": "Background",
+      "default": "dark",
+      "options": [
+        {
+          "value": "dark",
+          "label": "Dark"
+        },
+        {
+          "value": "bg",
+          "label": "Page"
+        },
+        {
+          "value": "alt",
+          "label": "Alternate"
+        },
+        {
+          "value": "inverse",
+          "label": "Inverse"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Seam)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "cloth",
+      "name": "Cloth",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Navy twill"
+        },
+        {
+          "type": "color",
+          "id": "color",
+          "label": "Colour",
+          "default": "#243049"
+        },
+        {
+          "type": "select",
+          "id": "weave",
+          "label": "Weave drawing",
+          "default": "twill",
+          "options": [
+            {
+              "value": "twill",
+              "label": "Twill"
+            },
+            {
+              "value": "herring",
+              "label": "Herringbone"
+            },
+            {
+              "value": "plain",
+              "label": "Plain or hopsack"
+            },
+            {
+              "value": "check",
+              "label": "Check"
+            },
+            {
+              "value": "flannel",
+              "label": "Flannel or crepe"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "comp",
+          "label": "Composition",
+          "default": "100% fine wool"
+        },
+        {
+          "type": "number",
+          "id": "gsm",
+          "label": "Weight (g/m²)",
+          "default": 260
+        },
+        {
+          "type": "text",
+          "id": "seasons",
+          "label": "Seasons (comma separated)",
+          "default": "All year"
+        },
+        {
+          "type": "textarea",
+          "id": "feel",
+          "label": "How it feels",
+          "default": "Smooth face, crisp hand. The four-season suiting."
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "The button opens this product. Empty: the fitting page."
+        }
+      ]
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "max_blocks": 16,
+  "presets": [
+    {
+      "name": "Swatches 03 - Cloth bunch",
+      "blocks": [
+        {
+          "type": "cloth",
+          "settings": {
+            "name": "Charcoal flannel",
+            "weave": "flannel",
+            "color": "#3f4146",
+            "comp": "100% wool",
+            "gsm": 340,
+            "seasons": "Autumn, Winter",
+            "feel": "Brushed, soft and matt. Holds a crease well."
+          }
+        },
+        {
+          "type": "cloth",
+          "settings": {
+            "name": "Navy twill",
+            "weave": "twill",
+            "color": "#243049",
+            "comp": "100% fine wool",
+            "gsm": 260,
+            "seasons": "All year",
+            "feel": "Smooth face, crisp hand. The four-season suiting."
+          }
+        },
+        {
+          "type": "cloth",
+          "settings": {
+            "name": "Mid-grey herringbone",
+            "weave": "herring",
+            "color": "#7d7e80",
+            "comp": "90% wool, 10% cashmere",
+            "gsm": 380,
+            "seasons": "Winter",
+            "feel": "Dense, warm, a quiet zigzag at arm's length."
+          }
+        },
+        {
+          "type": "cloth",
+          "settings": {
+            "name": "Tobacco plain",
+            "weave": "plain",
+            "color": "#8a6240",
+            "comp": "55% linen, 45% wool",
+            "gsm": 240,
+            "seasons": "Spring, Autumn",
+            "feel": "Dry, slightly slubby, relaxes with wear."
+          }
+        },
+        {
+          "type": "cloth",
+          "settings": {
+            "name": "Stone hopsack",
+            "weave": "plain",
+            "color": "#c9bda6",
+            "comp": "100% wool, open weave",
+            "gsm": 230,
+            "seasons": "Spring, Summer",
+            "feel": "Airy basket weave that breathes in heat."
+          }
+        },
+        {
+          "type": "cloth",
+          "settings": {
+            "name": "Olive check",
+            "weave": "check",
+            "color": "#5f6448",
+            "comp": "100% lambswool",
+            "gsm": 360,
+            "seasons": "Autumn, Winter",
+            "feel": "Soft tweed with a faint rust overcheck."
+          }
+        },
+        {
+          "type": "cloth",
+          "settings": {
+            "name": "Sky linen",
+            "weave": "plain",
+            "color": "#a9bccb",
+            "comp": "100% linen",
+            "gsm": 210,
+            "seasons": "Summer",
+            "feel": "Cool and crumply. Unlined jackets only."
+          }
+        },
+        {
+          "type": "cloth",
+          "settings": {
+            "name": "Burgundy twill",
+            "weave": "twill",
+            "color": "#5b2430",
+            "comp": "97% wool, 3% elastane",
+            "gsm": 280,
+            "seasons": "Autumn, Winter",
+            "feel": "A little stretch for trousers that move."
+          }
+        },
+        {
+          "type": "cloth",
+          "settings": {
+            "name": "Ivory crepe",
+            "weave": "flannel",
+            "color": "#ece6da",
+            "comp": "100% wool crepe",
+            "gsm": 250,
+            "seasons": "Spring, Summer",
+            "feel": "Grainy, springy, never creases in a case."
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

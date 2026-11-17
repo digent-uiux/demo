@@ -1,0 +1,437 @@
+{%- liquid
+  assign s = section.settings
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-referral-05.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-referral-05.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-tide', tokens: s.tokens -%}
+{%- comment -%}
+  Referral 05, fashion (tide preset). The friend's landing page, reached from a referral link, on the pop-4 band. Left: a
+  tall photo with a solid "From Maya" tag. Right: the sender's note as a large serif quote (its <em> words in italic), the
+  offer, and one email field; Claim checks the address and saves it as a customer (Shopify customer form, tagged), then
+  the field turns into a ticket with the code, Copy (confirms) and "Not you? Use another email". Below, the sender's
+  three picks show their price with the code once it is claimed (pieces over the minimum), or how much more is needed.
+  Live: the picks read the products you choose (live price), else their preview fields. In the Theme Editor, "Show in
+  the editor" can open the ticket so you can edit it. A referral app block (@app, e.g. Avada Referral) takes the form's
+  place.
+  Motion: the shared text and button layer (blko-ui-motion); the ticket rises 10px in 320ms ease-out when revealed.
+  Static = the DS frame (form state).
+{%- endcomment -%}
+{%- liquid
+  assign uid = 'ref05-' | append: section.id
+  assign apps = section.blocks | where: 'type', '@app'
+  assign picks = section.blocks | where: 'type', 'pick'
+  assign editor_code = false
+  if request.design_mode and s.editor_state == 'code'
+    assign editor_code = true
+  endif
+  assign off_c = s.off | times: 100 | round
+  assign min_c = s.min | times: 100 | round
+  assign initial = s.sender | strip | slice: 0 | upcase
+-%}
+{%- capture body -%}
+  <div class="breferral05__top"
+    ><div class="breferral05__media"
+      >{%- assign alt = s.image_alt | default: s.image.alt -%}
+      {%- if s.image != blank -%}
+        {{ s.image | image_url: width: 1200 | image_tag: loading: 'lazy', sizes: '(min-width: 768px) 40vw, 100vw', alt: alt, class: 'breferral05__img' -}}
+      {%- else -%}
+        {{ 'lifestyle-2' | placeholder_svg_tag: 'breferral05__img' -}}
+      {%- endif -%}
+      {%- if s.tag != blank -%}
+        <span class="blko-ui-text--small breferral05__tag"><span aria-hidden="true" class="blko-ui-text--label breferral05__avatar">{{ initial | escape }}</span>{{ s.tag | escape }}</span
+      >{%- endif -%}
+    </div
+
+    ><div class="breferral05__copy"
+      ><div class="breferral05__head"
+        ><h2 class="breferral05__h">{{ s.heading }}</h2
+        >{%- if s.text != blank -%}<p class="blko-ui-text--body breferral05__lead">{{ s.text | escape }}</p>{%- endif -%}
+      </div
+
+      >{%- if apps.size > 0 -%}
+        <div class="breferral05__app">{%- for b in apps -%}{%- render b -%}{%- endfor -%}</div
+      >{%- else -%}
+        {%- assign fid = uid | append: '-form' -%}
+        {%- form 'customer', id: fid, class: 'breferral05__claim', novalidate: 'novalidate', data-claim: '' -%}
+          {%- liquid
+            assign posted = false
+            if form.posted_successfully? or editor_code
+              assign posted = true
+            endif
+          -%}
+          <input type="hidden" name="contact[tags]" value="{{ s.tags | escape }}"
+          ><div class="breferral05__fields" data-fields{% if posted %} hidden{% endif %}
+            ><label for="{{ uid }}-email" class="blko-ui-text--small breferral05__label">{{ s.email_label | escape }}</label
+            ><div class="breferral05__row"
+              >{%- assign eid = uid | append: '-email' -%}
+              {%- assign mid = uid | append: '-msg' -%}
+              {%- assign ph = 'blko.referral_05.placeholder' | t -%}
+              {%- render 'blko-ui-input', id: eid, type: 'email', name: 'contact[email]', autocomplete: 'email', placeholder: ph, describedBy: mid, className: 'breferral05__email' -%}
+              {%- render 'blko-ui-button', type: 'submit', children: s.button_label, className: 'breferral05__submit' -%}
+            </div
+            >{%- assign err = '' -%}
+            {%- if form.errors -%}{%- assign err = 'blko.referral_05.bad' | t -%}{%- endif -%}
+            <p id="{{ uid }}-msg" class="blko-ui-text--small breferral05__msg"{% if err != blank %} role="alert" data-error{% endif %} data-hint="{{ s.hint | escape }}" data-t-empty="{{ s.error_empty | escape }}" data-t-bad="{{ 'blko.referral_05.bad' | t | escape }}">{% if err != blank %}{{ err }}{% else %}{{ s.hint | escape }}{% endif %}</p
+          ></div
+
+          ><div class="breferral05__done" data-done{% unless posted %} hidden{% endunless %}{% if form.posted_successfully? %} data-posted{% endif %}
+            ><div class="breferral05__ticket"
+              ><span aria-hidden="true" class="breferral05__notch breferral05__notch--l"></span
+              ><span aria-hidden="true" class="breferral05__notch breferral05__notch--r"></span
+              ><p class="blko-ui-text--label breferral05__muted breferral05__tlabel">{{ s.code_label | escape }}</p
+              ><div class="breferral05__trow"
+                ><p tabindex="-1" class="blko-ui-text--h3 breferral05__code" data-code>{{ s.code | escape }}</p
+                >{%- capture cl -%}<span data-ico="copy">{%- render 'blko-ui-icon', name: 'copy', size: 16 -%}</span><span data-ico="check" hidden>{%- render 'blko-ui-icon', name: 'check', size: 16 -%}</span><span data-copy-text>{{ 'blko.referral_05.copy' | t }}</span>{%- endcapture -%}
+                {%- capture ca -%}data-copy aria-label="{{ 'blko.referral_05.copy_code' | t | escape }}" data-t-copy="{{ 'blko.referral_05.copy' | t | escape }}" data-t-copied="{{ 'blko.referral_05.copied' | t | escape }}" data-t-label="{{ 'blko.referral_05.copy_code' | t | escape }}" data-t-label-done="{{ 'blko.referral_05.code_copied' | t | escape }}"{%- endcapture -%}
+                {%- render 'blko-ui-button', size: 'sm', children: cl, attrs: ca, className: 'breferral05__cbtn' -%}
+              </div
+            ></div
+            ><p role="status" class="blko-ui-text--small breferral05__saved" data-saved data-t="{{ s.saved | escape }}" data-t-copied="{{ 'blko.referral_05.paste' | t | escape }}">{{ s.saved | replace: ' for [email]', '' | replace: '[email]', '' | escape }}</p
+            ><button type="button" class="blko-ui-text--small breferral05__reset" data-reset>{{ 'blko.referral_05.not_you' | t }}</button
+          ></div
+        >{%- endform -%}
+      {%- endif -%}
+    </div
+  ></div
+
+  ><div class="breferral05__picks"{% if editor_code %} data-claimed{% endif %}
+    ><div class="breferral05__phead"
+      ><h3 class="blko-ui-text--h2 breferral05__ph">{{ s.picks_heading | escape }}</h3
+      ><p class="blko-ui-text--small breferral05__pnote"><span class="breferral05__before">{{ s.picks_before | escape }}</span><span class="breferral05__after">{{ s.picks_after | escape }}</span></p
+    ></div
+    ><ul class="breferral05__list"
+      >{%- for b in picks -%}
+        {%- liquid
+          assign bs = b.settings
+          assign item = bs.product
+          assign name = bs.name
+          assign pc = bs.price | times: 100 | round
+          if item != blank
+            assign name = item.title
+            assign pc = item.selected_or_first_available_variant.price
+          endif
+          assign fits = false
+          if pc >= min_c
+            assign fits = true
+          endif
+          assign with_code = pc | minus: off_c
+          assign need = min_c | minus: pc
+          capture need_m
+            render 'blko-ui-money', amount: need, cents: true
+          endcapture
+          assign need_t = s.need | replace: '[amount]', need_m
+        -%}
+        <li class="breferral05__pick" {{ b.shopify_attributes }}
+          >{%- if item != blank and item.featured_media != blank -%}
+            {{ item.featured_media.preview_image | image_url: width: 600 | image_tag: loading: 'lazy', sizes: '(min-width: 576px) 30vw, 96px', alt: '', class: 'breferral05__thumb' -}}
+          {%- elsif bs.image != blank -%}
+            {{ bs.image | image_url: width: 600 | image_tag: loading: 'lazy', sizes: '(min-width: 576px) 30vw, 96px', alt: '', class: 'breferral05__thumb' -}}
+          {%- else -%}
+            {{ 'product-2' | placeholder_svg_tag: 'breferral05__thumb' -}}
+          {%- endif -%}
+          <div class="breferral05__pinfo"
+            ><p class="blko-ui-text--card-title breferral05__pname">{%- if item != blank -%}<a href="{{ item.url }}">{{ name | escape }}</a>{%- else -%}{{ name | escape }}{%- endif -%}</p
+            >{%- if fits -%}
+              <span class="breferral05__before">{%- render 'blko-ui-price', amount: pc, cents: true -%}</span
+              ><span class="breferral05__after">{%- render 'blko-ui-price', amount: with_code, compareAt: pc, cents: true -%}</span
+            >{%- else -%}
+              {%- render 'blko-ui-price', amount: pc, cents: true -%}
+              <p class="blko-ui-text--small breferral05__muted breferral05__after">{{ need_t | escape }}</p
+            >{%- endif -%}
+          </div
+        ></li
+      >{%- endfor -%}
+    </ul
+  ></div
+>{%- endcapture -%}
+<div class="breferral05" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-breferral05
+  >{%- render 'blko-ui-section', surface: 'pop-4', label: s.label, inner: 'breferral05__in', children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Referral 05",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Photo and note"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Photo"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Photo alt text"
+    },
+    {
+      "type": "text",
+      "id": "sender",
+      "label": "Sender's name",
+      "default": "Maya",
+      "info": "Its first letter goes on the tag."
+    },
+    {
+      "type": "text",
+      "id": "tag",
+      "label": "Tag on the photo",
+      "default": "From Maya, member since 2023"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Note",
+      "default": "“I live in their linen. <em>You will too.</em>”",
+      "info": "Italic words are set in italic."
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Offer",
+      "default": "Maya thinks you'll like it here, so the first $20 is on her. Use it on any first order over $100, new season included."
+    },
+    {
+      "type": "header",
+      "content": "Claim"
+    },
+    {
+      "type": "text",
+      "id": "email_label",
+      "label": "Email label",
+      "default": "Your email"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Claim my $20"
+    },
+    {
+      "type": "text",
+      "id": "hint",
+      "label": "Hint",
+      "default": "New customers only. One code per person."
+    },
+    {
+      "type": "text",
+      "id": "error_empty",
+      "label": "Empty email message",
+      "default": "Enter your email to claim the $20."
+    },
+    {
+      "type": "text",
+      "id": "tags",
+      "label": "Customer tags",
+      "default": "referral, newsletter",
+      "info": "The email is saved as a customer with these tags."
+    },
+    {
+      "type": "text",
+      "id": "code",
+      "label": "Discount code",
+      "default": "MAYA-LINEN-20",
+      "info": "Create this code in Discounts: amount off, minimum purchase, first order only."
+    },
+    {
+      "type": "text",
+      "id": "code_label",
+      "label": "Code label",
+      "default": "Your code: $20 off over $100"
+    },
+    {
+      "type": "text",
+      "id": "saved",
+      "label": "After claiming",
+      "default": "Saved for [email]. The code works for 30 days.",
+      "info": "[email] = the address entered. Only promise an email if your welcome email sends the code."
+    },
+    {
+      "type": "select",
+      "id": "editor_state",
+      "label": "Show in the editor",
+      "default": "form",
+      "options": [
+        {
+          "value": "form",
+          "label": "Email form"
+        },
+        {
+          "value": "code",
+          "label": "Code revealed"
+        }
+      ],
+      "info": "Theme Editor only. Shoppers always start at the form."
+    },
+    {
+      "type": "number",
+      "id": "off",
+      "label": "Code amount off",
+      "default": 20
+    },
+    {
+      "type": "number",
+      "id": "min",
+      "label": "Minimum order",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Picks"
+    },
+    {
+      "type": "text",
+      "id": "picks_heading",
+      "label": "Heading",
+      "default": "Maya's favourites"
+    },
+    {
+      "type": "text",
+      "id": "picks_before",
+      "label": "Note before claiming",
+      "default": "Claim the code to see your prices"
+    },
+    {
+      "type": "text",
+      "id": "picks_after",
+      "label": "Note after claiming",
+      "default": "Prices with your code"
+    },
+    {
+      "type": "text",
+      "id": "need",
+      "label": "Under the minimum",
+      "default": "Add [amount] more to use the code",
+      "info": "[amount] = what is missing"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Section name for screen readers",
+      "default": "A gift from Maya"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Tide)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "pick",
+      "name": "Pick",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "header",
+          "content": "Preview (no product)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Linen camp shirt, chalk"
+        },
+        {
+          "type": "number",
+          "id": "price",
+          "label": "Price",
+          "default": 78
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Referral 05 - Claim code",
+      "blocks": [
+        {
+          "type": "pick",
+          "settings": {
+            "name": "Linen camp shirt, chalk",
+            "price": 78
+          }
+        },
+        {
+          "type": "pick",
+          "settings": {
+            "name": "Mohair jumper, meadow",
+            "price": 145
+          }
+        },
+        {
+          "type": "pick",
+          "settings": {
+            "name": "Penny loafers, cognac",
+            "price": 160
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

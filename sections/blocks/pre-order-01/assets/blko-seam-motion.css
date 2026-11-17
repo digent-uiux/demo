@@ -1,0 +1,53 @@
+/* Seam motion kit, Liquid half: generated with components/ui/seam-motion.tsx from one rule set (owner A). Picks: buttons fill drop from the top; links overline drop; headings centre clip open; images hover pan; cards caption slide; icons fade dip; entry rise behind a soft clip. Runs only under html.blko-m (set by blko-seam-motion.js). */
+:root { --motion-duration: 1200ms; --motion-ease: cubic-bezier(.19,1,.22,1); --motion-distance: 26px; --motion-stagger: 130ms; --motion-hover-scale: 1.02; }
+html.blko-m [data-reveal-group][data-pending] > *, html.blko-m [data-reveal][data-pending] { visibility: hidden; }
+html.blko-m [data-reveal-group][data-shown] > *, html.blko-m [data-reveal][data-shown] { animation: seam-enter var(--motion-duration) var(--motion-ease) backwards; }
+html.blko-m [data-reveal-group] > :nth-child(2) { animation-delay: var(--motion-stagger); }
+html.blko-m [data-reveal-group] > :nth-child(3) { animation-delay: calc(var(--motion-stagger) * 2); }
+html.blko-m [data-reveal-group] > :nth-child(4) { animation-delay: calc(var(--motion-stagger) * 3); }
+html.blko-m [data-reveal-group] > :nth-child(5) { animation-delay: calc(var(--motion-stagger) * 4); }
+html.blko-m [data-reveal-group] > :nth-child(n+6) { animation-delay: calc(var(--motion-stagger) * 5); }
+/* Buttons: fill drops from the top. */
+html.blko-m.blko-m :is(.blko-btn, .blko-ui-button) { position: relative; isolation: isolate; overflow: hidden; }
+html.blko-m.blko-m :is(.blko-btn, .blko-ui-button)::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit; background: color-mix(in oklab, currentColor 14%, transparent); transform: scaleY(0); transform-origin: 50% 0; transition: transform .7s var(--motion-ease); }
+html.blko-m.blko-m :is(.blko-btn, .blko-ui-button):is(:hover, :focus-visible)::before { transform: none; }
+/* Links: overline drop (a rule falls from above the words to under them). */
+@property --sm-ul { syntax: "<color>"; inherits: false; initial-value: transparent; }
+html.blko-m.blko-m :is(.blko-text-link, .blko-header__link, .blko-footer__link, .blko-ui-link) { background: linear-gradient(var(--sm-ul), var(--sm-ul)) no-repeat 0 0 / 100% 1px; transition: background-position .7s var(--motion-ease), --sm-ul .35s var(--motion-ease); }
+html.blko-m.blko-m :is(.blko-text-link, .blko-header__link, .blko-footer__link, .blko-ui-link):is(:hover, :focus-visible) { --sm-ul: currentColor; background-position: 0 100%; }
+/* Headings: centre clip open. */
+@keyframes seam-h { from { clip-path: inset(0 50% 0 50%); } to { clip-path: inset(0 0 0 0); } }
+html.blko-m.blko-m [data-shown] :is(h1, h2, .blko-display, .blko-h1, .blko-h2), html.blko-m.blko-m [data-reveal-group]:not([data-pending], [data-shown]) :is(h1, .blko-display) { animation: seam-h 1.4s var(--motion-ease) .1s backwards; }
+/* Images: hover pan (a slow drift while pointed at). */
+html.blko-m.blko-m :is(img, svg.blko-placeholder) { transition: translate 2.4s var(--motion-ease); }
+html.blko-m.blko-m :is(a, article, figure):hover :is(img, svg.blko-placeholder) { translate: -1.5% -1%; }
+/* Cards: the caption slides along. */
+html.blko-m.blko-m :is(.blko-card__title, .blko-ui-product-card__copy h3) { transition: translate .6s var(--motion-ease); }
+html.blko-m.blko-m :is(.blko-card, .blko-ui-product-card):is(:hover, :focus-within) :is(.blko-card__title, .blko-ui-product-card__copy h3) { translate: 6px 0; }
+/* Icons: fade dip. */
+@keyframes seam-x { 0%, 100% { opacity: 1; } 40% { opacity: .25; } }
+html.blko-m.blko-m :is(a, button):is(:hover, :focus-visible) :is(.blko-icon, .blko-ui-icon) { animation: seam-x .6s var(--motion-ease); }
+/* Section entry: rise behind a soft clip. */
+@keyframes seam-enter { from { opacity: 0; translate: 0 var(--motion-distance); clip-path: inset(0 0 30% 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes seam-Li { from { clip-path: circle(16% at 50% 50%); } to { clip-path: circle(75% at 50% 50%); } }
+@keyframes seam-Lh { from { clip-path: inset(0 50% 0 50%); translate: 0 30px; } to { clip-path: inset(0 0 0 0); } }
+@keyframes seam-Lp { from { opacity: 0; translate: 0 26px; clip-path: inset(0 0 40% 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes seam-Lb { from { opacity: 0; translate: 0 24px; } }
+@keyframes seam-Lf { 0% { transform: scaleY(0); transform-origin: 50% 0; } 50% { transform: scaleY(1); transform-origin: 50% 0; } 51% { transform: scaleY(1); transform-origin: 50% 100%; } 100% { transform: scaleY(0); transform-origin: 50% 100%; } }
+html.blko-m.blko-m #MainContent > .shopify-section:first-child .blko-section:not(#km) :is(img, svg.blko-placeholder) { animation: seam-Li 1.2s var(--motion-ease) backwards; }
+html.blko-m.blko-m #MainContent > .shopify-section:first-child .blko-section:not(#km) :is(h1, .blko-display) { animation: seam-Lh 1.05s var(--motion-ease) .2s backwards; }
+html.blko-m.blko-m #MainContent > .shopify-section:first-child .blko-section:not(#km) p { animation: seam-Lp .8s var(--motion-ease) .5s backwards; }
+html.blko-m.blko-m #MainContent > .shopify-section:first-child .blko-section:not(#km) :is(.blko-btn, .blko-ui-button) { animation: seam-Lb .7s var(--motion-ease) .65s backwards; }
+html.blko-m.blko-m #MainContent > .shopify-section:first-child .blko-section:not(#km) :is(.blko-btn, .blko-ui-button)::before { animation: seam-Lf 1s var(--motion-ease) .95s backwards; }
+@keyframes seam-Sh2 { from { opacity: .2; clip-path: inset(0 45% 0 45%); translate: 0 24px; } to { opacity: 1; clip-path: inset(-10% -5% -10% -5%); translate: 0 0; } }
+@keyframes seam-Sbig { from { clip-path: circle(28% at 50% 55%); } to { clip-path: circle(75% at 50% 50%); } }
+@supports (animation-timeline: view()) {
+html.blko-m.blko-m :is(h2, .blko-h2):not(#km) { animation: seam-Sh2 linear both; animation-timeline: view(); animation-range: entry 10% cover 40%; }
+html.blko-m.blko-m [data-km-big]:not(#km) { animation: seam-Sbig linear both; animation-timeline: view(); animation-range: entry 0% cover 50%; }
+}
+@supports not (animation-timeline: view()) {
+html.blko-m.blko-m :is(h2, .blko-h2):not(#km)[data-km-in] { animation: seam-Sh2 1s var(--motion-ease) both; }
+html.blko-m.blko-m [data-km-big]:not(#km)[data-km-in] { animation: seam-Sbig 1s var(--motion-ease) both; }
+}
+html.blko-m.blko-m [data-reveal-group][data-shown] > *, html.blko-m.blko-m [data-reveal][data-shown] { animation-name: seam-enter; }
+@media (prefers-reduced-motion: reduce) { html.blko-m.blko-m *, html.blko-m.blko-m *::before, html.blko-m.blko-m *::after { animation: none !important; transition: none !important; } }

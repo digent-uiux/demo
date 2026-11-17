@@ -1,0 +1,517 @@
+<script data-blko-kit="seam">try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-kit-seam')}catch(e){}</script>
+{{ 'blko-seam-motion.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-seam-motion.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign s = section.settings
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-pre-order-01.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-pre-order-01.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-seam', tokens: s.tokens -%}
+{%- comment -%}
+  Pre-order 01, coat drop with ship date and production bar (seam preset; DS registry/pre-order/pre-order-01.tsx).
+  Photo 7/12 (3:4, head to shin) with a close-up on its lower right (the product's second image, else the tie belt
+  cropped from the main photo), buy box 5/12: "Pre-order" line, title + light subtitle, price,
+  options, Pre-order now (sticky at the bottom of the band on phones), then "Ships from <date>" and a three-segment
+  production bar, then the terms.
+  Live: the product setting, else the page's product: title, price, image, options, add to cart (form 'product').
+  The button says the pre-order label when the picked variant sells on when out of stock (tracked, policy continue,
+  quantity <= 0) or the product has a pre-order selling plan (a group whose name contains "pre"; its first plan is sent).
+  Otherwise the in-stock label, or Sold out. Ship date: metafield custom.preorder_date, else the setting.
+  Preview (Theme Editor or no template, no product): the preview settings. On a live store with no product the price,
+  options and form hide and a link button shows. An @app block renders under the button.
+  Motion (html.blko-ui-motion): photo mask-up 1200ms, inset 200ms later, bar segments fill 800ms. Static = final frame.
+{%- endcomment -%}
+{%- liquid
+  assign p = s.product | default: product
+  assign apps = section.blocks | where: 'type', '@app'
+  assign live = false
+  assign preview = false
+  if p != blank
+    assign live = true
+  elsif request.design_mode or template == blank
+    assign preview = true
+  endif
+  assign ship = s.ship_date
+  if live
+    assign v = p.selected_or_first_available_variant
+    assign plan = nil
+    for g in p.selling_plan_groups
+      assign gn = g.name | downcase
+      if gn contains 'pre'
+        assign plan = g.selling_plans.first
+        break
+      endif
+    endfor
+    assign is_pre = false
+    if plan != nil
+      assign is_pre = true
+    elsif v.inventory_management == 'shopify' and v.inventory_policy == 'continue' and v.inventory_quantity <= 0
+      assign is_pre = true
+    endif
+    assign md = p.metafields.custom.preorder_date.value
+    if md != blank
+      assign ship = md | date: s.date_format
+    endif
+    assign photo = p.featured_media.preview_image | default: s.image
+    assign detail = p.media[1].preview_image | default: s.detail_image
+    assign title = p.title
+  else
+    assign photo = s.image
+    assign detail = s.detail_image
+    assign title = s.preview_title
+  endif
+  assign ship_line = s.ship_text | replace: '[date]', ship
+  assign done = s.steps_done
+  assign nxt = done | plus: 1
+  assign progress = s.progress_text | replace: '[done]', done
+-%}
+{%- capture body -%}
+<div class="bpreorder01__grid" data-po1
+  ><div class="bpreorder01__media"
+    ><div class="bpreorder01__photo" data-po1-photo
+      >{%- if photo != blank -%}
+        {{ photo | image_url: width: 1400 | image_tag: class: 'bpreorder01__img', widths: '600, 900, 1200, 1400', sizes: '(min-width: 896px) 58vw, 100vw', alt: photo.alt -}}
+      {%- else -%}
+        {{ 'product-apparel-1' | placeholder_svg_tag: 'bpreorder01__img' -}}
+      {%- endif -%}
+    </div
+    >{%- if detail != blank or photo != blank or preview -%}
+      <div class="bpreorder01__inset" data-po1-inset
+        >{%- if detail != blank -%}
+          {{ detail | image_url: width: 500 | image_tag: class: 'bpreorder01__img', loading: 'lazy', sizes: '300px', alt: detail.alt -}}
+        {%- elsif photo != blank -%}
+          {{ photo | image_url: width: 1400 | image_tag: class: 'bpreorder01__crop', loading: 'lazy', sizes: '1100px', alt: s.detail_alt -}}
+        {%- else -%}
+          {{ 'product-apparel-2' | placeholder_svg_tag: 'bpreorder01__img' -}}
+        {%- endif -%}
+      </div
+    >{%- endif -%}
+  </div
+
+  ><div class="bpreorder01__buy"
+    ><div class="bpreorder01__head"
+      >{%- if s.kicker != blank -%}<p class="blko-ui-text--label bpreorder01__kicker"{% if live %} data-kicker{% unless is_pre %} hidden{% endunless %}{% endif %}>{{ s.kicker | escape }}</p>{%- endif -%}
+      <h2 class="blko-ui-text--h1 bpreorder01__title">{{ title | escape }}{%- if s.subtitle != blank -%} <span class="blko-ui-text--h3 bpreorder01__sub">{{ s.subtitle | escape }}</span>{%- endif -%}</h2
+      >{%- if live -%}
+        <div data-price>{%- render 'blko-ui-price', amount: v.price, compareAt: v.compare_at_price, cents: true, size: 'lg' -%}</div
+      >{%- elsif preview -%}
+        {%- render 'blko-ui-price', amount: s.preview_price, size: 'lg' -%}
+      {%- endif -%}
+    </div
+
+    >{%- if s.text != blank -%}<p class="blko-ui-text--body bpreorder01__muted bpreorder01__text">{{ s.text | escape }}</p>{%- endif -%}
+
+    {%- if live -%}
+      {%- form 'product', p, class: 'bpreorder01__form', data-po1-form: '' -%}
+        <input type="hidden" name="id" value="{{ v.id }}" data-id
+        >{%- if plan != nil -%}<input type="hidden" name="selling_plan" value="{{ plan.id }}">{%- endif -%}
+        {%- unless p.has_only_default_variant -%}
+          {%- for opt in p.options_with_values -%}
+            <fieldset class="bpreorder01__set" data-opt="{{ forloop.index0 }}"
+              ><legend class="blko-ui-text--small bpreorder01__legend"><span><span class="bpreorder01__muted">{{ opt.name | escape }}:</span> <span data-val>{{ opt.selected_value | escape }}</span></span>{%- if forloop.last and s.guide_label != blank -%}<a href="{{ s.guide_url | default: routes.root_url }}" class="bpreorder01__guide">{{ s.guide_label | escape }}</a>{%- endif -%}</legend
+              ><div class="bpreorder01__opts" data-blko-ui-options
+                >{%- for val in opt.values -%}
+                  {%- if val.swatch.color != blank -%}
+                    {%- assign hex = val.swatch.color | append: '' -%}
+                    {%- render 'blko-ui-swatch', color: hex, label: val, selected: val.selected, value: val -%}
+                  {%- else -%}
+                    {%- assign vt = val | escape -%}
+                    {%- render 'blko-ui-option', children: vt, selected: val.selected, value: val -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              </div
+            ></fieldset
+          >{%- endfor -%}
+        {%- endunless -%}
+        <div class="bpreorder01__cta"
+          >{%- capture lbl -%}<span data-label>{%- if plan != nil or is_pre -%}{{ s.button_label | escape }}{%- elsif v.available -%}{{ s.instock_label | escape }}{%- else -%}{{ s.sold_out_label | escape }}{%- endif -%}</span>{%- endcapture -%}
+          {%- if v.available or plan != nil -%}
+            {%- render 'blko-ui-button', type: 'submit', size: 'lg', full: true, children: lbl, attrs: 'data-add' -%}
+          {%- else -%}
+            {%- render 'blko-ui-button', type: 'submit', size: 'lg', full: true, children: lbl, attrs: 'data-add disabled' -%}
+          {%- endif -%}
+        </div
+        ><script type="application/json" data-variants>[{%- for x in p.variants -%}{"id":{{ x.id }},"o":{{ x.options | json }},"a":{{ x.available | json }},"pre":{% if plan != nil %}true{% elsif x.inventory_management == 'shopify' and x.inventory_policy == 'continue' and x.inventory_quantity <= 0 %}true{% else %}false{% endif %},"p":{{ x.price | money | json }}}{%- unless forloop.last -%},{%- endunless -%}{%- endfor -%}]</script>{%- endform -%}
+    {%- elsif preview -%}
+      {%- assign colours = s.preview_colours | split: ',' -%}
+      <fieldset class="bpreorder01__set"
+        ><legend class="blko-ui-text--small bpreorder01__legend"><span><span class="bpreorder01__muted">{{ s.colour_label | escape }}:</span> <span data-val>{{ s.preview_colour | escape }}</span></span></legend
+        ><div class="bpreorder01__opts bpreorder01__opts--swatch" data-blko-ui-options
+          >{%- for c in colours -%}
+            {%- assign parts = c | split: ':' -%}
+            {%- assign cname = parts.first | strip -%}
+            {%- assign chex = parts.last | strip -%}
+            {%- assign sel = false -%}{%- if cname == s.preview_colour -%}{%- assign sel = true -%}{%- endif -%}
+            {%- render 'blko-ui-swatch', color: chex, label: cname, selected: sel, value: cname -%}
+          {%- endfor -%}
+        </div
+      ></fieldset
+      >{%- assign sizes = s.preview_sizes | split: ',' -%}
+      <fieldset class="bpreorder01__set"
+        ><legend class="blko-ui-text--small bpreorder01__legend"><span><span class="bpreorder01__muted">{{ s.size_label | escape }}:</span> <span data-val>{{ s.preview_size | escape }}</span></span>{%- if s.guide_label != blank -%}<a href="{{ s.guide_url | default: routes.root_url }}" class="bpreorder01__guide">{{ s.guide_label | escape }}</a>{%- endif -%}</legend
+        ><div class="bpreorder01__opts" data-blko-ui-options
+          >{%- for z in sizes -%}
+            {%- assign zt = z | strip -%}
+            {%- assign sel = false -%}{%- if zt == s.preview_size -%}{%- assign sel = true -%}{%- endif -%}
+            {%- render 'blko-ui-option', children: zt, selected: sel, value: zt -%}
+          {%- endfor -%}
+        </div
+      ></fieldset
+      ><div class="bpreorder01__cta"
+        >{%- render 'blko-ui-button', size: 'lg', full: true, children: s.button_label -%}
+      </div
+    >{%- else -%}
+      <div class="bpreorder01__cta"
+        >{%- render 'blko-ui-button', href: s.link_url, size: 'lg', full: true, children: s.link_label -%}
+      </div
+    >{%- endif -%}
+
+    {%- if apps.size > 0 -%}
+      <div class="bpreorder01__app">{%- for b in apps -%}{%- render b -%}{%- endfor -%}</div
+    >{%- endif -%}
+
+    <div class="bpreorder01__ship"
+      ><p class="bpreorder01__shiprow"><span class="blko-ui-text--h3 bpreorder01__date">{{ ship_line | escape }}</span>{%- if progress != blank -%}<span class="blko-ui-text--small bpreorder01__muted">{{ progress | escape }}</span>{%- endif -%}</p
+      ><ol class="bpreorder01__steps" aria-label="{{ s.steps_label | escape }}"
+        >{%- for k in (1..3) -%}
+          {%- liquid
+            assign key = 'step_' | append: k
+            assign name = s[key]
+            if k <= done
+              assign pct = 100
+            elsif k == nxt
+              assign pct = s.current_pct
+            else
+              assign pct = 0
+            endif
+          -%}
+          <li class="bpreorder01__step"
+            ><span class="bpreorder01__track"><span class="bpreorder01__fill" data-po1-fill style="--i:{{ forloop.index0 }};width:{{ pct }}%"></span></span
+            ><span class="blko-ui-text--label{% if pct < 100 %} bpreorder01__muted{% endif %}">{{ name | escape }}{%- if pct < 100 and pct > 0 -%}{{ s.in_progress | escape }}{%- endif -%}</span
+          ></li
+        >{%- endfor -%}
+      </ol
+    ></div
+
+    >{%- if s.terms != blank -%}<p class="blko-ui-text--small bpreorder01__muted bpreorder01__terms">{{ s.terms | escape }}</p>{%- endif -%}
+  </div
+></div
+>{%- endcapture -%}
+<div class="bpreorder01" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-bpreorder01 data-t-pre="{{ s.button_label | escape }}" data-t-in="{{ s.instock_label | escape }}" data-t-sold="{{ s.sold_out_label | escape }}" data-t-unavailable="{{ s.unavailable_label | escape }}"
+  >{%- render 'blko-ui-section', surface: 'bg', label: s.label, children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Pre-order 01",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Product"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Empty: the product of the page. The button turns into the pre-order label when the variant keeps selling when out of stock, or the product has a selling plan group named with \"pre\"."
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Line above the title",
+      "default": "Pre-order",
+      "info": "Live: shows only while the picked variant is on pre-order."
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "in brick wool"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Double-faced Italian wool, unlined, cut long to the calf. It sold out in October; this run is being made now."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Pre-order button",
+      "default": "Pre-order now"
+    },
+    {
+      "type": "text",
+      "id": "instock_label",
+      "label": "In-stock button",
+      "default": "Add to bag"
+    },
+    {
+      "type": "text",
+      "id": "sold_out_label",
+      "label": "Sold-out button",
+      "default": "Sold out"
+    },
+    {
+      "type": "text",
+      "id": "unavailable_label",
+      "label": "Button when the combination doesn't exist",
+      "default": "Unavailable"
+    },
+    {
+      "type": "text",
+      "id": "guide_label",
+      "label": "Size guide link",
+      "default": "Size guide"
+    },
+    {
+      "type": "url",
+      "id": "guide_url",
+      "label": "Size guide page"
+    },
+    {
+      "type": "header",
+      "content": "Shipping and production"
+    },
+    {
+      "type": "text",
+      "id": "ship_text",
+      "label": "Ship line",
+      "default": "Ships from [date]",
+      "info": "[date] = metafield custom.preorder_date (date), else the date below."
+    },
+    {
+      "type": "text",
+      "id": "ship_date",
+      "label": "Ship date",
+      "default": "12 Dec"
+    },
+    {
+      "type": "text",
+      "id": "date_format",
+      "label": "Date format for the metafield",
+      "default": "%-d %b"
+    },
+    {
+      "type": "text",
+      "id": "steps_label",
+      "label": "Production steps name for screen readers",
+      "default": "Production"
+    },
+    {
+      "type": "text",
+      "id": "step_1",
+      "label": "Step 1",
+      "default": "Cut"
+    },
+    {
+      "type": "text",
+      "id": "step_2",
+      "label": "Step 2",
+      "default": "Sewn"
+    },
+    {
+      "type": "text",
+      "id": "step_3",
+      "label": "Step 3",
+      "default": "Finishing"
+    },
+    {
+      "type": "range",
+      "id": "steps_done",
+      "label": "Steps done",
+      "min": 0,
+      "max": 3,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "current_pct",
+      "label": "Current step, % done",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "%",
+      "default": 60
+    },
+    {
+      "type": "text",
+      "id": "progress_text",
+      "label": "Progress line",
+      "default": "[done] of 3 production steps done",
+      "info": "[done] = steps done"
+    },
+    {
+      "type": "text",
+      "id": "in_progress",
+      "label": "Suffix on the current step",
+      "default": ", in progress"
+    },
+    {
+      "type": "text",
+      "id": "terms",
+      "label": "Terms",
+      "default": "Charged today, sent the day it is finished. Free returns for 30 days after it arrives."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Photo",
+      "info": "Used when the product has no image."
+    },
+    {
+      "type": "image_picker",
+      "id": "detail_image",
+      "label": "Close-up photo",
+      "info": "Used when the product has one image. Empty: a close crop of the main photo."
+    },
+    {
+      "type": "text",
+      "id": "detail_alt",
+      "label": "Close-up crop alt text",
+      "default": "Close-up of the coat's tie belt"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Section name for screen readers",
+      "default": "Pre-order the wrap coat"
+    },
+    {
+      "type": "header",
+      "content": "No product on a live store"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Button",
+      "default": "Shop the collection"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Button link",
+      "default": "/collections/all"
+    },
+    {
+      "type": "header",
+      "content": "Preview (Theme Editor, no product)"
+    },
+    {
+      "type": "text",
+      "id": "preview_title",
+      "label": "Title",
+      "default": "Belted wrap coat"
+    },
+    {
+      "type": "number",
+      "id": "preview_price",
+      "label": "Price",
+      "default": 420
+    },
+    {
+      "type": "text",
+      "id": "colour_label",
+      "label": "Colour label",
+      "default": "Colour"
+    },
+    {
+      "type": "text",
+      "id": "preview_colours",
+      "label": "Colours",
+      "default": "Brick:#9c3b25, Oat:#d9cbb4, Ink:#1f2328",
+      "info": "Name:#hex, comma separated"
+    },
+    {
+      "type": "text",
+      "id": "preview_colour",
+      "label": "Picked colour",
+      "default": "Brick"
+    },
+    {
+      "type": "text",
+      "id": "size_label",
+      "label": "Size label",
+      "default": "Size"
+    },
+    {
+      "type": "text",
+      "id": "preview_sizes",
+      "label": "Sizes",
+      "default": "XS, S, M, L, XL"
+    },
+    {
+      "type": "text",
+      "id": "preview_size",
+      "label": "Picked size",
+      "default": "M"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Seam)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pre-order 01 - Coat drop with ship date"
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

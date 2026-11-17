@@ -1,0 +1,477 @@
+<script data-blko-kit="rivet">try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-kit-rivet')}catch(e){}</script>
+{{ 'blko-rivet-motion.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-rivet-motion.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign s = section.settings
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-model-info-02.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-model-info-02.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-rivet', tokens: s.tokens -%}
+{%- comment -%}
+  Model info 02, how it fits: three models side by side, one size each (rivet preset; DS
+  registry/model-info/model-info-02.tsx). Head row: heading left, lead + size chart link right (from 768px). Below,
+  three columns (the middle one 64px lower): a 3:4 photo with the size letter in a tag on its lower left edge, name with
+  height and weight, "Usually M, wearing M in black", the fit line and "Choose M". The chosen column's button turns
+  solid; the others rest dimmer. A buy row closes the band: "Black, size M", the price, Add to cart. Phones: the head
+  stacks, the columns become a snap row (78% cards), the buy row below.
+  Live models, first found wins: (1) the metaobject list product.metafields.custom.models (fields name, stats or
+  height_in + weight, usual_size, size, colour, fit, image); (2) the section's Model blocks. Choosing a column picks the
+  first variant whose options include that size (and that colour, any case, when set); the buy row shows its price and
+  Add to cart posts it to /cart/add.js, then dispatches cart:refresh. A column with no matching variant shows the
+  sold-out label on Add. The product setting, else the page's product. An @app block (a fit or size app) renders under
+  the buy row. Preview (Theme Editor or no template, no product): the Model blocks and the preview price. Live with no
+  product: nothing renders.
+  Motion (html.blko-ui-motion): each photo opens with a shutter from the right (380ms, 80ms apart) and its size letter
+  rises out of the tag (120ms after its photo). Hovering a column dims the other two. Buttons never move; they only
+  change colour. Static = the frame with the middle column chosen.
+{%- endcomment -%}
+{%- liquid
+  assign p = s.product | default: product
+  assign apps = section.blocks | where: 'type', '@app'
+  assign blocks = section.blocks | where: 'type', 'model'
+  assign live = false
+  assign preview = false
+  if p != blank
+    assign live = true
+  elsif request.design_mode or template == blank
+    assign preview = true
+  endif
+  assign sep = '~|~'
+  assign source = 'blocks'
+  if live
+    assign meta_models = p.metafields.custom.models.value
+    if meta_models != blank
+      assign source = 'meta'
+    endif
+  endif
+  capture rows
+    if source == 'meta'
+      for m in meta_models
+        assign stats = m.stats
+        if stats == blank
+          assign h = m.height_in | plus: 0
+          assign hf = h | divided_by: 12 | floor
+          assign hi = h | modulo: 12
+          capture stats
+            echo hf | append: "'" | append: hi | append: '"'
+            if m.weight != blank
+              echo ', ' | append: m.weight
+            endif
+          endcapture
+        endif
+        echo m.name | append: sep | append: stats | append: sep | append: m.usual_size | append: sep | append: m.size | append: sep | append: m.colour | append: sep | append: m.fit | append: sep
+        if m.image.value != blank
+          echo m.image.value | image_url: width: 900 | append: sep | append: m.image.value.alt
+        else
+          echo '' | append: sep | append: m.name
+        endif
+        echo '~#~'
+      endfor
+    else
+      for b in blocks
+        assign bs = b.settings
+        echo bs.name | append: sep | append: bs.stats | append: sep | append: bs.usual | append: sep | append: bs.size | append: sep | append: bs.colour | append: sep | append: bs.fit | append: sep
+        if bs.image != blank
+          echo bs.image | image_url: width: 900 | append: sep | append: bs.alt
+        else
+          echo '' | append: sep | append: bs.alt
+        endif
+        echo '~#~'
+      endfor
+    endif
+  endcapture
+  assign models = rows | strip | remove_last: '~#~' | split: '~#~'
+  assign chosen = s.default_pick | minus: 1
+  if chosen >= models.size
+    assign chosen = 0
+  endif
+-%}
+<div class="bmodelinfo02" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-bmodelinfo02{% if live %} data-live{% endif %} data-money="{{ shop.money_format | escape }}" data-t-choose="{{ s.choose_label | escape }}" data-t-chosen="{{ s.chosen_label | escape }}" data-t-pick="{{ s.pick_text | escape }}" data-t-add="{{ s.add_label | escape }}" data-t-added="{{ s.added_label | escape }}" data-t-sold="{{ s.sold_label | escape }}" data-t-error="{{ s.add_error | escape }}"
+  >{%- if live or preview -%}{%- if models.size > 0 -%}
+  <section class="bmodelinfo02__inner" aria-label="{{ s.heading | escape }}"
+    ><header class="bmodelinfo02__head"
+      ><h2 class="bmodelinfo02__title">{{ s.heading | escape }}</h2
+      ><div class="bmodelinfo02__side"
+        >{%- if s.lead != blank -%}<p class="bmodelinfo02__lead">{{ s.lead | escape }}</p>{%- endif -%}
+        {%- if s.chart_label != blank -%}<a href="{{ s.chart_url | default: '#' }}" class="bmodelinfo02__link">{{ s.chart_label | escape }}</a>{%- endif -%}
+      </div
+    ></header
+
+    ><div class="bmodelinfo02__cols" data-cols
+      >{%- for row in models -%}
+        {%- assign f = row | strip | split: sep -%}
+        {%- assign size = f[3] -%}
+        {%- assign colour = f[4] | downcase -%}
+        {%- assign on = false -%}{%- if forloop.index0 == chosen -%}{%- assign on = true -%}{%- endif -%}
+        {%- liquid
+          assign vid = ''
+          assign vprice = s.preview_price | times: 100 | round
+          assign vok = true
+          if live
+            assign vok = false
+            assign vprice = p.price
+            for x in p.variants
+              if x.options contains size
+                assign cmatch = true
+                if colour != blank
+                  assign cmatch = false
+                  for o in x.options
+                    assign od = o | downcase
+                    if od == colour
+                      assign cmatch = true
+                    endif
+                  endfor
+                endif
+                if cmatch
+                  assign vid = x.id
+                  assign vprice = x.price
+                  assign vok = x.available
+                  break
+                endif
+              endif
+            endfor
+          endif
+          if on
+            assign first_price = vprice
+            assign first_ok = vok
+            assign first_colour = f[4]
+            assign first_size = size
+          endif
+          assign label = s.choose_label | replace: '[size]', size
+          if on
+            assign label = s.chosen_label | replace: '[size]', size
+          endif
+        -%}
+        <article class="bmodelinfo02__col{% if forloop.index0 == 1 %} is-mid{% endif %}" data-col{% if on %} data-on{% endif %} style="--i:{{ forloop.index0 }}" data-id="{{ vid }}" data-price="{{ vprice }}" data-ok="{{ vok }}" data-size="{{ size | escape }}" data-colour="{{ f[4] | escape }}"
+          ><div class="bmodelinfo02__media"
+            ><div class="bmodelinfo02__shot" data-shot
+              >{%- if f[6] != blank -%}
+                <img class="bmodelinfo02__img" src="{{ f[6] }}" srcset="{{ f[6] | replace: 'width=900', 'width=600' }} 600w, {{ f[6] }} 900w" sizes="(min-width: 768px) 33vw, 78vw" alt="{{ f[7] | escape }}" width="900" height="1200" loading="lazy"
+              >{%- else -%}
+                {{ 'lifestyle-1' | placeholder_svg_tag: 'bmodelinfo02__img' -}}
+              {%- endif -%}
+            </div
+            ><span class="bmodelinfo02__tag" aria-hidden="true"><span class="bmodelinfo02__letter" data-letter>{{ size | escape }}</span></span
+          ></div
+          ><div class="bmodelinfo02__text"
+            ><h3 class="bmodelinfo02__name">{{ f[0] | escape }}{% if f[1] != blank %}, <span class="bmodelinfo02__stats">{{ f[1] | escape }}</span>{% endif %}</h3
+            ><p class="bmodelinfo02__muted">{{ s.wear_text | replace: '[usual]', f[2] | replace: '[size]', size | replace: '[colour]', colour | escape }}</p
+            >{%- if f[5] != blank -%}<p class="bmodelinfo02__fit">{{ f[5] | escape }}</p>{%- endif -%}
+          </div
+          >{%- if on -%}
+            {%- render 'blko-ui-button', variant: 'primary', children: label, className: 'bmodelinfo02__choose', attrs: 'data-choose aria-pressed="true"' -%}
+          {%- else -%}
+            {%- render 'blko-ui-button', variant: 'outline', children: label, className: 'bmodelinfo02__choose', attrs: 'data-choose aria-pressed="false"' -%}
+          {%- endif -%}
+        </article
+      >{%- endfor -%}
+    </div
+
+    >{%- assign pick_line = s.pick_text | replace: '[colour]', first_colour | replace: '[size]', first_size -%}
+    {%- assign pick_head = pick_line | slice: 0 | upcase -%}{%- assign pick_rest = pick_line | slice: 1, 200 -%}
+    <div class="bmodelinfo02__buy"
+      ><p class="bmodelinfo02__pick"
+        ><span class="bmodelinfo02__pick-name" data-pick aria-live="polite">{{ pick_head | append: pick_rest | escape }}</span
+        ><span data-price>{% render 'blko-ui-price', amount: first_price, cents: true %}</span
+      ></p
+      >{%- if first_ok -%}
+        {%- render 'blko-ui-button', size: 'lg', children: s.add_label, className: 'bmodelinfo02__add', attrs: 'data-add aria-live="polite"' -%}
+      {%- else -%}
+        {%- render 'blko-ui-button', size: 'lg', children: s.sold_label, className: 'bmodelinfo02__add', attrs: 'data-add aria-live="polite" disabled' -%}
+      {%- endif -%}
+    </div
+    ><p class="bmodelinfo02__error" data-error role="alert" hidden></p
+    >{%- if apps.size > 0 -%}
+      <div class="bmodelinfo02__apps">{%- for block in apps -%}{% render block %}{%- endfor -%}</div
+    >{%- endif -%}
+  </section
+  >{%- endif -%}{%- endif -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Model info 02 - Lineup",
+  "tag": "div",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Product"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Empty on a product page: the page's product. Empty elsewhere: the preview, in the theme editor only."
+    },
+    {
+      "type": "paragraph",
+      "content": "Models come from the product's metaobject list custom.models (name, stats or height_in + weight, usual_size, size, colour, fit, image), else from the Model blocks. Each column picks the first variant with its size (and colour)."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "How it fits on three bodies"
+    },
+    {
+      "type": "textarea",
+      "id": "lead",
+      "label": "Lead",
+      "default": "Heavyweight 480 gsm fleece, boxy cut, dropped shoulder. Take your usual size for a loose fit, one up for oversized."
+    },
+    {
+      "type": "text",
+      "id": "chart_label",
+      "label": "Size chart link label",
+      "default": "Size chart"
+    },
+    {
+      "type": "url",
+      "id": "chart_url",
+      "label": "Size chart link"
+    },
+    {
+      "type": "header",
+      "content": "Columns"
+    },
+    {
+      "type": "select",
+      "id": "default_pick",
+      "label": "Chosen at first",
+      "options": [
+        {
+          "value": "1",
+          "label": "First column"
+        },
+        {
+          "value": "2",
+          "label": "Second column"
+        },
+        {
+          "value": "3",
+          "label": "Third column"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "text",
+      "id": "wear_text",
+      "label": "Size line",
+      "default": "Usually [usual], wearing [size] in [colour]",
+      "info": "[usual], [size] and [colour] are filled in."
+    },
+    {
+      "type": "text",
+      "id": "choose_label",
+      "label": "Choose button",
+      "default": "Choose [size]"
+    },
+    {
+      "type": "text",
+      "id": "chosen_label",
+      "label": "Chosen button",
+      "default": "Size [size] chosen"
+    },
+    {
+      "type": "header",
+      "content": "Buy row"
+    },
+    {
+      "type": "text",
+      "id": "pick_text",
+      "label": "Chosen line",
+      "default": "[colour], size [size]"
+    },
+    {
+      "type": "text",
+      "id": "add_label",
+      "label": "Add button",
+      "default": "Add to cart"
+    },
+    {
+      "type": "text",
+      "id": "added_label",
+      "label": "After adding",
+      "default": "Added: [colour], [size]"
+    },
+    {
+      "type": "text",
+      "id": "sold_label",
+      "label": "Sold-out button",
+      "default": "Sold out"
+    },
+    {
+      "type": "text",
+      "id": "add_error",
+      "label": "Add error",
+      "default": "We couldn't add that size. Please try again."
+    },
+    {
+      "type": "number",
+      "id": "preview_price",
+      "label": "Preview price",
+      "default": 98,
+      "info": "Theme editor without a product."
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Rivet)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 96,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 96
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "model",
+      "name": "Model",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo"
+        },
+        {
+          "type": "text",
+          "id": "alt",
+          "label": "Photo description",
+          "default": "A model in the hoodie"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Sami"
+        },
+        {
+          "type": "text",
+          "id": "stats",
+          "label": "Height and weight",
+          "default": "5'10\", 165 lb"
+        },
+        {
+          "type": "text",
+          "id": "usual",
+          "label": "Usual size",
+          "default": "M"
+        },
+        {
+          "type": "text",
+          "id": "size",
+          "label": "Size worn",
+          "default": "M"
+        },
+        {
+          "type": "text",
+          "id": "colour",
+          "label": "Colour worn",
+          "default": "black",
+          "info": "Matches the product's colour option, any case. Empty: size only."
+        },
+        {
+          "type": "textarea",
+          "id": "fit",
+          "label": "Fit note",
+          "default": "True to size: boxy through the body, the shoulder seam drops about two inches."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Model info 02 - Lineup",
+      "blocks": [
+        {
+          "type": "model",
+          "settings": {
+            "name": "Yuna",
+            "stats": "5'5\", 120 lb",
+            "usual": "XS",
+            "size": "S",
+            "colour": "charcoal",
+            "alt": "Yuna, a young woman with long dark hair, leaning on a stone wall by the water in a charcoal hoodie and light jeans",
+            "fit": "Oversized on her: the hem covers the hip and the sleeves stack at the wrist."
+          }
+        },
+        {
+          "type": "model",
+          "settings": {
+            "name": "Sami",
+            "stats": "5'10\", 165 lb",
+            "usual": "M",
+            "size": "M",
+            "colour": "black",
+            "alt": "Sami, a bearded man in round glasses, standing by an orange pole in a black hoodie with his hands in the pocket",
+            "fit": "True to size: boxy through the body, the shoulder seam drops about two inches."
+          }
+        },
+        {
+          "type": "model",
+          "settings": {
+            "name": "Arda",
+            "stats": "6'0\", 172 lb",
+            "usual": "M",
+            "size": "L",
+            "colour": "olive",
+            "alt": "Arda, a young man with short dark hair, arms crossed on a footbridge in an olive hoodie",
+            "fit": "Sized up for room. The hem sits just under the belt, sleeves end at the knuckle."
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

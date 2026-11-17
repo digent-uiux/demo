@@ -1,0 +1,401 @@
+<script data-blko-kit="kiln">try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-kit-kiln')}catch(e){}</script>
+{{ 'blko-kiln-motion.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-kiln-motion.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign s = section.settings
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-pre-order-02.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-pre-order-02.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-kiln', tokens: s.tokens -%}
+{%- comment -%}
+  Pre-order 02, batch timeline with three dated stops (kiln preset; DS registry/pre-order/pre-order-02.tsx).
+  Top row: heading (display size + light words) and lead on the left 7/12; on the right 5/12, bottom-aligned, product
+  line and price, Reserve a set (pill), the close line "Batch 4 closes 30 Nov, 22 of 60 sets left". Below, full width,
+  the timeline: a rail with three stops (blocks), each a date, title, line and a large 4:5 photo. Phones: the rail runs
+  down the left, each stop a row with a 96px photo.
+  Live: the product setting, else the page's product: title, price, add (form 'product'), the pre-order selling plan
+  when the product has one (a group whose name contains "pre"). Sets left: inventory_quantity of a tracked variant that
+  stops at zero, out of the batch size setting (hidden when unknown). Close date: metafield custom.preorder_date, else
+  the setting. Preview (Theme Editor or no template, no product): the preview settings. Live with no product: a link
+  button. An @app block renders under the button.
+  Motion (html.blko-ui-motion): when the timeline scrolls into view the stops light one by one at 200/650/1100ms (rail
+  draws, dot fills, photo blur to sharp, 600ms). Static = every stop lit.
+{%- endcomment -%}
+{%- liquid
+  assign p = s.product | default: product
+  assign apps = section.blocks | where: 'type', '@app'
+  assign stops = section.blocks | where: 'type', 'stop'
+  assign live = false
+  assign preview = false
+  if p != blank
+    assign live = true
+  elsif request.design_mode or template == blank
+    assign preview = true
+  endif
+  assign close = s.close_date
+  assign left = nil
+  if live
+    assign v = p.selected_or_first_available_variant
+    assign plan = nil
+    for g in p.selling_plan_groups
+      assign gn = g.name | downcase
+      if gn contains 'pre'
+        assign plan = g.selling_plans.first
+        break
+      endif
+    endfor
+    assign md = p.metafields.custom.preorder_date.value
+    if md != blank
+      assign close = md | date: s.date_format
+    endif
+    if v.inventory_management == 'shopify' and v.inventory_policy == 'deny'
+      assign left = v.inventory_quantity
+    endif
+    assign pname = p.title
+  elsif preview
+    assign left = s.preview_left
+    assign pname = s.preview_title
+  endif
+  assign close_line = s.close_text | replace: '[date]', close
+  assign left_line = ''
+  if left != nil and s.batch_size > 0
+    assign left_line = s.left_text | replace: '[left]', left | replace: '[total]', s.batch_size
+  endif
+  if left_line == blank
+    assign close_line = close_line | strip | remove_last: ','
+  endif
+-%}
+{%- capture body -%}
+<div class="bpreorder02__grid" data-po2
+  ><div class="bpreorder02__top"
+  ><div class="bpreorder02__intro"
+    ><h2 class="blko-ui-text--h1 bpreorder02__title">{{ s.heading | escape }}{%- if s.heading_light != blank -%} <span class="bpreorder02__light">{{ s.heading_light | escape }}</span>{%- endif -%}</h2
+    >{%- if s.text != blank -%}<p class="blko-ui-text--body bpreorder02__muted bpreorder02__text">{{ s.text | escape }}</p>{%- endif -%}
+  </div
+  ><div class="bpreorder02__buy"
+    >{%- if live or preview -%}
+      <div class="bpreorder02__price"
+        ><span class="blko-ui-text--small bpreorder02__muted">{{ pname | escape }}</span
+        >{%- if live -%}
+          {%- render 'blko-ui-price', amount: v.price, compareAt: v.compare_at_price, cents: true, size: 'lg' -%}
+        {%- else -%}
+          {%- render 'blko-ui-price', amount: s.preview_price, size: 'lg' -%}
+        {%- endif -%}
+      </div
+    >{%- endif -%}
+    {%- if live -%}
+      {%- form 'product', p, class: 'bpreorder02__form' -%}
+        <input type="hidden" name="id" value="{{ v.id }}"
+        >{%- if plan != nil -%}<input type="hidden" name="selling_plan" value="{{ plan.id }}">{%- endif -%}
+        {%- if v.available or plan != nil -%}
+          {%- render 'blko-ui-button', type: 'submit', size: 'lg', shape: 'pill', children: s.button_label -%}
+        {%- else -%}
+          {%- render 'blko-ui-button', type: 'submit', size: 'lg', shape: 'pill', children: s.sold_out_label, attrs: 'disabled' -%}
+        {%- endif -%}
+      {%- endform -%}
+    {%- elsif preview -%}
+      {%- render 'blko-ui-button', size: 'lg', shape: 'pill', children: s.button_label -%}
+    {%- else -%}
+      {%- render 'blko-ui-button', href: s.link_url, size: 'lg', shape: 'pill', children: s.link_label -%}
+    {%- endif -%}
+    {%- if apps.size > 0 -%}<div class="bpreorder02__app">{%- for b in apps -%}{%- render b -%}{%- endfor -%}</div>{%- endif -%}
+    {%- if close_line != blank -%}
+      <p class="blko-ui-text--small bpreorder02__muted bpreorder02__close">{{ close_line | escape }}{%- if left_line != blank -%} <span class="bpreorder02__left">{{ left_line | escape }}</span>{%- endif -%}</p
+    >{%- endif -%}
+  </div
+  ></div
+
+  ><ol class="bpreorder02__stops" aria-label="{{ s.stops_label | escape }}" data-po2-line
+    >{%- for b in stops -%}
+      {%- assign bs = b.settings -%}
+      <li class="bpreorder02__stop" data-stop {{ b.shopify_attributes }}
+        ><div class="bpreorder02__mark"
+          >{%- unless forloop.last -%}
+            <span class="bpreorder02__rail" aria-hidden="true"></span><span class="bpreorder02__rail bpreorder02__rail--on" data-po2-rail aria-hidden="true"></span
+          >{%- endunless -%}
+          <span class="bpreorder02__dot" data-po2-dot aria-hidden="true"></span
+        ></div
+        ><div class="bpreorder02__copy"
+          >{%- if bs.date != blank -%}<span class="blko-ui-text--small bpreorder02__date">{{ bs.date | escape }}</span>{%- endif -%}
+          <h3 class="blko-ui-text--h3 bpreorder02__name">{{ bs.title | escape }}</h3
+          >{%- if bs.text != blank -%}<p class="blko-ui-text--small bpreorder02__muted bpreorder02__line">{{ bs.text | escape }}</p>{%- endif -%}
+        </div
+        ><div class="bpreorder02__photo" data-po2-photo
+          >{%- if bs.image != blank -%}
+            {%- assign alt = bs.image_alt | default: bs.image.alt -%}
+            {{ bs.image | image_url: width: 900 | image_tag: class: 'bpreorder02__img', loading: 'lazy', widths: '200, 400, 700, 900', sizes: '(min-width: 896px) 30vw, 96px', alt: alt -}}
+          {%- else -%}
+            {{ 'collection-1' | placeholder_svg_tag: 'bpreorder02__img' -}}
+          {%- endif -%}
+        </div
+      ></li
+    >{%- endfor -%}
+  </ol
+></div
+>{%- endcapture -%}
+<div class="bpreorder02" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-bpreorder02
+  >{%- render 'blko-ui-section', surface: 'bg', label: s.label, children: body -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Pre-order 02",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Batch 4,"
+    },
+    {
+      "type": "text",
+      "id": "heading_light",
+      "label": "Heading, light words",
+      "default": "thrown to order"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Our speckled stoneware is made in small batches. Reserve a set now and it is made for you, not pulled from a shelf."
+    },
+    {
+      "type": "header",
+      "content": "Product"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Empty: the product of the page. A selling plan group named with \"pre\" is used for the order."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button",
+      "default": "Reserve a set"
+    },
+    {
+      "type": "text",
+      "id": "sold_out_label",
+      "label": "Sold-out button",
+      "default": "Batch full"
+    },
+    {
+      "type": "text",
+      "id": "close_text",
+      "label": "Close line",
+      "default": "Batch 4 closes [date],",
+      "info": "[date] = metafield custom.preorder_date (date), else the date below."
+    },
+    {
+      "type": "text",
+      "id": "close_date",
+      "label": "Close date",
+      "default": "30 Nov"
+    },
+    {
+      "type": "text",
+      "id": "date_format",
+      "label": "Date format for the metafield",
+      "default": "%-d %b"
+    },
+    {
+      "type": "text",
+      "id": "left_text",
+      "label": "Sets left",
+      "default": "[left] of [total] sets left",
+      "info": "Shows when the variant tracks stock and stops at zero."
+    },
+    {
+      "type": "range",
+      "id": "batch_size",
+      "label": "Batch size",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "default": 60
+    },
+    {
+      "type": "text",
+      "id": "stops_label",
+      "label": "Timeline name for screen readers",
+      "default": "From order to your door"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Section name for screen readers",
+      "default": "Join the next batch"
+    },
+    {
+      "type": "header",
+      "content": "No product on a live store"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Button",
+      "default": "Shop the batch"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Button link",
+      "default": "/collections/all"
+    },
+    {
+      "type": "header",
+      "content": "Preview (Theme Editor, no product)"
+    },
+    {
+      "type": "text",
+      "id": "preview_title",
+      "label": "Product",
+      "default": "Speckled tumbler, set of 4"
+    },
+    {
+      "type": "number",
+      "id": "preview_price",
+      "label": "Price",
+      "default": 96
+    },
+    {
+      "type": "number",
+      "id": "preview_left",
+      "label": "Sets left",
+      "default": 22
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Kiln)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "stop",
+      "name": "Stop",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "text",
+          "id": "date",
+          "label": "Date",
+          "default": "Now to 30 Nov"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "You order"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Reserve a set. We throw only as many as are ordered."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo"
+        },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Photo alt text",
+          "default": "A speckled stoneware tumbler on an oak table"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pre-order 02 - Batch timeline",
+      "blocks": [
+        {
+          "type": "stop",
+          "settings": {
+            "date": "Now to 30 Nov",
+            "title": "You order",
+            "text": "Reserve a set. We throw only as many as are ordered.",
+            "image_alt": "A speckled stoneware tumbler on an oak table in daylight"
+          }
+        },
+        {
+          "type": "stop",
+          "settings": {
+            "date": "1 to 12 Dec",
+            "title": "Thrown and fired",
+            "text": "Each bowl is thrown, trimmed and fired twice to cone 6.",
+            "image_alt": "Clay-covered hands shaping a pot on a turning wheel"
+          }
+        },
+        {
+          "type": "stop",
+          "settings": {
+            "date": "From 15 Dec",
+            "title": "Ships to you",
+            "text": "Wrapped in paper, sent tracked. In time for the holidays.",
+            "image_alt": "Small glazed cups cooling on firebricks with the kiln glowing below"
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}
