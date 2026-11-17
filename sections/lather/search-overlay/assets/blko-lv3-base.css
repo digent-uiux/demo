@@ -132,17 +132,16 @@ html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
 .ftr__cols h3{font:600 15px/1.2 var(--f-body);margin-bottom:12px}
 .ftr__cols a{display:block;text-decoration:none;color:var(--muted);padding:5px 0;font-size:15px}
 .ftr__cols a:hover{color:var(--ink)}
-.ftr__mark{margin-top:80px;color:var(--ink);opacity:.92}
-.ftr__mark .logo{width:min(100%,1320px);height:auto;aspect-ratio:3.2/1;max-height:300px}
+.ftr__mark{display:inline-block;margin:0 0 28px;color:var(--ink);line-height:0}
+.ftr__mark .logo{width:132px;height:44px;-webkit-mask-position:left center;mask-position:left center}
 .ftr__base{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-top:28px;padding-top:20px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
 .ftr__loc{display:flex;gap:8px}
 .ftr__loc select{height:38px;border-radius:var(--r-btn);border:0;background:var(--raised);padding:0 12px;font-size:14px}
 @media (max-width:760px){
   .ftr{padding:64px 0 24px}
   .ftr__top{grid-template-columns:1fr;gap:40px}
-  .ftr__form{flex-direction:column}
+  .ftr__form{flex-direction:column}.ftr__form input{flex:none}
   .ftr__cols{grid-template-columns:1fr 1fr}
-  .ftr__mark{margin-top:48px}
 }
 /* ============ Cart drawer / Quick view / Popup / Cookie (99-tail) ============ */
 .scrim{position:fixed;inset:0;z-index:70;background:rgba(38,43,34,.38);opacity:0;pointer-events:none;transition:opacity .4s var(--ease)}
@@ -206,9 +205,9 @@ html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
 .logo.logo--img{background:none;-webkit-mask:none;mask:none;width:auto;max-width:160px}
 .logo.logo--img img{height:100%;width:auto;object-fit:contain}
 .logo.logo--text{background:none;-webkit-mask:none;mask:none;width:auto;height:auto;font:400 30px/1 var(--f-display);letter-spacing:-.01em;text-decoration:none;white-space:nowrap}
-.ftr__mark .logo.logo--text{font-size:clamp(72px,18vw,300px);line-height:.9;aspect-ratio:auto}
-.ftr__mark .logo.logo--img{max-width:100%;height:auto}
-.ftr__mark .logo.logo--img img{width:100%;height:auto}
+.ftr__mark .logo.logo--text{font-size:34px;line-height:1.1;height:auto;color:var(--ink)}
+.ftr__mark .logo.logo--img{width:auto;max-width:180px;height:44px}
+.ftr__mark .logo.logo--img img{width:auto;height:100%}
 /* Shopify placeholders in the same boxes */
 .blko-lv3-ph{display:block;width:100%;height:100%;background:var(--stone);fill:rgba(38,43,34,.28)}
 .line .blko-lv3-ph{width:72px;height:88px;border-radius:var(--r-img)}

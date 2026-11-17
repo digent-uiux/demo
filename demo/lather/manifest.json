@@ -298,7 +298,7 @@
     "kind": "section",
     "category": "footer",
     "name": "Lather footer",
-    "description": "Lather footer: refund promise, newsletter ({% form 'customer' %}), menu columns (blocks, each a link_list with demo links while the menu is empty), the big logo mark, country/language ({% form 'locali",
+    "description": "Lather footer: refund promise, newsletter ({% form 'customer' %}), menu columns (blocks, each a link_list with demo links while the menu is empty), the small logo above the promise, country/language (",
     "file": "lather/templates/home.html",
     "deps": [],
     "credits": [],

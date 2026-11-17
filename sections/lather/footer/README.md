@@ -1,6 +1,6 @@
 # Lather footer
 
-Lather footer: refund promise, newsletter ({% form 'customer' %}), menu columns (blocks, each a link_list with demo links while the menu is empty), the big logo mark, country/language ({% form 'locali
+Lather footer: refund promise, newsletter ({% form 'customer' %}), menu columns (blocks, each a link_list with demo links while the menu is empty), the small logo above the promise, country/language (
 
 - Category: footer
 - Kind: section
@@ -52,7 +52,7 @@ Do not use a zip.
 | `email_label` | text | Email label (screen readers) | Email |
 | `email_placeholder` | text | Email placeholder | Email for 10% off your first order |
 | `signup_label` | text | Button | Sign up |
-| `show_mark` | checkbox | Show the big logo mark | True |
+| `show_mark` | checkbox | Show the logo above the promise | True |
 | `logo` | image_picker | Logo image |  |
 | `logo_tint` | checkbox | Tint the logo with the text colour (needs a transparent PNG or SVG) | True |
 | `brand_logo` | checkbox | No image: use the Lather mark (off = store name as text) | True |

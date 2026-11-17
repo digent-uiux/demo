@@ -1017,23 +1017,23 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
 .ftr__cols h3{font:600 15px/1.2 var(--f-body);margin-bottom:12px}
 .ftr__cols a{display:block;text-decoration:none;color:var(--muted);padding:5px 0;font-size:15px}
 .ftr__cols a:hover{color:var(--ink)}
-.ftr__mark{margin-top:80px;color:var(--ink);opacity:.92}
-.ftr__mark .logo{width:min(100%,1320px);height:auto;aspect-ratio:3.2/1;max-height:300px}
+.ftr__mark{display:inline-block;margin:0 0 28px;color:var(--ink);line-height:0}
+.ftr__mark .logo{width:132px;height:44px;-webkit-mask-position:left center;mask-position:left center}
 .ftr__base{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-top:28px;padding-top:20px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
 .ftr__loc{display:flex;gap:8px}
 .ftr__loc select{height:38px;border-radius:var(--r-btn);border:0;background:var(--raised);padding:0 12px;font-size:14px}
 @media (max-width:760px){
   .ftr{padding:64px 0 24px}
   .ftr__top{grid-template-columns:1fr;gap:40px}
-  .ftr__form{flex-direction:column}
+  .ftr__form{flex-direction:column}.ftr__form input{flex:none}
   .ftr__cols{grid-template-columns:1fr 1fr}
-  .ftr__mark{margin-top:48px}
 }
 </style>
 <footer class="ftr" id="footer">
   <div class="wrap">
     <div class="ftr__top">
       <div>
+        <a class="ftr__mark" href="../templates/home.html" aria-label="Lather, home"><span class="logo"></span></a>
         <p class="ftr__promise" data-rv="blur">If your skin reacts, we <em>refund</em> it.</p>
         <p class="ftr__how">First bottle of any formula, within 30 days, used or not. Email a photo of the label; no need to send it back.</p>
       </div>
@@ -1051,7 +1051,6 @@ html.motion .srch.open .srch__item{animation:srchIn .5s var(--ease) both;animati
         </div>
       </div>
     </div>
-    <div class="ftr__mark" aria-hidden="true"><span class="logo"></span></div>
     <div class="ftr__base">
       <span>© 2026 Lather.</span>
       <div class="ftr__loc">

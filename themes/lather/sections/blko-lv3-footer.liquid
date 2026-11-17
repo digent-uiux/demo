@@ -1,13 +1,13 @@
 {%- comment -%}
   Lather footer: refund promise, newsletter ({% form 'customer' %}), menu columns (blocks, each a link_list with demo
-  links while the menu is empty), the big logo mark, country/language ({% form 'localization' %}), payment line, ©.
+  links while the menu is empty), the small logo above the promise, country/language ({% form 'localization' %}), payment line, ©.
 {%- endcomment -%}
 {%- liquid
   assign logo_class = 'logo'
   assign logo_style = ''
   if section.settings.logo != blank
     if section.settings.logo_tint
-      assign logo_style = section.settings.logo | image_url: width: 1600 | prepend: '--lv3-logo:url(' | append: ')'
+      assign logo_style = section.settings.logo | image_url: width: 360 | prepend: '--lv3-logo:url(' | append: ')'
     else
       assign logo_class = 'logo logo--img'
     endif
@@ -19,6 +19,17 @@
   <div class="wrap">
     <div class="ftr__top">
       <div>
+        {%- if section.settings.show_mark -%}
+          <a class="ftr__mark" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }}">
+            <span class="{{ logo_class }}"{% if logo_style != blank %} style="{{ logo_style }}"{% endif %}>
+              {%- if section.settings.logo != blank and section.settings.logo_tint == false -%}
+                {{ section.settings.logo | image_url: width: 360 | image_tag: alt: '', widths: '180, 360', sizes: '180px', loading: 'lazy' }}
+              {%- elsif section.settings.logo == blank and section.settings.brand_logo == false -%}
+                {{ shop.name | escape }}
+              {%- endif -%}
+            </span>
+          </a>
+        {%- endif -%}
         {%- if section.settings.promise != blank -%}<p class="ftr__promise" data-rv="blur">{{ section.settings.promise }}</p>{%- endif -%}
         {%- if section.settings.how != blank -%}<p class="ftr__how">{{ section.settings.how }}</p>{%- endif -%}
       </div>
@@ -51,17 +62,6 @@
         {%- endif -%}
       </div>
     </div>
-    {%- if section.settings.show_mark -%}
-      <div class="ftr__mark" aria-hidden="true">
-        <span class="{{ logo_class }}"{% if logo_style != blank %} style="{{ logo_style }}"{% endif %}>
-          {%- if section.settings.logo != blank and section.settings.logo_tint == false -%}
-            {{ section.settings.logo | image_url: width: 1600 | image_tag: alt: '', widths: '640, 960, 1320, 1600', sizes: '(min-width: 1400px) 1320px, 100vw', loading: 'lazy' }}
-          {%- elsif section.settings.logo == blank and section.settings.brand_logo == false -%}
-            {{ shop.name | escape }}
-          {%- endif -%}
-        </span>
-      </div>
-    {%- endif -%}
     <div class="ftr__base">
       <span>© {{ 'now' | date: '%Y' }} {{ shop.name | escape }}.</span>
       {%- if section.settings.show_country or section.settings.show_language -%}
@@ -153,7 +153,7 @@
     {
       "type": "checkbox",
       "id": "show_mark",
-      "label": "Show the big logo mark",
+      "label": "Show the logo above the promise",
       "default": true
     },
     {
