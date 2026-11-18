@@ -1,5 +1,5 @@
 /* Lather v3 search overlay (home-v3 shared/10-search.html). Opens from the header search icon through LATHER.openLayer. */
-.srch{position:fixed;z-index:72;top:0;left:0;right:0;max-height:min(780px,100vh);overflow:auto;overscroll-behavior:contain;background:var(--raised);color:var(--ink);
+.srch{position:fixed;top:0;left:0;right:0;max-height:min(780px,100vh);overflow:auto;overscroll-behavior:contain;background:var(--raised);color:var(--ink);
   border-radius:0 0 12px 12px;box-shadow:0 30px 80px rgba(38,43,34,.2);visibility:hidden;opacity:0;pointer-events:none;
   transition:opacity .35s var(--ease),transform .45s var(--ease),visibility 0s linear .45s}
 html.motion .srch{transform:translateY(-14px)}

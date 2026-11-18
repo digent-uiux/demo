@@ -322,14 +322,17 @@ html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
 @media (max-width:760px){.lv3-rte{font-size:16px}.lv3-rte blockquote{font-size:18px}}
 /* Layers sit above anything a section or an app may stack (apps often use z-index 999-9999); they are moved to <body>
    by blko-lv3-store.js, so these values are compared at the page level. Order: cookie < mobile menu < scrim < drawer < dialogs. */
-.cookie{z-index:2147483000}
-.mnav{z-index:2147483001}
-.scrim{z-index:2147483002}
-.drawer{z-index:2147483003}
-.qv,.pop,.srch{z-index:2147483004}
+/* layer order by id (18/11), so a section stylesheet loaded later (search overlay set 72) can never drop a panel under the scrim */
+#cookie,.cookie{z-index:2147483000}
+#mnav,.mnav{z-index:2147483001}
+#scrim,.scrim{z-index:2147483002}
+#drawer,.drawer{z-index:2147483003}
+#qv,#pop,#srch,.qv,.pop,.srch{z-index:2147483004}
 /* Missing media on the storefront (18/11): no placeholder drawing, and a frame that would only hold one collapses, so
    cards fall back to text (store.js phFrames). The Theme Editor (html.lv3-editor) still shows them so the merchant sees what to fill. */
 html:not(.lv3-editor) svg.blko-lv3-ph{visibility:hidden}
 html:not(.lv3-editor) .lv3-ph-gone{display:none}
 html:not(.lv3-editor) .lv3-ph-keep{visibility:hidden}
 [data-lv3-nav][hidden]{display:none}
+/* the hidden attribute always wins over a component display rule (18/11: popup thank-you showed under the form) */
+[hidden]{display:none!important}
