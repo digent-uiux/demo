@@ -1,13 +1,13 @@
 /* 55 Shoppable image: one full-bleed after-shower photo, three still pins with a pulsing ring, a compact slider bottom-right */
 .s-look{position:relative;background:var(--deep);color:var(--raised)}
-.s-look__stage{position:relative;height:85vh;min-height:600px;max-height:980px;overflow:hidden}
+.s-look__stage{position:relative;height:auto;min-height:max(600px,min(85vh,980px));overflow:hidden}
 .s-look__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%}
 html.motion .s-look__img{transform:scale(1.06);transition:transform 1.4s var(--ease-io)}
 html.motion .s-look.is-in .s-look__img{transform:none}
 .s-look__shade{position:absolute;inset:0;pointer-events:none;background:
   linear-gradient(170deg,rgba(38,43,34,.62) 0%,rgba(38,43,34,.28) 26%,rgba(38,43,34,0) 46%),
   linear-gradient(0deg,rgba(38,43,34,.28) 0%,rgba(38,43,34,0) 30%)}
-.s-look__head{position:absolute;left:0;right:0;top:clamp(48px,8vh,88px);pointer-events:none}
+.s-look__head{position:relative;z-index:1;padding-top:clamp(48px,8vh,88px);padding-bottom:48px;pointer-events:none}
 .s-look__head .h2{max-width:9ch}
 .s-look__head p{margin-top:16px;max-width:30ch;font-size:18px;line-height:1.5;color:var(--raised);opacity:.9}
 
@@ -51,9 +51,9 @@ html.motion .s-look__pin::before{animation:s-look-ring 2.4s cubic-bezier(0,0,.2,
 .s-look__dash span.is-on{background:var(--moss)}
 
 @media (max-width:760px){
-  .s-look__stage{height:auto;min-height:0;max-height:none;aspect-ratio:4/5}
+  .s-look__stage{min-height:125vw}
   .s-look__img{object-position:46% 50%}
-  .s-look__head{top:28px}
+  .s-look__head{padding-top:28px;padding-bottom:96px}
   .s-look__head p{font-size:16px;max-width:19ch}
   .s-look__tag,.s-look__pin[data-side="left"] .s-look__tag{display:none;left:50%;right:auto;top:auto;bottom:calc(100% + 8px);transform:translateX(-50%)}
   .s-look__pin.is-on .s-look__tag{display:block}

@@ -10,6 +10,15 @@
   assign s = section.settings
   assign start = s.start | minus: 1
 -%}
+{%- liquid
+  assign lv3_n = 0
+  for block in section.blocks
+    if block.settings.poster != blank or block.settings.video != blank
+      assign lv3_n = lv3_n | plus: 1
+    endif
+  endfor
+-%}
+{%- if lv3_n > 0 or request.design_mode -%}
 {%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-5' -%}
 <section class="s-reels{%- if lv3_sid != 'scheme-5' %} color-{{ lv3_sid }} lv3-scheme-pick lv3-scheme-pick--dark{% endif %}" id="{{ s.anchor | default: 'reels' | handleize }}" aria-label="{{ s.label | escape }}" data-lv3-reels data-start="{{ start }}">
   <div class="wrap s-reels__top">
@@ -19,7 +28,7 @@
     </h2>
     <div class="s-reels__side" data-rv="blur" data-rv-delay="1">
       {%- if s.text != blank -%}<p class="s-reels__line">{{ s.text | escape }}</p>{%- endif -%}
-      <div class="s-reels__nav">
+      <div class="s-reels__nav" data-lv3-nav=".s-reels__rail">
         <button type="button" data-reels="-1" aria-label="{{ s.prev_label | escape }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
         <button type="button" data-reels="1" aria-label="{{ s.next_label | escape }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
       </div>
@@ -27,7 +36,7 @@
   </div>
 
   <div class="s-reels__rail" role="list" aria-label="{{ s.rail_label | escape }}">
-    {%- for block in section.blocks -%}
+    {%- for block in section.blocks -%}{%- if block.settings.poster != blank or block.settings.video != blank or request.design_mode -%}
       {%- liquid
         assign b = block.settings
         assign p = b.product
@@ -96,9 +105,10 @@
           </div>
         {%- endif -%}
       </article>
-    {%- endfor -%}
+    {%- endif -%}{%- endfor -%}
   </div>
 </section>
+{%- endif -%}
 
 {% schema %}
 {
@@ -128,7 +138,7 @@
         { "type": "image_picker", "id": "poster", "label": "Poster image", "info": "Shows until the clip plays, and when motion is reduced. 9:16." },
         { "type": "checkbox", "id": "warm", "label": "Soften poster colour", "default": false },
         { "type": "video", "id": "video", "label": "Clip", "info": "Muted, looping. Plays only while centred and in view." },
-        { "type": "text", "id": "video_src", "label": "Clip URL (.mp4)", "info": "Used when no clip is uploaded above. A bare file name (reel-1.mp4) is read from Content > Files." },
+        { "type": "text", "id": "video_src", "label": "Clip URL (.mp4)", "info": "Used when no clip is uploaded above; shows only with a poster photo. A bare file name (reel-1.mp4) is read from Content > Files." },
         { "type": "text", "id": "caption", "label": "Caption", "default": "Robe on, skin still damp" },
         { "type": "header", "content": "Product" },
         { "type": "product", "id": "product", "label": "Product" },

@@ -520,6 +520,32 @@
   document.addEventListener('click', function (e) { document.querySelectorAll('.hdr__more[open]').forEach(function (d) { if (!d.contains(e.target)) d.open = false; }); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') document.querySelectorAll('.hdr__more[open]').forEach(function (d) { d.open = false; d.querySelector('summary').focus(); }); });
 
+  /* storefront: no placeholder drawing. A large frame that only holds one is removed; a small one (a row thumbnail,
+     up to 160px) keeps its slot, invisible, so the text beside it stays in its column */
+  function phFrames(root) {
+    if (document.documentElement.classList.contains('lv3-editor')) return;
+    (root || document).querySelectorAll('svg.blko-lv3-ph').forEach(function (svg) {
+      var f = svg.parentElement;
+      if (!f || f === document.body || f.querySelector('h1,h2,h3,h4,p,.btn,blockquote,img,video')) f = svg;
+      var w = f.getBoundingClientRect().width;
+      f.classList.add(w && w <= 160 ? 'lv3-ph-keep' : 'lv3-ph-gone');
+    });
+  }
+  phFrames();
+  document.addEventListener('shopify:section:load', function (e) { phFrames(e.target); });
+
+  /* arrows ([data-lv3-nav="<rail selector>"]) only show when their rail in the same section can scroll */
+  function fitNavs() {
+    document.querySelectorAll('[data-lv3-nav]').forEach(function (nav) {
+      var sec = nav.closest('section') || document, rail = sec.querySelector(nav.getAttribute('data-lv3-nav'));
+      nav.hidden = !rail || rail.children.length < 3 || rail.scrollWidth <= rail.clientWidth + 2;
+    });
+  }
+  fitNavs();
+  window.addEventListener('resize', function () { requestAnimationFrame(fitNavs); });
+  window.addEventListener('load', fitNavs);
+  document.addEventListener('shopify:section:load', function () { requestAnimationFrame(fitNavs); });
+
   /* theme editor: re-collect products and arm reveals in reloaded sections */
   document.addEventListener('shopify:section:load', function (e) { refresh(e.target); reveal(e.target); if (e.target.querySelectorAll) e.target.querySelectorAll('[data-rv]').forEach(function (el) { el.classList.add('in'); }); });
 })();

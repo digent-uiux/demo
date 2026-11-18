@@ -10,6 +10,15 @@
   assign s = section.settings
   assign uid = section.id | replace: '_', '-'
 -%}
+{%- liquid
+  assign lv3_n = 0
+  for block in section.blocks
+    if block.settings.product != blank or block.settings.name != blank
+      assign lv3_n = lv3_n | plus: 1
+    endif
+  endfor
+-%}
+{%- if lv3_n > 0 or request.design_mode -%}
 {%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-2' -%}
 <section class="s-cmp{%- if lv3_sid != 'scheme-2' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="{{ s.anchor | default: 'compare' | handleize }}" aria-labelledby="cmpH-{{ uid }}">
   <div class="wrap">
@@ -18,20 +27,22 @@
         {%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
         {%- if s.heading_2 != blank -%}<span class="ln"><span>{{ s.heading_2 }}</span></span>{%- endif -%}
       </h2>
+      {%- if lv3_n > 1 -%}
       <div class="s-cmp__ask" data-rv="blur" data-rv-delay="1">
         <p id="cmpAsk-{{ uid }}">{{ s.ask | escape }}</p>
         <div class="s-cmp__chips" role="group" aria-labelledby="cmpAsk-{{ uid }}">
-          {%- for block in section.blocks -%}
+          {%- for block in section.blocks -%}{%- if block.settings.product != blank or block.settings.name != blank or request.design_mode -%}
             {%- if block.settings.chip != blank -%}
               <button type="button" class="chip" aria-pressed="false" data-pick="{{ block.id }}">{{ block.settings.chip | escape }}</button>
             {%- endif -%}
-          {%- endfor -%}
+          {%- endif -%}{%- endfor -%}
         </div>
       </div>
+      {%- endif -%}
     </div>
 
-    <div class="s-cmp__row" data-rv="blur" data-rv-delay="2">
-      {%- for block in section.blocks -%}
+    <div class="s-cmp__row" style="--cmp-n:{{ lv3_n | at_least: 1 }}" data-n="{{ lv3_n }}" data-rv="blur" data-rv-delay="2">
+      {%- for block in section.blocks -%}{%- if block.settings.product != blank or block.settings.name != blank or request.design_mode -%}
         {%- liquid
           assign b = block.settings
           assign p = b.product
@@ -73,10 +84,11 @@
             <div class="s-cmp__foot"><span class="price" data-price="{{ key | escape }}">{{ cents | money_without_trailing_zeros }}</span><button type="button" class="btn btn--light btn--sm" data-add="{{ key | escape }}" aria-label="{{ s.add_aria | replace: '[name]', nm | escape }}">{{ s.add_label | escape }}</button></div>
           </div>
         </article>
-      {%- endfor -%}
+      {%- endif -%}{%- endfor -%}
     </div>
   </div>
 </section>
+{%- endif -%}
 
 {% schema %}
 {

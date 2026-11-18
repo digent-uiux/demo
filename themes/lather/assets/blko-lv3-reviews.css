@@ -61,3 +61,7 @@ html.motion .s-reviews__slide:not(.is-on) .s-reviews__card{transform:translateY(
 .s-reviews__prod .s-reviews__thumb{width:48px;height:48px;border-radius:4px;object-fit:cover;background:var(--raised);fill:rgba(38,43,34,.25)}
 .s-reviews__date{display:block}
 .s-reviews__star-off{opacity:.3}
+
+/* a face without a photo shows the reviewer's initial (18/11) */
+.s-reviews__init{display:grid;place-items:center;width:100%;height:100%;font:500 20px/1 var(--f-body);color:var(--ink);background:var(--sage-wash)}
+.s-reviews__ctrl[hidden]{display:none}

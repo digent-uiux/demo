@@ -1,7 +1,7 @@
 /* 65 Collage: three photos of clearly different sizes (tall, wide, square) set as one mosaic */
 .s-col{background:var(--oat);padding:120px 0 128px}
 .s-col__box{container-type:inline-size}
-.s-col__grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-template-rows:13cqw 22cqw 32cqw;gap:16px}
+.s-col__grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-template-rows:minmax(13cqw,auto) 22cqw 32cqw;gap:16px}
 .s-col__head{grid-column:1 / 6;grid-row:1;align-self:start}
 .s-col__head .h2{max-width:11ch}
 .s-col__tile--wide{grid-column:6 / 13;grid-row:1 / 3}

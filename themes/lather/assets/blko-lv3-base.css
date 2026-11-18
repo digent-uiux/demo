@@ -327,3 +327,9 @@ html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
 .scrim{z-index:2147483002}
 .drawer{z-index:2147483003}
 .qv,.pop,.srch{z-index:2147483004}
+/* Missing media on the storefront (18/11): no placeholder drawing, and a frame that would only hold one collapses, so
+   cards fall back to text (store.js phFrames). The Theme Editor (html.lv3-editor) still shows them so the merchant sees what to fill. */
+html:not(.lv3-editor) svg.blko-lv3-ph{visibility:hidden}
+html:not(.lv3-editor) .lv3-ph-gone{display:none}
+html:not(.lv3-editor) .lv3-ph-keep{visibility:hidden}
+[data-lv3-nav][hidden]{display:none}

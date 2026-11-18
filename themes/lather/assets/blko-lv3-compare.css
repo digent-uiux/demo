@@ -48,3 +48,12 @@
 .s-cmp__img .blko-lv3-ph{display:block;width:100%;height:100%}
 .s-cmp__name a{color:inherit;text-decoration:none}
 .s-cmp__name a:hover{text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1.5px}
+
+/* the row follows the number of items (18/11): 3 items fill the width in 3 columns, 1-2 stay a readable width */
+@media (min-width:761px){
+  .s-cmp__row{grid-template-columns:repeat(var(--cmp-n,4),minmax(0,1fr))}
+  .s-cmp__row[data-n="1"]{max-width:860px}
+  .s-cmp__row[data-n="1"] .s-cmp__card{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr)}
+  .s-cmp__row[data-n="1"] .s-cmp__body{padding:32px;justify-content:center}
+  .s-cmp__row[data-n="2"]{max-width:860px}
+}

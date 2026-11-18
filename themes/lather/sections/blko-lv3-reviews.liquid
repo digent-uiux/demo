@@ -10,6 +10,16 @@
   assign s = section.settings
   assign uid = 'rv-' | append: section.id
 -%}
+{%- liquid
+  # a review needs its text; none -> no section on the storefront; one -> no pager or arrows
+  assign lv3_n = 0
+  for block in section.blocks
+    if block.settings.text != blank
+      assign lv3_n = lv3_n | plus: 1
+    endif
+  endfor
+-%}
+{%- if lv3_n > 0 or request.design_mode -%}
 {%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-3' -%}
 <section class="s-reviews{%- if lv3_sid != 'scheme-3' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="{{ s.anchor | default: 'reviews' | handleize }}" aria-label="{{ s.label | escape }}" data-lv3-reviews>
   <div class="wrap s-reviews__grid">
@@ -27,23 +37,23 @@
           </p>
         {%- endif -%}
       </div>
-      <div class="s-reviews__ctrl" data-rv="blur" data-rv-delay="2">
+      <div class="s-reviews__ctrl" data-rv="blur" data-rv-delay="2"{% if lv3_n < 2 %} hidden{% endif %}>
         <div class="s-reviews__faces" role="tablist" aria-label="{{ s.tabs_label | escape }}">
-          {%- for block in section.blocks -%}
+          {%- assign lv3_i = 0 -%}{%- for block in section.blocks -%}{%- if block.settings.text != blank or request.design_mode -%}
             {%- liquid
               assign b = block.settings
               assign face = b.face | default: b.photo
-              assign i = forloop.index0
+              assign i = lv3_i
             -%}
-            <button class="s-reviews__face" type="button" role="tab" id="{{ uid }}-tab{{ i }}" aria-controls="{{ uid }}-slide{{ i }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"{% unless forloop.first %} tabindex="-1"{% endunless %} aria-label="{{ b.tab_label | default: b.name | escape }}">
+            <button class="s-reviews__face" type="button" role="tab" id="{{ uid }}-tab{{ i }}" aria-controls="{{ uid }}-slide{{ i }}" aria-selected="{% if lv3_i == 0 %}true{% else %}false{% endif %}"{% unless lv3_i == 0 %} tabindex="-1"{% endunless %} aria-label="{{ b.tab_label | default: b.name | escape }}">
               {%- if face != blank -%}
                 {%- assign pos = 'object-position: ' | append: face.presentation.focal_point -%}
                 {{ face | image_url: width: 160, height: 160, crop: 'center' | image_tag: alt: '', loading: 'lazy', width: 56, height: 56, style: pos }}
               {%- else -%}
-                {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph' }}
+                <span class="s-reviews__init" aria-hidden="true">{{ b.name | strip | slice: 0 | upcase | default: '★' }}</span>
               {%- endif -%}
             </button>
-          {%- endfor -%}
+          {%- assign lv3_i = lv3_i | plus: 1 -%}{%- endif -%}{%- endfor -%}
         </div>
         <div class="s-reviews__arrows">
           <button type="button" data-rvgo="-1" aria-label="{{ s.prev_label | escape }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
@@ -53,10 +63,10 @@
     </div>
 
     <div class="s-reviews__stage" data-rv="settle">
-      {%- for block in section.blocks -%}
+      {%- assign lv3_i = 0 -%}{%- for block in section.blocks -%}{%- if block.settings.text != blank or request.design_mode -%}
         {%- liquid
           assign b = block.settings
-          assign i = forloop.index0
+          assign i = lv3_i
           assign p = b.product
           assign key = b.key | default: block.id | handleize
           if p != blank
@@ -71,7 +81,7 @@
           endif
           assign off = 5 | minus: b.stars
         -%}
-        <div class="s-reviews__slide{% if forloop.first %} is-on{% endif %}" role="tabpanel" id="{{ uid }}-slide{{ i }}" aria-labelledby="{{ uid }}-tab{{ i }}" {{ block.shopify_attributes }}>
+        <div class="s-reviews__slide{% if lv3_i == 0 %} is-on{% endif %}" role="tabpanel" id="{{ uid }}-slide{{ i }}" aria-labelledby="{{ uid }}-tab{{ i }}" {{ block.shopify_attributes }}>
           <figure class="s-reviews__photo">
             {%- if b.photo != blank -%}
               {%- assign pos = 'object-position: ' | append: b.photo.presentation.focal_point -%}
@@ -107,10 +117,11 @@
             {%- endif -%}
           </article>
         </div>
-      {%- endfor -%}
+      {%- assign lv3_i = lv3_i | plus: 1 -%}{%- endif -%}{%- endfor -%}
     </div>
   </div>
 </section>
+{%- endif -%}
 
 {% schema %}
 {

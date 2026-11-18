@@ -15,6 +15,21 @@
   endif
   assign img_alt = s.image_alt | default: s.image.alt
 -%}
+{%- liquid
+  # Storefront: no photo, no section (the editor still shows the frame so the merchant can fill it).
+  # A hotspot with neither a product nor a name is left out everywhere (pin, card and dash stay in step).
+  assign lv3_items = 0
+  for block in section.blocks
+    if block.settings.product != blank or block.settings.name != blank
+      assign lv3_items = lv3_items | plus: 1
+    endif
+  endfor
+  assign lv3_show = true
+  if s.image == blank and request.design_mode != true
+    assign lv3_show = false
+  endif
+-%}
+{%- if lv3_show -%}
 {%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-5' -%}
 <section class="s-look{%- if lv3_sid != 'scheme-5' %} color-{{ lv3_sid }} lv3-scheme-pick lv3-scheme-pick--dark{% endif %}"{% if s.anchor != blank %} id="{{ s.anchor | handleize }}"{% endif %} aria-label="{{ s.label | escape }}">
   <div class="s-look__stage" data-ratio="{{ ratio }}">
@@ -31,7 +46,7 @@
       </h2>
       {%- if s.text != blank -%}<p data-rv="blur" data-rv-delay="2">{{ s.text | escape }}</p>{%- endif -%}
     </div>
-    {%- for block in section.blocks -%}
+    {%- assign lv3_i = 0 -%}{%- for block in section.blocks -%}{%- if block.settings.product != blank or block.settings.name != blank or request.design_mode -%}
       {%- liquid
         assign b = block.settings
         assign p = b.product
@@ -43,20 +58,21 @@
         assign fx = b.x | divided_by: 100.0
         assign fy = b.y | divided_by: 100.0
       -%}
-      <button type="button" class="s-look__pin" style="--i:{{ forloop.index0 }};--px:{{ b.x }}%;--py:{{ b.y }}%" data-fx="{{ fx }}" data-fy="{{ fy }}" data-i="{{ forloop.index0 }}"{% if b.side == 'left' %} data-side="left"{% endif %} aria-label="{{ s.pin_aria | replace: '[name]', tag | escape }}" aria-controls="lookCard-{{ uid }}-{{ forloop.index0 }}" {{ block.shopify_attributes }}><span class="s-look__tag">{{ tag | escape }}</span></button>
-    {%- endfor -%}
+      <button type="button" class="s-look__pin" style="--i:{{ lv3_i }};--px:{{ b.x }}%;--py:{{ b.y }}%" data-fx="{{ fx }}" data-fy="{{ fy }}" data-i="{{ lv3_i }}"{% if b.side == 'left' %} data-side="left"{% endif %} aria-label="{{ s.pin_aria | replace: '[name]', tag | escape }}" aria-controls="lookCard-{{ uid }}-{{ lv3_i }}" {{ block.shopify_attributes }}><span class="s-look__tag">{{ tag | escape }}</span></button>
+    {%- assign lv3_i = lv3_i | plus: 1 -%}{%- endif -%}{%- endfor -%}
   </div>
 
+  {%- if lv3_items > 0 -%}
   <div class="s-look__panel" role="region" aria-label="{{ s.panel_label | escape }}" data-rv="blur" data-rv-delay="3">
     <div class="s-look__bar">
       <p>{{ s.panel_title | escape }}</p>
-      <div class="s-look__arrows">
+      <div class="s-look__arrows"{% if lv3_items < 2 %} hidden{% endif %}>
         <button type="button" data-dir="-1" aria-label="{{ s.prev_label | escape }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
         <button type="button" data-dir="1" aria-label="{{ s.next_label | escape }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
       </div>
     </div>
     <div class="s-look__track" tabindex="0" aria-label="{{ s.track_label | escape }}">
-      {%- for block in section.blocks -%}
+      {%- assign lv3_i = 0 -%}{%- for block in section.blocks -%}{%- if block.settings.product != blank or block.settings.name != blank or request.design_mode -%}
         {%- liquid
           assign b = block.settings
           assign p = b.product
@@ -85,7 +101,7 @@
           endif
         -%}
         {%- render 'blko-lv3-product-data', key: key, product: p, name: b.name, size: b.size, price: b.price, line: b.line, labels: b.labels, img: b.image -%}
-        <article class="s-look__card" id="lookCard-{{ uid }}-{{ forloop.index0 }}" data-i="{{ forloop.index0 }}" data-id="{{ key | escape }}">
+        <article class="s-look__card" id="lookCard-{{ uid }}-{{ lv3_i }}" data-i="{{ lv3_i }}" data-id="{{ key | escape }}">
           <a class="s-look__thumb lv3-plink" href="{{ url }}" tabindex="-1" aria-hidden="true">
             {%- if img != blank -%}
               {{ img | image_url: width: 320 | image_tag: alt: '', loading: 'lazy', widths: '160, 240, 320', sizes: '104px' }}
@@ -96,13 +112,15 @@
           <div><h3><a class="lv3-pname" href="{{ url }}">{{ nm | escape }}</a></h3>{%- if desc != blank -%}<p class="small">{{ desc | escape }}</p>{%- endif -%}
             <div class="s-look__row"><span class="price">{{ cents | money_without_trailing_zeros }}</span><button type="button" class="s-look__q" data-quick="{{ key | escape }}" aria-label="{{ s.quick_aria | replace: '[name]', nm | escape }}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg></button><button type="button" class="btn btn--primary btn--sm" data-add="{{ key | escape }}" aria-label="{{ s.add_aria | replace: '[name]', nm | escape }}">{{ s.add_label | escape }}</button></div></div>
         </article>
-      {%- endfor -%}
+      {%- assign lv3_i = lv3_i | plus: 1 -%}{%- endif -%}{%- endfor -%}
     </div>
     <div class="s-look__dash" aria-hidden="true">
-      {%- for block in section.blocks -%}<span{% if forloop.first %} class="is-on"{% endif %}></span>{%- endfor -%}
+      {%- assign lv3_i = 0 -%}{%- for block in section.blocks -%}{%- if block.settings.product != blank or block.settings.name != blank or request.design_mode -%}<span{% if lv3_i == 0 %} class="is-on"{% endif %}></span>{%- assign lv3_i = lv3_i | plus: 1 -%}{%- endif -%}{%- endfor -%}
     </div>
   </div>
+  {%- endif -%}
 </section>
+{%- endif -%}
 
 {% schema %}
 {

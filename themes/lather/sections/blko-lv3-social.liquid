@@ -6,6 +6,27 @@
 <script src="{{ 'blko-lv3-social.js' | asset_url }}" defer></script>
 
 {%- assign s = section.settings -%}
+{%- liquid
+  assign lv3_n = 0
+  for block in section.blocks
+    if block.settings.image != blank
+      assign lv3_n = lv3_n | plus: 1
+    endif
+  endfor
+  # Follow: this section's link, else the first account in Theme settings > Social media; no link, no button
+  assign lv3_follow = s.button_link
+  if lv3_follow == blank
+    assign lv3_nets = 'instagram,tiktok,pinterest,facebook,youtube,x' | split: ','
+    for n in lv3_nets
+      assign lv3_key = 'social_' | append: n | append: '_link'
+      if settings[lv3_key] != blank
+        assign lv3_follow = settings[lv3_key]
+        break
+      endif
+    endfor
+  endif
+-%}
+{%- if lv3_n > 0 or request.design_mode -%}
 {%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-2' -%}
 <section class="s-social{%- if lv3_sid != 'scheme-2' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="{{ s.anchor | default: 'social' | handleize }}" aria-label="{{ s.label | escape }}" data-lv3-social>
   <div class="wrap s-social__top">
@@ -15,12 +36,12 @@
     </h2>
     <div class="s-social__acct" data-rv="blur" data-rv-delay="1">
       <p><b>{{ s.handle | escape }}</b>{{ s.tagline | escape }}</p>
-      {%- if s.button_label != blank -%}<a class="btn btn--ghost" href="{{ s.button_link | default: '#social' }}">{{ s.button_label | escape }}</a>{%- endif -%}
+      {%- if s.button_label != blank and lv3_follow != blank -%}<a class="btn btn--ghost" href="{{ lv3_follow }}">{{ s.button_label | escape }}</a>{%- endif -%}
     </div>
   </div>
   <div class="s-social__strip">
     <div class="s-social__track">
-      {%- for block in section.blocks -%}
+      {%- for block in section.blocks -%}{%- if block.settings.image != blank or request.design_mode -%}
         {%- liquid
           assign b = block.settings
           assign p = b.product
@@ -65,10 +86,11 @@
             </a>
           {%- endif -%}
         </figure>
-      {%- endfor -%}
+      {%- endif -%}{%- endfor -%}
     </div>
   </div>
 </section>
+{%- endif -%}
 
 {% schema %}
 {
