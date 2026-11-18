@@ -29,3 +29,5 @@
   .s-pdp-recent__list::-webkit-scrollbar{display:none}
   .s-pdp-recent__card{flex:0 0 84%;scroll-snap-align:start}
 }
+/* long product names wrap to two lines instead of being cut on one (18/11) */
+.s-pdp-recent__name{white-space:normal;text-overflow:clip;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}

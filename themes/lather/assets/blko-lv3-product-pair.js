@@ -16,7 +16,7 @@
       price = Math.round(total * (100 - pct)) / 100;
       root.querySelector('[data-pdp-pair-wash]').textContent = L.fmt(a.price);
       root.querySelector('[data-pdp-pair-lotion]').textContent = L.fmt(b.price);
-      root.querySelector('[data-pdp-set-price]').innerHTML = L.fmt(price) + ' <s>' + L.fmt(total) + '</s>';
+      root.querySelector('[data-pdp-set-price]').innerHTML = L.fmt(price) + (pct > 0 ? ' <s>' + L.fmt(total) + '</s>' : '');
       if (btn) btn.textContent = String(S.button || '').replace('[amount]', L.fmt(price));
     }
     update();

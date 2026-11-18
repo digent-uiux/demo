@@ -21,7 +21,7 @@
 -%}
 {%- capture logo_inner -%}
   {%- if lg != blank and section.settings.logo_tint == false -%}
-    {{ lg | image_url: width: 480 | image_tag: alt: shop.name, widths: '160, 240, 320, 480', sizes: '160px', loading: 'eager' }}
+    {{ lg | image_url: width: 480 | image_tag: alt: wordmark, widths: '160, 240, 320, 480', sizes: '160px', loading: 'eager' }}
   {%- elsif lg == blank and section.settings.brand_logo == false -%}
     {{ wordmark | escape }}
   {%- endif -%}
@@ -48,9 +48,11 @@
       {%- else -%}
         {%- render 'blko-lv3-demo-links', lines: section.settings.demo_links, routes: routes -%}
       {%- endif -%}
+      {%- comment -%} Links that do not fit beside the logo move in here (blko-lv3-store.js); labels never wrap or overlap. {%- endcomment -%}
+      <details class="hdr__more" hidden><summary>{{ section.settings.more_label | default: 'More' | escape }}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><div class="hdr__more-list"></div></details>
     </nav>
     <button class="icon-btn hdr__menu" type="button" aria-label="{{ section.settings.open_label | escape }}" aria-controls="mnav" aria-expanded="false" id="menuBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-    <a href="{{ routes.root_url }}" class="{{ logo_class }}"{% if logo_style != blank %} style="{{ logo_style }}"{% endif %} aria-label="{{ section.settings.home_label | replace: '[shop]', shop.name | escape }}">{{ logo_inner }}</a>
+    <a href="{{ routes.root_url }}" class="{{ logo_class }}"{% if logo_style != blank %} style="{{ logo_style }}"{% endif %} aria-label="{{ section.settings.home_label | replace: '[shop]', wordmark | escape }}">{{ logo_inner }}</a>
     <div class="hdr__tools">
       {%- if section.settings.show_search -%}
         <a class="icon-btn" href="{{ routes.search_url }}" aria-label="{{ section.settings.search_label | escape }}" aria-haspopup="dialog" aria-controls="srch" aria-expanded="false" data-search-open><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg></a>
@@ -58,8 +60,11 @@
       {%- if section.settings.show_account and shop.customer_accounts_enabled -%}
         <a class="icon-btn hide-m" href="{{ routes.account_url }}" aria-label="{{ section.settings.account_label | escape }}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1.4-3.6 4.2-5.4 7.5-5.4s6.1 1.8 7.5 5.4"/></svg></a>
       {%- endif -%}
-      <a class="icon-btn" href="{{ routes.root_url | append: '/pages/wishlist' | replace: '//', '/' }}" aria-label="{{ section.settings.wish_label | escape }}" data-wish-link data-label="{{ section.settings.wish_label | escape }}" data-label-n="{{ section.settings.wish_label_n | escape }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg></a>
+      {%- comment -%} The heart opens the wishlist page; hidden until the store has a page with the handle wishlist. {%- endcomment -%}
+      {%- if pages['wishlist'].id != blank -%}
+      <a class="icon-btn" href="{{ pages['wishlist'].url }}" aria-label="{{ section.settings.wish_label | escape }}" data-wish-link data-label="{{ section.settings.wish_label | escape }}" data-label-n="{{ section.settings.wish_label_n | escape }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg></a>
       <span class="bag-count" data-wish-count aria-hidden="true" hidden>0</span>
+      {%- endif -%}
       <a class="icon-btn" href="{{ routes.cart_url }}" aria-label="{{ section.settings.bag_label | escape }}" id="bagBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1.2 12H6.2L5 8z"/><path d="M9 8V6.5a3 3 0 016 0V8"/></svg></a>
       <span class="bag-count" id="bagCount" aria-live="polite">{{ cart.item_count }}</span>
     </div>
@@ -156,6 +161,13 @@
       "id": "nav_label",
       "label": "Main menu",
       "default": "Main"
+    },
+    {
+      "type": "text",
+      "id": "more_label",
+      "label": "More label",
+      "default": "More",
+      "info": "Menu links that do not fit beside the logo go under this. On small screens the menu button opens them all."
     },
     {
       "type": "text",

@@ -35,6 +35,22 @@
     endif
   endif
 
+  # static mode (no Search & Discovery filters): an option shows only when some product in the collection carries its
+  # group:value tag, and the whole filter panel hides when nothing would match (18/11: a store without such tags got
+  # options that emptied the grid).
+  assign tag_keys = '|'
+  if mode == 'static'
+    for tag in collection.all_tags
+      if tag contains ':'
+        assign tp = tag | split: ':'
+        assign tk_group = tp[0] | handleize
+        assign tk_value = tp[1] | handleize
+        assign tag_keys = tag_keys | append: tk_group | append: ':' | append: tk_value | append: '|'
+      endif
+    endfor
+  endif
+  assign shown_options = 0
+
   assign sort_default = 'featured'
   assign sort_current = 'featured'
   assign any_active = false
@@ -99,6 +115,7 @@
 {%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-1' -%}
 <section class="s-shop-catalogue{%- if lv3_sid != 'scheme-1' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" id="shopCatalogue-{{ uid }}" aria-label="{{ s.label | escape }}" data-lv3-catalogue data-mode="{{ mode }}" data-total="{{ total }}" data-count-one="{{ s.count_one | escape }}" data-count-other="{{ s.count_other | escape }}" data-remove="{{ s.remove_label | escape }}">
 <div class="wrap s-shop-catalogue__layout">
+  {%- capture filter_panel -%}
   <details class="s-shop-catalogue__filters" open data-filters>
     <summary>{{ s.filter_title | escape }}</summary>
     <form class="s-shop-catalogue__filter-body" id="{{ form_id }}"{% if mode != 'demo' %} action="{{ collection.url }}" method="get"{% endif %} data-filter-form>
@@ -119,22 +136,31 @@
       {%- else -%}
         {%- for g in groups -%}
           {%- assign param = g.settings.param | handleize -%}
-          <fieldset class="s-shop-catalogue__fieldset" {{ g.shopify_attributes }}><legend>{{ g.settings.legend | escape }}</legend>
+          {%- capture g_opts -%}
             {%- assign rows = g.settings.options | newline_to_br | split: '<br />' -%}
             {%- for row in rows -%}
               {%- assign parts = row | strip | split: '|' -%}
               {%- assign val = parts[0] | strip | handleize -%}
               {%- if val != blank -%}
-                {%- assign lbl = parts[1] | strip | default: parts[0] -%}
-                <label class="s-shop-catalogue__option"><input type="checkbox" name="{{ param }}" value="{{ val }}"> {{ lbl | strip | escape }}</label>
+                {%- assign key = '|' | append: param | append: ':' | append: val | append: '|' -%}
+                {%- if mode == 'demo' or tag_keys contains key -%}
+                  {%- assign lbl = parts[1] | strip | default: parts[0] -%}
+                  <label class="s-shop-catalogue__option"><input type="checkbox" name="{{ param }}" value="{{ val }}"> {{ lbl | strip | escape }}</label>
+                {%- endif -%}
               {%- endif -%}
             {%- endfor -%}
-          </fieldset>
+          {%- endcapture -%}
+          {%- if g_opts != blank -%}
+            {%- assign shown_options = shown_options | plus: 1 -%}
+            <fieldset class="s-shop-catalogue__fieldset" {{ g.shopify_attributes }}><legend>{{ g.settings.legend | escape }}</legend>{{ g_opts }}</fieldset>
+          {%- endif -%}
         {%- endfor -%}
         <button class="s-shop-catalogue__reset" type="reset">{{ s.reset_label | escape }}</button>
       {%- endif -%}
     </form>
   </details>
+  {%- endcapture -%}
+  {%- if mode == 'server' or shown_options > 0 -%}{{ filter_panel }}{%- endif -%}
   <div class="s-shop-catalogue__results">
     <div class="s-shop-catalogue__toolbar"><p class="s-shop-catalogue__count" role="status" data-count>{{ count_text | escape }}</p><label class="s-shop-catalogue__sort"><span>{{ s.sort_label | escape }}</span><select aria-label="{{ s.sort_aria | escape }}" data-sort{% if mode != 'demo' %} name="sort_by" form="{{ form_id }}"{% endif %}>
       {%- if mode == 'demo' -%}

@@ -67,3 +67,12 @@ html.motion .s-hero.is-intro .s-hero__h .ln>span{transform:translateY(108%)}
   .s-hero__cta{flex-direction:column;gap:10px;margin-top:20px}
   .s-hero__cta .btn{width:100%}
 }
+/* 390 (18/11): a long merchant heading never runs under the header or into the lead. The copy sits in the flow at the
+   bottom and the hero grows with it; lines get room for descenders instead of a negative margin. */
+@media (max-width:760px){
+  .s-hero{display:flex;flex-direction:column;justify-content:flex-end;height:auto;min-height:max(620px,calc(100svh - 40px))}
+  .s-hero__fg{position:relative;inset:auto;padding-top:132px}
+  .s-hero__h{line-height:1.06}
+  .s-hero__h .ln{padding-bottom:.14em;margin-bottom:-.04em}
+  .s-hero__lead{margin-top:16px}
+}

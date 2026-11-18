@@ -124,6 +124,20 @@
   function imgHTML(src, alt) { return src ? '<img src="' + esc(src) + '" alt="' + esc(alt || '') + '" loading="lazy">' : phHTML(); }
 
   /* ---------- layers ---------- */
+  /* Fixed layers live directly under <body> (18/11): a section wrapper with a transform, filter, opacity or z-index
+     (motion, an app, a merchant section) can no longer trap the drawer under later sections or under its scrim.
+     A section reloaded in the theme editor brings fresh copies: the old ones are dropped first. */
+  var LAYERS = ['mnav', 'scrim', 'drawer', 'qv', 'pop', 'srch', 'cookie'];
+  function portal(root) {
+    LAYERS.forEach(function (id) {
+      var el = (root || document).querySelector('#' + id);
+      if (!el || el.parentNode === document.body) return;
+      if (root) [].slice.call(document.body.children).forEach(function (c) { if (c.id === id && c !== el) c.remove(); });
+      document.body.appendChild(el);
+    });
+  }
+  portal();
+  document.addEventListener('shopify:section:load', function (e) { portal(e.target); });
   var scrim = $('#scrim'), drawer = $('#drawer'), qv = $('#qv'), pop = $('#pop');
   var lastFocus = null;
   function openLayer(el) {
@@ -471,6 +485,40 @@
   });
 
   reveal(document);
+
+  /* header menu: links that do not fit beside the logo go into "More"; if even one link + More does not fit, the
+     header switches to the menu button (the mobile sheet lists every link). Never wraps, never covers the logo. */
+  function fitNav() {
+    document.querySelectorAll('.hdr__nav').forEach(function (nav) {
+      var hdr = nav.closest('.hdr'), more = nav.querySelector('.hdr__more'), list = more && more.querySelector('.hdr__more-list');
+      if (list) while (list.firstChild) nav.insertBefore(list.firstChild, more);
+      if (hdr) hdr.classList.remove('is-compact');
+      if (more) { more.hidden = true; more.open = false; }
+      nav.classList.add('is-fit');
+      if (getComputedStyle(nav).display === 'none') return;
+      nav.querySelectorAll('a').forEach(function (a) { if (a.scrollWidth > a.clientWidth + 1) a.title = a.textContent.trim(); else a.removeAttribute('title'); });
+      var over = function () { return nav.scrollWidth > nav.clientWidth + 1; };
+      if (!over()) return;
+      var links = [].slice.call(nav.children).filter(function (el) { return el.tagName === 'A'; });
+      if (more && list) {
+        more.hidden = false;
+        while (links.length && over()) list.insertBefore(links.pop(), list.firstChild);
+      }
+      if ((!more || !links.length || over()) && hdr) {
+        if (list) while (list.firstChild) nav.insertBefore(list.firstChild, more);
+        if (more) more.hidden = true;
+        hdr.classList.add('is-compact');
+      }
+    });
+  }
+  var fitT;
+  function fitSoon() { cancelAnimationFrame(fitT); fitT = requestAnimationFrame(fitNav); }
+  fitNav();
+  window.addEventListener('resize', fitSoon);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitNav);
+  document.addEventListener('shopify:section:load', fitSoon);
+  document.addEventListener('click', function (e) { document.querySelectorAll('.hdr__more[open]').forEach(function (d) { if (!d.contains(e.target)) d.open = false; }); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') document.querySelectorAll('.hdr__more[open]').forEach(function (d) { d.open = false; d.querySelector('summary').focus(); }); });
 
   /* theme editor: re-collect products and arm reveals in reloaded sections */
   document.addEventListener('shopify:section:load', function (e) { refresh(e.target); reveal(e.target); if (e.target.querySelectorAll) e.target.querySelectorAll('[data-rv]').forEach(function (el) { el.classList.add('in'); }); });

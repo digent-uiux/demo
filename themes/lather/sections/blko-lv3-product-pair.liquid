@@ -107,7 +107,7 @@
       </h2>
       {%- if s.text != blank -%}<p>{{ s.text | escape }}</p>{%- endif -%}
       <ul class="s-pdp-pair__items"><li><a class="lv3-pname" href="{{ m_url }}">{{ m_label | escape }}</a><span data-pdp-pair-wash>{{ m_cents | money_without_trailing_zeros }}</span></li><li><a class="lv3-pname" href="{{ p_url }}">{{ p_label | escape }}</a><span data-pdp-pair-lotion>{{ p_cents | money_without_trailing_zeros }}</span></li></ul>
-      <p class="s-pdp-pair__sum"><span class="price" data-pdp-set-price>{{ set_str }} <s>{{ total | money_without_trailing_zeros }}</s></span><span>{{ save_text | escape }}</span></p>
+      <p class="s-pdp-pair__sum"><span class="price" data-pdp-set-price>{{ set_str }}{% if s.pct > 0 %} <s>{{ total | money_without_trailing_zeros }}</s>{% endif %}</span>{% if s.pct > 0 and save_text != blank %}<span>{{ save_text | escape }}</span>{% endif %}</p>
       <button class="btn btn--light" type="button" data-pdp-add-set>{{ btn_text | escape }}</button>
       {%- if s.small_text != blank -%}<p class="small">{{ s.small_text | escape }}</p>{%- endif -%}
       {%- if s.quick_label != blank -%}<button class="s-pdp-pair__single" type="button" data-quick="{{ pk }}">{{ s.quick_label | escape }}</button>{%- endif -%}
@@ -127,7 +127,7 @@
     { "type": "image_picker", "id": "image", "label": "Photo (demo)", "info": "A picked paired product shows its own image." },
     { "type": "text", "id": "image_alt", "label": "Photo alt text", "default": "Calm lotion, 250 ml oat bottle with a moss pump" },
     { "type": "header", "content": "Set" },
-    { "type": "range", "id": "pct", "label": "Set discount", "min": 5, "max": 50, "step": 5, "unit": "%", "default": 15, "info": "Shown on the page. For real products also create a matching automatic discount." },
+    { "type": "range", "id": "pct", "label": "Set discount", "min": 0, "max": 50, "step": 5, "unit": "%", "default": 15, "info": "0 = no discount. For real products also create a matching automatic discount." },
     { "type": "text", "id": "save_text", "label": "Discount text", "default": "[pct]% off together" },
     { "type": "text", "id": "button", "label": "Button", "default": "Add the Calm routine, [amount]" },
     { "type": "text", "id": "set_name", "label": "Set name", "default": "Calm routine set", "info": "Bag line name (demo) and the Set line property (real products)." },

@@ -1,0 +1,33 @@
+{
+  "sections": {
+    "main": {
+      "type": "blko-lv3-main-page",
+      "settings": {
+        "padding_top": 96,
+        "padding_bottom": 16
+      }
+    },
+    "contact": {
+      "type": "blko-lv3-help-contact",
+      "settings": {
+        "heading": "Ask a <em>person.</em>",
+        "text": "Tell us the product, your question, and your order number if you have one.",
+        "hours": "Customer care\nWeekdays, 9\u20135 ET",
+        "note": "Include your order number so we can find the details.",
+        "l_name": "Name",
+        "l_email": "Email",
+        "l_topic": "What is it about?",
+        "topics": "Choosing a product\nShipping or an order\nSkin-reaction refund\nSomething else",
+        "l_order": "Order number, optional",
+        "l_message": "Your message",
+        "button": "Send message",
+        "success": "Thank you. Your message has been sent. We will be in touch soon.",
+        "anchor": "contact"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "contact"
+  ]
+}

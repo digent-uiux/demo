@@ -71,7 +71,14 @@
       <h2 class="h2" id="featH-{{ uid }}" data-rv="blur">{{ s.heading }}</h2>
       {%- if s.sub != blank -%}<p data-rv="blur" data-rv-delay="1">{{ s.sub | escape }}</p>{%- endif -%}
     </div>
-    <div class="s-feat__tile" data-rv="settle">
+    {%- liquid
+      # Text on the photo: light text over a dark shade (default), or dark text over a light shade for pale photos.
+      assign t_shade = s.t_shade | default: 100 | divided_by: 100.0
+      if s.t_shade == 0
+        assign t_shade = 0
+      endif
+    -%}
+    <div class="s-feat__tile{% if s.t_text_color == 'dark' %} is-dark-text{% endif %}" style="--feat-shade:{{ t_shade }}" data-rv="settle">
       {%- if s.t_image != blank -%}
         {{ s.t_image | image_url: width: 1600 | image_tag: widths: '600, 900, 1200, 1600', sizes: '(max-width: 900px) 100vw, 40vw', loading: 'lazy', alt: s.t_image.alt }}
       {%- else -%}
@@ -81,7 +88,7 @@
         {%- if s.t_kicker != blank -%}<p>{{ s.t_kicker | escape }}</p>{%- endif -%}
         {%- if t_title != blank -%}<h3>{{ t_title | escape }}</h3>{%- endif -%}
         {%- if s.t_text != blank -%}<p class="small">{{ s.t_text | escape }}</p>{%- endif -%}
-        {%- if t_btn != blank -%}<button class="btn btn--light" type="button" data-add="{{ t_key | escape }}">{{ t_btn | escape }}</button>{%- endif -%}
+        {%- if t_btn != blank -%}<button class="btn {% if s.t_text_color == 'dark' %}btn--primary{% else %}btn--light{% endif %}" type="button" data-add="{{ t_key | escape }}">{{ t_btn | escape }}</button>{%- endif -%}
       </div>
     </div>
     <div class="s-feat__railbox">
@@ -142,6 +149,8 @@
     { "type": "text", "id": "anchor", "label": "Anchor id", "default": "shop" },
     { "type": "header", "content": "Promo tile" },
     { "type": "image_picker", "id": "t_image", "label": "Photo" },
+    { "type": "select", "id": "t_text_color", "label": "Text on the photo", "default": "light", "options": [{ "value": "light", "label": "Light text, dark shade" }, { "value": "dark", "label": "Dark text, light shade (pale photos)" }] },
+    { "type": "range", "id": "t_shade", "label": "Shade behind the text", "min": 0, "max": 150, "step": 10, "unit": "%", "default": 100, "info": "100% is the usual shade. Raise it for busy or bright photos." },
     { "type": "text", "id": "t_kicker", "label": "Small line", "default": "New here?" },
     { "type": "text", "id": "t_title", "label": "Title", "default": "Start with the Oat bar, $9", "info": "Write [price] to show the product's current price." },
     { "type": "textarea", "id": "t_text", "label": "Text", "default": "Oat milk soap for face and body. A rich lather that rinses soft, and no fragrance." },

@@ -59,3 +59,8 @@ html.motion .s-feat__panel.is-out{opacity:0;filter:blur(8px)}
 }
 /* card rows line up: names hold two lines, buy row sits at the card foot */
 .s-feat__name{min-height:2.5em}
+/* text over the tile photo stays readable (18/11): shade strength (--feat-shade) and a dark-text option for pale photos */
+.s-feat__tile::after{background:linear-gradient(0deg,rgba(38,43,34,calc(.7*var(--feat-shade,1))) 0%,rgba(38,43,34,calc(.28*var(--feat-shade,1))) 34%,rgba(38,43,34,0) 62%)}
+.s-feat__tile.is-dark-text{color:var(--ink)}
+.s-feat__tile.is-dark-text::after{background:linear-gradient(0deg,rgba(247,243,234,calc(.86*var(--feat-shade,1))) 0%,rgba(247,243,234,calc(.5*var(--feat-shade,1))) 38%,rgba(247,243,234,0) 66%)}
+.s-feat__tile.is-dark-text .s-feat__tcopy .small{color:var(--ink)}

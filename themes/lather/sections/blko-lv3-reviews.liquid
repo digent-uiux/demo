@@ -38,7 +38,7 @@
             <button class="s-reviews__face" type="button" role="tab" id="{{ uid }}-tab{{ i }}" aria-controls="{{ uid }}-slide{{ i }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"{% unless forloop.first %} tabindex="-1"{% endunless %} aria-label="{{ b.tab_label | default: b.name | escape }}">
               {%- if face != blank -%}
                 {%- assign pos = 'object-position: ' | append: face.presentation.focal_point -%}
-                {{ face | image_url: width: 160, height: 160, crop: 'region' | image_tag: alt: '', loading: 'lazy', width: 56, height: 56, style: pos }}
+                {{ face | image_url: width: 160, height: 160, crop: 'center' | image_tag: alt: '', loading: 'lazy', width: 56, height: 56, style: pos }}
               {%- else -%}
                 {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph' }}
               {%- endif -%}
@@ -81,10 +81,12 @@
             {%- endif -%}
           </figure>
           <article class="s-reviews__card">
+            {%- if b.stars > 0 -%}
             <p class="stars" role="img" aria-label="{{ s.stars_label | replace: '[n]', b.stars | escape }}">
               {%- for n in (1..b.stars) -%}★{%- endfor -%}
               {%- if off > 0 -%}<span class="s-reviews__star-off">{%- for n in (1..off) -%}★{%- endfor -%}</span>{%- endif -%}
             </p>
+            {%- endif -%}
             {%- if b.text != blank -%}<blockquote class="s-reviews__q">“{{ b.text | escape }}”</blockquote>{%- endif -%}
             <p class="s-reviews__who"><b>{{ b.name | escape }}</b>{{ b.detail | escape }}{%- if b.date != blank -%}<span class="s-reviews__date">{{ b.date | escape }}</span>{%- endif -%}</p>
             {%- if p != blank or b.name_product != blank -%}
@@ -138,7 +140,7 @@
       "settings": [
         { "type": "image_picker", "id": "photo", "label": "Photo", "info": "5:6. Also used for the face button unless a face is set." },
         { "type": "image_picker", "id": "face", "label": "Face (optional)" },
-        { "type": "range", "id": "stars", "label": "Stars", "min": 1, "max": 5, "step": 1, "default": 5 },
+        { "type": "range", "id": "stars", "label": "Stars", "min": 0, "max": 5, "step": 1, "default": 5, "info": "0 hides the stars." },
         { "type": "textarea", "id": "text", "label": "Review", "default": "First wash that doesn't leave my arms tight. No smell at all, which is the whole point." },
         { "type": "text", "id": "name", "label": "Name", "default": "Hannah K." },
         { "type": "text", "id": "detail", "label": "Skin and use", "default": "Eczema-prone skin, using it for 6 months" },

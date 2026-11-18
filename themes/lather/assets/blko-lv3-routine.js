@@ -89,13 +89,13 @@
       steps.forEach(step => {
         const p = pickOf(step); if (!p) return;
         const pp = step.querySelector('[data-pp]');
-        if (pp) pp.innerHTML = fmt(setCents(p.cents)) + ' <s>' + fmt(p.cents) + '</s>';
+        if (pp) pp.innerHTML = fmt(setCents(p.cents)) + (OFF > 0 ? ' <s>' + fmt(p.cents) + '</s>' : '');
         if (p.on !== undefined) step.classList.toggle('is-off', !p.on);
       });
       const p = picks();
       const orig = p.reduce((a, x) => a + x.cents, 0);
       const tot = p.reduce((a, x) => a + setCents(x.cents), 0);
-      if (totalEl) totalEl.innerHTML = fmt(tot) + ' <s>' + fmt(orig) + '</s>';
+      if (totalEl) totalEl.innerHTML = fmt(tot) + (OFF > 0 ? ' <s>' + fmt(orig) + '</s>' : '');
       if (fineEl) fineEl.textContent = (root.dataset.fine || '').split('[count]').join(String(p.length));
       if (changed && totalEl) { totalEl.classList.remove('tick'); void totalEl.offsetWidth; totalEl.classList.add('tick'); }
     }
@@ -112,7 +112,7 @@
     if (addBtn) addBtn.addEventListener('click', () => {
       const L = window.LATHER; if (!L) return;
       picks().forEach(p => {
-        const note = (root.dataset.note || '').split('[discount]').join(String(OFF)).split('[price]').join(fmt(p.cents));
+        const note = OFF > 0 ? (root.dataset.note || '').split('[discount]').join(String(OFF)).split('[price]').join(fmt(p.cents)) : '';
         L.add(p.key, 1, { key: 'routine-' + p.key, name: p.name, price: setCents(p.cents) / 100, note });
       });
     });

@@ -12,7 +12,12 @@
     const list = root.querySelector('[data-list]');
     const sort = root.querySelector('[data-sort]');
     const details = root.querySelector('[data-filters]');
-    if (!form || !list || !sort || !details) return;
+    if (!list || !sort) return;
+    if (!form || !details) {
+      /* no filter panel (no storefront filters and no tag matches): the sort still reloads the collection */
+      if (mode !== 'demo') sort.addEventListener('change', () => { const u = new URL(location.href); u.searchParams.set('sort_by', sort.value); u.searchParams.delete('page'); location.href = u.toString(); });
+      return;
+    }
     const summary = details.querySelector('summary');
     if (matchMedia('(max-width:760px)').matches) details.open = false;
 

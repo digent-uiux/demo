@@ -1,13 +1,24 @@
-{%- comment -%} Generic page (templates/page.json): title and the page content in the Lather type. {%- endcomment -%}
+{%- comment -%} Generic page (templates/page.json): title and the page content as one centred reading column (about 700px), with
+  styles for everything the page editor writes: headings, lists, links, quotes, images, tables, video. {%- endcomment -%}
 {%- assign lv3_sid = section.settings.color_scheme.id | default: section.settings.color_scheme | default: 'scheme-1' -%}
+{%- liquid
+  # On a designed page (help, wishlist, contact) this section only carries what the merchant wrote: nothing when empty.
+  assign lv3_body = page.content | strip
+  assign lv3_skip = false
+  if section.settings.hide_empty and lv3_body == blank
+    assign lv3_skip = true
+  endif
+-%}
+{%- unless lv3_skip -%}
 <div class="lv3-page{%- if lv3_sid != 'scheme-1' %} color-{{ lv3_sid }} lv3-scheme-pick{% endif %}" style="padding-top:{{ section.settings.padding_top }}px;padding-bottom:{{ section.settings.padding_bottom }}px">
   <div class="wrap">
     <div class="lv3-page__in">
       {%- if section.settings.show_title -%}<h1 class="h1 lv3-page__title" data-rv="blur">{{ page.title | escape }}</h1>{%- endif -%}
-      <div class="lv3-rte">{{ page.content }}</div>
+      {%- if lv3_body != blank -%}<div class="lv3-rte">{{ page.content }}</div>{%- endif -%}
     </div>
   </div>
 </div>
+{%- endunless -%}
 
 {% schema %}
 {
@@ -17,6 +28,7 @@
   "settings": [
     { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
     { "type": "checkbox", "id": "show_title", "label": "Show the title", "default": true },
+    { "type": "checkbox", "id": "hide_empty", "label": "Hide when the page has no content", "default": false, "info": "For designed pages (help, wishlist): the text you write in Online Store > Pages shows here." },
     { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 96 },
     { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 96 }
   ]

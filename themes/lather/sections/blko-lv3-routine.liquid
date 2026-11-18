@@ -138,15 +138,15 @@
                   </div>
                 {%- endif -%}
               </div>
-              <p class="price s-routine__pp" data-pp>{{ now_set | money_without_trailing_zeros }} <s>{{ now_orig | money_without_trailing_zeros }}</s></p>
+              <p class="price s-routine__pp" data-pp>{{ now_set | money_without_trailing_zeros }}{% if off > 0 %} <s>{{ now_orig | money_without_trailing_zeros }}</s>{% endif %}</p>
             </li>
           {%- endif -%}
         {%- endfor -%}
       </ol>
 
       <div class="s-routine__total" data-rv="blur" data-rv-delay="3">
-        {%- if s.save_text != blank -%}<span class="s-routine__save">{{ s.save_text | replace: '[discount]', off | escape }}</span>{%- endif -%}
-        <p class="s-routine__sum"><span class="small">{{ s.total_label | escape }}</span><span class="price" data-rt-total>{{ total_set | money_without_trailing_zeros }} <s>{{ total_orig | money_without_trailing_zeros }}</s></span></p>
+        {%- if s.save_text != blank and off > 0 -%}<span class="s-routine__save">{{ s.save_text | replace: '[discount]', off | escape }}</span>{%- endif -%}
+        <p class="s-routine__sum"><span class="small">{{ s.total_label | escape }}</span><span class="price" data-rt-total>{{ total_set | money_without_trailing_zeros }}{% if off > 0 %} <s>{{ total_orig | money_without_trailing_zeros }}</s>{% endif %}</span></p>
         <button class="btn btn--primary btn--block" type="button" data-rt-add>{{ s.button_label | escape }}</button>
         {%- if s.fine_text != blank -%}<p class="small s-routine__fine" data-rt-fine>{{ s.fine_text | replace: '[count]', pick_count | escape }}</p>{%- endif -%}
       </div>
@@ -187,7 +187,7 @@
     { "type": "text", "id": "lead", "label": "Intro", "default": "Wash, pat dry, then lotion while skin is still damp." },
     { "type": "text", "id": "steps_label", "label": "Steps list name (screen readers)", "default": "Routine steps" },
     { "type": "header", "content": "Set price" },
-    { "type": "range", "id": "discount", "label": "Routine discount", "min": 5, "max": 50, "step": 1, "unit": "%", "default": 20, "info": "Shown on every line. To charge it at checkout, set up a matching automatic discount in Shopify." },
+    { "type": "range", "id": "discount", "label": "Routine discount", "min": 0, "max": 50, "step": 1, "unit": "%", "default": 20, "info": "0 = no discount. To charge it, set up a matching automatic discount in Shopify." },
     { "type": "text", "id": "save_text", "label": "Saving badge", "info": "[discount] becomes the discount.", "default": "Save [discount]%" },
     { "type": "text", "id": "total_label", "label": "Total label", "default": "Total" },
     { "type": "text", "id": "button_label", "label": "Button label", "default": "Add all to bag" },

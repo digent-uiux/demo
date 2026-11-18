@@ -24,3 +24,4 @@ a.s-shop-catalogue__reset{display:inline-block}
 /* cards in a row line up: same image ratio, two-line text, the Add button at the card foot */
 .s-shop-catalogue__info{flex:1;align-content:start}
 .s-shop-catalogue__desc{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.s-shop-catalogue__layout:not(:has(> .s-shop-catalogue__filters)){grid-template-columns:minmax(0,1fr)}

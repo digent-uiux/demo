@@ -206,7 +206,7 @@
             </figure>
           {%- endif -%}
           <div class="s-pdp-reviews__body">
-            <div class="s-pdp-reviews__top"><span class="stars" role="img" aria-label="{{ aria | escape }}">{% for n in (1..r) %}★{% endfor %}{% if r < 5 %}<s>{% for n in (r..4) %}★{% endfor %}</s>{% endif %}</span>{%- if skin_label != blank -%}<span class="s-pdp-reviews__skin">{{ skin_label | escape }}</span>{%- endif -%}</div>
+            <div class="s-pdp-reviews__top">{% if r > 0 %}<span class="stars" role="img" aria-label="{{ aria | escape }}">{% for n in (1..r) %}★{% endfor %}{% if r < 5 %}<s>{% for n in (r..4) %}★{% endfor %}</s>{% endif %}</span>{% endif %}{%- if skin_label != blank -%}<span class="s-pdp-reviews__skin">{{ skin_label | escape }}</span>{%- endif -%}</div>
             {%- if b.title != blank -%}<h3 class="s-pdp-reviews__title">{{ b.title | escape }}</h3>{%- endif -%}
             {%- if b.text != blank -%}<p class="s-pdp-reviews__text">{{ b.text | escape }}</p>{%- endif -%}
             <p class="s-pdp-reviews__who"><b>{{ b.name | escape }}</b>
@@ -544,7 +544,8 @@
           "type": "range",
           "id": "rating",
           "label": "Stars",
-          "min": 1,
+          "info": "0 hides the stars.",
+          "min": 0,
           "max": 5,
           "step": 1,
           "default": 5

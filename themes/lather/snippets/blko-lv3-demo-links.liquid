@@ -5,10 +5,13 @@
   Store policies: [shipping_policy] [refund_policy] [privacy_policy] [terms_of_service] link to the policy set in
   Settings > Policies. A path after the token is the fallback ("Shipping | [shipping_policy] /pages/help#shipping");
   without one, the line is left out while that policy is empty.
+  A /pages/, /blogs/, /products/ or /collections/<handle> link is left out while the store has no such page, blog,
+  product or collection, so a fresh store never links to a 404 (wishlist, help, about ...).
 {%- endcomment -%}
 {%- liquid
   assign rows = lines | newline_to_br | split: '<br />'
   assign root = routes.root_url
+  assign lv3_kinds = 'pages,blogs,products,collections' | split: ','
   if root == '/'
     assign root = ''
   endif
@@ -34,6 +37,30 @@
         endif
       endif
       assign first_char = url | slice: 0
+      for kind in lv3_kinds
+        assign seg = '/' | append: kind | append: '/'
+        if url contains seg
+          assign handle = url | split: '#' | first | split: '?' | first | split: seg | last | split: '/' | first
+          case kind
+            when 'pages'
+              if pages[handle].id == blank
+                assign skip = true
+              endif
+            when 'blogs'
+              if blogs[handle].id == blank
+                assign skip = true
+              endif
+            when 'products'
+              if all_products[handle].id == blank
+                assign skip = true
+              endif
+            when 'collections'
+              if handle != 'all' and collections[handle].id == blank
+                assign skip = true
+              endif
+          endcase
+        endif
+      endfor
       assign url = url | replace: '[home]', routes.root_url | replace: '[all]', routes.all_products_collection_url | replace: '[search]', routes.search_url | replace: '[account]', routes.account_url | replace: '[cart]', routes.cart_url
       if first_char == '/'
         assign url = root | append: url

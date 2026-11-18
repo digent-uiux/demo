@@ -152,7 +152,7 @@ html.motion .s-pdp-reviews__item.is-lead[data-rv]:not(.in) .s-pdp-reviews__media
 .s-pdp-reviews__stars{display:flex;gap:2px}
 .s-pdp-reviews__stars input,.s-pdp-reviews__chips input,.s-pdp-reviews__photo input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
 .s-pdp-reviews__stars label{width:44px;height:44px;display:grid;place-items:center;border-radius:var(--r-btn);font-size:30px;line-height:1;color:var(--stone);cursor:pointer;transition:color .2s,background-color .2s}
-.s-pdp-reviews__stars label.on{color:var(--moss)}
+.s-pdp-reviews__stars label.on{color:var(--ink)}
 .s-pdp-reviews__stars input:focus-visible + label{outline:2px solid var(--moss);outline-offset:1px}
 .s-pdp-reviews__stars.is-bad label{color:color-mix(in srgb,var(--sale) 40%,var(--stone))}
 .s-pdp-reviews__rate-txt{font-size:15px;color:var(--muted);min-width:7ch}

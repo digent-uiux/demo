@@ -60,7 +60,7 @@ body{background:var(--oat);color:var(--ink);font:400 calc(16px * var(--type-scal
 .label--new{background:var(--sage);color:var(--ink)}
 .label--sale{background:var(--sale);color:var(--raised)}
 .labels{display:flex;gap:6px;flex-wrap:wrap}
-.stars{color:var(--moss);letter-spacing:1px;font-size:14px}
+.stars{color:var(--ink);letter-spacing:1px;font-size:14px}
 .qty{display:inline-flex;align-items:center;height:40px;border-radius:var(--r-btn);background:var(--raised)}
 .qty button{width:38px;height:40px;font-size:18px}
 .qty span{min-width:22px;text-align:center;font-weight:600}
@@ -258,4 +258,72 @@ html.motion [data-rv="line"] .ln:nth-child(3)>span{transition-delay:.18s}
 .lv3-code{font:600 clamp(22px,3vw,30px)/1.2 var(--f-price);letter-spacing:.06em;background:var(--oat);border-radius:var(--r-btn);padding:14px 18px;text-align:center}
 
 /* Theme settings > Products: vendor / rating on cards (off by default) */
-.lv3-card-vendor{font-size:13px;color:var(--muted);margin-top:2px}.lv3-card-rating{display:flex;align-items:center;gap:6px;margin-top:4px;font-size:13px;color:var(--muted)}.lv3-card-rating__stars{letter-spacing:2px;background:linear-gradient(90deg,var(--moss) var(--pct),var(--line) var(--pct));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lv3-card-vendor{font-size:13px;color:var(--muted);margin-top:2px}.lv3-card-rating{display:flex;align-items:center;gap:6px;margin-top:4px;font-size:13px;color:var(--muted)}.lv3-card-rating__stars{letter-spacing:2px;background:linear-gradient(90deg,var(--ink) var(--pct),var(--line) var(--pct));-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* Header menu that is too long for its side of the logo (18/11): one line per label, the logo column always kept;
+   blko-lv3-store.js moves the links that do not fit into "More", or switches to the menu button when even that does
+   not fit. Without the script the overflow is clipped, never drawn over the logo. */
+.hdr__nav{min-width:0;flex-wrap:nowrap;white-space:nowrap;overflow:hidden}
+.hdr__nav.is-fit{overflow:visible}
+.hdr__nav>a,.hdr__more-list a{flex:none;max-width:18ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hdr__more-list a{max-width:28ch}
+.hdr__more{position:relative;flex:none}
+.hdr__more[hidden]{display:none}
+.hdr__more>summary{list-style:none;cursor:pointer;padding:6px 0;display:inline-flex;align-items:center;gap:6px}
+.hdr__more>summary::-webkit-details-marker{display:none}
+.hdr__more>summary svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s var(--ease)}
+.hdr__more[open]>summary svg{transform:rotate(180deg)}
+.hdr__more-list{position:absolute;top:calc(100% + 10px);left:-16px;min-width:220px;display:flex;flex-direction:column;padding:8px 0;background:var(--raised);color:var(--ink);border-radius:var(--r-card,var(--r-img));box-shadow:0 18px 40px rgba(38,43,34,.16);z-index:5}
+.hdr__more-list a{display:block;padding:9px 16px;text-decoration:none}
+.hdr__more-list a:hover,.hdr__more-list a:focus-visible{background:var(--sage-wash)}
+.hdr__more>summary:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+.hdr.is-compact .hdr__nav{display:none}
+.hdr.is-compact .hdr__menu{display:inline-grid}
+/* the logo stays on the page centre whatever the menu or icons hold: both side columns are equal and may shrink to 0 */
+.hdr__in{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)}
+.hdr__tools{min-width:0}
+@media (max-width:900px){.hdr__in{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)}.hdr__menu{justify-self:start}}
+/* overlays: the section wrapper never sits under a later section, even before the script moves the layers to <body> */
+.shopify-section.lv3-overlays-sec{position:relative;z-index:70}
+/* Reading page (18/11): one centred column, every element the page editor writes is styled, even rhythm */
+.lv3-page__in{max-width:700px;margin-inline:auto}
+.lv3-page__title{margin-bottom:clamp(24px,3vw,36px);overflow-wrap:anywhere}
+.lv3-rte{font-size:17px;line-height:1.7;color:var(--ink);overflow-wrap:break-word}
+.lv3-rte>:first-child{margin-top:0}
+.lv3-rte>*+*{margin-top:1.05em}
+.lv3-rte :is(h1,h2,h3,h4,h5,h6){font-family:var(--f-body);font-weight:500;letter-spacing:-.015em;line-height:1.2;color:var(--ink);margin-top:1.9em}
+.lv3-rte :is(h1,h2,h3,h4,h5,h6)+*{margin-top:.6em}
+.lv3-rte h1{font-size:clamp(30px,3.2vw,38px)}
+.lv3-rte h2{font-size:clamp(25px,2.5vw,30px)}
+.lv3-rte h3{font-size:21px}
+.lv3-rte :is(h4,h5,h6){font-size:18px}
+.lv3-rte p:empty{display:none}
+.lv3-rte strong,.lv3-rte b{font-weight:600}
+.lv3-rte a{color:inherit;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px;transition:text-decoration-thickness .2s var(--ease)}
+.lv3-rte a:hover{text-decoration-thickness:2px}
+.lv3-rte :is(ul,ol){padding-left:1.4em}
+.lv3-rte ul{list-style:none}
+.lv3-rte ul>li{position:relative}
+.lv3-rte ul>li::before{content:"";position:absolute;left:-1.05em;top:.72em;width:6px;height:6px;border-radius:50%;background:var(--moss)}
+.lv3-rte ol{list-style:decimal}
+.lv3-rte ol>li::marker{color:var(--muted);font-variant-numeric:tabular-nums}
+.lv3-rte li+li{margin-top:.45em}
+.lv3-rte li>:is(ul,ol){margin-top:.45em}
+.lv3-rte blockquote{margin-inline:0;padding:4px 0 4px 22px;border-left:3px solid var(--sage);font-size:20px;line-height:1.5;color:var(--ink)}
+.lv3-rte :is(img,video,iframe){display:block;max-width:100%;height:auto;border-radius:var(--r-img)}
+.lv3-rte iframe{width:100%;aspect-ratio:16/9;height:auto;border:0}
+.lv3-rte figure{margin-inline:0}
+.lv3-rte figcaption{margin-top:8px;font-size:14px;color:var(--muted)}
+.lv3-rte hr{border:0;border-top:1px solid var(--line);margin-block:2em}
+.lv3-rte table{width:100%;border-collapse:collapse;font-size:15px;line-height:1.5;display:block;overflow-x:auto}
+.lv3-rte :is(th,td){padding:10px 14px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.lv3-rte th{font-weight:600;background:var(--stone)}
+.lv3-rte code{font-size:.92em;background:var(--stone);padding:1px 5px;border-radius:4px}
+@media (max-width:760px){.lv3-rte{font-size:16px}.lv3-rte blockquote{font-size:18px}}
+/* Layers sit above anything a section or an app may stack (apps often use z-index 999-9999); they are moved to <body>
+   by blko-lv3-store.js, so these values are compared at the page level. Order: cookie < mobile menu < scrim < drawer < dialogs. */
+.cookie{z-index:2147483000}
+.mnav{z-index:2147483001}
+.scrim{z-index:2147483002}
+.drawer{z-index:2147483003}
+.qv,.pop,.srch{z-index:2147483004}

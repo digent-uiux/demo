@@ -26,7 +26,7 @@
     <div class="ftr__top">
       <div>
         {%- if section.settings.show_mark -%}
-          <a class="ftr__mark" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }}">
+          <a class="ftr__mark" href="{{ routes.root_url }}" aria-label="{{ wordmark | escape }}">
             <span class="{{ logo_class }}"{% if logo_style != blank %} style="{{ logo_style }}"{% endif %}>
               {%- if lg != blank and section.settings.logo_tint == false -%}
                 {{ lg | image_url: width: 360 | image_tag: alt: '', widths: '180, 360', sizes: '180px', loading: 'lazy' }}
@@ -54,22 +54,49 @@
         {%- if section.blocks.size > 0 -%}
           <div class="ftr__cols">
             {%- for b in section.blocks -%}
-              {%- assign menu = b.settings.menu -%}
+              {%- liquid
+                assign menu = b.settings.menu
+                # A menu with sub-menus: each parent link with children becomes a column (its title = the column heading,
+                # its children = the links); parent links without children stay in this block's own column.
+                assign nested = false
+                assign flat = 0
+                if menu != blank
+                  for link in menu.links
+                    if link.links.size > 0
+                      assign nested = true
+                    else
+                      assign flat = flat | plus: 1
+                    endif
+                  endfor
+                endif
+              -%}
+              {%- if nested == false or flat > 0 -%}
               <nav aria-label="{{ b.settings.title | escape }}" {{ b.shopify_attributes }}>
                 {%- if b.settings.title != blank -%}<h3>{{ b.settings.title | escape }}</h3>{%- endif -%}
                 {%- if menu != blank and menu.links.size > 0 -%}
-                  {%- for link in menu.links -%}<a href="{{ link.url }}">{{ link.title | escape }}</a>{%- endfor -%}
+                  {%- for link in menu.links -%}{%- if link.links.size == 0 -%}<a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>{%- endif -%}{%- endfor -%}
                 {%- else -%}
                   {%- render 'blko-lv3-demo-links', lines: b.settings.demo_links, routes: routes -%}
                 {%- endif -%}
               </nav>
+              {%- endif -%}
+              {%- if nested -%}
+                {%- for link in menu.links -%}
+                  {%- if link.links.size > 0 -%}
+                    <nav aria-label="{{ link.title | escape }}"{% if flat == 0 and forloop.first %} {{ b.shopify_attributes }}{% endif %}>
+                      <h3>{{ link.title | escape }}</h3>
+                      {%- for child in link.links -%}<a href="{{ child.url }}"{% if child.current %} aria-current="page"{% endif %}>{{ child.title | escape }}</a>{%- endfor -%}
+                    </nav>
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endif -%}
             {%- endfor -%}
           </div>
         {%- endif -%}
       </div>
     </div>
     <div class="ftr__base">
-      <span>© {{ 'now' | date: '%Y' }} {{ shop.name | escape }}.</span>
+      <span>© {{ 'now' | date: '%Y' }} {{ wordmark | escape }}.</span>
       {%- render 'blko-lv3-social-links' -%}
       {%- if section.settings.show_country or section.settings.show_language -%}
         <div class="ftr__loc">

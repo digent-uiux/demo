@@ -5,7 +5,9 @@
   name   product name for the screen-reader label
   label  label template, [name] is the product name (default "Save [name]"). aria-pressed tells the saved state.
   text, text_on   optional: render the text version (product page), e.g. text: 'Save', text_on: 'Saved'
+  Renders nothing until the store has a page with the handle wishlist (the list lives there; the header heart opens it).
 {%- endcomment -%}
+{%- if pages['wishlist'].id != blank -%}
 {%- liquid
   assign w_label = label | default: 'Save [name]' | replace: '[name]', name
 -%}
@@ -13,4 +15,5 @@
 <button class="lv3-heart lv3-heart--text" type="button" data-wish="{{ key | escape }}" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg><span data-wish-text data-off="{{ text | escape }}" data-on="{{ text_on | default: text | escape }}">{{ text | escape }}</span></button>
 {%- else -%}
 <button class="lv3-heart" type="button" data-wish="{{ key | escape }}" aria-pressed="false" aria-label="{{ w_label | escape }}"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.4l-7.3-7.2a4.6 4.6 0 010-6.5 4.6 4.6 0 016.5 0l.8.8.8-.8a4.6 4.6 0 016.5 6.5z"/></svg></button>
+{%- endif -%}
 {%- endif -%}
