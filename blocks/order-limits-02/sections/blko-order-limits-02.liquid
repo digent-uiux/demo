@@ -1,0 +1,500 @@
+<script data-blko-kit="seam">try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-kit-seam')}catch(e){}</script>
+{{ 'blko-seam-motion.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-seam-motion.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign s = section.settings
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-order-limits-02.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-order-limits-02.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-seam', tokens: s.tokens -%}
+{%- comment -%}
+  Order limits 02, a limited drop, two per customer said by the button (seam preset; DS registry/order-limits/order-limits-02.tsx).
+  From a 1152px container: one full-bleed photo (16:10) with a square panel floating top-left on it (400px, 56px in):
+  line above the title, title + a light second line, price, the reason (muted), the size chips, then the rule in one
+  sentence right above the stepper ("Limit 2 per customer. 120 made, no restock."), the stepper (capped) + Add with the
+  live total, and the state line (stock, or the at-limit / in-the-bag line). Below 1152: the photo at 3:2, the panel under it.
+  Live: the product setting, else the page's product: title, price, image (the photo setting wins), the first option's
+  values (sold-out values struck through), and the picked variant's quantity_rule (max = [limit] and the cap, min);
+  a variant without a max uses the Limit setting. The cart's quantity of the variant lowers the cap. Stock: "[left] of
+  [made] left" when Shopify tracks the variant. Sold out disables the stepper and Add. Add posts /cart/add.js, then
+  dispatches cart:refresh; a 422 shows the error line. @app: an order-limits app block (per-customer caps across
+  orders) replaces the rule line. Theme Editor with no app block: the shared editor-only blko-ui-app-cta card for Avada
+  Order Limits Quantity.
+  Motion (html.blko-ui-motion): the photo settles 1.05 → 1 (1600ms), the panel wipes open from the top (900ms) and its
+  rows rise 16px 80ms apart; at the limit a 2px accent line draws under the rule. Buttons never move. Static = the
+  frame with S picked and 1 in the stepper.
+{%- endcomment -%}
+{%- liquid
+  assign p = s.product | default: product
+  assign apps = section.blocks | where: 'type', '@app'
+  assign sizes = section.blocks | where: 'type', 'size'
+  assign live = false
+  assign preview = false
+  if p != blank
+    assign live = true
+  elsif request.design_mode or template == blank
+    assign preview = true
+  endif
+  assign limit = s.limit
+  assign q_min = 1
+  if live
+    assign v = p.selected_or_first_available_variant
+    assign cents = v.price
+    assign title = p.title
+    assign photo = s.image | default: p.featured_media.preview_image
+    if v.quantity_rule.max != blank
+      assign limit = v.quantity_rule.max
+    endif
+    assign q_min = v.quantity_rule.min | default: 1
+    assign picked = v.option1
+    assign opt_name = p.options.first
+    if v.inventory_management == 'shopify'
+      assign left = v.inventory_quantity
+    else
+      assign left = nil
+    endif
+  else
+    assign cents = s.preview_price | times: 100 | round
+    assign title = s.preview_title
+    assign photo = s.image
+    assign picked = s.preview_size
+    assign opt_name = s.option_label
+    assign left = s.preview_left
+  endif
+  if limit < q_min
+    assign limit = q_min
+  endif
+  assign in_bag = 0
+  assign sold_out = false
+  if live
+    for it in cart.items
+      if it.variant_id == v.id
+        assign in_bag = in_bag | plus: it.quantity
+      endif
+    endfor
+    unless v.available
+      assign sold_out = true
+    endunless
+  endif
+  assign cap = limit | minus: in_bag
+  assign full = false
+  if cap < q_min
+    assign full = true
+    assign cap = q_min
+  endif
+  assign limit_s = limit | append: ''
+  assign bag_s = in_bag | append: ''
+  assign cap_s = cap | append: ''
+  assign q_min_s = q_min | append: ''
+  assign total = cents | times: q_min
+  assign made_s = s.made | append: ''
+  if left != nil
+    assign left_s = left | append: ''
+    assign stock = s.stock_text | replace: '[left]', left_s | replace: '[made]', made_s
+  else
+    assign stock = s.untracked_text | replace: '[made]', made_s
+  endif
+  assign rule_text = s.rule | replace: '[limit]', limit_s
+  if full
+    assign state = s.bag_full | replace: '[limit]', limit_s
+  elsif q_min >= cap and in_bag > 0
+    assign state = s.in_bag | replace: '[bag]', bag_s | replace: '[left]', cap_s
+  elsif q_min >= cap
+    assign state = s.at_limit | replace: '[limit]', limit_s
+  else
+    assign state = stock
+  endif
+-%}
+{%- capture total_html -%}{%- render 'blko-ui-money', amount: total, cents: true -%}{%- endcapture -%}
+{%- capture add_html -%}<span data-add-label>{{ s.add_label | replace: '[n]', q_min_s | replace: '[total]', total_html | escape }}</span>{%- endcapture -%}
+<div class="borderlimits02" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-borderlimits02{% if live %} data-live{% endif %} data-limit="{{ s.limit }}" data-cap="{{ cap }}" data-bag="{{ in_bag }}" data-cents="{{ cents }}" data-money="{{ shop.money_format | escape }}" data-t-bag="{{ s.in_bag | escape }}" data-made="{{ s.made }}" data-t-stock="{{ s.stock_text | escape }}" data-t-untracked="{{ s.untracked_text | escape }}" data-t-limit="{{ s.at_limit | escape }}" data-t-add="{{ s.add_label | escape }}" data-t-added="{{ s.added_label | escape }}" data-t-error="{{ s.add_error | escape }}" data-t-sold="{{ s.sold_label | escape }}"
+  >{%- if live or preview -%}
+  <section class="borderlimits02__band" aria-label="{{ title | escape }}"
+    ><div class="borderlimits02__media"
+      ><div class="borderlimits02__move" data-move
+        >{%- if photo != blank -%}
+          {{ photo | image_url: width: 2400 | image_tag: class: 'borderlimits02__img', widths: '900, 1600, 2400', sizes: '100vw', alt: photo.alt -}}
+        {%- else -%}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'borderlimits02__img' -}}
+        {%- endif -%}
+      </div
+    ></div
+    ><div class="borderlimits02__wrap"
+      ><div class="borderlimits02__panel" data-panel
+        ><div class="borderlimits02__block" data-row style="--r:0"
+          >{%- if s.line != blank -%}<p class="borderlimits02__line">{{ s.line | escape }}</p>{%- endif -%}
+          <h2 class="borderlimits02__title">{{ title | escape }}{% if s.title_suffix != blank %} <span class="borderlimits02__suffix">{{ s.title_suffix | escape }}</span>{% endif %}</h2
+          ><div data-price>{% render 'blko-ui-price', amount: cents, cents: true, size: 'lg' %}</div
+          >{%- if s.reason != blank -%}<p class="borderlimits02__reason">{{ s.reason | escape }}</p>{%- endif -%}
+        </div
+        ><fieldset class="borderlimits02__sizes" data-row style="--r:1"
+          ><legend class="borderlimits02__legend"><span class="borderlimits02__lname">{{ opt_name | escape }}:</span> <span class="borderlimits02__muted" data-picked>{{ picked | escape }}</span></legend
+          ><div class="borderlimits02__chips" data-blko-ui-options
+            >{%- if live -%}
+              {%- for value in p.options_with_values.first.values -%}
+                {%- assign out = false -%}{%- unless value.available -%}{%- assign out = true -%}{%- endunless -%}
+                {%- render 'blko-ui-option', children: value, value: value, selected: value.selected, soldOut: out, disabled: out -%}
+              {%- endfor -%}
+            {%- else -%}
+              {%- for b in sizes -%}
+                {%- assign out = false -%}{%- if b.settings.sold_out -%}{%- assign out = true -%}{%- endif -%}
+                {%- assign on = false -%}{%- if b.settings.title == picked -%}{%- assign on = true -%}{%- endif -%}
+                {%- render 'blko-ui-option', children: b.settings.title, value: b.settings.title, selected: on, soldOut: out, disabled: out -%}
+              {%- endfor -%}
+            {%- endif -%}
+          </div
+        ></fieldset
+        ><div class="borderlimits02__block" data-row style="--r:2"
+          >{%- if apps.size > 0 -%}
+            <div class="borderlimits02__apps">{%- for block in apps -%}{% render block %}{%- endfor -%}</div
+          >{%- else -%}
+            <p class="borderlimits02__rule"><span class="borderlimits02__rule-on">{{ rule_text | escape }}<span class="borderlimits02__under" data-under data-on="{% if q_min >= cap %}true{% else %}false{% endif %}"></span></span>{% if s.rule_note != blank %} <span class="borderlimits02__muted">{{ s.rule_note | escape }}</span>{% endif %}</p
+            >{%- render 'blko-ui-app-cta', app: 'Avada Order Limits Quantity', url: 'https://apps.shopify.com/avada-order-limit', slug: 'order-limits', line: s.app_line -%}
+          {%- endif -%}
+          <form action="{{ routes.cart_add_url }}" method="post" class="borderlimits02__row" data-form
+            ><input type="hidden" name="id" value="{% if live %}{{ v.id }}{% endif %}" data-id
+            >{%- if sold_out or full -%}
+              {%- render 'blko-ui-quantity', value: q_min, min: q_min, max: q_min, label: s.qty_label, className: 'borderlimits02__qty is-off' -%}
+              {%- if sold_out -%}{%- assign off_label = s.sold_label -%}{%- else -%}{%- assign off_label = s.full_label -%}{%- endif -%}
+              {%- render 'blko-ui-button', type: 'submit', size: 'lg', children: off_label, className: 'borderlimits02__add', attrs: 'data-add disabled' -%}
+            {%- else -%}
+              {%- render 'blko-ui-quantity', value: q_min, min: q_min, max: cap, label: s.qty_label, name: 'quantity', className: 'borderlimits02__qty' -%}
+              {%- render 'blko-ui-button', type: 'submit', size: 'lg', children: add_html, className: 'borderlimits02__add', attrs: 'data-add aria-live="polite"' -%}
+            {%- endif -%}
+          </form
+          ><div class="borderlimits02__foot"
+            ><p class="borderlimits02__status{% if q_min >= cap %} is-limit{% endif %}" role="status" data-status>{{ state | escape }}</p
+            ><a href="{{ routes.cart_url }}" class="borderlimits02__cart" data-cart hidden>{{ s.cart_label | escape }}</a
+          ></div
+        ></div
+      ></div
+    ></div
+  ></section
+  >{%- if live -%}
+  <script type="application/json" data-variants>[{%- for x in p.variants -%}{%- assign xm = x.quantity_rule.max | default: s.limit -%}{"id":{{ x.id }},"o":{{ x.option1 | json }},"a":{{ x.available | json }},"p":{{ x.price }},"max":{{ xm }},"min":{{ x.quantity_rule.min | default: 1 }},"left":{% if x.inventory_management == 'shopify' %}{{ x.inventory_quantity }}{% else %}null{% endif %}}{%- unless forloop.last -%},{%- endunless -%}{%- endfor -%}]</script>{%- endif -%}
+  {%- endif -%}
+</div
+
+>
+
+{% schema %}
+{
+  "name": "Order limits 02 - Drop",
+  "tag": "div",
+  "max_blocks": 13,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Product"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Empty on a product page: the page's product. Works with Avada Order Limits Quantity: https://apps.shopify.com/avada-order-limit?utm_source=blocko&utm_medium=theme&utm_campaign=order-limits"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Photo",
+      "info": "Wide, with a quiet area top left for the panel. Empty: the product's first image."
+    },
+    {
+      "type": "text",
+      "id": "line",
+      "label": "Line above the title",
+      "default": "Hand-loomed linen, 120 made"
+    },
+    {
+      "type": "text",
+      "id": "title_suffix",
+      "label": "Second line after the title",
+      "default": "in raw linen"
+    },
+    {
+      "type": "textarea",
+      "id": "reason",
+      "label": "Reason, under the price",
+      "default": "The cloth is loomed by hand, about thirty metres a week. We cut 120 tops from it and won't make more this year."
+    },
+    {
+      "type": "header",
+      "content": "Limit"
+    },
+    {
+      "type": "paragraph",
+      "content": "The picked variant's quantity rule max sets [limit] and caps the stepper; Shopify applies it per order. To cap per customer across orders, add an order-limits app block: it replaces the rule line."
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "label": "Limit without a rule",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "text",
+      "id": "rule",
+      "label": "Rule, one sentence",
+      "default": "Limit [limit] per customer.",
+      "info": "[limit] is the number."
+    },
+    {
+      "type": "text",
+      "id": "rule_note",
+      "label": "After the rule",
+      "default": "120 made, no restock."
+    },
+    {
+      "type": "text",
+      "id": "at_limit",
+      "label": "Line at the limit",
+      "default": "That's the limit: [limit] per customer."
+    },
+    {
+      "type": "text",
+      "id": "in_bag",
+      "label": "Line when some are in the bag",
+      "default": "You have [bag] in your bag, so you can add [left] more.",
+      "info": "[bag] and [left] are filled in."
+    },
+    {
+      "type": "text",
+      "id": "bag_full",
+      "label": "Line when the bag holds the limit",
+      "default": "You already have [limit] in your bag, the most per customer."
+    },
+    {
+      "type": "header",
+      "content": "Stock"
+    },
+    {
+      "type": "number",
+      "id": "made",
+      "label": "Made in this run",
+      "default": 120
+    },
+    {
+      "type": "text",
+      "id": "stock_text",
+      "label": "Stock line",
+      "default": "[left] of [made] left.",
+      "info": "For variants Shopify tracks. [left] and [made] are filled in."
+    },
+    {
+      "type": "text",
+      "id": "untracked_text",
+      "label": "Stock line, untracked",
+      "default": "[made] made."
+    },
+    {
+      "type": "header",
+      "content": "Buy"
+    },
+    {
+      "type": "text",
+      "id": "qty_label",
+      "label": "Stepper name for screen readers",
+      "default": "Quantity"
+    },
+    {
+      "type": "text",
+      "id": "add_label",
+      "label": "Add button",
+      "default": "Add [n] to bag, [total]",
+      "info": "[n] is the quantity, [total] the price."
+    },
+    {
+      "type": "text",
+      "id": "added_label",
+      "label": "After adding",
+      "default": "Added to bag"
+    },
+    {
+      "type": "text",
+      "id": "sold_label",
+      "label": "Sold-out button",
+      "default": "Sold out"
+    },
+    {
+      "type": "text",
+      "id": "full_label",
+      "label": "Button when the bag holds the limit",
+      "default": "Limit reached"
+    },
+    {
+      "type": "text",
+      "id": "cart_label",
+      "label": "Bag link after adding",
+      "default": "View bag"
+    },
+    {
+      "type": "text",
+      "id": "add_error",
+      "label": "Add error",
+      "default": "We couldn't add this. You may already have the limit in your bag."
+    },
+    {
+      "type": "header",
+      "content": "App (theme editor only)"
+    },
+    {
+      "type": "text",
+      "id": "app_line",
+      "label": "Editor card line",
+      "default": "Cap each customer across orders, not only per order."
+    },
+    {
+      "type": "header",
+      "content": "Preview (theme editor, no product)"
+    },
+    {
+      "type": "text",
+      "id": "preview_title",
+      "label": "Title",
+      "default": "Tie-back top"
+    },
+    {
+      "type": "number",
+      "id": "preview_price",
+      "label": "Price",
+      "default": 185
+    },
+    {
+      "type": "number",
+      "id": "preview_left",
+      "label": "Left",
+      "default": 38
+    },
+    {
+      "type": "text",
+      "id": "option_label",
+      "label": "Option name",
+      "default": "Size"
+    },
+    {
+      "type": "text",
+      "id": "preview_size",
+      "label": "Picked size",
+      "default": "S",
+      "info": "Must match a Size block."
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Seam)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 0,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "size",
+      "name": "Preview size",
+      "limit": 12,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Size",
+          "default": "M"
+        },
+        {
+          "type": "checkbox",
+          "id": "sold_out",
+          "label": "Sold out",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Order limits 02 - Drop",
+      "blocks": [
+        {
+          "type": "size",
+          "settings": {
+            "title": "XS"
+          }
+        },
+        {
+          "type": "size",
+          "settings": {
+            "title": "S"
+          }
+        },
+        {
+          "type": "size",
+          "settings": {
+            "title": "M"
+          }
+        },
+        {
+          "type": "size",
+          "settings": {
+            "title": "L",
+            "sold_out": true
+          }
+        },
+        {
+          "type": "size",
+          "settings": {
+            "title": "XL"
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

@@ -1,0 +1,49 @@
+{%- comment -%}
+  blko-ui-app-cta: editor-only card that points the merchant to the Avada app that powers a block.
+  It prints nothing on the live store: only inside the Theme Editor (request.design_mode), and only when the caller
+  has no @app block yet. Shoppers never see it.
+
+  Args (plain values only: Shopify's upload parser rejects filters inside render args):
+    app    App name, e.g. 'AG Product Reviews'                                         (required)
+    url    App Store page, without query, e.g. 'https://apps.shopify.com/air-reviews'   (required)
+    slug   Block slug for utm_campaign, e.g. 'reviews'                                 (required)
+    line   One sentence on what the app adds, e.g. 'Show real reviews, photos and a write-a-review form.'
+    cta    Button label, default 'Install'
+    note   Small line under it, default 'Only you see this in the editor. Add the app block here once it is installed.'
+    show   Optional. Pass false to skip it (e.g. when the caller already found an @app block).
+
+  Caller pattern:
+    {%- assign apps = section.blocks | where: 'type', '@app' -%}
+    {%- if apps.size == 0 -%}{% render 'blko-ui-app-cta', app: 'AG Product Reviews', url: 'https://apps.shopify.com/air-reviews', slug: 'reviews', line: 'Show real reviews, photos and a write-a-review form.' %}{%- endif -%}
+
+  Styles are inline and scoped, so the card needs no shared CSS and reads well on any theme ground (it inherits the
+  section's text colour and mixes its own tints from it). Buttons never move: hover only changes the fill.
+{%- endcomment -%}
+{%- if request.design_mode and show != false and app != blank and url != blank -%}
+  {%- liquid
+    assign cta_label = cta | default: 'Install'
+    assign cta_note = note | default: 'Only you see this in the editor. Add the app block here once it is installed.'
+    assign cta_href = url | append: '?utm_source=blocko&utm_medium=theme&utm_campaign=' | append: slug
+  -%}
+  <style>
+    .blko-ui-app-cta{box-sizing:border-box;display:flex;align-items:center;gap:16px;width:100%;max-width:720px;margin:24px auto 0;padding:14px 14px 14px 18px;border:1px dashed color-mix(in srgb,currentColor 32%,transparent);border-radius:14px;background:color-mix(in srgb,currentColor 5%,transparent);font:inherit;font-size:15px;line-height:1.4;color:inherit;text-align:left;letter-spacing:normal;text-transform:none}
+    .blko-ui-app-cta__icon{flex:none;display:grid;place-items:center;width:40px;height:40px;border-radius:10px;background:color-mix(in srgb,currentColor 10%,transparent)}
+    .blko-ui-app-cta__icon svg{width:20px;height:20px}
+    .blko-ui-app-cta__text{flex:1 1 auto;min-width:0;display:grid;gap:2px}
+    .blko-ui-app-cta__line{margin:0;font-weight:500}
+    .blko-ui-app-cta__note{margin:0;font-size:13px;opacity:.7}
+    .blko-ui-app-cta__btn{flex:none;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 16px;border:1px solid currentColor;border-radius:999px;color:inherit;text-decoration:none;font-weight:600;font-size:14px;background:transparent;transition:background-color .2s ease}
+    .blko-ui-app-cta__btn svg{width:16px;height:16px}
+    .blko-ui-app-cta__btn:hover{background:color-mix(in srgb,currentColor 12%,transparent)}
+    .blko-ui-app-cta__btn:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+    @media (max-width:560px){.blko-ui-app-cta{flex-wrap:wrap}.blko-ui-app-cta__btn{width:100%;justify-content:center}}
+  </style>
+  <aside class="blko-ui-app-cta" data-blko-app-cta="{{ slug | escape }}" aria-label="{{ app | escape }}">
+    <span class="blko-ui-app-cta__icon" aria-hidden="true">{% render 'blko-ui-icon', name: 'puzzle' %}</span>
+    <span class="blko-ui-app-cta__text">
+      <span class="blko-ui-app-cta__line">{% if line != blank %}{{ line | escape }} {% endif %}Works with <strong>{{ app | escape }}</strong>.</span>
+      <span class="blko-ui-app-cta__note">{{ cta_note | escape }}</span>
+    </span>
+    <a class="blko-ui-app-cta__btn" href="{{ cta_href }}" target="_blank" rel="noopener">{{ cta_label | escape }}{% render 'blko-ui-icon', name: 'arrow-up-right' %}</a>
+  </aside>
+{%- endif -%}
