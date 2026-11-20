@@ -1,0 +1,389 @@
+<script data-blko-kit="veil">try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-kit-veil')}catch(e){}</script>
+{{ 'blko-veil-motion.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-veil-motion.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign s = section.settings
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-before-after-13.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-before-after-13.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-veil', tokens: s.tokens -%}
+{%- comment -%}
+  Before after 13, two faces and a benefit list (ported from registry/before-after/before-after-13.tsx). Veil.
+  Two arch-topped photos of the same person side by side, each with a solid label chip at its foot ("Before";
+  "After" + "Wearing [shade]"). Beside them: a heading, the benefit lines (blocks, large and light, hairlines between),
+  and the shade row: product name, shade, price, Add to bag and "Shop this shade".
+  1440: lines and the shade row on the left (5 of 12 cols), photos on the right (7 cols). Phones: photos first, then
+  the heading and lines, then the shade row.
+  Live: the Product setting (blank on a product page: the page's product). The shade setting is matched to a variant by
+  title or option value (no match: the selected or first available variant, and the editor shows a note). Add posts
+  that variant to cart/add.js (routes.root_url): Adding, then Added + View bag and cart:refresh; an error shows the
+  message and the button comes back; a sold-out variant locks the button and says why. No JS: the row is a native
+  /cart/add form, so Add still works. No product: the preview name and price, and Add is simulated.
+  Motion (html.blko-ui-motion, no reduced motion): the lines fade in one after another once in view. Static = this
+  layout. Buttons never move: the label swaps.
+{%- endcomment -%}
+{%- liquid
+  assign main = s.product | default: product
+  assign live = false
+  if main != blank
+    assign live = true
+  endif
+  assign shade = s.shade | strip
+  assign shade_l = shade | downcase
+  assign v = nil
+  assign matched = false
+  if live
+    for x in main.variants
+      assign xt = x.title | downcase
+      if xt == shade_l
+        assign v = x
+        assign matched = true
+        break
+      endif
+      for o in x.options
+        assign ol = o | downcase
+        if ol == shade_l
+          assign v = x
+          assign matched = true
+        endif
+      endfor
+      if matched
+        break
+      endif
+    endfor
+    if v == nil
+      assign v = main.selected_or_first_available_variant
+    endif
+    assign p_name = main.title
+    assign p_price = v.price
+    assign p_url = main.url | append: '?variant=' | append: v.id
+    assign sold = false
+    unless v.available
+      assign sold = true
+    endunless
+  else
+    assign p_name = s.preview_title
+    assign p_price = s.preview_price | times: 100 | round
+    assign p_url = s.preview_url | default: '#'
+    assign sold = s.preview_sold
+  endif
+  capture m_price
+    render 'blko-ui-money', amount: p_price, cents: true
+  endcapture
+  assign after_sub = s.after_shade_text | replace: '[shade]', shade
+  assign sold_line = s.sold_text | replace: '[shade]', shade
+-%}
+<div class="bbeforeafter13" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-bbeforeafter13
+  ><section class="bbeforeafter13__wrap" aria-label="{{ s.heading | escape }}"
+    ><div class="bbeforeafter13__pair"
+      >{%- for k in (1..2) -%}
+        {%- liquid
+          if k == 1
+            assign im = s.before_image
+            assign lab = s.before_label
+            assign sub = ''
+          else
+            assign im = s.after_image
+            assign lab = s.after_label
+            assign sub = after_sub
+          endif
+        -%}
+        <figure class="bbeforeafter13__fig"
+          >{%- if im != blank -%}
+            {{ im | image_url: width: 1000 | image_tag: class: 'bbeforeafter13__img', loading: 'lazy', widths: '400, 600, 800, 1000', sizes: '(min-width: 1024px) 30vw, 50vw', alt: im.alt -}}
+          {%- else -%}
+            {{ 'image' | placeholder_svg_tag: 'bbeforeafter13__img bbeforeafter13__img--ph' -}}
+          {%- endif -%}
+          <figcaption class="bbeforeafter13__cap"><span class="bbeforeafter13__chip"><b>{{ lab | escape }}</b>{% if sub != blank %}<span>{{ sub | escape }}</span>{% endif %}</span></figcaption
+        ></figure
+      >{%- endfor -%}
+    </div
+    ><div class="bbeforeafter13__text"
+      ><h2 class="bbeforeafter13__heading">{{ s.heading | escape }}</h2
+      >{%- assign n = 0 -%}
+      {%- for b in section.blocks -%}{%- if b.type == 'line' and b.settings.text != blank -%}{%- assign n = n | plus: 1 -%}{%- endif -%}{%- endfor -%}
+      {%- if n > 0 -%}
+        <ul class="bbeforeafter13__lines" role="list" aria-label="{{ 'blko.before_after_13.benefits' | t }}"
+          >{%- assign i = 0 -%}
+          {%- for b in section.blocks -%}
+            {%- if b.type == 'line' and b.settings.text != blank -%}
+              <li class="bbeforeafter13__line" style="--i: {{ i }}" {{ b.shopify_attributes }}>{{ b.settings.text | escape }}</li
+              >{%- assign i = i | plus: 1 -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </ul
+      >{%- endif -%}
+      <blko-ba-add class="bbeforeafter13__buy"{% if live %} data-live{% endif %}{% if request.design_mode %} data-editor{% endif %} data-root="{{ routes.root_url }}" data-t-add="{{ s.add_label | escape }}" data-t-adding="{{ s.adding_label | escape }}" data-t-added="{{ s.added_label | escape }}" data-t-sold="{{ s.sold_label | escape }}" data-t-in-bag="{{ s.in_bag_text | replace: '[shade]', shade | escape }}" data-t-view="{{ s.view_label | escape }}" data-t-error="{{ s.error_text | escape }}" data-cart-url="{{ routes.cart_url }}"
+        ><p class="bbeforeafter13__product"><b>{{ p_name | escape }}</b> {{ s.in_word | escape }} {{ shade | escape }}, <span class="bbeforeafter13__price">{{ m_price }}</span></p
+        ><form class="bbeforeafter13__row" action="{{ routes.cart_add_url }}" method="post"
+          >{%- if live -%}<input type="hidden" name="id" value="{{ v.id }}"><input type="hidden" name="quantity" value="1">{%- endif -%}
+          {%- capture lbl -%}<span data-cta>{% if sold %}{{ s.sold_label | escape }}{% else %}{{ s.add_label | escape }}{% endif %}</span>{%- endcapture -%}
+          {%- capture at -%}data-add{% if sold %} disabled{% endif %}{%- endcapture -%}
+          {%- render 'blko-ui-button', size: 'lg', type: 'submit', children: lbl, attrs: at -%}
+          <a class="bbeforeafter13__shop" href="{{ p_url }}">{{ s.shop_label | escape }}</a
+        ></form
+        ><p class="bbeforeafter13__status" role="status" data-status>{% if sold %}{{ sold_line | escape }}{% endif %}</p
+        >{%- if request.design_mode and live and matched == false -%}
+          <p class="bbeforeafter13__note">{{ s.nomatch_note | replace: '[shade]', shade | escape }}</p
+        >{%- endif -%}
+      </blko-ba-add
+    ></div
+  ></section
+></div
+
+>
+
+{% schema %}
+{
+  "name": "Before after 13 - Pair",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Two photos of the same person, before and after, with what changed and the shade to buy. Use real photos of one person in the same light."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "One sheer layer, still your skin"
+    },
+    {
+      "type": "image_picker",
+      "id": "before_image",
+      "label": "Before photo"
+    },
+    {
+      "type": "text",
+      "id": "before_label",
+      "label": "Before label",
+      "default": "Before"
+    },
+    {
+      "type": "image_picker",
+      "id": "after_image",
+      "label": "After photo"
+    },
+    {
+      "type": "text",
+      "id": "after_label",
+      "label": "After label",
+      "default": "After"
+    },
+    {
+      "type": "text",
+      "id": "after_shade_text",
+      "label": "Under the after label",
+      "default": "Wearing [shade]",
+      "info": "[shade] is the shade below."
+    },
+    {
+      "type": "header",
+      "content": "Shade in the photo"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Empty on a product page: the page's product."
+    },
+    {
+      "type": "text",
+      "id": "shade",
+      "label": "Shade worn",
+      "default": "Light 2",
+      "info": "Matched to a variant by its title or option value, so Add and the link use that variant."
+    },
+    {
+      "type": "text",
+      "id": "in_word",
+      "label": "Between name and shade",
+      "default": "in"
+    },
+    {
+      "type": "text",
+      "id": "add_label",
+      "label": "Button",
+      "default": "Add to bag"
+    },
+    {
+      "type": "text",
+      "id": "adding_label",
+      "label": "Button while adding",
+      "default": "Adding"
+    },
+    {
+      "type": "text",
+      "id": "added_label",
+      "label": "Button after adding",
+      "default": "Added"
+    },
+    {
+      "type": "text",
+      "id": "sold_label",
+      "label": "Button, sold out",
+      "default": "Sold out"
+    },
+    {
+      "type": "text",
+      "id": "sold_text",
+      "label": "Sold-out line",
+      "default": "[shade] is sold out right now."
+    },
+    {
+      "type": "text",
+      "id": "in_bag_text",
+      "label": "Line after adding",
+      "default": "[shade] is in your bag."
+    },
+    {
+      "type": "text",
+      "id": "view_label",
+      "label": "Bag link",
+      "default": "View bag"
+    },
+    {
+      "type": "text",
+      "id": "error_text",
+      "label": "Add error",
+      "default": "We couldn't add it. Please try again."
+    },
+    {
+      "type": "text",
+      "id": "shop_label",
+      "label": "Product link",
+      "default": "Shop this shade"
+    },
+    {
+      "type": "text",
+      "id": "nomatch_note",
+      "label": "Editor note, shade not found",
+      "default": "No variant is called [shade]: Add uses the first available one."
+    },
+    {
+      "type": "header",
+      "content": "Preview (no product)"
+    },
+    {
+      "type": "text",
+      "id": "preview_title",
+      "label": "Name",
+      "default": "Sheer Skin Tint SPF 30"
+    },
+    {
+      "type": "number",
+      "id": "preview_price",
+      "label": "Price",
+      "default": 46
+    },
+    {
+      "type": "url",
+      "id": "preview_url",
+      "label": "Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "preview_sold",
+      "label": "Preview as sold out",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Veil)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "line",
+      "name": "Benefit line",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Line",
+          "default": "Evens tone",
+          "info": "Two or three words."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Before after 13 - Pair",
+      "blocks": [
+        {
+          "type": "line",
+          "settings": {
+            "text": "Evens tone"
+          }
+        },
+        {
+          "type": "line",
+          "settings": {
+            "text": "Blurs pores"
+          }
+        },
+        {
+          "type": "line",
+          "settings": {
+            "text": "Softens redness"
+          }
+        },
+        {
+          "type": "line",
+          "settings": {
+            "text": "Lets freckles show"
+          }
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}

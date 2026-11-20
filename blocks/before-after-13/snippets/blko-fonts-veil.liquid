@@ -1,0 +1,4 @@
+{%- comment -%}
+  Bundled fonts of the Blocko Veil preset (OFL, latin subset). Printed only when the section uses the preset.
+{%- endcomment -%}
+{%- if tokens != 'theme' -%}<style>@font-face{font-family:'blko Marcellus';src:url('{{ 'blko-f-marcellus.woff2' | asset_url }}') format('woff2');font-weight:400;font-style:normal;font-display:swap}@font-face{font-family:'blko Mulish';src:url('{{ 'blko-f-mulish.woff2' | asset_url }}') format('woff2');font-weight:200 1000;font-style:normal;font-display:swap}</style>{%- endif -%}

@@ -1,0 +1,37 @@
+/* Veil motion kit. GENERATED from components/ui/kits/veil.ts by kits/liquid.mjs; do not edit.
+   Runs only under html.blko-kit-veil (added by blko-veil-motion.js when motion is allowed). */
+/* Entry: drift down into place from above (no scale, so it reads the same whatever the box size; r3: 28px). */
+html.blko-kit-veil:root [data-reveal-group][data-shown] > :not(h1, h2) { animation-name: veil-settle; }
+@keyframes veil-settle { from { opacity: 0; transform: translateY(calc(var(--blko-motion-distance, 14px) * -2)); } }
+
+/* Headings: uncovered from the top down. */
+html.blko-kit-veil:root [data-reveal-group][data-shown] :is(h1, h2) { animation: veil-drop calc(var(--blko-motion-duration, 1300ms) * 1.2) var(--blko-motion-ease, cubic-bezier(.19,1,.22,1)) calc(var(--blko-motion-stagger, 140ms) + 100ms) backwards; }
+@keyframes veil-drop { from { clip-path: inset(-.2em -.2em 100% -.2em); transform: translateY(-.12em); } to { clip-path: inset(-.2em -.2em -.2em -.2em); transform: none; } }
+
+/* Buttons: a fill opens out from the centre. */
+html.blko-kit-veil:root .blko-ui-button:not(.blko-ui-button--link) { background-image: linear-gradient(color-mix(in oklab, currentColor 14%, transparent), color-mix(in oklab, currentColor 14%, transparent)); background-repeat: no-repeat; background-position: 50% 0; background-size: 0% 100%; transition: background-size .7s var(--blko-motion-ease, cubic-bezier(.19,1,.22,1)); }
+html.blko-kit-veil:root .blko-ui-button:not(.blko-ui-button--link):is(:hover, :focus-visible) { background-size: 100% 100%; }
+
+/* Pictures: ease out of a slow zoom when their section reveals. */
+html.blko-kit-veil:root [data-reveal-group][data-shown] :is(img, svg[data-placeholder]) { animation: veil-zoom calc(var(--blko-motion-duration, 1300ms) * 1.8) var(--blko-motion-ease, cubic-bezier(.19,1,.22,1)) backwards; }
+@keyframes veil-zoom { from { transform: scale(1.12); } }
+
+/* Menus: hovering one link dims its neighbours. */
+html.blko-kit-veil:root :is(nav, footer) :is(ul, ol) a { transition: opacity .5s var(--blko-motion-ease, cubic-bezier(.19,1,.22,1)); }
+html.blko-kit-veil:root :is(nav, footer) :is(ul, ol):has(a:is(:hover, :focus-visible)) a:not(:hover, :focus-visible) { opacity: .42; }
+
+/* r3 load: heading uncovered from the top as it settles, text drifts down, buttons, the picture out of a long zoom. */
+html.blko-kit-veil:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(h1, h2) { animation: veil-l-head 1.2s var(--blko-motion-ease, cubic-bezier(.19,1,.22,1)) 80ms backwards; }
+@keyframes veil-l-head { from { clip-path: inset(-.2em -.2em 100% -.2em); transform: scale(1.08); opacity: .2; } to { clip-path: inset(-.2em -.2em -.2em -.2em); transform: none; opacity: 1; } }
+html.blko-kit-veil:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(h1, h2) ~ p { animation: veil-l-down 1s var(--blko-motion-ease, cubic-bezier(.19,1,.22,1)) 480ms backwards; }
+@keyframes veil-l-down { from { opacity: 0; transform: translateY(-28px); } }
+html.blko-kit-veil:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(.blko-ui-button:not(.blko-ui-button--link), .blko-ui-arrow-link) { animation: veil-l-btn 1s var(--blko-motion-ease, cubic-bezier(.19,1,.22,1)) 700ms backwards; }
+@keyframes veil-l-btn { from { opacity: 0; transform: scale(.9); } }
+html.blko-kit-veil:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(img, svg[data-placeholder]) { animation: veil-l-img 1.6s var(--blko-motion-ease, cubic-bezier(.19,1,.22,1)) backwards; }
+@keyframes veil-l-img { from { opacity: .2; transform: scale(1.3); } }
+
+/* r3 scroll: framed pictures zoom out slowly through their whole travel (--veil-z 0..1). */
+html.blko-kit-veil:root [data-shown] :is(img, svg[data-placeholder])[data-veil-z] { scale: calc(1.18 - var(--veil-z, 1) * .18); }
+/* r3 scroll: tiles drift down into place one after another. */
+html.blko-kit-veil:root [data-reveal-group][data-shown] :is(:is(ul, ol, [class*="grid"]) > :has(img, svg[data-placeholder]), .blko-ui-product-card:not(:is(ul, ol, [class*="grid"]) > * .blko-ui-product-card)) { animation: veil-cascade 1.2s var(--blko-motion-ease, cubic-bezier(.19,1,.22,1)) calc(var(--veil-i, 0) * 150ms + 200ms) backwards; }
+@keyframes veil-cascade { from { opacity: 0; transform: translateY(-40px); } }
