@@ -1,0 +1,41 @@
+/* Isle motion kit. GENERATED from components/ui/kits/isle.ts by kits/liquid.mjs; do not edit.
+   Runs only under html.blko-kit-isle (added by blko-isle-motion.js when motion is allowed). */
+@property --isle-r { syntax: "<percentage>"; inherits: false; initial-value: 0%; }
+
+/* Entry: float up with a slight lean. */
+html.blko-kit-isle:root [data-reveal-group][data-shown] > :not(h1, h2) { animation-name: isle-float; }
+@keyframes isle-float { from { opacity: 0; transform: translateY(calc(var(--blko-motion-distance, 36px) * 1.5)) rotate(-1.2deg); } }
+
+/* Headings: drop softly from above. */
+html.blko-kit-isle:root [data-reveal-group][data-shown] :is(h1, h2) { animation: isle-drop calc(var(--blko-motion-duration, 800ms) * 1.2) var(--blko-motion-ease, cubic-bezier(.3,1.25,.5,1)) calc(var(--blko-motion-stagger, 90ms) + 80ms) backwards; }
+@keyframes isle-drop { from { opacity: 0; transform: translateY(-.45em); } }
+
+/* Buttons: an ink ripple spreads from where the pointer came in (the script sets the point). */
+html.blko-kit-isle:root .blko-ui-button:not(.blko-ui-button--link) { background-image: radial-gradient(circle at var(--isle-x, 50%) var(--isle-y, 50%), color-mix(in oklab, currentColor 20%, transparent) var(--isle-r), transparent calc(var(--isle-r) + 1%)); background-repeat: no-repeat; transition: --isle-r .65s var(--blko-motion-ease, cubic-bezier(.3,1.25,.5,1)); }
+html.blko-kit-isle:root .blko-ui-button:not(.blko-ui-button--link):is(:hover, :focus-visible) { --isle-r: 160%; }
+
+/* Pictures in a clipping frame drift with the scroll (the script sets the offset; 8% overscan hides the edges). */
+html.blko-kit-isle:root :is(img, svg[data-placeholder])[data-isle-drift] { scale: 1.08; translate: 0 var(--isle-dy, 0px); }
+
+/* Links: a wavy underline settles in. */
+html.blko-kit-isle:root :is(nav, footer, p) a:not(.blko-ui-button):not(.blko-ui-arrow-link):not(:has(img, svg)):is(:hover, :focus-visible) { text-decoration-line: underline; text-decoration-style: wavy; text-decoration-thickness: 1.5px; text-decoration-color: var(--blko-color-pop-1); text-underline-offset: .22em; animation: isle-wave .45s var(--blko-motion-ease, cubic-bezier(.3,1.25,.5,1)); }
+@keyframes isle-wave { from { text-decoration-color: transparent; text-underline-offset: .6em; } }
+
+/* r3 load: heading floats up out of a mask from below, then the text, buttons with one ink ring, the picture. */
+html.blko-kit-isle:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(h1, h2) { animation: isle-l-head .95s var(--blko-motion-ease, cubic-bezier(.3,1.25,.5,1)) 60ms backwards; }
+@keyframes isle-l-head {
+  from { opacity: 0; transform: translateY(36px) rotate(-2.5deg); mask-image: linear-gradient(transparent 33%, #000 66%); mask-size: 100% 300%; mask-repeat: no-repeat; mask-position: 0 0; }
+  to { mask-image: linear-gradient(transparent 33%, #000 66%); mask-size: 100% 300%; mask-repeat: no-repeat; mask-position: 0 100%; }
+}
+html.blko-kit-isle:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(h1, h2) ~ p { animation: isle-l-up .8s var(--blko-motion-ease, cubic-bezier(.3,1.25,.5,1)) 320ms backwards; }
+@keyframes isle-l-up { from { opacity: 0; transform: translateY(28px) rotate(-1deg); } }
+html.blko-kit-isle:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(.blko-ui-button:not(.blko-ui-button--link), .blko-ui-arrow-link) { animation: isle-l-btn 1s var(--blko-motion-ease, cubic-bezier(.3,1.25,.5,1)) 500ms backwards; }
+@keyframes isle-l-btn { 0% { opacity: 0; transform: translateY(28px); box-shadow: 0 0 0 0 color-mix(in oklab, var(--blko-color-pop-1) 60%, transparent); } 45% { opacity: 1; transform: none; box-shadow: 0 0 0 0 color-mix(in oklab, var(--blko-color-pop-1) 60%, transparent); } 100% { box-shadow: 0 0 0 16px transparent; } }
+html.blko-kit-isle:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(img, svg[data-placeholder]) { animation: isle-l-img 1.1s var(--blko-motion-ease, cubic-bezier(.3,1.25,.5,1)) 100ms backwards; }
+@keyframes isle-l-img { from { clip-path: inset(10% round 60px); transform: scale(1.15); } to { clip-path: inset(0 round 0); transform: none; } }
+
+/* r3 scroll: tiles bob up one after another, leaning left and right in turn. */
+html.blko-kit-isle:root [data-reveal-group][data-shown] :is(:is(ul, ol, [class*="grid"]) > :has(img, svg[data-placeholder]), .blko-ui-product-card:not(:is(ul, ol, [class*="grid"]) > * .blko-ui-product-card)) { animation: isle-bob .8s var(--blko-motion-ease, cubic-bezier(.3,1.25,.5,1)) calc(var(--isle-i, 0) * 90ms + 150ms) backwards; }
+html.blko-kit-isle:root [data-reveal-group][data-shown] :is(:is(ul, ol, [class*="grid"]) > :has(img, svg[data-placeholder]), .blko-ui-product-card:not(:is(ul, ol, [class*="grid"]) > * .blko-ui-product-card)):nth-child(even) { animation-name: isle-bob-r; }
+@keyframes isle-bob { from { opacity: 0; transform: translateY(48px) rotate(-3deg); } }
+@keyframes isle-bob-r { from { opacity: 0; transform: translateY(48px) rotate(3deg); } }

@@ -1,0 +1,324 @@
+<script data-blko-kit="isle">try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-kit-isle')}catch(e){}</script>
+{{ 'blko-isle-motion.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-isle-motion.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign s = section.settings
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-bundle-14.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+{{ 'blko-ui-commerce.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-ui-commerce.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-bundle-14.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-isle', mode: 'faces', source: s.tokens, tokens: s.tokens -%}
+{% capture content %}<header class="bbundle14__head"><div><h2 class="blko-ui-text--h2">{{ s.title }}</h2></div><p class="blko-ui-text--small">{{ s.lead | escape }}</p></header><div class="bbundle14__layout"><ul class="bbundle14__minis">{% for b in section.blocks %}{% if b.type != 'mini' %}{% continue %}{% endif %}{%- liquid
+  assign p = b.settings.product
+  assign cents = b.settings.price | times: 100
+  assign vid = ''
+  assign sold = false
+  assign pick0 = b.settings.selected
+  if p != blank
+    assign v = p.selected_or_first_available_variant
+    assign vid = v.id
+    assign cents = v.price
+    if p.available == false
+      assign sold = true
+      assign pick0 = false
+    endif
+  endif
+  assign nm = p.title | default: b.settings.title
+-%}<li {{ b.shopify_attributes }}{% if sold %} class="is-sold"{% endif %}><button type="button" data-mini="{{ b.id }}" data-name="{{ nm | escape }}" data-ml="{{ b.settings.ml }}" data-cents="{{ cents }}" data-variant="{{ vid }}"{% if sold %} data-sold="1"{% endif %} data-initial="{{ pick0 }}" aria-pressed="{{ pick0 }}"><span class="bbundle14__photo">{% if b.settings.product.featured_image != blank %}{{ b.settings.product.featured_image | image_url: width: 360 | image_tag: alt: '' }}{% elsif b.settings.image != blank %}{{ b.settings.image | image_url: width: 360 | image_tag: alt: '' }}{% else %}{{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}{% endif %}<span class="bbundle14__badge" aria-hidden="true"><span data-check>{% render 'blko-ui-icon', name: 'check', size: 16 %}</span><span data-plus>{% render 'blko-ui-icon', name: 'plus', size: 16 %}</span></span></span><span class="bbundle14__copy"><span class="blko-ui-text--small">{{ b.settings.product.title | default: b.settings.title | escape }}</span><span class="bbundle14__meta blko-ui-text--label"><span>{{ b.settings.ml }} ml</span><span data-price></span></span></span></button>{%- if p != blank and p.has_only_default_variant == false and sold == false -%}<select class="bbundle14__var blko-ui-text--small" data-var="{{ b.id }}" aria-label="{{ s.variant_aria | replace: '[name]', nm | escape }}">{%- for pv in p.variants -%}<option value="{{ pv.id }}" data-cents="{{ pv.price }}"{% if pv.id == v.id %} selected{% endif %}{% unless pv.available %} disabled{% endunless %}>{{ pv.title | escape }}{% unless pv.available %}, {{ s.sold | escape }}{% endunless %}</option>{%- endfor -%}</select>{%- endif -%}<template data-slot="{{ b.id }}"><li data-slot-id="{{ b.id }}"><span class="bbundle14__drop">{% if b.settings.product.featured_image != blank %}{{ b.settings.product.featured_image | image_url: width: 200 | image_tag }}{% elsif b.settings.image != blank %}{{ b.settings.image | image_url: width: 200 | image_tag }}{% else %}{{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}{% endif %}<button type="button" data-remove="{{ b.id }}" aria-label="{{ s.take | escape }} {{ b.settings.product.title | default: b.settings.title | escape }} {{ s.out | escape }}">{% render 'blko-ui-icon', name: 'x', size: 12 %}</button></span><span class="blko-ui-text--badge">{{ b.settings.ml }} ml</span></li></template></li>{% endfor %}</ul><div class="bbundle14__right"><div class="bbundle14__pouch"><div class="bbundle14__zip" aria-hidden="true"></div><div class="bbundle14__pull" aria-hidden="true"></div><ul aria-label="{{ s.in_pouch | escape }}" class="bbundle14__slots"></ul><div class="bbundle14__meterbox"><div class="bbundle14__meterhead blko-ui-text--label"><span>{{ s.liquids | escape }}</span><span data-volume></span></div><div class="bbundle14__meter" role="meter" aria-label="{{ s.meter_label | escape }}" aria-valuemin="0" aria-valuemax="100"><div data-fill></div>{% for n in (1..3) %}{% assign tick = n | times: 25 %}<span aria-hidden="true" style="left:{{ tick }}%"></span>{% endfor %}</div></div></div><div class="bbundle14__summary"><div class="bbundle14__total"><p class="blko-ui-text--small" data-count aria-live="polite"></p><span data-total>{% render 'blko-ui-price', amount: 30 %}</span></div>{% render 'blko-ui-button', shape: 'pill', full: true, children: s.fill, attrs: 'data-add disabled' %}<p class="bbundle14__error blko-ui-text--small" hidden></p><div class="bbundle14__app">{% for b in section.blocks %}{% if b.type == '@app' %}{% render b %}{% endif %}{% endfor %}</div></div></div></div>{% endcapture %}<div class="bbundle14" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px" data-bbundle14 data-config="{{ s | json | escape }}" data-money="{{ shop.money_format | escape }}">{% render 'blko-ui-section', surface: 'alt', label: s.label, inner: 'bbundle14__inner', children: content %}</div
+>
+
+{% schema %}
+{
+  "name": "Travel pouch",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Build a travel kit"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "Title",
+      "default": "Four minis, one clear <em>pouch</em>"
+    },
+    {
+      "type": "text",
+      "id": "lead",
+      "label": "Lead",
+      "default": "The pouch holds 100 ml of liquids in all."
+    },
+    {
+      "type": "text",
+      "id": "take",
+      "label": "Take",
+      "default": "Take"
+    },
+    {
+      "type": "text",
+      "id": "out",
+      "label": "Out",
+      "default": "out"
+    },
+    {
+      "type": "text",
+      "id": "in_pouch",
+      "label": "In pouch",
+      "default": "In the pouch"
+    },
+    {
+      "type": "text",
+      "id": "liquids",
+      "label": "Liquids",
+      "default": "Liquids"
+    },
+    {
+      "type": "text",
+      "id": "meter_label",
+      "label": "Meter label",
+      "default": "Liquids in the pouch"
+    },
+    {
+      "type": "text",
+      "id": "pick",
+      "label": "Pick",
+      "default": "Pick [amount] more"
+    },
+    {
+      "type": "text",
+      "id": "complete",
+      "label": "Complete",
+      "default": "Kit complete"
+    },
+    {
+      "type": "text",
+      "id": "of",
+      "label": "Of",
+      "default": "of"
+    },
+    {
+      "type": "text",
+      "id": "four",
+      "label": "Four",
+      "default": "Pouch has four"
+    },
+    {
+      "type": "text",
+      "id": "over",
+      "label": "Over",
+      "default": "Over by [amount] ml"
+    },
+    {
+      "type": "text",
+      "id": "fill",
+      "label": "Fill",
+      "default": "Fill the pouch"
+    },
+    {
+      "type": "text",
+      "id": "add",
+      "label": "Add",
+      "default": "Add the kit"
+    },
+    {
+      "type": "text",
+      "id": "added",
+      "label": "Added",
+      "default": "Kit added"
+    },
+    {
+      "type": "text",
+      "id": "save",
+      "label": "Save",
+      "default": "Save"
+    },
+    {
+      "type": "text",
+      "id": "error",
+      "label": "Error",
+      "default": "The kit could not be added. Try again."
+    },
+    {
+      "type": "range",
+      "id": "discount_pct",
+      "label": "Full kit, % off",
+      "info": "Shown only. Set the same discount as an automatic discount in Shopify admin. 0 hides the sale price and the savings line.",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "%",
+      "default": 20
+    },
+    {
+      "type": "text",
+      "id": "sold",
+      "label": "Sold out label",
+      "default": "Sold out"
+    },
+    {
+      "type": "text",
+      "id": "variant_aria",
+      "label": "Variant menu (screen readers)",
+      "default": "Choose a variant of [name]"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Isle)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "Travel pouch",
+      "blocks": [
+        {
+          "type": "mini",
+          "settings": {
+            "title": "Foaming cleanser",
+            "ml": 50,
+            "price": 10,
+            "selected": false
+          }
+        },
+        {
+          "type": "mini",
+          "settings": {
+            "title": "Vitamin C serum",
+            "ml": 15,
+            "price": 16,
+            "selected": true
+          }
+        },
+        {
+          "type": "mini",
+          "settings": {
+            "title": "Gel cream",
+            "ml": 30,
+            "price": 14,
+            "selected": true
+          }
+        },
+        {
+          "type": "mini",
+          "settings": {
+            "title": "Daily SPF 30 lotion",
+            "ml": 30,
+            "price": 13,
+            "selected": false
+          }
+        },
+        {
+          "type": "mini",
+          "settings": {
+            "title": "Night face oil",
+            "ml": 20,
+            "price": 15,
+            "selected": false
+          }
+        },
+        {
+          "type": "mini",
+          "settings": {
+            "title": "Rose lip and cheek balm",
+            "ml": 15,
+            "price": 12,
+            "selected": false
+          }
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "mini",
+      "name": "Mini",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Mini"
+        },
+        {
+          "type": "number",
+          "id": "ml",
+          "label": "Ml",
+          "default": 15
+        },
+        {
+          "type": "number",
+          "id": "price",
+          "label": "Price",
+          "default": 10
+        },
+        {
+          "type": "checkbox",
+          "id": "selected",
+          "label": "Selected",
+          "default": false
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo"
+        }
+      ]
+    }
+  ],
+  "class": "blko-bundle"
+}
+{% endschema %}
