@@ -38,6 +38,8 @@
     const ctas = [...root.querySelectorAll('[data-bundle-add]')];
     const tiers = [C.t2 || 0, C.t3 || 0, C.t4 || 0];
     const setPct = C.set || 0;
+    // no discount set: the tier track is not rendered and the tier message / savings line stay empty
+    const hasDisc = setPct > 0 || tiers.some(x => x > 0);
     let lastSig = '';
 
     const tierPct = n => (n >= 4 ? tiers[2] : n === 3 ? tiers[1] : n === 2 ? tiers[0] : 0);
@@ -119,12 +121,13 @@
         }
       });
       $('[data-bundle-count]').textContent = n === 1 ? T(C.item_one, { n }) : T(C.item_many, { n });
-      $('[data-bundle-fill]').style.transform = 'scaleX(' + (sets.length ? 1 : Math.min(n, 4) / 4) + ')';
-      stops.forEach((s, i) => s.classList.toggle('is-hit', pct > 0 && pct >= tiers[i]));
-      $('[data-bundle-msg]').textContent = message(n, pct, sets);
+      const fillEl = $('[data-bundle-fill]');
+      if (fillEl) fillEl.style.transform = 'scaleX(' + (sets.length ? 1 : Math.min(n, 4) / 4) + ')';
+      stops.forEach(s => s.classList.toggle('is-hit', pct > 0 && pct >= +s.dataset.pct));
+      $('[data-bundle-msg]').textContent = hasDisc ? message(n, pct, sets) : '';
       const tEl = $('[data-bundle-total]');
       tEl.innerHTML = money(totalCents) + (pct ? ' <s>' + money(cents) + '</s>' : '');
-      $('[data-bundle-save]').textContent = pct ? T(C.save, { amount: money(cents - totalCents) }) : (n ? C.no_discount : '');
+      $('[data-bundle-save]').textContent = !hasDisc ? '' : pct ? T(C.save, { amount: money(cents - totalCents) }) : (n ? C.no_discount : '');
       const sig = n + ':' + totalCents;
       if (changed && sig !== lastSig) { tEl.classList.remove('tick'); void tEl.offsetWidth; tEl.classList.add('tick'); }
       lastSig = sig;

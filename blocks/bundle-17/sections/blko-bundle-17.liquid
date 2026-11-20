@@ -204,30 +204,45 @@
         assign cta_text = s.cta_add | replace: '[amount]', total_money
       endif
       assign tiers = s.tier_2 | append: ',' | append: s.tier_3 | append: ',' | append: s.tier_4 | split: ','
+      comment
+        No discount set (every tier and the set % at 0): no tier track, no tier message, no savings line.
+      endcomment
+      assign disc_sum = s.tier_2 | plus: s.tier_3 | plus: s.tier_4 | plus: s.set_pct
+      if disc_sum > 0
+        assign has_disc = true
+      else
+        assign has_disc = false
+        assign msg = ''
+      endif
     -%}
-    <aside class="s-bundle__panel" aria-label="{{ s.panel_title | escape }}" data-rv="settle" data-rv-delay="1"
+    <aside class="s-bundle__panel{% unless has_disc %} is-nodisc{% endunless %}" aria-label="{{ s.panel_title | escape }}" data-rv="settle" data-rv-delay="1"
       ><div class="s-bundle__ph"><h3>{{ s.panel_title | escape }}</h3><span data-bundle-count>{{ count_text | escape }}</span></div
       ><ul class="s-bundle__slots" aria-label="{{ s.slots_label | escape }}"
         >{{- slot_html -}}
         {%- assign empty_slots = 4 | minus: slot_count -%}
         {%- for e in (1..empty_slots) -%}<li class="s-bundle__slot"></li>{%- endfor -%}
       </ul
-      ><div class="s-bundle__track" aria-hidden="true"><i class="s-bundle__fill" data-bundle-fill style="transform:scaleX({{ fill }})"></i></div
+      >{%- if has_disc -%}
+      <div class="s-bundle__track" aria-hidden="true"><i class="s-bundle__fill" data-bundle-fill style="transform:scaleX({{ fill }})"></i></div
       ><ol class="s-bundle__stops" data-bundle-stops aria-label="{{ s.stops_label | escape }}"
         >{%- for t in tiers -%}
           {%- liquid
             assign tp = t | plus: 0
             assign left = forloop.index | plus: 1 | times: 25
+            if tp == 0
+              continue
+            endif
           -%}
-          <li style="left:{{ left }}%"{% if pct > 0 and pct >= tp %} class="is-hit"{% endif %}><i></i>{{ s.stop_label | replace: '[pct]', tp | escape }}</li
+          <li data-pct="{{ tp }}" style="left:{{ left }}%"{% if pct > 0 and pct >= tp %} class="is-hit"{% endif %}><i></i>{{ s.stop_label | replace: '[pct]', tp | escape }}</li
         >{%- endfor -%}
       </ol
-      ><p class="s-bundle__msg" data-bundle-msg aria-live="polite">{{ msg | escape }}</p
+      >{%- endif -%}
+      <p class="s-bundle__msg" data-bundle-msg aria-live="polite">{{ msg | escape }}</p
       ><div class="s-bundle__sum"
         ><div
           ><span class="small">{{ s.total_label | escape }}</span
           ><p class="price s-bundle__total" data-bundle-total>{{ total_money }}{% if pct > 0 %} <s>{{ cents | money_without_trailing_zeros }}</s>{% endif %}</p
-          ><span class="s-bundle__save" data-bundle-save>{% if pct > 0 %}{{ s.save | replace: '[amount]', saved | money_without_trailing_zeros }}{% elsif n > 0 %}{{ s.no_discount | escape }}{% endif %}</span
+          ><span class="s-bundle__save" data-bundle-save>{% if has_disc == false %}{% elsif pct > 0 %}{{ s.save | replace: '[amount]', saved | money_without_trailing_zeros }}{% elsif n > 0 %}{{ s.no_discount | escape }}{% endif %}</span
         ></div
         ><button class="btn btn--primary btn--sm s-bundle__cta s-bundle__cta--m" type="button" data-bundle-add{% if n < 2 %} disabled{% endif %}>{{ cta_text }}</button
       ></div
