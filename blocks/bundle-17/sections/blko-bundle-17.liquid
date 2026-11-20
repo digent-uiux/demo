@@ -1,0 +1,885 @@
+<script data-blko-kit="lather">try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-kit-lather')}catch(e){}</script>
+{{ 'blko-lather-motion.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'blko-lather-motion.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  assign s = section.settings
+-%}
+{{ 'blko-ui-core.css' | asset_url | stylesheet_tag }}
+{{ 'blko-bundle-17.css' | asset_url | stylesheet_tag }}
+<script data-blko-ui-gate>try{if(!new URLSearchParams(location.search).has('static')&&!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('blko-ui-load')}catch(e){}</script>
+<script src="{{ 'blko-ui-motion.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'blko-bundle-17.js' | asset_url }}" defer="defer"></script>
+{%- render 'blko-fonts-lather', mode: 'faces', source: s.tokens, tokens: s.tokens -%}
+{%- comment -%}
+  Lather v3 build-your-own bundle (v3 theme section blko-lv3-bundle). Left: set blocks (name, note, scene photo, up to
+  3 product rows with a quantity stepper and a "pick" link). Right: a sticky "Your set" panel with 4 slots, a tier
+  track (2 / 3 / 4+ items) and the total. A complete set always gets the set discount. Prices come from the real
+  variants (or the demo price in cents). "Add set" posts every picked variant to /cart/add.js with the line property
+  "Set: <name>" (and a hidden "_set_discount"); the discount itself is an automatic discount in Shopify admin. The
+  button confirms inline; with demo rows only it confirms as a preview. @app blocks (bundle apps) render in the panel.
+{%- endcomment -%}
+{%- liquid
+  assign uid = 'blko-lv3-bundle-' | append: section.id
+  assign anchor = s.anchor | handleize
+  if anchor == blank
+    assign anchor = uid
+  endif
+  assign slots_idx = '1,2,3' | split: ','
+  assign n = 0
+  assign cents = 0
+  assign first_full = ''
+  assign slot_html = ''
+  assign slot_count = 0
+-%}
+<div class="bbundle17" data-tokens="{{ s.tokens }}" style="--pt:{{ s.padding_top }}px;--pb:{{ s.padding_bottom }}px"
+><section class="s-bundle" id="{{ anchor }}" aria-labelledby="{{ uid }}-h"
+  ><div class="wrap s-bundle__in"
+    ><div class="s-bundle__pick"
+      ><header class="s-bundle__hd"
+        ><h2 class="h2" id="{{ uid }}-h" data-rv="line"
+          >{%- if s.heading_1 != blank -%}<span class="ln"><span>{{ s.heading_1 }}</span></span>{%- endif -%}
+          {%- if s.heading_2 != blank -%}<span class="ln"><span>{{ s.heading_2 }}</span></span>{%- endif -%}
+        </h2
+        >{%- if s.tiers_text != blank -%}<p class="s-bundle__tiers" data-rv="blur" data-rv-delay="1">{{ s.tiers_text | escape }}</p>{%- endif -%}
+      </header
+
+      >{%- for block in section.blocks -%}
+        {%- if block.type != 'set' -%}{%- continue -%}{%- endif -%}
+        {%- liquid
+          assign st = block.settings
+          assign gid = uid | append: '-g' | append: forloop.index
+          assign set_key = 'set' | append: forloop.index
+          if st.start
+            assign q0 = 1
+          else
+            assign q0 = 0
+          endif
+          assign rows_in_set = 0
+        -%}
+        <div class="s-bundle__group" role="group" aria-labelledby="{{ gid }}" data-set="{{ set_key }}" data-name="{{ st.name | escape }}" {{ block.shopify_attributes }}
+          ><div class="s-bundle__gh"
+            ><h3 id="{{ gid }}">{{ st.name | escape }}{% if st.note != blank %} <span class="small">{{ st.note | escape }}</span>{% endif %}</h3
+            >{%- if st.pick_label != blank -%}<button class="s-bundle__pickset" type="button" data-pick-set="{{ set_key }}">{{ st.pick_label | escape }}</button>{%- endif -%}
+          </div
+          ><div class="s-bundle__gbody"
+            >{%- if st.scene != blank -%}
+              {{ st.scene | image_url: width: 880 | image_tag: loading: 'lazy', widths: '200, 300, 440, 880', sizes: '(min-width: 1100px) 148px, (min-width: 861px) 112px, 76px', alt: st.scene_alt, class: 's-bundle__scene' -}}
+            {%- else -%}
+              {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph s-bundle__scene' -}}
+            {%- endif -%}
+            <ul class="s-bundle__list" role="list"
+              >{%- for i in slots_idx -%}
+                {%- liquid
+                  assign k_product = 'product_' | append: i
+                  assign k_key = 'key_' | append: i
+                  assign k_name = 'name_' | append: i
+                  assign k_note = 'note_' | append: i
+                  assign k_price = 'price_' | append: i
+                  assign k_pump = 'pump_' | append: i
+                  assign k_image = 'image_' | append: i
+                  assign p = st[k_product]
+                  assign r_name = st[k_name]
+                  if p == blank and r_name == blank
+                    continue
+                  endif
+                  assign r_key = st[k_key] | strip | handleize
+                  if r_key == blank
+                    assign r_key = 'b-' | append: block.id | append: '-' | append: i
+                  endif
+                  assign r_cents = st[k_price] | plus: 0
+                  assign r_img = st[k_image]
+                  assign r_variant = ''
+                  assign r_sold = false
+                  assign rq = q0
+                  if p != blank
+                    assign v = p.selected_or_first_available_variant
+                    assign r_variant = v.id
+                    assign r_name = p.title
+                    assign r_cents = v.price
+                    if p.available == false
+                      assign r_sold = true
+                      assign rq = 0
+                    endif
+                    if r_img == blank
+                      assign r_img = p.featured_media.preview_image
+                    endif
+                  endif
+                  assign rows_in_set = rows_in_set | plus: 1
+                  assign n = n | plus: rq
+                  assign line_cents = r_cents | times: rq
+                  assign cents = cents | plus: line_cents
+                  assign r_thumb = ''
+                  if r_img != blank
+                    assign r_thumb = r_img | image_url: width: 200
+                  endif
+                  assign r_alt = r_name | escape
+                -%}
+                <li class="s-bundle__row{% if rq > 0 %} is-on{% endif %}{% if r_sold %} is-sold{% endif %}" data-id="{{ r_key }}"{% if r_sold %} data-sold="1"{% endif %} data-variant="{{ r_variant }}" data-cents="{{ r_cents }}" data-name="{{ r_name | escape }}" data-thumb="{{ r_thumb }}">
+                  {%- if r_img != blank -%}
+                    {{ r_img | image_url: width: 200 | image_tag: loading: 'lazy', widths: '120, 200', sizes: '60px', alt: r_name, class: 's-bundle__thumb' -}}
+                  {%- else -%}
+                    {{ 'image' | placeholder_svg_tag: 'blko-lv3-ph s-bundle__thumb' -}}
+                  {%- endif -%}
+                  <div class="txt"
+                    ><p class="s-bundle__nm">{% if st[k_pump] != 'none' %}<i class="s-bundle__pump s-bundle__pump--{{ st[k_pump] }}"></i>{% endif %}{{ r_name | escape }}</p
+                    >{%- if st[k_note] != blank -%}<p class="small">{{ st[k_note] | escape }}</p>{%- endif -%}
+                    {%- if p != blank and p.has_only_default_variant == false and r_sold == false -%}
+                      <select class="s-bundle__var" aria-label="{{ s.variant_aria | replace: '[name]', r_alt }}"
+                        >{%- for pv in p.variants -%}<option value="{{ pv.id }}" data-cents="{{ pv.price }}"{% if pv.id == v.id %} selected{% endif %}{% unless pv.available %} disabled{% endunless %}>{{ pv.title | escape }}{% unless pv.available %}, {{ s.sold_label | escape }}{% endunless %}</option>{%- endfor -%}
+                      </select
+                    >{%- endif -%}
+                    {%- if r_sold -%}<p class="small s-bundle__sold">{{ s.sold_label | escape }}</p>{%- endif -%}
+                  </div
+                  ><p class="price">{{ r_cents | money_without_trailing_zeros }}</p
+                  ><div class="qty"><button type="button" data-d="-1" aria-label="{{ s.less_aria | replace: '[name]', r_alt }}"{% if rq == 0 %} disabled{% endif %}>−</button><span aria-live="polite">{{ rq }}</span><button type="button" data-d="1" aria-label="{{ s.more_aria | replace: '[name]', r_alt }}"{% if r_sold %} disabled{% endif %}>+</button></div
+                ></li
+                >{%- if rq > 0 and slot_count < 4 -%}
+                  {%- liquid
+                    assign slot_count = slot_count | plus: 1
+                    if r_img != blank
+                      capture one_slot
+                        echo '<li class="s-bundle__slot is-full" data-id="' | append: r_key | append: '">'
+                        echo r_img | image_url: width: 200 | image_tag: loading: 'lazy', alt: r_name
+                        echo '</li>'
+                      endcapture
+                    else
+                      capture one_slot
+                        echo '<li class="s-bundle__slot is-full" data-id="' | append: r_key | append: '">'
+                        echo 'image' | placeholder_svg_tag
+                        echo '</li>'
+                      endcapture
+                    endif
+                    assign slot_html = slot_html | append: one_slot
+                  -%}
+                {%- endif -%}
+              {%- endfor -%}
+            </ul
+          ></div
+        ></div
+        >{%- if st.start and rows_in_set > 0 and first_full == '' -%}{%- assign first_full = st.name -%}{%- endif -%}
+      {%- endfor -%}
+    </div
+
+    >{%- liquid
+      if first_full != ''
+        assign pct = s.set_pct
+      elsif n >= 4
+        assign pct = s.tier_4
+      elsif n == 3
+        assign pct = s.tier_3
+      elsif n == 2
+        assign pct = s.tier_2
+      else
+        assign pct = 0
+      endif
+      assign total = 100 | minus: pct | times: cents | divided_by: 100.0 | round
+      assign saved = cents | minus: total
+      if first_full != ''
+        assign msg = s.msg_set | replace: '[set]', first_full | replace: '[pct]', pct
+      elsif n == 0
+        assign msg = s.msg_empty | replace: '[next]', s.tier_2
+      elsif n == 1
+        assign msg = s.msg_one | replace: '[next]', s.tier_2
+      elsif n == 2
+        assign msg = s.msg_mid | replace: '[pct]', pct | replace: '[next]', s.tier_3
+      elsif n == 3
+        assign msg = s.msg_mid | replace: '[pct]', pct | replace: '[next]', s.tier_4
+      else
+        assign msg = s.msg_max | replace: '[pct]', pct
+      endif
+      if n == 1
+        assign count_text = s.item_one | replace: '[n]', n
+      else
+        assign count_text = s.item_many | replace: '[n]', n
+      endif
+      if first_full != ''
+        assign fill = 1
+      else
+        assign fill = n | at_most: 4 | divided_by: 4.0
+      endif
+      assign total_money = total | money_without_trailing_zeros
+      if n < 2
+        assign cta_text = s.cta_pick
+      else
+        assign cta_text = s.cta_add | replace: '[amount]', total_money
+      endif
+      assign tiers = s.tier_2 | append: ',' | append: s.tier_3 | append: ',' | append: s.tier_4 | split: ','
+    -%}
+    <aside class="s-bundle__panel" aria-label="{{ s.panel_title | escape }}" data-rv="settle" data-rv-delay="1"
+      ><div class="s-bundle__ph"><h3>{{ s.panel_title | escape }}</h3><span data-bundle-count>{{ count_text | escape }}</span></div
+      ><ul class="s-bundle__slots" aria-label="{{ s.slots_label | escape }}"
+        >{{- slot_html -}}
+        {%- assign empty_slots = 4 | minus: slot_count -%}
+        {%- for e in (1..empty_slots) -%}<li class="s-bundle__slot"></li>{%- endfor -%}
+      </ul
+      ><div class="s-bundle__track" aria-hidden="true"><i class="s-bundle__fill" data-bundle-fill style="transform:scaleX({{ fill }})"></i></div
+      ><ol class="s-bundle__stops" data-bundle-stops aria-label="{{ s.stops_label | escape }}"
+        >{%- for t in tiers -%}
+          {%- liquid
+            assign tp = t | plus: 0
+            assign left = forloop.index | plus: 1 | times: 25
+          -%}
+          <li style="left:{{ left }}%"{% if pct > 0 and pct >= tp %} class="is-hit"{% endif %}><i></i>{{ s.stop_label | replace: '[pct]', tp | escape }}</li
+        >{%- endfor -%}
+      </ol
+      ><p class="s-bundle__msg" data-bundle-msg aria-live="polite">{{ msg | escape }}</p
+      ><div class="s-bundle__sum"
+        ><div
+          ><span class="small">{{ s.total_label | escape }}</span
+          ><p class="price s-bundle__total" data-bundle-total>{{ total_money }}{% if pct > 0 %} <s>{{ cents | money_without_trailing_zeros }}</s>{% endif %}</p
+          ><span class="s-bundle__save" data-bundle-save>{% if pct > 0 %}{{ s.save | replace: '[amount]', saved | money_without_trailing_zeros }}{% elsif n > 0 %}{{ s.no_discount | escape }}{% endif %}</span
+        ></div
+        ><button class="btn btn--primary btn--sm s-bundle__cta s-bundle__cta--m" type="button" data-bundle-add{% if n < 2 %} disabled{% endif %}>{{ cta_text }}</button
+      ></div
+      ><button class="btn btn--primary btn--block s-bundle__cta s-bundle__cta--d" type="button" data-bundle-add{% if n < 2 %} disabled{% endif %}>{{ cta_text }}</button
+      >{%- for block in section.blocks -%}
+        {%- if block.type == '@app' -%}<div class="s-bundle__app">{% render block %}</div>{%- endif -%}
+      {%- endfor -%}
+    </aside
+  ></div
+  ><script type="application/json" data-bundle-config>
+    {
+      "t2": {{ s.tier_2 | json }}, "t3": {{ s.tier_3 | json }}, "t4": {{ s.tier_4 | json }}, "set": {{ s.set_pct | json }},
+      "msg_set": {{ s.msg_set | json }}, "msg_empty": {{ s.msg_empty | json }}, "msg_one": {{ s.msg_one | json }},
+      "msg_mid": {{ s.msg_mid | json }}, "msg_max": {{ s.msg_max | json }},
+      "item_one": {{ s.item_one | json }}, "item_many": {{ s.item_many | json }},
+      "save": {{ s.save | json }}, "no_discount": {{ s.no_discount | json }},
+      "cta_pick": {{ s.cta_pick | json }}, "cta_add": {{ s.cta_add | json }},
+      "set_name": {{ s.set_name | json }}, "mix_name": {{ s.mix_name | json }},
+      "added": {{ s.added_label | json }}, "error": {{ s.error_text | json }}, "money": {{ shop.money_format | json }}
+    }
+  </script></section
+></div
+
+>
+
+{% schema %}
+{
+  "name": "Shower set builder",
+  "tag": "div",
+  "class": "blko-bundle",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading_1",
+      "label": "Heading, line 1",
+      "info": "Italic text shows in the display font.",
+      "default": "Build your <em>shower</em>"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading_2",
+      "label": "Heading, line 2",
+      "default": "set."
+    },
+    {
+      "type": "text",
+      "id": "tiers_text",
+      "label": "Intro",
+      "default": "Take a full set for 15% off, or mix any two or more. The more you add, the more comes off."
+    },
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anchor id",
+      "default": "bundle"
+    },
+    {
+      "type": "header",
+      "content": "Discounts"
+    },
+    {
+      "type": "paragraph",
+      "content": "These numbers drive the panel. To charge them at checkout, create matching automatic discounts in Shopify admin (the cart lines carry the property Set and _set_discount)."
+    },
+    {
+      "type": "range",
+      "id": "tier_2",
+      "label": "2 items, % off",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "%",
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "tier_3",
+      "label": "3 items, % off",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "%",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "tier_4",
+      "label": "4 or more items, % off",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "%",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "set_pct",
+      "label": "Complete set, % off",
+      "info": "Any set with all its products picked gets this, whatever the count.",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "%",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Panel"
+    },
+    {
+      "type": "text",
+      "id": "panel_title",
+      "label": "Panel title",
+      "default": "Your set"
+    },
+    {
+      "type": "text",
+      "id": "slots_label",
+      "label": "Slots label (screen readers)",
+      "default": "Items in your set"
+    },
+    {
+      "type": "text",
+      "id": "stops_label",
+      "label": "Tiers label (screen readers)",
+      "default": "Discount tiers"
+    },
+    {
+      "type": "text",
+      "id": "stop_label",
+      "label": "Tier stop",
+      "info": "[pct] is the percentage.",
+      "default": "[pct]% off"
+    },
+    {
+      "type": "text",
+      "id": "item_one",
+      "label": "Count, one",
+      "default": "[n] item"
+    },
+    {
+      "type": "text",
+      "id": "item_many",
+      "label": "Count, many",
+      "default": "[n] items"
+    },
+    {
+      "type": "text",
+      "id": "total_label",
+      "label": "Total label",
+      "default": "Total"
+    },
+    {
+      "type": "text",
+      "id": "save",
+      "label": "Saving",
+      "info": "[amount] is the saving.",
+      "default": "You save [amount]"
+    },
+    {
+      "type": "text",
+      "id": "no_discount",
+      "label": "No discount",
+      "default": "No discount yet"
+    },
+    {
+      "type": "text",
+      "id": "cta_pick",
+      "label": "Button, fewer than 2 items",
+      "default": "Pick 2 to make a set"
+    },
+    {
+      "type": "text",
+      "id": "cta_add",
+      "label": "Button",
+      "info": "[amount] is the total.",
+      "default": "Add set, [amount]"
+    },
+    {
+      "type": "text",
+      "id": "added_label",
+      "label": "Button, after adding",
+      "default": "Added to your bag"
+    },
+    {
+      "type": "text",
+      "id": "error_text",
+      "label": "Error message",
+      "default": "That did not go into your bag. Please try again."
+    },
+    {
+      "type": "header",
+      "content": "Messages"
+    },
+    {
+      "type": "paragraph",
+      "content": "[set] is the set name, [pct] the current discount, [next] the next one."
+    },
+    {
+      "type": "text",
+      "id": "msg_set",
+      "label": "Set complete",
+      "default": "[set] complete: [pct]% off."
+    },
+    {
+      "type": "text",
+      "id": "msg_empty",
+      "label": "Nothing picked",
+      "default": "Pick a set, or any 2 items to get [next]% off."
+    },
+    {
+      "type": "text",
+      "id": "msg_one",
+      "label": "One item",
+      "default": "Add 1 more to get [next]% off."
+    },
+    {
+      "type": "text",
+      "id": "msg_mid",
+      "label": "Two or three items",
+      "default": "[pct]% off. Add 1 more to get [next]% off."
+    },
+    {
+      "type": "text",
+      "id": "msg_max",
+      "label": "Four or more",
+      "default": "[pct]% off, the best price on any set."
+    },
+    {
+      "type": "header",
+      "content": "Bag line"
+    },
+    {
+      "type": "text",
+      "id": "set_name",
+      "label": "Name, one complete set",
+      "info": "[set] is the set name.",
+      "default": "[set] set"
+    },
+    {
+      "type": "text",
+      "id": "mix_name",
+      "label": "Name, mixed set",
+      "default": "Your shower set"
+    },
+    {
+      "type": "text",
+      "id": "less_aria",
+      "label": "Minus button (screen readers)",
+      "default": "One less [name]"
+    },
+    {
+      "type": "text",
+      "id": "more_aria",
+      "label": "Plus button (screen readers)",
+      "default": "One more [name]"
+    },
+    {
+      "type": "text",
+      "id": "variant_aria",
+      "label": "Variant menu (screen readers)",
+      "default": "Choose a variant of [name]"
+    },
+    {
+      "type": "text",
+      "id": "sold_label",
+      "label": "Sold out label",
+      "default": "Sold out"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "tokens",
+      "label": "Colors, fonts, corners",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Bundled preset (Lather)"
+        },
+        {
+          "value": "theme",
+          "label": "Read the theme's tokens"
+        }
+      ],
+      "default": "preset",
+      "info": "Reads the design tokens a Blocko theme sets (--blko-color-bg, --blko-font-heading, --blko-radius-card, --blko-theme-button-case…)."
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 0,
+      "info": "Phones use 70%."
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "set",
+      "name": "Set",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Set name",
+          "default": "Calm routine"
+        },
+        {
+          "type": "text",
+          "id": "note",
+          "label": "Note",
+          "default": "For everyday, eczema-prone skin."
+        },
+        {
+          "type": "text",
+          "id": "pick_label",
+          "label": "Pick-all link",
+          "default": "Pick both"
+        },
+        {
+          "type": "checkbox",
+          "id": "start",
+          "label": "Picked when the page opens",
+          "default": false
+        },
+        {
+          "type": "image_picker",
+          "id": "scene",
+          "label": "Scene photo"
+        },
+        {
+          "type": "text",
+          "id": "scene_alt",
+          "label": "Scene photo alt text",
+          "default": "Calm wash and Calm lotion on dark wet leaves"
+        },
+        {
+          "type": "header",
+          "content": "Product 1"
+        },
+        {
+          "type": "product",
+          "id": "product_1",
+          "label": "Product",
+          "info": "Blank uses the demo fields below. A slot with no product and no name is hidden."
+        },
+        {
+          "type": "text",
+          "id": "key_1",
+          "label": "Product key",
+          "info": "Short id of this row.",
+          "default": "calm"
+        },
+        {
+          "type": "text",
+          "id": "name_1",
+          "label": "Name (demo)",
+          "default": "Calm wash"
+        },
+        {
+          "type": "text",
+          "id": "note_1",
+          "label": "Note",
+          "default": "Fragrance-free, colloidal oat. 400 ml."
+        },
+        {
+          "type": "text",
+          "id": "price_1",
+          "label": "Price in cents (demo)",
+          "default": "1800"
+        },
+        {
+          "type": "select",
+          "id": "pump_1",
+          "label": "Pump colour dot",
+          "default": "moss",
+          "options": [
+            {
+              "value": "none",
+              "label": "None"
+            },
+            {
+              "value": "moss",
+              "label": "Moss"
+            },
+            {
+              "value": "deep",
+              "label": "Deep green"
+            },
+            {
+              "value": "sage",
+              "label": "Sage"
+            },
+            {
+              "value": "oat",
+              "label": "Oat"
+            },
+            {
+              "value": "stone",
+              "label": "Stone"
+            }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "image_1",
+          "label": "Thumbnail",
+          "info": "Blank uses the product's first image."
+        },
+        {
+          "type": "header",
+          "content": "Product 2"
+        },
+        {
+          "type": "product",
+          "id": "product_2",
+          "label": "Product",
+          "info": "Blank uses the demo fields below. A slot with no product and no name is hidden."
+        },
+        {
+          "type": "text",
+          "id": "key_2",
+          "label": "Product key",
+          "info": "Short id of this row.",
+          "default": "lotion"
+        },
+        {
+          "type": "text",
+          "id": "name_2",
+          "label": "Name (demo)",
+          "default": "Calm lotion"
+        },
+        {
+          "type": "text",
+          "id": "note_2",
+          "label": "Note",
+          "default": "Light, on damp skin after the wash. 250 ml."
+        },
+        {
+          "type": "text",
+          "id": "price_2",
+          "label": "Price in cents (demo)",
+          "default": "2200"
+        },
+        {
+          "type": "select",
+          "id": "pump_2",
+          "label": "Pump colour dot",
+          "default": "none",
+          "options": [
+            {
+              "value": "none",
+              "label": "None"
+            },
+            {
+              "value": "moss",
+              "label": "Moss"
+            },
+            {
+              "value": "deep",
+              "label": "Deep green"
+            },
+            {
+              "value": "sage",
+              "label": "Sage"
+            },
+            {
+              "value": "oat",
+              "label": "Oat"
+            },
+            {
+              "value": "stone",
+              "label": "Stone"
+            }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "image_2",
+          "label": "Thumbnail",
+          "info": "Blank uses the product's first image."
+        },
+        {
+          "type": "header",
+          "content": "Product 3"
+        },
+        {
+          "type": "product",
+          "id": "product_3",
+          "label": "Product",
+          "info": "Blank uses the demo fields below. A slot with no product and no name is hidden."
+        },
+        {
+          "type": "text",
+          "id": "key_3",
+          "label": "Product key",
+          "info": "Short id of this row."
+        },
+        {
+          "type": "text",
+          "id": "name_3",
+          "label": "Name (demo)"
+        },
+        {
+          "type": "text",
+          "id": "note_3",
+          "label": "Note"
+        },
+        {
+          "type": "text",
+          "id": "price_3",
+          "label": "Price in cents (demo)"
+        },
+        {
+          "type": "select",
+          "id": "pump_3",
+          "label": "Pump colour dot",
+          "default": "none",
+          "options": [
+            {
+              "value": "none",
+              "label": "None"
+            },
+            {
+              "value": "moss",
+              "label": "Moss"
+            },
+            {
+              "value": "deep",
+              "label": "Deep green"
+            },
+            {
+              "value": "sage",
+              "label": "Sage"
+            },
+            {
+              "value": "oat",
+              "label": "Oat"
+            },
+            {
+              "value": "stone",
+              "label": "Stone"
+            }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "image_3",
+          "label": "Thumbnail",
+          "info": "Blank uses the product's first image."
+        }
+      ]
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shower set builder",
+      "blocks": [
+        {
+          "type": "set",
+          "settings": {
+            "name": "Calm routine",
+            "note": "For everyday, eczema-prone skin.",
+            "pick_label": "Pick both",
+            "start": true,
+            "scene_alt": "Calm wash and Calm lotion on dark wet leaves",
+            "key_1": "calm",
+            "name_1": "Calm wash",
+            "note_1": "Fragrance-free, colloidal oat. 400 ml.",
+            "price_1": "1800",
+            "pump_1": "moss",
+            "key_2": "lotion",
+            "name_2": "Calm lotion",
+            "note_2": "Light, on damp skin after the wash. 250 ml.",
+            "price_2": "2200",
+            "pump_2": "none"
+          }
+        },
+        {
+          "type": "set",
+          "settings": {
+            "name": "Very dry skin",
+            "note": "For tight, winter skin.",
+            "pick_label": "Pick all three",
+            "start": false,
+            "scene_alt": "Rich wash, Rich cream and Body milk on wet travertine",
+            "key_1": "rich",
+            "name_1": "Rich wash",
+            "note_1": "Thicker, almost a lotion. 400 ml.",
+            "price_1": "2000",
+            "pump_1": "deep",
+            "key_2": "cream",
+            "name_2": "Rich cream",
+            "note_2": "For shins, elbows and hands. 200 ml.",
+            "price_2": "2400",
+            "pump_2": "none",
+            "key_3": "milk",
+            "name_3": "Body milk",
+            "note_3": "Light and quick, never sticky. 300 ml.",
+            "price_3": "2000"
+          }
+        },
+        {
+          "type": "set",
+          "settings": {
+            "name": "Little ones",
+            "note": "Ages 1 and up, fragrance-free.",
+            "pick_label": "Pick both",
+            "start": false,
+            "scene_alt": "Little lotion and Oat bar on stone and linen",
+            "key_1": "little",
+            "name_1": "Little lotion",
+            "note_1": "Soft oat lotion for after the bath. 150 ml.",
+            "price_1": "1400",
+            "pump_1": "none",
+            "key_2": "bar",
+            "name_2": "Oat bar",
+            "note_2": "Oat milk soap for face and body. 120 g.",
+            "price_2": "900",
+            "pump_2": "none"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

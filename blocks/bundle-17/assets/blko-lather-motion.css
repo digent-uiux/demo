@@ -1,0 +1,42 @@
+/* Lather motion kit. GENERATED from components/ui/kits/lather.ts by kits/liquid.mjs; do not edit.
+   Runs only under html.blko-kit-lather (added by blko-lather-motion.js when motion is allowed). */
+/* Entry: snap up from further down. */
+html.blko-kit-lather:root [data-reveal-group][data-shown] > :not(h1, h2) { animation-name: lather-snap; }
+@keyframes lather-snap { from { opacity: 0; transform: translateY(calc(var(--blko-motion-distance, 44px) * 1.6)); } }
+
+/* Headings: slam down from oversize. */
+html.blko-kit-lather:root [data-reveal-group][data-shown] :is(h1, h2) { transform-origin: 0 50%; animation: lather-slam var(--blko-motion-duration, 420ms) var(--blko-motion-ease, cubic-bezier(.12,.9,.2,1.15)) calc(var(--blko-motion-stagger, 40ms) + 60ms) backwards; }
+@keyframes lather-slam { from { opacity: 0; transform: scale(1.3); } }
+
+/* Buttons: lift off a hard offset shadow, press flat. */
+html.blko-kit-lather:root .blko-ui-button:not(.blko-ui-button--link) { transition: transform .16s ease-out, box-shadow .16s ease-out; }
+html.blko-kit-lather:root .blko-ui-button:not(.blko-ui-button--link):is(:hover, :focus-visible) { transform: translate(-3px, -3px); box-shadow: 3px 3px 0 var(--blko-color-text); }
+html.blko-kit-lather:root .blko-ui-button:not(.blko-ui-button--link):active { transform: none; box-shadow: 0 0 0 var(--blko-color-text); transition-duration: .06s; }
+
+/* Pictures: a diagonal shutter opens when their section reveals. */
+html.blko-kit-lather:root [data-reveal-group][data-shown] :is(img, svg[data-placeholder]) { animation: lather-shutter calc(var(--blko-motion-duration, 420ms) * 1.8) var(--blko-motion-ease, cubic-bezier(.12,.9,.2,1.15)) calc(var(--blko-motion-stagger, 40ms) * 2) backwards; }
+@keyframes lather-shutter { from { clip-path: polygon(0 0, 0 0, 0 0); } to { clip-path: polygon(0 0, 200% 0, 0 200%); } }
+
+/* Links: a bar under the words rises into a highlight. */
+html.blko-kit-lather:root :is(nav, footer, p) a:not(.blko-ui-button):not(.blko-ui-arrow-link):not(:has(img, svg)) { background-image: linear-gradient(color-mix(in oklab, var(--blko-color-pop-1) 45%, transparent), color-mix(in oklab, var(--blko-color-pop-1) 45%, transparent)); background-repeat: no-repeat; background-position: 0 100%; background-size: 100% 0px; transition: background-size .25s ease-out; }
+html.blko-kit-lather:root :is(nav, footer, p) a:not(.blko-ui-button):not(.blko-ui-arrow-link):not(:has(img, svg)):is(:hover, :focus-visible) { background-size: 100% 100%; }
+
+/* Icons: a quick kick. */
+html.blko-kit-lather:root :is(.blko-ui-button:not(.blko-ui-button--link), .blko-ui-arrow-link):is(:hover, :focus-visible) svg { animation: lather-kick .4s var(--blko-motion-ease, cubic-bezier(.12,.9,.2,1.15)); }
+@keyframes lather-kick { 35% { transform: rotate(-18deg) scale(1.15); } }
+
+/* r3 load: heading slams down from oversize, text snaps up, buttons kick in, the picture shutters open. */
+html.blko-kit-lather:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(h1, h2) { transform-origin: 0 50%; animation: lather-l-head .5s cubic-bezier(.12,.9,.2,1) 60ms backwards; }
+@keyframes lather-l-head { from { opacity: 0; transform: scale(1.7); } }
+html.blko-kit-lather:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(h1, h2) ~ p { animation: lather-l-up .42s var(--blko-motion-ease, cubic-bezier(.12,.9,.2,1.15)) 220ms backwards; }
+@keyframes lather-l-up { from { opacity: 0; transform: translateY(44px); } }
+html.blko-kit-lather:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(.blko-ui-button:not(.blko-ui-button--link), .blko-ui-arrow-link) { animation: lather-l-btn .5s var(--blko-motion-ease, cubic-bezier(.12,.9,.2,1.15)) 320ms backwards; }
+@keyframes lather-l-btn { from { opacity: 0; transform: translateY(60px) rotate(-8deg); } }
+html.blko-kit-lather:root :is([data-reveal-group], section:not(:has([data-reveal-group], section))):not([data-pending], [data-shown], [data-reveal], :has(nav)) :is(img, svg[data-placeholder]) { animation: lather-l-img .6s var(--blko-motion-ease, cubic-bezier(.12,.9,.2,1.15)) 100ms backwards; }
+@keyframes lather-l-img { from { clip-path: polygon(0 0, 0 0, 0 0); } to { clip-path: polygon(0 0, 200% 0, 0 200%); } }
+
+/* r3 scroll: section headings slide in from the left with the scroll (--lather-k 0..1). */
+html.blko-kit-lather:root [data-reveal-group][data-shown] h2[data-lather-k] { translate: calc((1 - var(--lather-k, 1)) * -12vw) 0; }
+/* r3 scroll: tiles stamp down from oversize, one after another. */
+html.blko-kit-lather:root [data-reveal-group][data-shown] :is(:is(ul, ol, [class*="grid"]) > :has(img, svg[data-placeholder]), .blko-ui-product-card:not(:is(ul, ol, [class*="grid"]) > * .blko-ui-product-card)) { animation: lather-stamp .38s cubic-bezier(.12,.9,.2,1.15) calc(var(--lather-i, 0) * 60ms + 120ms) backwards; }
+@keyframes lather-stamp { from { opacity: 0; transform: scale(1.25); } }
